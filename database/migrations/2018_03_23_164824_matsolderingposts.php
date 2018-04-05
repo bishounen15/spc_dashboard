@@ -13,7 +13,7 @@ class MatsolderingPosts extends Migration
      */
     public function up()
     {
-        Schema::create('matsolderingposts', function (Blueprint $table) {
+        Schema::create('mat_soldering', function (Blueprint $table) {
             $table->increments('id'); 
             $table->string('Station');
             $table->string('Location');
@@ -39,6 +39,6 @@ class MatsolderingPosts extends Migration
      */
     public function down()
     {
-        Schema::drop('matsolderingposts');
+        Schema::drop('mat_soldering');
     }
 }

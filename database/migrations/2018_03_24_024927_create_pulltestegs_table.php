@@ -13,7 +13,7 @@ class CreatePulltestegsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pulltestegs', function (Blueprint $table) {
+        Schema::create('pull_test_egs', function (Blueprint $table) {
             $table->increments('id');
             $table->String('Date');
             $table->String('Laminator');
@@ -41,6 +41,6 @@ class CreatePulltestegsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pulltestegs');
+        Schema::dropIfExists('pull_test_egs');
     }
 }
