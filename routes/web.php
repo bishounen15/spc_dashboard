@@ -11,6 +11,29 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', 'PagesController@index');
+Route::get('/Summary', 'PagesController@Summary');
+Route::get('/pulltest', 'PagesController@pulltest');
+
+Route::resource('lam', 'LamController');
+Route::resource('laytec', 'LaytecController');
+Route::resource('pulltest', 'PulltestController');
+Route::resource('pulltestEG', 'PulltestEGController');
+Route::resource('stringer', 'StringerController');
+Route::resource('flash', 'FlashController');
+
+Route::resource('matrixpulltest', 'MatrixPullTestsController');
+Route::resource('matsolder', 'MatSolderingPostsController');
+// Route::resource('pulltest', 'MatrixpulltestController');
+
+Route::resource('Potting','PottingController');
+Route::resource('Curing','CuringController');
+Route::resource('SolderTemp','solderTempController');
+Route::resource('JBox','JBoxController');
+Route::resource('Frame','FrameController');
+Route::resource('Framming','SqBwController');
+Route::resource('MixRatio','MixRatioController');

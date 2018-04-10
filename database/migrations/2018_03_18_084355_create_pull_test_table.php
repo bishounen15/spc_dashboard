@@ -18,10 +18,14 @@ class CreatePullTestTable extends Migration
                 $table->string('Station');
                 $table->string('Location');
                 $table->string('Shift');
+                $table->string('Node');
                 $table->string('Supplier');
-                $table->float('Temp');
-                $table->integer('Site');
-                $table->float('Pull Test');
+                $table->integer('Site1');
+                $table->float('PullTest1');
+                $table->integer('Site2');
+                $table->float('PullTest2');
+                $table->integer('Site3');
+                $table->float('PullTest3');
                 $table->float('Average');
                 $table->string('Remarks');
                 $table->timestamps();

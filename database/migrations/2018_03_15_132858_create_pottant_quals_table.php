@@ -26,7 +26,7 @@ class CreatePottantQualsTable extends Migration
             $table->double('weightA');
             $table->double('weightB');
             $table->double('totalWt');
-            $table->double('targetParam');
+            $table->double('targetParam')->nullable();
             $table->integer('ratio');
 
             $table->timestamps();

@@ -36,8 +36,8 @@ class CreateFrameQualsTable extends Migration
             $table->double('beadScale');
             $table->string('facilitySupply');
             $table->double('mainPressure');
-            $table->string('paramID');
-            $table->double('TargetParam');
+            $table->string('paramID')->nullable();
+            $table->double('TargetParam')->nullable();
             $table->string('remarks');
             $table->timestamps();
         });
