@@ -25,7 +25,7 @@ class LamController extends Controller
      */
     public function create()
     {
-        return view ('posts.Lam');
+        return view ('posts.lam');
     }
 
     /**
