@@ -43,8 +43,8 @@
                         <div class = "row">
                             <div class = "col-sm-1"> </div>
                             <div class = "col-sm-1">   </div>
-                            <div class="col-sm-2">       {{Form::label('w/ Sealant','w/ Sealant'),['class'=>'form-control']}} </div>
-                            <div class = "col-sm-2">    {{Form::label('w/o Sealant','w/o Sealant'),['class'=>'form-control']}}    </div>
+                            <div class="col-sm-2">      {{Form::label('w/o Sealant','w/o Sealant'),['class'=>'form-control']}}   </div>
+                            <div class = "col-sm-2">    {{Form::label('w/ Sealant','w/ Sealant'),['class'=>'form-control']}}   </div>
                             <div class="col-sm-2">      {{Form::label('Diff','Difference'),['class'=>'form-control']}}  </div>
                             <div class = "col-sm-2">    {{Form::label('Sum','Sum'),['class'=>'form-control']}}  </div>
                             <div class="col-sm-1">    </div>
@@ -54,8 +54,8 @@
                     <div class = "row">
                         <div class = "col-sm-1"> </div>
                         <div class = "col-sm-1">   {{Form::label('L1','L1'),['class'=>'form-control']}}  </div>
-                        <div class="col-sm-2">     {{ Form::text('L1wSealant', '0',['class'=>'form-control'] )}} </div>
-                        <div class = "col-sm-2">   {{ Form::text('L1woSealant', '0',['class'=>'form-control'] )}}    </div>
+                        <div class="col-sm-2">      {{ Form::text('L1woSealant', '0',['class'=>'form-control'] )}} </div>
+                        <div class = "col-sm-2">    {{ Form::text('L1wSealant', '0',['class'=>'form-control'] )}} </div>
                         <div class="col-sm-2">     {{ Form::text('L1diff', '0',['class'=>'form-control'] )}}  </div>
                         <div class = "col-sm-2">    {{ Form::text('sum', '0',['class'=>'form-control', 'read-only'] )}}   </div>
                         <div class="col-sm-1">    </div>
@@ -65,8 +65,8 @@
                 <div class = "row">
                     <div class = "col-sm-1"> </div>
                     <div class = "col-sm-1">   {{Form::label('L2','L2'),['class'=>'form-control']}}  </div>
-                    <div class="col-sm-2">     {{ Form::text('L2wSealant', '0',['class'=>'form-control'] )}} </div>
-                    <div class = "col-sm-2">   {{ Form::text('L2woSealant', '0',['class'=>'form-control'] )}}    </div>
+                    <div class="col-sm-2">     {{ Form::text('L2woSealant', '0',['class'=>'form-control'] )}}</div>
+                    <div class = "col-sm-2">    {{ Form::text('L2wSealant', '0',['class'=>'form-control'] )}}    </div>
                     <div class="col-sm-2">     {{ Form::text('L2diff', '0',['class'=>'form-control'] )}}  </div>
                     <div class = "col-sm-2">      </div>
                     <div class="col-sm-1">    </div>
@@ -76,8 +76,8 @@
             <div class = "row">
                 <div class = "col-sm-1"> </div>
                 <div class = "col-sm-1">   {{Form::label('S1','S1'),['class'=>'form-control']}}  </div>
-                <div class="col-sm-2">     {{ Form::text('S1wSealant', '0',['class'=>'form-control'] )}} </div>
-                <div class = "col-sm-2">   {{ Form::text('S1woSealant', '0',['class'=>'form-control'] )}}    </div>
+                <div class="col-sm-2">     {{ Form::text('S1woSealant', '0',['class'=>'form-control'] )}}  </div>
+                <div class = "col-sm-2">   {{ Form::text('S1wSealant', '0',['class'=>'form-control'] )}}   </div>
                 <div class="col-sm-2">     {{ Form::text('S1diff', '0',['class'=>'form-control'] )}}  </div>
                 <div class = "col-sm-2">      </div>
                 <div class="col-sm-1">    </div>
@@ -88,8 +88,8 @@
         <div class = "row">
             <div class = "col-sm-1"> </div>
             <div class = "col-sm-1">   {{Form::label('S2','S2'),['class'=>'form-control']}}  </div>
-            <div class="col-sm-2">     {{ Form::text('S2wSealant', '0',['class'=>'form-control'] )}} </div>
-            <div class = "col-sm-2">   {{ Form::text('S2woSealant', '0',['class'=>'form-control'] )}}    </div>
+            <div class="col-sm-2">    {{ Form::text('S2woSealant', '0',['class'=>'form-control'] )}}  </div>
+            <div class = "col-sm-2">  {{ Form::text('S2wSealant', '0',['class'=>'form-control'] )}}     </div>
             <div class="col-sm-2">     {{ Form::text('S2diff', '0',['class'=>'form-control'] )}}  </div>
             <div class = "col-sm-2">      </div>
             <div class="col-sm-1">    </div>
