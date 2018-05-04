@@ -32,16 +32,52 @@
                         <br/>
                         <div class = "row">
                                 <div class = "col-sm-1"> </div>
-                                <div class = "col-sm-1">   {{Form::label('tempBefAdj','Temp Before Adjustment'),['class'=>'form-control']}}  </div>
-                                <div class="col-sm-2">     {{Form::text('tempBefAdj','0' ,['class'=>'form-control'])}} </div>
-                                <div class = "col-sm-1">   {{Form::label('tempAftAdj','Temp After Adjustment'),['class'=>'form-control']}}  </div>
-                                <div class="col-sm-3">     {{Form::text('tempAftAdj','0' ,['class'=>'form-control'])}} </div>
-                                <div class = "col-sm-1">   {{Form::label('remarks','remarks'),['class'=>'form-control']}}  </div>
-                                <div class="col-sm-2">    {{ Form::select('remarks', array('Passed' => 'Passed','Failed' => 'Failed'),'Passed',['class'=>'form-control'] )}} </div>
+                                <div class = "col-sm-1">     </div>
+                                <div class="col-sm-3">    {{Form::label('tempBefAdj','Temp Before Adjustment'),['class'=>'form-control']}} {{Form::text('tempBefAdj','0' ,['class'=>'form-control'])}} </div>
+                                <div class = "col-sm-3">   {{Form::label('tempAftAdj','Temp After Adjustment'),['class'=>'form-control']}}  </div>
+                                <div class="col-sm-3">      {{Form::label('average','Average'),['class'=>'form-control']}}</div>
                                 <div class = "col-sm-1"> </div>
                       
                         </div>
                     <br/>
+
+                    <div class = "row">
+                                <div class = "col-sm-1"> </div>
+                                <div class = "col-sm-1">   1  </div>
+                                <div class="col-sm-3">    {{Form::text('tempBefAdj','0' ,['class'=>'form-control'])}}   {{Form::text('tempBefAdj','0' ,['class'=>'form-control'])}} </div>
+                                <div class = "col-sm-3">   {{Form::text('tempAftAdj','0' ,['class'=>'form-control'])}}   </div>
+                                <div class="col-sm-3">       {{Form::text('tempAvg','0' ,['class'=>'form-control'])}} </div>
+                                <div class = "col-sm-1"> </div>
+              
+                </div>
+                <div class = "row">
+                                <div class = "col-sm-1"> </div>
+                                <div class = "col-sm-1">  2   </div>
+                                <div class="col-sm-3">    {{Form::text('tempBefAdj','0' ,['class'=>'form-control'])}}   {{Form::text('tempBefAdj','0' ,['class'=>'form-control'])}} </div>
+                                <div class = "col-sm-3">   {{Form::text('tempAftAdj','0' ,['class'=>'form-control'])}}   </div>
+                                <div class="col-sm-3">       {{Form::text('tempAvg','0' ,['class'=>'form-control'])}} </div>
+                                <div class = "col-sm-1"> </div>
+              
+                </div>
+                <div class = "row">
+                                <div class = "col-sm-1"> </div>
+                                <div class = "col-sm-1">  3   </div>
+                                <div class="col-sm-3">    {{Form::text('tempBefAdj','0' ,['class'=>'form-control'])}}   {{Form::text('tempBefAdj','0' ,['class'=>'form-control'])}} </div>
+                                <div class = "col-sm-3">   {{Form::text('tempAftAdj','0' ,['class'=>'form-control'])}}   </div>
+                                <div class="col-sm-3">       {{Form::text('tempAvg','0' ,['class'=>'form-control'])}} </div>
+                                <div class = "col-sm-1"> </div>
+              
+                </div>
+                <div class = "row">
+                                <div class = "col-sm-1"> </div>            
+                                <div class = "col-sm-2">   {{Form::label('remarks','remarks'),['class'=>'form-control']}}  </div>
+                                <div class="col-sm-5">    {{ Form::select('remarks', array('Passed' => 'Passed','Failed' => 'Failed'),'Passed',['class'=>'form-control'] )}} </div>
+                                <div class = "col-sm-4"> </div>
+              
+                </div>
+
+              
+            <br/>
            
                     </div>
                     
