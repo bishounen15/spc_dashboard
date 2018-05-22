@@ -51,10 +51,10 @@
                     <div class = "row">
                         <div class = "col-sm-1"> </div>
                         <div class = "col-sm-1">   {{Form::label('A','PartA'),['class'=>'form-control']}}  </div>
-                        <div class="col-sm-2">     {{ Form::text('befDispenseWtA', '0',['class'=>'form-control'] )}} </div>
-                        <div class = "col-sm-2">   {{ Form::text('dispensedWtA', '0',['class'=>'form-control'] )}}    </div>
-                        <div class="col-sm-2">     {{ Form::text('weightA', '0',['class'=>'form-control'] )}}  </div>
-                        <div class = "col-sm-2">    {{ Form::text('totalWt', '0',['class'=>'form-control', 'read-only'] )}}   </div>
+                        <div class="col-sm-2">     {{ Form::text('befDispenseWtA', '0',['class'=>'form-control', 'id'=>'befDispenseWtA'] )}} </div>
+                        <div class = "col-sm-2">   {{ Form::text('dispensedWtA', '0',['class'=>'form-control', 'id'=>'dispensedWtA' ] )}}    </div>
+                        <div class="col-sm-2">     {{ Form::text('weightA', '0',['class'=>'form-control','id'=>'weightA','readonly'=>'true'] )}}  </div>
+                        <div class = "col-sm-2">    {{ Form::text('totalWt', '0',['class'=>'form-control', 'id'=>'totalWt','readonly'=>'true'] )}}   </div>
                         <div class="col-sm-1">    </div>
                         <div class = "col-sm-1">   </div>
                
@@ -62,9 +62,9 @@
                 <div class = "row">
                     <div class = "col-sm-1"> </div>
                     <div class = "col-sm-1">   {{Form::label('B','PartB'),['class'=>'form-control']}}  </div>
-                    <div class="col-sm-2">     {{ Form::text('befDispenseWtB', '0',['class'=>'form-control'] )}} </div>
-                    <div class = "col-sm-2">   {{ Form::text('dispensedWtB', '0',['class'=>'form-control'] )}}    </div>
-                    <div class="col-sm-2">     {{ Form::text('weightB', '0',['class'=>'form-control'] )}}  </div>
+                    <div class="col-sm-2">     {{ Form::text('befDispenseWtB', '0',['class'=>'form-control','id'=>'befDispenseWtB'] )}} </div>
+                    <div class = "col-sm-2">   {{ Form::text('dispensedWtB', '0',['class'=>'form-control', 'id'=>'befDispenseWtB'] )}}    </div>
+                    <div class="col-sm-2">     {{ Form::text('weightB', '0',['class'=>'form-control','id'=>'weightB','readonly'=>'true'] )}}  </div>
                     <div class = "col-sm-2">      </div>
                     <div class="col-sm-1">    </div>
                     <div class = "col-sm-1">   </div>
@@ -101,4 +101,49 @@
 
  @endsection
 
+ @push('jscript')
+ <script>
+           $('#befDispensedWtA' ).keyup(function(){
+                var wtA;
+                var wtB;
+
+    textone = parseFloat($('#befDispensedWtA').val());
+    texttwo = parseFloat($('#dispensedWtA').val());
+  
+    if(texttwo==0){
+        var result = 0;
+    }else{
+        var result = texttwo - textone;
+   
+    }
+    $('#weightA').val(result.toFixed(2));
+    wtA = parseFloat($('#weightA').val());
+    wtB = parseFloat($('#weightB').val());
+   
+    sum =  wtA + wtB;
+    $('#totalWt').val(sum.toFixed(2));
+    });
+
+      $('#dispensedWtA' ).keyup(function(){
+                var wtA;
+                var wtB;
+
+    textone = parseFloat($('#befDispensedWtA').val());
+    texttwo = parseFloat($('#dispensedWtA').val());
+  
+    if(texttwo==0){
+        var result = 0;
+    }else{
+        var result = texttwo - textone;
+   
+    }
+    $('#weightA').val(result.toFixed(2));
+    wtA = parseFloat($('#weightA').val());
+    wtB = parseFloat($('#weightB').val());
+   
+    sum =  wtA + wtB;
+    $('#totalWt').val(sum.toFixed(2));
+    });
  
+ </script>
+ @endpush

@@ -17,5 +17,7 @@
            </div>
             @yield('content')
        </div>
+
+    @stack('jscript')
     </body>
 </html>
