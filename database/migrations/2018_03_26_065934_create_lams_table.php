@@ -13,7 +13,7 @@ class CreateLamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('Lams', function (Blueprint $table) {
+        Schema::connection('spc')->create('Lams', function (Blueprint $table) {
             $table->increments('id');
             $table->String('Date');
             $table->String('Laminator');
@@ -69,6 +69,6 @@ class CreateLamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lams');
+        Schema::connection('spc')->dropIfExists('lams');
     }
 }

@@ -13,7 +13,7 @@ class CreatePulltestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pull_tests', function (Blueprint $table) {
+        Schema::connection('spc')->create('pull_tests', function (Blueprint $table) {
             $table->increments('id');
             $table->String('Date');
             $table->String('Laminator');
@@ -57,6 +57,6 @@ class CreatePulltestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pull_tests');
+        Schema::connection('spc')->dropIfExists('pull_tests');
     }
 }

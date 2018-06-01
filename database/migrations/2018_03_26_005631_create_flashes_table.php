@@ -13,7 +13,7 @@ class CreateFlashesTable extends Migration
      */
     public function up()
     {
-        Schema::create('flashes', function (Blueprint $table) {
+        Schema::connection('spc')->create('flashes', function (Blueprint $table) {
             $table->increments('id');
             $table->String('Date');
             $table->String('Difference');
@@ -32,6 +32,6 @@ class CreateFlashesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('flashes');
+        Schema::connection('spc')->dropIfExists('flashes');
     }
 }

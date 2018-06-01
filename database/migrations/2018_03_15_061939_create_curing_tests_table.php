@@ -13,7 +13,7 @@ class CreateCuringTestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('curing_tests', function (Blueprint $table) {
+        Schema::connection('spc')->create('curing_tests', function (Blueprint $table) {
             $table->increments('id');
             $table->string('shift');
             $table->string('serialNo');
@@ -32,6 +32,6 @@ class CreateCuringTestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('curing_tests');
+        Schema::connection('spc')->dropIfExists('curing_tests');
     }
 }

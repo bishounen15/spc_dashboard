@@ -13,7 +13,7 @@ class CreateSolderTempsTable extends Migration
      */
     public function up()
     {
-        Schema::create('solder_temps', function (Blueprint $table) {
+        Schema::connection('spc')->create('solder_temps', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('transID');
             $table->string('shift');
@@ -33,6 +33,6 @@ class CreateSolderTempsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('solder_temps');
+        Schema::connection('spc')->dropIfExists('solder_temps');
     }
 }

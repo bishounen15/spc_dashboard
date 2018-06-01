@@ -13,7 +13,7 @@ class CreateFrameSqBwsTable extends Migration
      */
     public function up()
     {
-        Schema::create('frame_sq_bws', function (Blueprint $table) {
+        Schema::connection('spc')->create('frame_sq_bws', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('qualTransID');
             $table->string('shift');
@@ -42,6 +42,6 @@ class CreateFrameSqBwsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('frame_sq_bws');
+        Schema::connection('spc')->dropIfExists('frame_sq_bws');
     }
 }

@@ -13,7 +13,7 @@ class CreateLaytecsTable extends Migration
      */
     public function up()
     {
-        Schema::create('laytecs', function (Blueprint $table) {
+        Schema::connection('spc')->create('laytecs', function (Blueprint $table) {
             $table->increments('id');
             $table->String('Date');
             $table->String('Laminator');
@@ -41,6 +41,6 @@ class CreateLaytecsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('laytecs');
+        Schema::connection('spc')->dropIfExists('laytecs');
     }
 }
