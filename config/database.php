@@ -63,6 +63,21 @@ return [
             'engine' => null,
         ],
 
+        'web_portal' => [
+            'driver' => 'mysql',
+            'host' => '192.168.128.7',
+            'port' => '3306',
+            'database' => 'spmmc00',
+            'username' => 'spmmc01',
+            'password' => 'password@01',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'database' => env('DB_DATABASE', database_path('database.sqlite')),

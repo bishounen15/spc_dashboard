@@ -2,6 +2,13 @@
 @section('content')
 <title>{{config('app.name', 'SOLARPH')}}</title>
 <div class="container">
+@guest
+<div class="row">
+  <div class="alert alert-danger col text-center">
+    <strong>You are not logged in.</strong>
+  </div>
+</div>
+@else
 <div class="row">
     <div class="col-4">
         {{-- style="width: 16rem;" --}}
@@ -120,5 +127,6 @@
                       </table>
         </div> --}}
 </div>
+@endguest
 </div>
 @endsection
