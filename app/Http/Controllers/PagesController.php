@@ -16,4 +16,7 @@ class PagesController extends Controller
     public function pulltest(){
         return view ('pages.pulltest');
     }
+    public function lamdata(){
+        return view ('pages.lamdata');
+    }
 }

@@ -17,14 +17,14 @@
                                     {{Form::label('Laminator', 'Laminator:')}}
                                 </div>    
                                 <div class="col-md-3">
-                                    {{Form::select('Laminator', array('Laminator 1' => 'Laminator 1', 'Laminator 2' => 'Laminator 2'),'Select Shift',['class'=>'form-control'])}}
+                                    {{Form::select('Laminator', array('Laminator 1' => 'Laminator 1', 'Laminator 2' => 'Laminator 2'),'',['class'=>'form-control','placeholder'=>'Select Laminator'])}}
                                     <small class="form-text text-danger">{{ $errors->first('Laminator') }}</small>
                                 </div>
                                 <div class="col-md-1">
                                         {{Form::label('Shift', 'Shift:')}}   
                                 </div>    
                                 <div class="col-md-3">
-                                 {{Form::select('Shift', array('Shift A' => 'Shift A', 'Shift B' => 'Shift B','Shift C' => 'Shift C'), '',['class'=>'form-control'])}}
+                                 {{Form::select('Shift', array('Shift A' => 'Shift A', 'Shift B' => 'Shift B','Shift C' => 'Shift C'),'',['class'=>'form-control','placeholder'=>'Select Shift'])}}
                                     <small class="form-text text-danger">{{ $errors->first('Shift') }}</small>
                                 </div>
                         </div><br>
@@ -78,38 +78,16 @@
         </div>
         <br>
         <div class="card">
-                <h5 class="card-header">Pull Test Details</h5>
+                <h5 class="card-header">Pull Test EVA to Glass Details</h5>
                     <div class="card-body">
                         <div class="row">
                                 <div class="col-md-1">
                                     {{Form::label('Site1', 'Site1:')}}
                                 </div>    
                                 <div class="col-md-2">
-                                    {{Form::text('PTEG1', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G'])}}
+                                    {{Form::text('PTEG1', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G', 'id'=>'PTEG1'])}}
                                     <small class="form-text text-danger">{{ $errors->first('PTEG1') }}</small>
                                 </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEGA', 'Average:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEGA', '', ['class' => 'form-control', 'placeholder'=>'E to G Average'])}}
-                                    
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEB1', 'PTEB1:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEB1', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('PTEB1') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEBA', 'Average:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEBA', '', ['class' => 'form-control', 'placeholder'=>'E to B Average'])}}
-                                </div>
-                        </div><br>  
-                        <div class="row">
                                 <div class="col-md-1">
                                     {{Form::label('Site2', 'Site2:')}}
                                 </div>    
@@ -118,24 +96,6 @@
                                     <small class="form-text text-danger">{{ $errors->first('PTEG2') }}</small>
                                 </div>
                                 <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                    
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEB2', 'PTEB2:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEB2', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('PTEB2') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                </div>
-                        </div><br>
-                        <div class="row">
-                                <div class="col-md-1">
                                     {{Form::label('Site3', 'Site3:')}}
                                 </div>    
                                 <div class="col-md-2">
@@ -143,47 +103,13 @@
                                     <small class="form-text text-danger">{{ $errors->first('PTEG3') }}</small>
                                 </div>
                                 <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                    
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEB3', 'PTEB3:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEB3', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('PTEB3') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                </div>
-                        </div><br>
-                        <div class="row">
-                                <div class="col-md-1">
                                     {{Form::label('Site4', 'Site4:')}}
                                 </div>    
                                 <div class="col-md-2">
                                     {{Form::text('PTEG4', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G'])}}
                                     <small class="form-text text-danger">{{ $errors->first('PTEG4') }}</small>
                                 </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                    
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEB4', 'PTEB4:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEB4', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('PTEB4') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                </div>
-                        </div><br>
+                        </div><br>  
                         <div class="row">
                                 <div class="col-md-1">
                                     {{Form::label('Site5', 'Site5:')}}
@@ -193,48 +119,12 @@
                                     <small class="form-text text-danger">{{ $errors->first('PTEG5') }}</small>
                                 </div>
                                 <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                    
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEB5', 'PTEB5:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEB5', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('PTEB5') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                </div>
-                        </div><br>
-                        <div class="row">
-                                <div class="col-md-1">
                                     {{Form::label('Site6', 'Site6:')}}
                                 </div>    
                                 <div class="col-md-2">
                                     {{Form::text('PTEG6', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G'])}}
                                     <small class="form-text text-danger">{{ $errors->first('PTEG6') }}</small>
                                 </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                    
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEB6', 'PTEB6:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEB6', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('PTEB6') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                </div>
-                        </div><br>
-                        <div class="row">
                                 <div class="col-md-1">
                                     {{Form::label('Site7', 'Site7:')}}
                                 </div>    
@@ -243,45 +133,11 @@
                                     <small class="form-text text-danger">{{ $errors->first('PTEG7') }}</small>
                                 </div>
                                 <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                    
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEB7', 'PTEB7:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEB7', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('PTEB7') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                </div>
-                        </div><br>
-                        <div class="row">
-                                <div class="col-md-1">
                                     {{Form::label('Site8', 'Site8:')}}
                                 </div>    
                                 <div class="col-md-2">
                                     {{Form::text('PTEG8', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G'])}}
                                     <small class="form-text text-danger">{{ $errors->first('PTEG8') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                    
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEB8', 'PTEB8:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEB8', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('PTEB8') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
                                 </div>
                         </div><br>
                         <div class="row">
@@ -293,24 +149,6 @@
                                     <small class="form-text text-danger">{{ $errors->first('PTEG9') }}</small>
                                 </div>
                                 <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                    
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('PTEB9', 'PTEB9:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('PTEB9', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('PTEB9') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                </div>    
-                                <div class="col-md-2">
-                                </div>
-                        </div><br>
-                        <div class="row">
-                                <div class="col-md-1">
                                     {{Form::label('Site10', 'Site10:')}}
                                 </div>    
                                 <div class="col-md-2">
@@ -318,26 +156,181 @@
                                     <small class="form-text text-danger">{{ $errors->first('PTEG10') }}</small>
                                 </div>
                                 <div class="col-md-1">
+                                    {{Form::label('Site11', 'Site11:')}}
                                 </div>    
                                 <div class="col-md-2">
-                                    
+                                    {{Form::text('PTEG11', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEG11') }}</small>
                                 </div>
                                 <div class="col-md-1">
-                                    {{Form::label('PTEB10', 'PTEB10:')}}
+                                    {{Form::label('Site12', 'Site12:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEG12', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEG12') }}</small>
+                                </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-md-1">
+                                {{Form::label('Site13', 'Site13:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                {{Form::text('PTEG13', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G'])}}
+                                <small class="form-text text-danger">{{ $errors->first('PTEG13') }}</small>
+                            </div>
+                            <div class="col-md-1">
+                                {{Form::label('Site14', 'Site14:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                {{Form::text('PTEG14', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G'])}}
+                                <small class="form-text text-danger">{{ $errors->first('PTEG14') }}</small>
+                            </div>
+                            <div class="col-md-1">
+                                {{Form::label('Site15', 'Site15:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                {{Form::text('PTEG15', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-G'])}}
+                                <small class="form-text text-danger">{{ $errors->first('PTEG15') }}</small>
+                            </div>
+                            <div class="col-md-1">
+                                {{Form::label('PTEGA', 'Average:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                {{Form::text('PTEGA', '', ['class' => 'form-control', 'placeholder'=>'E to G Average'])}}
+                                <small class="form-text text-danger">{{ $errors->first('PTEGA') }}</small>
+                            </div>
+                        </div><br>
+                    </div>
+            </div><br>
+            <div class="card">
+                <h5 class="card-header">Pull Test EVA to Backsheet Details</h5>
+                    <div class="card-body">
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site1', 'Site1:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB1', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB1') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('Site2', 'Site2:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB2', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB2') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('Site3', 'Site3:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB3', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB3') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('Site4', 'Site4:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB4', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB4') }}</small>
+                                </div>
+                        </div><br>  
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site5', 'Site5:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB5', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB5') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('Site6', 'Site6:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB6', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB6') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('Site7', 'Site7:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB7', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB7') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('Site8', 'Site8:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB8', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB8') }}</small>
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site9', 'Site9:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB9', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB9') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('Site10', 'Site10:')}}
                                 </div>    
                                 <div class="col-md-2">
                                     {{Form::text('PTEB10', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
                                     <small class="form-text text-danger">{{ $errors->first('PTEB10') }}</small>
                                 </div>
                                 <div class="col-md-1">
+                                    {{Form::label('Site11', 'Site11:')}}
                                 </div>    
                                 <div class="col-md-2">
+                                    {{Form::text('PTEB11', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB11') }}</small>
                                 </div>
+                                <div class="col-md-1">
+                                    {{Form::label('Site12', 'Site12:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('PTEB12', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('PTEB12') }}</small>
+                                </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-md-1">
+                                {{Form::label('Site13', 'Site13:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                {{Form::text('PTEB13', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                <small class="form-text text-danger">{{ $errors->first('PTEB13') }}</small>
+                            </div>
+                            <div class="col-md-1">
+                                {{Form::label('Site14', 'Site14:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                {{Form::text('PTEB14', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                <small class="form-text text-danger">{{ $errors->first('PTEB14') }}</small>
+                            </div>
+                            <div class="col-md-1">
+                                {{Form::label('Site15', 'Site15:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                {{Form::text('PTEB15', '', ['class' => 'form-control', 'placeholder'=>'Pull Test E-B'])}}
+                                <small class="form-text text-danger">{{ $errors->first('PTEB15') }}</small>
+                            </div>
+                            <div class="col-md-1">
+                                {{Form::label('PTEBA', 'Average:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                {{Form::text('PTEBA', '', ['class' => 'form-control', 'placeholder'=>'E to B Average'])}}
+                                <small class="form-text text-danger">{{ $errors->first('PTEBA') }}</small>
+                                
+                            </div>
                         </div><br>
                         {{Form::submit('Submit', ['class' => 'btn btn-primary'])}}   
                         {!! Form::close() !!}
                     </div>
             </div>
     </div>
+    
                     
 @endsection

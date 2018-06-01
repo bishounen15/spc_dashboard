@@ -18,6 +18,7 @@
 Route::get('/', 'PagesController@index');
 Route::get('/Summary', 'PagesController@Summary');
 Route::get('/pulltest', 'PagesController@pulltest');
+Route::get('/lamdata', 'PagesController@lamdata');
 
 Route::resource('lam', 'LamController');
 Route::resource('laytec', 'LaytecController');

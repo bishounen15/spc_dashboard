@@ -414,7 +414,7 @@
                                     {{Form::label('Site14', 'Site14:')}}
                                 </div>    
                                 <div class="col-md-2">
-                                    {{Form::text('LXM14', $lam->LXM14, ['class' => 'form-control', 'placeholder'=>'LXM14' , 'id' => 'LXM14'])}}
+                                    {{Form::text('LXM14', $lam->LXM14, ['class' => 'form-control', 'placeholder'=>'LXM14' , 'id' => 'LXM14','onkeyup'=>'calc()'])}}
                                     <small class="form-text text-danger">{{ $errors->first('LXM14') }}</small>
                                 </div>
                                 <div class="col-md-1">
@@ -464,7 +464,7 @@
                                     {{Form::label('Site16', 'Site16:')}}
                                 </div>    
                                 <div class="col-md-2">
-                                    {{Form::text('LXM16', $lam->LXM16, ['class' => 'form-control', 'placeholder'=>'LXM16','id'=>'LXM16'])}}
+                                    {{Form::text('LXM16', $lam->LXM16, ['class' => 'form-control', 'placeholder'=>'LXM16','id'=>'LXM16', 'onkeyup'=>'calc()'])}}
                                     <small class="form-text text-danger">{{ $errors->first('LXM16') }}</small>
                                 </div>
                                 <div class="col-md-1">

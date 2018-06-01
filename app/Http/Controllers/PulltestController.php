@@ -25,6 +25,7 @@ class PulltestController extends Controller
      */
     public function create()
     {
+       
         return view ('posts.pulltest');
     }
 
@@ -55,7 +56,11 @@ class PulltestController extends Controller
             'PTEG7' => 'required',
             'PTEG8' => 'required',
             'PTEG9' => 'required',
-            'PTEG10' => 'required',
+            'PTEG11' => 'required',
+            'PTEG12' => 'required',
+            'PTEG13' => 'required',
+            'PTEG14' => 'required',
+            'PTEG15' => 'required',
             'PTEGA' => 'required',
             'PTEB1' => 'required',
             'PTEB2' => 'required',
@@ -67,6 +72,11 @@ class PulltestController extends Controller
             'PTEB8' => 'required',
             'PTEB9' => 'required',
             'PTEB10' => 'required',
+            'PTEB11' => 'required',
+            'PTEB12' => 'required',
+            'PTEB13' => 'required',
+            'PTEB14' => 'required',
+            'PTEB15' => 'required',
             'PTEBA' => 'required',
         ]);
 
@@ -91,6 +101,11 @@ class PulltestController extends Controller
         $pulltest->PTEG8 = $request->input('PTEG8');
         $pulltest->PTEG9 = $request->input('PTEG9');
         $pulltest->PTEG10 = $request->input('PTEG10');
+        $pulltest->PTEG11 = $request->input('PTEG11');
+        $pulltest->PTEG12 = $request->input('PTEG12');
+        $pulltest->PTEG13 = $request->input('PTEG13');
+        $pulltest->PTEG14 = $request->input('PTEG14');
+        $pulltest->PTEG15 = $request->input('PTEG15');
         $pulltest->PTEGA = $request->input('PTEGA');
         $pulltest->PTEB1 = $request->input('PTEB1');
         $pulltest->PTEB2 = $request->input('PTEB2');
@@ -102,6 +117,11 @@ class PulltestController extends Controller
         $pulltest->PTEB8 = $request->input('PTEB8');
         $pulltest->PTEB9 = $request->input('PTEB9');
         $pulltest->PTEB10 = $request->input('PTEB10');
+        $pulltest->PTEB11 = $request->input('PTEB11');
+        $pulltest->PTEB12 = $request->input('PTEB12');
+        $pulltest->PTEB13 = $request->input('PTEB13');
+        $pulltest->PTEB14 = $request->input('PTEB14');
+        $pulltest->PTEB15 = $request->input('PTEB15');
         $pulltest->PTEBA = $request->input('PTEBA');
         $pulltest->save();
         return redirect('/pulltest/create')->with('success', 'Successfully Created');
