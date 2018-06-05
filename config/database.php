@@ -65,11 +65,11 @@ return [
 
         'web_portal' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.7',
+            'host' => '192.168.128.9',
             'port' => '3306',
             'database' => 'spmmc00',
-            'username' => 'spmmc01',
-            'password' => 'password@01',
+            'username' => 'spmmcadmin',
+            'password' => 'P@ssw0rd@SQL',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
