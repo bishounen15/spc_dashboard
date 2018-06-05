@@ -9,11 +9,11 @@
             <div class="row">
             {{-- <div class="col-md-12"> --}}
             <div class="card">
-            <div class="card-header">LAMINATOR MONITORING</div> 
+            <div class="card-header">PULLTEST MONITORING</div> 
             {{-- <div class="card"> --}}
             <div class="card-body"> 
             <a href="/Summary" class="btn btn-success">Go Back</a>
-            <a href="/lam/create" class="btn btn-primary">ADD LXM DATA</a>
+            <a href="/pulltest/create" class="btn btn-primary">ADD PULLTEST DATA</a>
             <br><br>
             <table class="table table-striped">
             <tr>
@@ -27,8 +27,8 @@
             <th>EVA&nbsp;&nbsp;&nbsp;</th>
             <th>Backsheet&nbsp;&nbsp;&nbsp;</th>
             <th>Location&nbsp;&nbsp;&nbsp;</th>
-            <th>LXM Average&nbsp;&nbsp;</th>
-            <th>RELGEL Average&nbsp;&nbsp;</th>
+            <th>EVA-Glass Avrge&nbsp;&nbsp;&nbsp;</th>
+            <th>EVA-Backsheet Avrge&nbsp;&nbsp;&nbsp;</th>
             </tr>
             @if(count($alldata) > 0)
             <?php $i=0 ?>
@@ -45,8 +45,8 @@
             <td>{{$pulltest->EVA}}</td>
             <td>{{$pulltest->Backsheet}}</td>
             <td>{{$pulltest->Location}}</td>
-            <td>{{$pulltest->LXMA}}</td>
-            <td>{{$pulltest->RelGelA}}</td>
+            <td>{{$pulltest->PTEGA}}</td>
+            <td>{{$pulltest->PTEBA}}</td>
             </tr>
             @endforeach 
             @else

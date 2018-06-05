@@ -15,7 +15,10 @@ class LamController extends Controller
      */
     public function index()
     {
-        //
+        $posts = DB::select('SELECT * FROM lams ORDER BY ID DESC'); 
+        //$posts = Post::orderBy('created_at','desc')->paginate(2);
+        return view('pages.lamdata')  
+                    ->with('alldata',$posts);
     }
 
     /**
@@ -79,7 +82,7 @@ class LamController extends Controller
             'Shift' => 'required',
             'Recipe' => 'required|alpha_num|max:25',
             'Glass' => 'required|alpha_num|max:25',
-            'ModuleID' => 'required|alpha_num|max:25',
+            'ModuleID' => 'required|alpha_num|max:15|min:13',
             'EVA' => 'required|alpha_num|max:25',
             'Backsheet' => 'required|alpha_num|max:25',
             'Location' => 'required|alpha_num|max:25',
@@ -167,7 +170,7 @@ class LamController extends Controller
         // dd($lam);
         Lam::create($lam);
 
-        return redirect('/lam/create')->with('success', 'Successfully Created');
+        return redirect('/lamdata')->with('success', 'Successfully Created');
     }
 
     /**

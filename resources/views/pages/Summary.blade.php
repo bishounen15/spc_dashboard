@@ -11,7 +11,7 @@
               </div>
               <ul class="list-group list-group-flush">
                 <li class="list-group-item"><a href ="/lamdata">LXM Data Input</a></li>
-                <li class="list-group-item"><a href ="/pulltest/create">Pull Test Data Input</a></li>
+                <li class="list-group-item"><a href ="/pulltestdata">Pull Test Data Input</a></li>
               </ul>
             </div>
 

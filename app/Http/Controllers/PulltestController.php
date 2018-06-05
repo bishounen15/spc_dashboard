@@ -13,9 +13,14 @@ class PulltestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    //eto kapagwala kang nilagay kundi /pulltestdata lang
+    //Dito showing ng lahat ng list
     public function index()
     {
-        //
+        $posts = DB::select('SELECT * FROM pull_tests'); 
+        //$posts = Post::orderBy('created_at','desc')->paginate(2);
+        return view('pages.pulltestdata')  
+                    ->with('alldata',$posts);
     }
 
     /**
@@ -23,10 +28,13 @@ class PulltestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
+    //eto kapag /pulltestdata/create
+    //Dito ang create form.
     public function create()
     {
        
-        return view ('posts.pulltest');
+        return view('posts.pulltest') ;
     }
 
     /**
@@ -35,48 +43,50 @@ class PulltestController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    //Dito mo isusubmit ung post mo sa form n gnawa mo sa create
+    //PulltestController@store ung papasahan
     public function store(Request $request)
     {
         $this->validate($request, [
             'Date' => 'required',
             'Laminator' => 'required',
             'Shift' => 'required',
-            'Recipe' => 'required',
-            'Glass' => 'required',
-            'ModuleID' => 'required',
+            'Recipe' => 'required|alpha_num|max:25',
+            'Glass' => 'required|alpha_num|max:25',
+            'ModuleID' => 'required|alpha_num|max:15|min:13',
             'EVA' => 'required',
-            'Backsheet' => 'required',
-            'Location' => 'required',
-            'PTEG1' => 'required',
-            'PTEG2' => 'required',
-            'PTEG3' => 'required',
-            'PTEG4' => 'required',
-            'PTEG5' => 'required',
-            'PTEG6' => 'required',
-            'PTEG7' => 'required',
-            'PTEG8' => 'required',
-            'PTEG9' => 'required',
-            'PTEG11' => 'required',
-            'PTEG12' => 'required',
-            'PTEG13' => 'required',
-            'PTEG14' => 'required',
-            'PTEG15' => 'required',
+            'Backsheet' => 'required|alpha_num|max:25',
+            'Location' => 'required|alpha_num|max:25',
+            'PTEG1' => 'required|not_in:0|numeric',
+            'PTEG2' => 'required|not_in:0|numeric',
+            'PTEG3' => 'required|not_in:0|numeric',
+            'PTEG4' => 'required|not_in:0|numeric',
+            'PTEG5' => 'required|not_in:0|numeric',
+            'PTEG6' => 'required|not_in:0|numeric',
+            'PTEG7' => 'required|not_in:0|numeric',
+            'PTEG8' => 'required|not_in:0|numeric',
+            'PTEG9' => 'required|not_in:0|numeric',
+            'PTEG11' => 'required|not_in:0|numeric',
+            'PTEG12' => 'required|not_in:0|numeric',
+            'PTEG13' => 'required|not_in:0|numeric',
+            'PTEG14' => 'required|not_in:0|numeric',
+            'PTEG15' => 'required|not_in:0|numeric',
             'PTEGA' => 'required',
-            'PTEB1' => 'required',
-            'PTEB2' => 'required',
-            'PTEB3' => 'required',
-            'PTEB4' => 'required',
-            'PTEB5' => 'required',
-            'PTEB6' => 'required',
-            'PTEB7' => 'required',
-            'PTEB8' => 'required',
-            'PTEB9' => 'required',
-            'PTEB10' => 'required',
-            'PTEB11' => 'required',
-            'PTEB12' => 'required',
-            'PTEB13' => 'required',
-            'PTEB14' => 'required',
-            'PTEB15' => 'required',
+            'PTEB1' => 'required|not_in:0|numeric',
+            'PTEB2' => 'required|not_in:0|numeric',
+            'PTEB3' => 'required|not_in:0|numeric',
+            'PTEB4' => 'required|not_in:0|numeric',
+            'PTEB5' => 'required|not_in:0|numeric',
+            'PTEB6' => 'required|not_in:0|numeric',
+            'PTEB7' => 'required|not_in:0|numeric',
+            'PTEB8' => 'required|not_in:0|numeric',
+            'PTEB9' => 'required|not_in:0|numeric',
+            'PTEB10' => 'required|not_in:0|numeric',
+            'PTEB11' => 'required|not_in:0|numeric',
+            'PTEB12' => 'required|not_in:0|numeric',
+            'PTEB13' => 'required|not_in:0|numeric',
+            'PTEB14' => 'required|not_in:0|numeric',
+            'PTEB15' => 'required|not_in:0|numeric',
             'PTEBA' => 'required',
         ]);
 
@@ -99,7 +109,7 @@ class PulltestController extends Controller
         $pulltest->PTEG6 = $request->input('PTEG6');
         $pulltest->PTEG7 = $request->input('PTEG7');
         $pulltest->PTEG8 = $request->input('PTEG8');
-        $pulltest->PTEG9 = $request->input('PTEG9');
+        $pulltest->PTEG9 = $request->input('PTEG9');    
         $pulltest->PTEG10 = $request->input('PTEG10');
         $pulltest->PTEG11 = $request->input('PTEG11');
         $pulltest->PTEG12 = $request->input('PTEG12');
@@ -124,7 +134,7 @@ class PulltestController extends Controller
         $pulltest->PTEB15 = $request->input('PTEB15');
         $pulltest->PTEBA = $request->input('PTEBA');
         $pulltest->save();
-        return redirect('/pulltest/create')->with('success', 'Successfully Created');
+        return redirect('/pulltest')->with('success', 'Successfully Created');
     }
 
     /**
@@ -133,9 +143,26 @@ class PulltestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //Dito kapag individual showing
+    //for example ung unang item need mo iview ung details.
+    //kaya sya may $id.
     public function show($id)
     {
-        //
+        //Pre eto syntax nyan Model::where('anongcolumn ung gagamitin mo s where','= or like or between basta eto ung operand','tpos ung value nahahanapin mo')
+        //$variable = Model::where('column','=','value')
+        //->get();
+        //sample
+        //$employeenapogi = Employee::where('name','LIKE','%Jhay%')->get();
+
+        //sample ng OR statement
+        //$employeenapogi = Employee::where('name','LIKE','%Jhay%')
+        //->orWhere('name','LIKE','%Jerremy%')
+        //->get();
+
+        //sample ng AND statement
+        //$employeenapogi = Employee::where('name','LIKE','%Jhay%')
+        //->where('name','LIKE','%Jerremy%')
+        //->get();  
     }
 
     /**
@@ -144,6 +171,7 @@ class PulltestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //Dito kapag edit nmn. parang create+show form. kse maguupdate k ng info
     public function edit($id)
     {
         //
@@ -156,6 +184,8 @@ class PulltestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //Dito mo ipopost ung gnawa mo sa edit.
+    //PulltestController@update ung action
     public function update(Request $request, $id)
     {
         //
@@ -167,6 +197,8 @@ class PulltestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+     //Dito kung delete
     public function destroy($id)
     {
         //
