@@ -13,7 +13,7 @@
         <a href="/Summary" class="btn btn-secondary">Go Back</a>
         <a href="/Frame/create" class="btn btn-success">Add Record</a>
         
-            <table class="table table-striped">
+            <table class="table table-striped" style="font-size:12px;">
             <tr>
                 <th>Seq</th>
                
@@ -29,15 +29,18 @@
                 <th>Bead <br/>Scale</th>
                 <th>Facility <br/>Supply</th>
                 <th>Main <br/>Pressure</th>
-                <th>Target</th>
+                <th>Target <br/>(+-)10</th>
+                <th>Qual <br/>Result</th>
                 <th>Remarks</th>
             </tr>
 
-             
+        
                 @if(count($frameLogs) > 0)
+        <?php $i=0 ?>
                 @foreach($frameLogs as $potLog)
+                <?php $i++ ?>
                  <tr>
-                    <td>{{$potLog->id}}</td>
+                 <td>{{ $i /*$potLog->id */ }}</td>
                     <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->date}}</td>
                     <td>{{$potLog->qualTime}}</td>
@@ -51,7 +54,8 @@
                     <td>{{$potLog->facilitySupply}}</td>
                     <td>{{$potLog->mainPressure}}</td>
                     <td>{{$potLog->TargetParam}}</td>
-                    <td>{{$potLog->remarks}}</td>
+                    <td>{{$potLog->qualResult}}</td>
+                    <td style="font-size:10px;">{{$potLog->remarks}}</td>
                  </tr>
                  <tr>
                     <td> <td>

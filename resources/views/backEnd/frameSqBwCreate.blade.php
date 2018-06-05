@@ -145,7 +145,14 @@
     $('#L1' ).change(function(){
         if($('#L1').val()!=''){
            if( parseFloat( $('#L1').val())==parseFloat( $('#L2').val()) && parseFloat( $('#L1').val())==parseFloat( $('#L3').val()))
-           { $('#LDiff').val('0'); }else{$('#LDiff').val('1');}
+           { $('#LDiff').val('0'); }
+           else
+           {  //$('#LDiff').val('1');
+           if( parseFloat( $('#L1').val()) < parseFloat( $('#L2').val()) && parseFloat( $('#L2').val()) > parseFloat( $('#L3').val()) )
+          {   $('#LDiff').val('1'); } else {   $('#LDiff').val('0'); }
+          
+           
+           }
             
         }else{
             $('#L1').val(L1);
@@ -156,8 +163,14 @@
     $('#L2' ).change(function(){
         if($('#L2').val()!=''){
            if( parseFloat( $('#L2').val())==parseFloat( $('#L1').val()) && parseFloat( $('#L2').val())==parseFloat( $('#L3').val()))
-           { $('#LDiff').val('0'); }else{$('#LDiff').val('1');}
-            
+           { $('#LDiff').val('0'); }
+           else
+           {  // $('#LDiff').val('1');
+           if( parseFloat( $('#L1').val()) < parseFloat( $('#L2').val()) && parseFloat( $('#L2').val()) > parseFloat( $('#L3').val()) )
+           {   $('#LDiff').val('1'); } else {   $('#LDiff').val('0'); }
+          
+           
+           }
         }else{
             $('#L2').val(L1);
         }
@@ -167,7 +180,14 @@
     $('#L3' ).change(function(){
         if($('#L3').val()!=''){
            if( parseFloat( $('#L3').val())==parseFloat( $('#L1').val()) && parseFloat( $('#L3').val())==parseFloat( $('#L2').val()))
-           { $('#LDiff').val('0'); }else{$('#LDiff').val('1');}
+           { $('#LDiff').val('0'); }
+           else
+           { // $('#LDiff').val('1');
+           if( parseFloat( $('#L1').val()) < parseFloat( $('#L2').val()) && parseFloat( $('#L2').val()) > parseFloat( $('#L3').val()) )
+           {   $('#LDiff').val('1'); } else {   $('#LDiff').val('0'); }
+          
+           
+           }
             
         }else{
             $('#L3').val(L1);
