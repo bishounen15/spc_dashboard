@@ -28,7 +28,8 @@ Route::resource('flash', 'FlashController');
 
 Route::resource('matrixpulltest', 'MatrixPullTestsController');
 Route::resource('matsolder', 'MatSolderingPostsController');
-// Route::resource('pulltest', 'MatrixpulltestController');
+Route::resource('offlinebtob', 'OfflineBtoBPullTestController');
+Route::resource('offlinematsolder', 'OfflineMatSolderingPostsController');
 
 Route::resource('Potting','PottingController');
 Route::resource('Curing','CuringController');

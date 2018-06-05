@@ -40,20 +40,38 @@
                 </div>
             {{-- </div> --}}
     </div>
-    <div class="col-4">
-        {{-- style="width: 16rem;" --}}
-        <div class="card">
-                <div class="card-header">
-                  MATRIX
+      <div class="col-4"> 
+          {{-- style="width: 16rem;" --}}
+          <div class="card">
+                  <div class="card-header">
+                    MATRIX ASSY
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><a href ="/matrixpulltest">Ribbon-to-Busbar Pull Test</a></li>
+                    <li class="list-group-item"><a href ="/matsolder">Matrix Soldering Temp</a></li>
+                  </ul>
                 </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item"><a href ="/matrixpulltest/create">Pull Test</a></li>
-                  <li class="list-group-item"><a href ="/matsolder/create">Soldering</a></li>
-                </ul>
-              </div>
-    </div>
-
-    <div class="col-4">
+  
+              {{-- <div class="col-3"> --}}
+              <br>
+              {{-- style="width: 16rem;" --}}
+                <div class="card"> 
+                        <div class="card-header">
+                        OFFLINE/MATERIAL PREP
+                        </div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item"><a href ="/offlinebtob">Busbar-to-Busbar Pull Test</a></li>
+                          <li class="list-group-item"><a href ="/offlinematsolder">Offline Matrix Soldering Temp</a></li>
+                        </ul>
+                </div>
+              <br>
+              
+              <br>
+              {{-- style="width: 16rem;" --}}
+            
+              <br>
+      </div> 
+     <div class="col-4">
     {{-- style="width:26rem;" --}}
     <div class="card">
         <div class="card-header">Back End</div>
@@ -66,7 +84,6 @@
           <li class="list-group-item"><a href="/Potting">Potting</a></li>
           <li class="list-group-item"><a href="/Curing">Curing</a></li>
         </ul>
-    </div>
     </div>
         {{-- <div class="col-9">
                 <table class="table">

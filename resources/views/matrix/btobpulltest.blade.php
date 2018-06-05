@@ -7,11 +7,11 @@
         <div class="row">
             {{-- <div class="col-md-12"> --}}
                 <div class="card">
-            <div class="card-header">Ribbon to Busbar Pulltest Monitoring</div> 
+            <div class="card-header">Busbar to Busbar Pulltest Monitoring</div> 
             {{-- <div class="card"> --}}
         <div class="card-body">        
         <a href="/Summary" class="btn btn-secondary">Go Back</a>
-        <a href="/matrixpulltest/create" class="btn btn-success">Add Record</a>
+        <a href="/offlinebtob/create" class="btn btn-success">Add Record</a>
         
             <table class="table table-striped" style="font-size:12px;">
             <tr>
@@ -33,9 +33,9 @@
             </tr>
 
         
-                @if(count($rtobpulltest) > 0)
+                @if(count($btobpulltest) > 0)
         <?php $i=0 ?>
-                @foreach($rtobpulltest as $potLog)
+                @foreach($btobpulltest as $potLog)
                 <?php $i++ ?>
                  <tr>
                  <td>
