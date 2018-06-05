@@ -15,9 +15,9 @@ class MatrixPullTestsController extends Controller
      */
     public function index()
     {
-        $post = MatrixPullTest::all();
-        $posts = DB::select('SELECT * FROM matrix_pull_tests');
-        return view('matrix.index')->with('posts', $post);
+       // $post = MatrixPullTest::all();
+        $posts = DB::select('SELECT * FROM rtobpull');
+        return view('matrix.matrixpulltest')->with('rtobpulltest', $posts);
     }
 
     /**
@@ -27,7 +27,7 @@ class MatrixPullTestsController extends Controller
      */ 
     public function create()
     {
-        return view('matrix.create');
+        return view('matrix.creatematrixpulltest');
     }
 
     /**
@@ -46,11 +46,11 @@ class MatrixPullTestsController extends Controller
                 'node'=> 'required',
                 'supplier' => 'required',
                 'site1' => 'required',
-                'pulltest1' => 'required',
+                'pulltest1' => 'required|numeric',
                 'site2' => 'required',
-                'pulltest2' => 'required',
+                'pulltest2' => 'required|numeric',
                 'site3' => 'required',
-                'pulltest3' => 'required',
+                'pulltest3' => 'required|numeric',
                 'remarks' => 'required',
                 'average' => 'required'
             ]);
@@ -73,7 +73,7 @@ class MatrixPullTestsController extends Controller
         $post->Average = $request->input('average');
 
         $post->save ();
-        return redirect('/matrixpulltest/create')->with('success', 'Data Created');
+        return redirect('/matrixpulltest')->with('success', 'Data Created');
     }
 
     /**
@@ -118,9 +118,13 @@ class MatrixPullTestsController extends Controller
         $post->string = $request->input('station');
         $post->string = $request->input('shift');
         $post->string = $request->input('node');
-        $post->string = $request->input('site');
-        $post->string = $request->input('temp');
-        $post->string = $request->input('pull test');
+        $post->string = $request->input('site1');
+        $post->string = $request->input('pulltest1');
+        $post->string = $request->input('site2');
+        $post->string = $request->input('pulltest2');
+        $post->string = $request->input('site3');
+        $post->string = $request->input('pulltest3');
+        $post->string = $request->input('average');
         $post->string = $request->input('remarks');
         $post->save();
         return redirect('/matrix/create')->with('success', 'Data Updated');

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\MatSolderingPost;
+use App\OfflineBtoBPullTestPost;
 
 
-class MatSolderingPostsController extends Controller
+class OfflineBtoBPullTestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class MatSolderingPostsController extends Controller
     public function index()
     {
         //$post = Post::all();
-        $posts = DB::select('SELECT * FROM mat_soldering');
-        return view('matrix.matsolderingtemp')->with('matsolderingtemp', $posts);
+        $posts = DB::select('SELECT * FROM btobpulltest');
+        return view('matrix.btobpulltest')->with('btobpulltest', $posts);
     }
 
     /**
@@ -27,13 +27,13 @@ class MatSolderingPostsController extends Controller
      */
     public function create()
     {
-        return view('matrix.creatematsoldering');
+        return view('matrix.createofflinebtobpulltest');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $request   
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -45,29 +45,35 @@ class MatSolderingPostsController extends Controller
                 'shift' => 'required',
                 'node'=> 'required',
                 'supplier' => 'required',
-                'temp1' => 'required|numeric',
-                'temp2' => 'required|numeric',
-                'temp3' => 'required|numeric',
+                'site1' => 'required',
+                'pulltest1' => 'required|numeric',
+                'site2' => 'required',
+                'pulltest2' => 'required|numeric',
+                'site3' => 'required',
+                'pulltest3' => 'required|numeric',
                 'remarks' => 'required',
                 'average' => 'required',
             ]);
 
         //Create Post
         //$post = $request->post;
-        $post = new MatSolderingPost;
+        $post = new OfflineBtoBPullTestPost;
         $post->Station = $request->input('station');
         $post->Location = $request->input('location');
         $post->Shift = $request->input('shift');
         $post->Node = $request->input('node');
         $post->Supplier = $request->input('supplier');
-        $post->temp1 = $request->input('temp1');
-        $post->temp2 = $request->input('temp2');
-        $post->temp3 = $request->input('temp3');
+        $post->Site1 = $request->input('site1');
+        $post->PullTest1 = $request->input('pulltest1');
+        $post->Site2 = $request->input('site2');
+        $post->PullTest2 = $request->input('pulltest2');
+        $post->Site3 = $request->input('site3');
+        $post->PullTest3 = $request->input('pulltest3');
         $post->Remarks = $request->input('remarks');
         $post->Average = $request->input('average');
         $post->created_at = $request->input('date');
         $post->save ();
-        return redirect('/matsolder')->with('success', 'Data Created');
+        return redirect('/offlinebtob')->with('success', 'Data Created');
     }
 
     /**
@@ -89,8 +95,8 @@ class MatSolderingPostsController extends Controller
      */
     public function edit($id)
     {
-        $post = MatSolderingPost::find($id);
-        return view('pages.about')->with('matsolderingpost', $post);
+        $post = OfflineBtoBPullTestPost::find($id);
+        return view('pages.about')->with('offlinebtobpulltest', $post);
     }
 
     /**
@@ -105,20 +111,21 @@ class MatSolderingPostsController extends Controller
         //Validate
         
         //Create Post
-        $post = MatSolderingPost::find($id);
+        $post = OfflineBtoBPullTest::find($id);
         $post->string = $request->input('location');
         $post->string = $request->input('station');
         $post->string = $request->input('shift');
         $post->string = $request->input('node');
-        $post->string = $request->input('supplier');
-        $post->string = $request->input('temp1');
-        $post->string = $request->input('temp2');
-        $post->string = $request->input('temp3');
+        $post->string = $request->input('site1');
+        $post->string = $request->input('pulltest1');
+        $post->string = $request->input('site2');
+        $post->string = $request->input('pulltest2');
+        $post->string = $request->input('site3');
+        $post->string = $request->input('pulltest3');
+        $post->string = $request->input('average');
         $post->string = $request->input('remarks');
-        $post->float = $request->input('average');
-        $post->string = $request->input('date');
         $post->save();
-        return redirect('/matsolderingposts')->with('success', 'Data Updated');
+        return redirect('/offlinebtobpulltest')->with('success', 'Data Updated');
     }
 
     /**
@@ -129,8 +136,8 @@ class MatSolderingPostsController extends Controller
      */
     public function destroy($id)
     {
-        $post = MatSolderingPost::find($id);
+        $post = OfflineBtoBPullTest::find($id);
         $post->delete();
-        return redirect('/matsolderingposts')->with('success', 'Data Deleted');
+        return redirect('/offlinebtobpulltest')->with('success', 'Data Deleted');
     }
 }

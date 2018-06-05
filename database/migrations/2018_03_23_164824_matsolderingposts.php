@@ -20,11 +20,8 @@ class MatsolderingPosts extends Migration
             $table->string('Shift');
             $table->string('Supplier');
             $table->string('Node');
-            $table->integer('Site1');
             $table->float('Temp1');
-            $table->integer('Site2');
             $table->float('Temp2');
-            $table->integer('Site3');
             $table->float('Temp3');
             $table->float('Average');
             $table->string('Remarks');

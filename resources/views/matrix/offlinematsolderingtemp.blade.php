@@ -7,11 +7,11 @@
         <div class="row">
             {{-- <div class="col-md-12"> --}}
                 <div class="card">
-            <div class="card-header">Ribbon to Busbar Pulltest Monitoring</div> 
+            <div class="card-header">Offline Matrix Soldering Temp Monitoring</div> 
             {{-- <div class="card"> --}}
         <div class="card-body">        
         <a href="/Summary" class="btn btn-secondary">Go Back</a>
-        <a href="/matrixpulltest/create" class="btn btn-success">Add Record</a>
+        <a href="/offlinematsolder/create" class="btn btn-success">Add Record</a>
         
             <table class="table table-striped" style="font-size:12px;">
             <tr>
@@ -19,23 +19,20 @@
                 <th>Station</th>
                 <th>Location</th>
                 <th>Shift</th>
-                <th>Node</th>
                 <th>Supplier</th>
-                <th>Site 1</th>
-                <th>Pull Test 1</th>
-                <th>Site 2</th>
-                <th>Pull Test 2</th>
-                <th>Site 3</th>
-                <th>Pull Test 3</th>
+                <th>Node</th>
+                <th>Temp 1</th>
+                <th>Temp 2</th>
+                <th>Temp 3</th>
                 <th>Remarks</th>
                 <th>Average</th>
                 <th>Date</th>
             </tr>
 
         
-                @if(count($rtobpulltest) > 0)
+                @if(count($offlinematsolderingtemp) > 0)
         <?php $i=0 ?>
-                @foreach($rtobpulltest as $potLog)
+                @foreach($offlinematsolderingtemp as $potLog)
                 <?php $i++ ?>
                  <tr>
                  <td>
@@ -44,12 +41,9 @@
                     <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->node}}</td>
                     <td>{{$potLog->supplier}}</td>
-                    <td>{{$potLog->site1}}</td>
-                    <td>{{$potLog->pulltest1}}</td>
-                    <td>{{$potLog->site2}}</td>
-                    <td>{{$potLog->pulltest2}}</td>
-                    <td>{{$potLog->site3}}</td>
-                    <td>{{$potLog->pulltest3}}</td>
+                    <td>{{$potLog->temp1}}</td>
+                    <td>{{$potLog->temp2}}</td>
+                    <td>{{$potLog->temp3}}</td>
                     <td>{{$potLog->remarks}}</td>
                     <td style="font-size:12px;">{{$potLog->average}}</td>
                     <td>{{$potLog->created_at}}</td>

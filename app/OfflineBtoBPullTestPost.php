@@ -4,11 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MatrixPullTest extends Model
+class OfflineBtoBPullTestPost extends Model
 {
     // Table Name
-    protected $connection = 'spc';
-    protected $table = 'rtobpull';
+    protected $table = 'btobpulltest';
     //Primary Key
     public $primarykey = 'id';
     //Timestamps
