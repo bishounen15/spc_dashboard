@@ -13,7 +13,16 @@ class PagesController extends Controller
     public function Summary(){
         return view ('pages.Summary');
     }
+    
     public function pulltest(){
         return view ('pages.pulltest');
+    }
+
+    public function apps(){
+        return view ('pages.apps');
+    }
+
+    public function link(){
+        return view ('pages.link');
     }
 }

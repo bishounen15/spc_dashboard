@@ -34,7 +34,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        @guest
+                        @else
+                            <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li>
+                        @endguest
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -42,7 +45,8 @@
                         <!-- Authentication Links -->
                         @guest
                             <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
-                            <li><a class="nav-link"     href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                            {{-- <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li> --}}
+                            <li><a class="nav-link" href="{{ route('portal_link') }}">{{ __('Link Portal Account') }}</a></li>
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
