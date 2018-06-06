@@ -13,7 +13,7 @@ class CreateOfflinematsolderingTable extends Migration
      */
     public function up()
     {
-        Schema::create('offlinematsoldering', function (Blueprint $table) {
+        Schema::connection('spc')->create('offlinematsoldering', function (Blueprint $table) {
             $table->increments('id');
             $table->String('station');
             $table->String('location');
@@ -36,6 +36,6 @@ class CreateOfflinematsolderingTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offlinematsoldering');
+        Schema::connection('spc')->dropIfExists('offlinematsoldering');
     }
 }

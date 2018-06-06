@@ -13,7 +13,7 @@ class CreateBtobpulltestTable extends Migration
      */
     public function up()
     {
-        Schema::create('btobpulltest', function (Blueprint $table) {
+        Schema::connection('spc')->create('btobpulltest', function (Blueprint $table) {
             $table->increments('id');
             $table->String('station');
             $table->String('location');
@@ -39,6 +39,6 @@ class CreateBtobpulltestTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('btobpulltest');
+        Schema::connection('spc')->dropIfExists('btobpulltest');
     }
 }

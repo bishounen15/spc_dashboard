@@ -13,7 +13,7 @@ class CreateRtobpullTable extends Migration
      */
     public function up()
     {
-        Schema::create('rtobpull', function (Blueprint $table) {
+        Schema::connection('spc')->create('rtobpull', function (Blueprint $table) {
             $table->increments('id');
             $table->String('station');
             $table->String('location');
@@ -39,6 +39,6 @@ class CreateRtobpullTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rtobpull');
+        Schema::connection('spc')->dropIfExists('rtobpull');
     }
 }

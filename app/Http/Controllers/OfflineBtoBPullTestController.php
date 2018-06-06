@@ -16,7 +16,7 @@ class OfflineBtoBPullTestController extends Controller
     public function index()
     {
         //$post = Post::all();
-        $posts = DB::select('SELECT * FROM btobpulltest');
+        $posts = OfflineBtoBPullTestPost::all(); //DB::select('SELECT * FROM btobpulltest');
         return view('matrix.btobpulltest')->with('btobpulltest', $posts);
     }
 

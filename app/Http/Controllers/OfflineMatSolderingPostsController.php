@@ -16,7 +16,7 @@ class OfflineMatSolderingPostsController extends Controller
     public function index()
     {
         //$post = Post::all();
-        $posts = DB::select('SELECT * FROM offlinematsoldering');
+        $posts = OfflineMatSolderingPost::all(); //DB::select('SELECT * FROM offlinematsoldering');
         return view('matrix.offlinematsolderingtemp')->with('offlinematsolderingtemp', $posts);
     }
 
