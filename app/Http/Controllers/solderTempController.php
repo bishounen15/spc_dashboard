@@ -13,7 +13,7 @@ class solderTempController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM solder_temps');                                        
+        $posts = SolderTemp::get(); //DB::select('SELECT * FROM solder_temps');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
           return view('backEnd.solderTemp')->with('tempLogs',$posts);
     }

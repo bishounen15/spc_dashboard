@@ -25,6 +25,7 @@ Route::get('/Apps','PagesController@apps')->name('apps');
 Route::get('/Summary', 'PagesController@Summary');
 Route::get('/pulltest', 'PagesController@pulltest');
 Route::get('/lamdata', 'PagesController@lamdata');
+//Route::get('/create', 'FrameController@store');
 
 Route::resource('lam', 'LamController');
 Route::resource('laytec', 'LaytecController');

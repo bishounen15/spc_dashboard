@@ -15,7 +15,7 @@ class MixRatioController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM pottant_quals');                                        
+        $posts = pottantQual::get(); //DB::select('SELECT * FROM pottant_quals');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
           return view('backEnd.potMixingRatio')->with('MixLogs',$posts);
     }

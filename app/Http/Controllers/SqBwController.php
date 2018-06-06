@@ -15,7 +15,7 @@ class SqBwController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM frame_sq_bws');                                        
+        $posts = frameSqBw::get(); //DB::select('SELECT * FROM frame_sq_bws');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
           return view('backEnd.frameSqBw')->with('frameSBLogs',$posts);
     }

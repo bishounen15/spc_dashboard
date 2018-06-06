@@ -19,7 +19,7 @@ class PottingController extends Controller
         //
        // $title = "Back End";
      //   return view('backEnd.pottingQual');
-        $posts = DB::select('SELECT * FROM potting_quals');                                        
+        $posts = POttingQual::get(); //DB::select('SELECT * FROM potting_quals');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
           return view('backEnd.pottingQual')->with('potLogs',$posts);
         

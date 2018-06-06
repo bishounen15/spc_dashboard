@@ -16,7 +16,7 @@ class CuringController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM curing_tests');                                        
+        $posts = CuringTest::get(); // DB::select('SELECT * FROM curing_tests');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
           return view('backEnd.curingTest')->with('curLogs',$posts);
     }

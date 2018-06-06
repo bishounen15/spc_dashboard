@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use App\frameQual;
+
 
 class FrameController extends Controller
 {
@@ -14,7 +17,7 @@ class FrameController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM frame_quals');                                        
+        $posts = frameQual::orderBy("id","desc")->get();//DB::select('SELECT * FROM frame_quals ORDER BY ID DESC');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
         return view('backEnd.frameQual')->with('frameLogs',$posts);
     }
@@ -26,7 +29,10 @@ class FrameController extends Controller
      */
     public function create()
     {
-        return view('backEnd.frameCreate');
+        $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
+        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+       return view('backEnd.frameCreate')->with('frameLogs',$posts);
+        
     }
 
     /**
@@ -37,11 +43,39 @@ class FrameController extends Controller
      */
     public function store(Request $request)
     {
+        
+
+       $this->validate($request, [ 
+       // 'shift' => 'required', 
+       // 'date' => 'required',
+        'qualTime' => 'required',
+        'serialNo'=> 'required',
+        'L1woSealant' => 'required|numeric|min:700',
+        'L1wSealant' => 'required|numeric|min:700',
+        'L2woSealant' => 'required|numeric|min:700',
+        'L2wSealant' => 'required|numeric|min:700',
+        'S1wSealant' => 'required|numeric|min:500',
+        'S1woSealant' => 'required|numeric|min:500',
+        'S2wSealant' => 'required|numeric|min:500',
+        'S2woSealant' => 'required|numeric|min:500',
+     //   'S2diff' => 'required',
+       // 'S1diff' => 'required',
+        //'L2diff' => 'required',
+        //'L1diff' => 'required',
+        //'S2diff' => 'required',
+        //'sum' =>  'required|numeric',
+        'remarks' => 'required',
+       //'remarks2' => 'required',
+        'beadScale' => 'required|integer|min:1',
+        'facilitySupply' => 'required|integer|min:1',
+        'mainPressure' => 'required|integer|min:1'  
+            ]); 
+            
         $post = new frameQual;
         $post->qualTransID = $request->input('transID');
         $post->shift = $request->input('shift');
         $post->date = $request->input('fixture_date');
-        $post->qualTime = $request->input('fixture_date');
+        $post->qualTime = $request->input('qualTime');
         $post->serialNo = $request->input('serialNo');
             $post->L1woSealantWt= $request ->input('L1woSealant');
             $post->L1wSealantWt= $request ->input('L1wSealant');
@@ -60,12 +94,39 @@ class FrameController extends Controller
             $post->facilitySupply= $request ->input('facilitySupply');
             $post->mainPressure= $request ->input('mainPressure');
             $post->paramID= $request ->input('');
-            $post->TargetParam= $request ->input('');
-            $post->remarks= $request ->input('remarks');
+            $post->TargetParam= $request ->input('target');
+            $post->qualResult= $request ->input('remarks');
+            $post->remarks= $request ->input('remarks2');
        // $post->crossSection = $request->input('crossSection');
         $post->save();
-
-        return redirect('/Frame')->with('success','Record was successfully added!');
+        if($request->input('remarks')=="fail" && $request->input('serialNo')=="Frame Qual" ){
+            $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
+            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+         //return redirect('Frame/create')->with('frameLogs',$posts);
+          // return redirect()->route('create',['frameLogs'=>$posts]);
+         return Redirect::route('Frame.create')
+                           ->with('frameLogs',$posts)
+                          ->with('error','Qual Failed! record was added. Add Another qual.');
+           //->with('success','Qual Failed.Record was added.Add another qual.');
+            //return redirect('/Frame')->with('success','Record was successfully added!');
+        }elseif($request->input('remarks')=="pass" && $request->input('serialNo')=="Frame Qual" ){
+            $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
+            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+            return Redirect::route('Frame.create')
+            ->with('frameLogs',$posts)
+           ->with('success','Qual Passed! record was added. Add Another qual with Serial No.');
+            //return redirect('/Frame')->with('success','Record was successfully added!');
+        }elseif($request->input('remarks')=="fail" && $request->input('serialNo')!="Frame Qual" ){
+            $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
+            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+            return Redirect::route('Frame.create')
+            ->with('frameLogs',$posts)
+           ->with('error','Qual Failed! record was added. Add Another qual.');
+            //return redirect('/Frame')->with('success','Record was successfully added!');
+        }else{
+            return redirect('/Frame')->with('success','Record was successfully added!');
+        }
+        
     }
 
     /**

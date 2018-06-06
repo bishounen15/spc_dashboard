@@ -13,7 +13,7 @@ class JBoxController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM jbox_dis_wt_quals');                                        
+        $posts = jboxDisWtQual::get(); //DB::select('SELECT * FROM jbox_dis_wt_quals');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
           return view('backEnd.jBoxDispense')->with('disLogs',$posts);
     }
