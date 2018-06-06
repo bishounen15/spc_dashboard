@@ -34,7 +34,7 @@ Route::resource('pulltestEG', 'PulltestEGController');
 Route::resource('stringer', 'StringerController');
 Route::resource('flash', 'FlashController');
 Route::resource('pulltestdata', 'PulltestController');
-Route::resource('lamdata', 'Lamcontroller');
+Route::resource('lamdata', 'LamController');
 
 Route::resource('matrixpulltest', 'MatrixPullTestsController');
 Route::resource('matsolder', 'MatSolderingPostsController');
