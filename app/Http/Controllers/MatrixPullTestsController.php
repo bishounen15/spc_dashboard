@@ -16,7 +16,7 @@ class MatrixPullTestsController extends Controller
     public function index()
     {
        // $post = MatrixPullTest::all();
-        $posts = DB::select('SELECT * FROM rtobpull');
+        $posts = MatrixPullTest::all(); //DB::select('SELECT * FROM rtobpull');
         return view('matrix.matrixpulltest')->with('rtobpulltest', $posts);
     }
 

@@ -29,7 +29,7 @@ class FrameController extends Controller
      */
     public function create()
     {
-        $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
+        $posts = frameQual::get();//DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
        return view('backEnd.frameCreate')->with('frameLogs',$posts);
         
