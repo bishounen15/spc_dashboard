@@ -22,7 +22,7 @@ Route::group(['middleware'=>['auth','revalidate']], function() {
 
 Route::get('/Apps','PagesController@apps')->name('apps');
 
-Route::get('/Summary', 'PagesController@Summary');
+Route::get('/Summary', 'PagesController@Summary')->name('spc_entry');
 Route::get('/pulltest', 'PagesController@pulltest');
 Route::get('/lamdata', 'PagesController@lamdata');
 //Route::get('/create', 'FrameController@store');

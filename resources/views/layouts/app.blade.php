@@ -50,6 +50,7 @@
                         @guest
                         @else
                             <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li>
+                            <li><a class="nav-link" href="{{ route('spc_entry') }}">{{ __('SPC Dashboard') }}</a></li>
                         @endguest
                     </ul>
 
