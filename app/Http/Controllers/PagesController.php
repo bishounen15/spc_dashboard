@@ -25,4 +25,11 @@ class PagesController extends Controller
     public function link(){
         return view ('pages.link');
     }
+    
+    public function lamdata(){
+        return view ('pages.lamdata');
+    }
+    public function pulltestdata(){
+        return view ('pages.pulltestdata');
+    }
 }

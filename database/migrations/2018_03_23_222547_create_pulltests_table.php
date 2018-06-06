@@ -34,6 +34,11 @@ class CreatePulltestsTable extends Migration
             $table->String('PTEG8');
             $table->String('PTEG9');
             $table->String('PTEG10');
+            $table->String('PTEG11');
+            $table->String('PTEG12');
+            $table->String('PTEG13');
+            $table->String('PTEG14');
+            $table->String('PTEG15');
             $table->String('PTEGA');
             $table->String('PTEB1');
             $table->String('PTEB2');
@@ -45,6 +50,11 @@ class CreatePulltestsTable extends Migration
             $table->String('PTEB8');
             $table->String('PTEB9');
             $table->String('PTEB10');
+            $table->String('PTEB11');
+            $table->String('PTEB12');
+            $table->String('PTEB13');
+            $table->String('PTEB14');
+            $table->String('PTEB15');
             $table->String('PTEBA');
             $table->timestamps();
         });

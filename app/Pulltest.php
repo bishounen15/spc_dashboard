@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Pulltest extends Model
 {
     protected $connection = 'spc';
-    protected $table = 'Pulltests';
+    protected $table = 'pull_tests';
     public $primaryKey = 'id';
 }
