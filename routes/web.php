@@ -27,6 +27,7 @@ Route::resource('flash', 'FlashController');
 Route::resource('pulltestdata', 'PulltestController');
 Route::resource('lamdata', 'Lamcontroller');
 Route::resource('stringerdata', 'StringerController');
+Route::resource('ftd', 'FlashController');
 
 Route::resource('matrixpulltest', 'MatrixPullTestsController');
 Route::resource('matsolder', 'MatSolderingPostsController');

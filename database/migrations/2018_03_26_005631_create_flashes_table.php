@@ -15,12 +15,16 @@ class CreateFlashesTable extends Migration
     {
         Schema::create('flashes', function (Blueprint $table) {
             $table->increments('id');
-            $table->String('Date');
-            $table->String('Difference');
-            $table->String('CalSerial');
-            $table->String('Remarks');
-            $table->String('Target');
-            $table->String('Actual');
+            $table->String('ModuleID');
+            $table->String('InspTime');
+            $table->String('ISC');
+            $table->String('UOC');
+            $table->String('IMPP');
+            $table->String('UMPP');
+            $table->String('PMPP');
+            $table->String('ShuntResist');
+            $table->String('FF');
+            $table->String('BIN');
             $table->timestamps();
         });
     }

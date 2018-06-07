@@ -2,59 +2,103 @@
 
 @section('content')
     <div class="container" style="width:120%">
+        <br>
         <div class="card">
             <h5 class="card-header">Flash Test Data Inputs</h5>
-                <div class="card-body">
-                        {!! Form::open(['action' => 'FlashController@store', 'method' => 'POST']) !!}
+            {!! Form::open(['action' => 'FlashController@store', 'method' => 'POST']) !!}
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-1.5">
+                        {{Form::label('ModuleID', 'SCAN MODULE ID:')}}
+                    </div>
+                    <div class="col-md-6">
+                        {{Form::text('ModuleID', '', ['class' => 'form-control', 'placeholder'=>'Module ID'])}}
+                        <small class="form-text text-danger">{{ $errors->first('ModuleID') }}</small>
+                    </div> 
+                </div>                
+            </div>
+        </div>
+        <div class="card">
+                <div class="card-header"><b>Flash Test Details</b></div>
+                    <div class="card-body">
                         <div class="row">
-                                <div class="col-md-1">
-                                    {{Form::label('Date', 'Date:')}}
+                                <div class="col-md-1.3">
+                                    {{Form::label('InspTime', '&nbsp;&nbsp;Inspect Time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')}}
                                 </div>    
                                 <div class="col-md-3">
-                                        {{Form::text('Date', '', ['class' => 'form-control', 'placeholder'=>'Date'])}}
+                                    {{Form::text('InspTime', '', ['class' => 'form-control', 'placeholder'=>'Inspection Time'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('InspTime') }}</small>
                                 </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Difference', '%Difference:')}}
+                                <div class="col-md-1.3">
+                                    {{Form::label('ISC', 'ISC:&nbsp;&nbsp;&nbsp;&nbsp;')}}
                                 </div>    
                                 <div class="col-md-3">
-                                        {{Form::text('Difference', '', ['class' => 'form-control', 'placeholder'=>'Difference'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Difference') }}</small>
+                                    {{Form::text('ISC', '', ['class' => 'form-control', 'placeholder'=>'ISC'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('ISC') }}</small>
                                 </div>
-                                <div class="col-md-1">
-                                    {{Form::label('CalSerial', 'Cal.Serial:')}}
+                                <div class="col-md-1.3">
+                                    {{Form::label('UOC', 'Uoc:&nbsp;&nbsp;&nbsp;&nbsp;')}}
                                 </div>    
                                 <div class="col-md-3">
-                                        {{Form::text('CalSerial', '', ['class' => 'form-control', 'placeholder'=>'Calibration Serial'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('CalSerial') }}</small>
+                                        {{Form::text('UOC', '', ['class' => 'form-control', 'placeholder'=>'Uoc'])}}
+                                        <small class="form-text text-danger">{{ $errors->first('UOC') }}</small>
+                                </div>
+                        </div><br>  
+                        <div class="row">
+                                <div class="col-md-1.3">
+                                    {{Form::label('IMPP', '&nbsp;&nbsp;IMPP:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')}}
+                                </div>    
+                                <div class="col-md-3">
+                                    {{Form::text('IMPP', '', ['class' => 'form-control', 'placeholder'=>'IMPP'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('IMPP') }}</small>
+                                </div>
+                                <div class="col-md-1.3">
+                                    {{Form::label('UMPP', 'ISC:&nbsp;&nbsp;&nbsp;&nbsp;')}}
+                                </div>    
+                                <div class="col-md-3">
+                                    {{Form::text('UMPP', '', ['class' => 'form-control', 'placeholder'=>'UMPP'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('UMPP') }}</small>
+                                </div>
+                                <div class="col-md-1.3">
+                                    {{Form::label('PMPP', 'Pmpp:&nbsp;')}}
+                                </div>    
+                                <div class="col-md-3">
+                                        {{Form::text('PMPP', '', ['class' => 'form-control', 'placeholder'=>'PMPP'])}}
+                                        <small class="form-text text-danger">{{ $errors->first('PMPP') }}</small>
                                 </div>
                         </div><br>
                         <div class="row">
-                                <div class="col-md-1">
-                                    {{Form::label('Remarks', 'Remarks:')}}
+                                <div class="col-md-1.3">
+                                    {{Form::label('ShuntResist', '&nbsp;&nbsp;Shunt Resistance:')}}
                                 </div>    
                                 <div class="col-md-3">
-                                    {{Form::text('Remarks', '', ['class' => 'form-control', 'placeholder'=>'Remarks'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Remarks') }}</small>
+                                    {{Form::text('ShuntResist', '', ['class' => 'form-control', 'placeholder'=>'Shunt Resistance'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('ShuntResist') }}</small>
                                 </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Target', 'Target:')}}
+                                <div class="col-md-1.3">
+                                    {{Form::label('FF', 'FF:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')}}
                                 </div>    
                                 <div class="col-md-3">
-                                    {{Form::text('Target', '', ['class' => 'form-control', 'placeholder'=>'Target'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Target') }}</small>
+                                    {{Form::text('FF', '', ['class' => 'form-control', 'placeholder'=>'FF'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('FF') }}</small>
                                 </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Actual', 'Actual:')}}
+                                <div class="col-md-1.3">
+                                    {{Form::label('BIN', 'BIN:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')}}
                                 </div>    
                                 <div class="col-md-3">
-                                    {{Form::text('Actual', '', ['class' => 'form-control', 'placeholder'=>'Actual'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Actual') }}</small>
+                                        {{Form::text('BIN', '', ['class' => 'form-control', 'placeholder'=>'BIN'])}}
+                                        <small class="form-text text-danger">{{ $errors->first('BIN') }}</small>
                                 </div>
                         </div><br>
-                        {{Form::submit('Submit', ['class' => 'btn btn-primary'])}}   
+                        
+                        {{Form::submit('&nbsp;&nbsp;Submit&nbsp;&nbsp;', ['class' => 'btn btn-primary' ])}}  &emsp; <a href="/ftd" class="btn btn-danger">Cancel</a>
                         {!! Form::close() !!}
                     </div>
+            </div><br>     
+                    </div>
             </div>
+                
     </div>
                     
 @endsection

@@ -33,7 +33,7 @@
                       FLASH TEST DATA
                     </div>
                     <ul class="list-group list-group-flush">
-                      <li class="list-group-item"><a href ="/flash/create">Flash Test Data Input</a></li>
+                      <li class="list-group-item"><a href ="/ftd">Flash Test Data Input</a></li>
                     </ul>
                 </div>
             {{-- </div> --}}
