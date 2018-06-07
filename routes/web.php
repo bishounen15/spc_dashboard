@@ -17,8 +17,6 @@
 
 Route::get('/', 'PagesController@index');
 Route::get('/Summary', 'PagesController@Summary');
-Route::get('/pulltest', 'PagesController@pulltest');
-Route::get('/lamdata', 'PagesController@lamdata');
 
 Route::resource('lam', 'LamController');
 Route::resource('laytec', 'LaytecController');
@@ -28,6 +26,7 @@ Route::resource('stringer', 'StringerController');
 Route::resource('flash', 'FlashController');
 Route::resource('pulltestdata', 'PulltestController');
 Route::resource('lamdata', 'Lamcontroller');
+Route::resource('stringerdata', 'StringerController');
 
 Route::resource('matrixpulltest', 'MatrixPullTestsController');
 Route::resource('matsolder', 'MatSolderingPostsController');

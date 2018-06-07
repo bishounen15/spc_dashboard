@@ -484,7 +484,7 @@
                                 <div class="col-md-2">
                                 </div>
                         </div><br>
-                        {{Form::submit('Submit', ['class' => 'btn btn-primary'])}}   
+                        {{Form::submit('Submit', ['class' => 'btn btn-primary'])}} &emsp; <a href="/lamdata" class="btn btn-danger">Cancel</a>  
                         {!! Form::close() !!}
                     </div>
             </div>

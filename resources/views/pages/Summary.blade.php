@@ -23,7 +23,7 @@
                         STRINGER
                         </div>
                         <ul class="list-group list-group-flush">
-                          <li class="list-group-item"><a href ="/stringer/create">Stringer Data Input</a></li>
+                          <li class="list-group-item"><a href ="/stringerdata">Stringer Data Input</a></li>
                         </ul>
                 </div>
               <br>
