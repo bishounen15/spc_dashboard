@@ -13,7 +13,7 @@ class CreateStringersTable extends Migration
      */
     public function up()
     {
-        Schema::create('stringers', function (Blueprint $table) {
+        Schema::connection('spc')->create('stringers', function (Blueprint $table) {
             $table->increments('id');
             $table->String('Date');
             $table->String('Laminator');
@@ -39,6 +39,6 @@ class CreateStringersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stringers');
+        Schema::connection('spc')->dropIfExists('stringers');
     }
 }

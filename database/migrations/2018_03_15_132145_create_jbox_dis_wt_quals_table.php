@@ -13,7 +13,7 @@ class CreateJboxDisWtQualsTable extends Migration
      */
     public function up()
     {
-        Schema::create('jbox_dis_wt_quals', function (Blueprint $table) {
+        Schema::connection('spc')->create('jbox_dis_wt_quals', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('qualTransID');
             $table->string('shift');
@@ -34,6 +34,6 @@ class CreateJboxDisWtQualsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jbox_dis_wt_quals');
+        Schema::connection('spc')->dropIfExists('jbox_dis_wt_quals');
     }
 }

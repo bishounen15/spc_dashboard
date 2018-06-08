@@ -13,7 +13,7 @@ class CreateFrameQualsTable extends Migration
      */
     public function up()
     {
-        Schema::create('frame_quals', function (Blueprint $table) {
+        Schema::connection('spc')->create('frame_quals', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('qualTransID');
             $table->string('shift');
@@ -50,6 +50,6 @@ class CreateFrameQualsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('frame_quals');
+        Schema::connection('spc')->dropIfExists('frame_quals');
     }
 }

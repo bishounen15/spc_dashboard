@@ -13,7 +13,7 @@ class CreatePottantQualsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pottant_quals', function (Blueprint $table) {
+        Schema::connection('spc')->create('pottant_quals', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('qualTransID');
             $table->string('shift');
@@ -40,6 +40,6 @@ class CreatePottantQualsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pottant_quals');
+        Schema::connection('spc')->dropIfExists('pottant_quals');
     }
 }

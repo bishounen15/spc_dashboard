@@ -16,6 +16,12 @@
 // });
 
 Route::get('/', 'PagesController@index');
+Route::get('/link','PagesController@link')->name('portal_link');
+
+Route::group(['middleware'=>['auth','revalidate']], function() {
+
+Route::get('/Apps','PagesController@apps')->name('apps');
+
 Route::get('/Summary', 'PagesController@Summary');
 Route::get('/pulltest', 'PagesController@pulltest');
 
@@ -38,3 +44,9 @@ Route::resource('JBox','JBoxController');
 Route::resource('Frame','FrameController');
 Route::resource('Framming','SqBwController');
 Route::resource('MixRatio','MixRatioController');
+
+});
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

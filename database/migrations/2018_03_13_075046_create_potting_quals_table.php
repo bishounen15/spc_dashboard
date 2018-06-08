@@ -13,7 +13,7 @@ class CreatePOttingQualsTable extends Migration
      */
     public function up()
     {
-        Schema::create('potting_quals', function (Blueprint $table) {
+        Schema::connection('spc')->create('potting_quals', function (Blueprint $table) {
             $table->increments('id');
             $table->string('shift');
             $table->dateTime('time');
@@ -33,6 +33,6 @@ class CreatePOttingQualsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('potting_quals');
+        Schema::connection('spc')->dropIfExists('potting_quals');
     }
 }
