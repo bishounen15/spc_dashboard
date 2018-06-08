@@ -16,7 +16,7 @@ class OfflineBtoBPullTestController extends Controller
     public function index()
     {
         //$post = Post::all();
-        $posts = DB::select('SELECT * FROM btobpulltest');
+        $posts = DB::select('SELECT * FROM btobpulltest ORDER BY id DESC');
         return view('matrix.btobpulltest')->with('btobpulltest', $posts);
     }
 
@@ -40,7 +40,7 @@ class OfflineBtoBPullTestController extends Controller
     {
         //Validate
             $this->validate($request, [  
-                'station' => 'required',       
+                'employeeid' => 'required|numeric',       
                 'location' => 'required',
                 'shift' => 'required',
                 'node'=> 'required',
@@ -58,7 +58,7 @@ class OfflineBtoBPullTestController extends Controller
         //Create Post
         //$post = $request->post;
         $post = new OfflineBtoBPullTestPost;
-        $post->Station = $request->input('station');
+        $post->EmployeeID = $request->input('employeeid');
         $post->Location = $request->input('location');
         $post->Shift = $request->input('shift');
         $post->Node = $request->input('node');

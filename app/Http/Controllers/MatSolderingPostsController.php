@@ -16,7 +16,7 @@ class MatSolderingPostsController extends Controller
     public function index()
     {
         //$post = Post::all();
-        $posts = DB::select('SELECT * FROM mat_soldering');
+        $posts = DB::select('SELECT * FROM mat_soldering ORDER BY id DESC');
         return view('matrix.matsolderingtemp')->with('matsolderingtemp', $posts);
     }
 

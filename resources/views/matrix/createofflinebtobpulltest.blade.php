@@ -9,30 +9,30 @@
                         <div class="jumbotron text-center">
                             <div class="row">
                 <div class="col-md-1">
-                    {{Form::label('station', 'Station')}}
+                    {{Form::label('employeeid', 'Employee ID:')}}
                 </div>  
                 <div class="col-md-5">  
-                    {{Form::select('station', array('MA1AT&BPullTest' => 'MA1A T&B PullTest', 'MA1BT&BPullTest' => 'MA1B T&B PullTest', 'MatrixReworkPullTest' => 'Matrix ReworkPullTest','BBtoBBPullTest ' => 'Busbar to Busbar Pull Test '),'Select Station',['class' => 'form-control','placeholder' => 'Select Station'])}}
-                    <small class="form-text text-danger">{{ $errors->first('station') }}</small>
+                        {{ Form::text('employeeid', '',['class'=>'form-control'] )}}
+                    <small class="form-text text-danger">{{ $errors->first('employeeid') }}</small>
                 </div>
                 <div class="col-md-1">
-                    {{Form::label('location', 'Location')}}
+                    {{Form::label('location', 'Location:')}}
                 </div>  
                 <div class="col-md-5">  
-                    {{Form::select('location', array('1stTop' => '1st Top', '2ndTop' => '2nd Top', '1stBottom' => '1st Bottom', 'MatrixRework' => 'Matrix Rework','BusbarPrep' => 'Busbar Prep'),'',['class' => 'form-control','placeholder' => 'Select Location'])}}
+                        {{ Form::text('location', 'Busbar Prep',['class'=>'form-control'] )}}
                     <small class="form-text text-danger">{{ $errors->first('location') }}</small>
                 </div>
             </div><br>
             <div class="row">
                     <div class="col-md-1">
-                        {{Form::label('shift', 'Shift')}}
+                        {{Form::label('shift', 'Shift:')}}
                     </div>  
                     <div class="col-md-5">  
                         {{Form::select('shift', array('ShiftA' => 'Shift A', 'ShiftB' => 'Shift B', 'ShiftC' => 'Shift C'),'',['class' => 'form-control','placeholder' => 'Select Shift'])}}
                         <small class="form-text text-danger">{{ $errors->first('shift') }}</small>
                     </div>
                     <div class="col-md-1">
-                            {{Form::label('node', 'Node')}}
+                            {{Form::label('node', 'Node:')}}
                     </div>  
                     <div class="col-md-5">  
                         {{ Form::text('node', 'Busbar to Busbar',['class'=>'form-control'] )}} 
@@ -41,14 +41,14 @@
             </div></br>
             <div class="row">
                     <div class="col-md-1">        
-                        {{Form::label('supplier', 'Supplier')}}
+                        {{Form::label('supplier', 'Supplier:')}}
                     </div>
                     <div class="col-md-5">  
                         {{Form::text('supplier','', ['class' => 'form-control','placeholder' => 'Supplier'])}}   
                         <small class="form-text text-danger">{{ $errors->first('supplier') }}</small>
                     </div>            
                     <div class="col-md-1"> 
-                        {{Form::label('remarks', 'Remarks')}}
+                        {{Form::label('remarks', 'Remarks:')}}
                     </div>
                     <div class="col-md-5">
                         {{Form::text('remarks','', ['class' => 'form-control','placeholder' => 'Remarks'])}}
@@ -128,7 +128,7 @@
         </div>
     </div>
 </div>  
-        &emsp; {{Form::submit('Submit',['class'=> 'btn btn-primary'])}}&emsp; <a href="/btobpulltest" class="btn btn-danger">Cancel</a>
+        {{Form::submit('Submit',['class'=>'btn btn-primary'])}}
         {!! Form::close() !!}
 @endsection
 

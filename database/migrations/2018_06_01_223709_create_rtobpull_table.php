@@ -15,7 +15,7 @@ class CreateRtobpullTable extends Migration
     {
         Schema::create('rtobpull', function (Blueprint $table) {
             $table->increments('id');
-            $table->String('station');
+            $table->String('employeeid');
             $table->String('location');
             $table->String('shift');
             $table->String('node');

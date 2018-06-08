@@ -12,14 +12,14 @@
                                 {{Form::label('station', 'Station')}}
                                 </div>  
                                 <div class="col-md-5">  
-                                    {{Form::select('station', array('MA1AT&BSolderTemp' => 'MA1A T&B SolderTemp', 'MatrixReworkSolderingTemp' => 'Matrix Rework Soldering Temp', 'BBPrepSolderingTemp' => 'BB Prep Soldering Temp'),'-',['class' => 'form-control','placeholder' => 'Select Station'])}}
+                                        {{ Form::text('station', 'Busbar Prep',['class'=>'form-control'] )}}
                                     <small class="form-text text-danger">{{ $errors->first('station') }}</small>
                                 </div>
                                 <div class="col-md-1">
                                     {{Form::label('location', 'Location')}}
                                 </div>  
                                 <div class="col-md-5">  
-                                    {{Form::select('location', array('1stTop' => '1st Top', '2ndTop' => '2nd Top', '1stBottom' => '1st Bottom', 'MatrixRework' => 'Matrix Rework','BusbarPrep' => 'Busbar Prep'),'',['class' => 'form-control','placeholder' => 'Select Location'])}}
+                                        {{ Form::text('location', 'Busbar Prep',['class'=>'form-control'] )}}
                                     <small class="form-text text-danger">{{ $errors->first('location') }}</small>
                                 </div>
                             </div><br>
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>        
-                    {{Form::submit('Save',['class'=>'btn btn-primary'])}}
+                    {{Form::submit('Submit',['class'=>'btn btn-primary'])}}
                     {!! Form::close() !!}
 @endsection
                 @push('jscript')

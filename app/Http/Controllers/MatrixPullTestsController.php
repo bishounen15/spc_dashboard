@@ -16,7 +16,7 @@ class MatrixPullTestsController extends Controller
     public function index()
     {
        // $post = MatrixPullTest::all();
-        $posts = DB::select('SELECT * FROM rtobpull');
+        $posts = DB::select('SELECT * FROM rtobpull ORDER BY id DESC');
         return view('matrix.matrixpulltest')->with('rtobpulltest', $posts);
     }
 
@@ -40,7 +40,7 @@ class MatrixPullTestsController extends Controller
     {
         //Validate
                 $this->validate($request, [         
-                'station' => 'required',
+                'employeeid' => 'required|numeric',
                 'location' => 'required',
                 'shift' => 'required',
                 'node'=> 'required',
@@ -58,7 +58,7 @@ class MatrixPullTestsController extends Controller
         //Create Post
         //$post = $request->post;
         $post = new MatrixPullTest;
-        $post->Station = $request->input('station');
+        $post->EmployeeID = $request->input('employeeid');
         $post->Location = $request->input('location');
         $post->Shift = $request->input('shift');
         $post->Node = $request->input('node');

@@ -16,7 +16,7 @@
             <table class="table table-striped" style="font-size:12px;">
             <tr>
                 <th></th>
-                <th>Station</th>
+                <th>Employee ID</th>
                 <th>Location</th>
                 <th>Shift</th>
                 <th>Node</th>
@@ -39,7 +39,7 @@
                 <?php $i++ ?>
                  <tr>
                  <td>
-                    <td>{{$potLog->station}}</td>
+                    <td>{{$potLog->employeeid}}</td>
                     <td>{{$potLog->location}}</td>
                     <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->node}}</td>

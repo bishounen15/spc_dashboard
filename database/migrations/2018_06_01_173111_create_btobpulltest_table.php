@@ -15,7 +15,7 @@ class CreateBtobpulltestTable extends Migration
     {
         Schema::create('btobpulltest', function (Blueprint $table) {
             $table->increments('id');
-            $table->String('station');
+            $table->String('employeeid');
             $table->String('location');
             $table->String('shift');
             $table->String('node');
