@@ -3,58 +3,147 @@
 <title>{{config('app.name', 'SOLARPH')}}</title>
 <div class="container">
     <br>
-
-    <br>
     <div class="col-md-12">
             <div class="row">
             {{-- <div class="col-md-12"> --}}
             <div class="card">
             <div class="card-header">STRINGER MONITORING</div> 
             {{-- <div class="card"> --}}
-            <div class="card-body"> 
-            <a href="/Summary" class="btn btn-success">Go Back</a>
+            <div class="card-body">
             <a href="/stringer/create" class="btn btn-primary">ADD STRINGER DATA</a>
             <br><br>
-            <table class="table table-striped">
-            <tr>
-            <th></th>
-            <th>Date &nbsp;&nbsp;&nbsp;</th>
-            <th>Stringer &nbsp;&nbsp;&nbsp;&nbsp;</th>
-            <th>Shift &nbsp;&nbsp;&nbsp;</th>
-            <th>Cell &nbsp;&nbsp;&nbsp;</th>
-            <th>Ribbon &nbsp;&nbsp;&nbsp;</th>
-            <th>Station&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-            <th>Side&nbsp;&nbsp;&nbsp;</th>
-            <th>Cell No.&nbsp;&nbsp;&nbsp;</th>
-            <th>Location&nbsp;&nbsp;&nbsp;</th>
-            <th>Peel Test&nbsp;&nbsp;</th>
-            <th>Criteria&nbsp;&nbsp;</th>
-            <th>Remarks&nbsp;&nbsp;</th>
-            </tr>
-            @if(count($alldata) > 0)
-            <?php $i=0 ?>
-            @foreach($alldata as $pulltest)
-            <?php $i++ ?>
-            <tr>
-            <td>
-            <td>{{$pulltest->Date}}</td>
-            <td>{{$pulltest->Stringer}}</td>
-            <td>{{$pulltest->Shift}}</td>
-            <td>{{$pulltest->Cell}}</td>
-            <td>{{$pulltest->Ribbon}}</td>
-            <td>{{$pulltest->Station}}</td>
-            <td>{{$pulltest->Side}}</td>
-            <td>{{$pulltest->Cell}}</td>
-            <td>{{$pulltest->Location}}</td>
-            <td>{{$pulltest->PeelTest}}</td>
-            <td>{{$pulltest->Criteria}}</td>
-            <td>{{$pulltest->Remarks}}</td>
-            </tr>
-            @endforeach 
-            @else
-            <p>No Records Found</p>
-            @endif
-            </table>
+            <table class="table table-hover table table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">VALUE</th>
+                        <th scope="col">FRONT</th>
+                        <th scope="col">BACK</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td><b>Ave (Ind)</b></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td><b>Stdev (Ind)</b></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                      <th scope="row">3</th>
+                        <td><b>XBB (Ave of Ave)</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">4</th>
+                        <td><b>Stdev (Ave)</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5</th>
+                        <td><b>Median</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">6</th>
+                        <td><b>Percentile (0.00135)</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7</th>
+                        <td><b>Percentile (0.99865)</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">8</th>
+                        <td><b>USL</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">9</th>
+                        <td><b>LSL</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">10</th>
+                        <td><b>Target</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">11</th>
+                        <td><b>Z</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">12</th>
+                        <td><b>CpU</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">13</th>
+                        <td><b>CpL</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">14</th>
+                        <td><b>Cpk</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">15</th>
+                        <td><b>CpN U</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">16</th>
+                        <td><b>CpN L</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">17</th>
+                        <td><b>CpN</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">18</th>
+                        <td><b>UCL</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">19</th>
+                        <td><b>LCL</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">20</th>
+                        <td><b>N</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                  </table>
             </div>
             {{-- </div> --}}
             </div>

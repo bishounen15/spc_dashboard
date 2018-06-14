@@ -45,22 +45,15 @@
                             {{Form::text('Ribbon', '', ['class' => 'form-control', 'placeholder'=>'Ribbon'])}}
                             <small class="form-text text-danger">{{ $errors->first('Ribbon') }}</small>
                         </div>
-                            <div class="col-md-1">
-                            {{Form::label('Station', 'Station:')}}
-                        </div>    
-                        <div class="col-md-3">
-                            {{Form::text('Station', '', ['class' => 'form-control', 'placeholder'=>'Station'])}}
-                            <small class="form-text text-danger">{{ $errors->first('Station') }}</small>
-                        </div>
+                        <div class="col-md-1">
+                                {{Form::label('Side', 'Side:')}}
+                            </div>    
+                            <div class="col-md-3">
+                                {{Form::select('Side', array('Front' => 'Front Side', 'Back' => 'Back Side'), '',['class'=>'form-control','placeholder'=>'Select Side'])}}
+                                <small class="form-text text-danger">{{ $errors->first('Side') }}</small>
+                            </div>
                     </div><br>
                     <div class="row">
-                        <div class="col-md-1">
-                            {{Form::label('Side', 'Side:')}}
-                        </div>    
-                        <div class="col-md-3">
-                            {{Form::select('Side', array('Front' => 'Front Side', 'Back' => 'Back Side'), '',['class'=>'form-control','placeholder'=>'Select Side'])}}
-                            <small class="form-text text-danger">{{ $errors->first('Side') }}</small>
-                        </div>
                         <div class="col-md-1">
                             {{Form::label('Cell No.', 'Cell No.:')}}
                         </div>    
@@ -74,9 +67,7 @@
                         <div class="col-md-3">
                             {{Form::text('Location', '', ['class' => 'form-control', 'placeholder'=>'Location'])}}
                             <small class="form-text text-danger">{{ $errors->first('Location') }}</small>
-                            </div>
-                    </div><br>
-                    <div class="row">
+                        </div>
                         <div class="col-md-1">
                             {{Form::label('PeelTest', 'PeelTest:')}}
                         </div>    
@@ -84,6 +75,8 @@
                             {{Form::text('PeelTest', '', ['class' => 'form-control', 'placeholder'=>'Peel Test'])}}
                             <small class="form-text text-danger">{{ $errors->first('PeelTest') }}</small>
                         </div>
+                    </div><br>
+                    <div class="row">
                         <div class="col-md-1">
                         {{Form::label('Creteria', 'Creteria:')}}
                         </div>    

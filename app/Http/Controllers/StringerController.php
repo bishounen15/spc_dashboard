@@ -45,7 +45,6 @@ class StringerController extends Controller
             'Shift' => 'required',
             'Cell' => 'required',
             'Ribbon' => 'required',
-            'Station' => 'required',
             'Side' => 'required',
             'CellNo' => 'required',
             'Location' => 'required',
@@ -77,7 +76,6 @@ class StringerController extends Controller
         $stringer->Shift = $request->input('Shift');
         $stringer->Cell = $request->input('Cell');
         $stringer->Ribbon = $request->input('Ribbon');
-        $stringer->Station = $request->input('Station');
         $stringer->Side = $request->input('Side');
         $stringer->CellNo = $request->input('CellNo');
         $stringer->Location = $request->input('Location');

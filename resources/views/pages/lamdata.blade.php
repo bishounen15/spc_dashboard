@@ -12,7 +12,6 @@
             <div class="card-header">LAMINATOR MONITORING</div> 
             {{-- <div class="card"> --}}
             <div class="card-body"> 
-            <a href="/Summary" class="btn btn-success">Go Back</a>
             <a href="/lam/create" class="btn btn-primary">ADD LXM DATA</a>
             <br><br>
             <table class="table table-striped">

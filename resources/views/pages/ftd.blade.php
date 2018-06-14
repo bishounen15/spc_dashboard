@@ -11,8 +11,7 @@
             <div class="card">
             <div class="card-header">FLASH TEST DATA MONITORING</div> 
             {{-- <div class="card"> --}}
-            <div class="card-body"> 
-            <a href="/Summary" class="btn btn-success">Go Back</a>
+            <div class="card-body">
             <a href="flash/create" class="btn btn-primary">ADD FLASH TEST DATA</a>
             <br><br>
             <table class="table table-striped">

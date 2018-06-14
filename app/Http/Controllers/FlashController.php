@@ -40,7 +40,7 @@ class FlashController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'ModuleID' => 'required',
+            'ModuleID' => 'required|alpha_num|max:15|min:13',
             'InspTime' => 'required',
             'ISC' => 'required',
             'UOC' => 'required',

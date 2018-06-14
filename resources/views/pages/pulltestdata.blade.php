@@ -11,8 +11,7 @@
             <div class="card">
             <div class="card-header">PULLTEST MONITORING</div> 
             {{-- <div class="card"> --}}
-            <div class="card-body"> 
-            <a href="/Summary" class="btn btn-success">Go Back</a>
+            <div class="card-body">
             <a href="/pulltest/create" class="btn btn-primary">ADD PULLTEST DATA</a>
             <br><br>
             <table class="table table-striped">

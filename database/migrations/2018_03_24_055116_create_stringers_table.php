@@ -20,7 +20,6 @@ class CreateStringersTable extends Migration
             $table->String('Shift');
             $table->String('Cell');
             $table->String('Ribbon');
-            $table->String('Station');
             $table->String('Side');
             $table->String('CellNo');
             $table->String('Location');
