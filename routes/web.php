@@ -49,6 +49,8 @@ Route::resource('Frame','FrameController');
 Route::resource('Framming','SqBwController');
 Route::resource('MixRatio','MixRatioController');
 
+Route::resource('Yield','yieldController');
+
 });
 
 Auth::routes();
