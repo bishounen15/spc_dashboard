@@ -17,7 +17,7 @@
                             {{Form::label('Stringer', 'Stringer:')}}
                         </div>    
                         <div class="col-md-3">
-                            {{Form::select('Stringer', array('Stringer 1A' => 'Stringer 1B', 'Stringer 2B' => 'Stringer 2B',
+                            {{Form::select('Stringer', array('Stringer 1A' => 'Stringer 1A', 'Stringer 2B' => 'Stringer 2B',
                             'Stringer 3A' => 'Stringer 3A', 'Stringer 3B' => 'Stringer 3B',
                             'StrinG Rework' => 'String Rework', 'Solder Temp' => 'Solder Temp'), '',['class'=>'form-control','placeholder'=>'Select Stringer'])}}
                             <small class="form-text text-danger">{{ $errors->first('Stringer') }}</small>
@@ -61,162 +61,366 @@
                             {{Form::text('CellNo', '', ['class' => 'form-control', 'placeholder'=>'Cell No.'])}}
                             <small class="form-text text-danger">{{ $errors->first('CellNo') }}</small>
                         </div>
-                            <div class="col-md-1">
-                                {{Form::label('Location', 'Location:')}}
-                            </div>    
-                        <div class="col-md-3">
-                            {{Form::text('Location', '', ['class' => 'form-control', 'placeholder'=>'Location'])}}
-                            <small class="form-text text-danger">{{ $errors->first('Location') }}</small>
-                        </div>
-                        <div class="col-md-1">
-                            {{Form::label('PeelTest', 'PeelTest:')}}
-                        </div>    
-                        <div class="col-md-3">
-                            {{Form::text('PeelTest', '', ['class' => 'form-control', 'placeholder'=>'Peel Test'])}}
-                            <small class="form-text text-danger">{{ $errors->first('PeelTest') }}</small>
-                        </div>
-                    </div><br>
-                    <div class="row">
-                        <div class="col-md-1">
-                        {{Form::label('Creteria', 'Creteria:')}}
-                        </div>    
-                        <div class="col-md-3">
-                            {{Form::text('Criteria', '', ['class' => 'form-control', 'placeholder'=>'Criteria'])}}
-                            <small class="form-text text-danger">{{ $errors->first('Criteria') }}</small>
-                        </div>
-                        <div class="col-md-1">
-                            {{Form::label('Remarks', 'Remarks:')}}
-                            </div>    
-                        <div class="col-md-3">
-                            {{Form::text('Remarks', '', ['class' => 'form-control', 'placeholder'=>'Remarks'])}}
-                            <small class="form-text text-danger">{{ $errors->first('Remarks') }}</small>
-                        </div>
+                       
                     </div><br>
             </div>
-        </div><br>
+        </div>
         <div class="card">
                 <h5 class="card-header">Stringer Sites Details</h5>
                     <div class="card-body">
-                        <div class="row">
-                                <div class="col-md-1">
-                                    {{Form::label('Site1', 'Site1:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('Site1', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 1'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Site1') }}</small>
+                        <div class="card">
+                            <div class="card-header"> Site 1</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        {{Form::label('Location', 'Location:')}}
+                                    </div>
+                                    <div class="col-md-3">
+                                            {{Form::label('Peel Test', 'Peel Test:')}}
+                                    </div>
+                                    <div class="col-md-3">
+                                            {{Form::label('Criteria', 'Criteria:')}}
+                                    </div>  
+                                    <div class="col-md-3">
+                                            {{Form::label('Remarks', 'Remarks:')}}
+                                    </div>                                 
                                 </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Site2', 'Site2:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('Site2', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 2'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Site2') }}</small>
+                                <div class="row">
+                                        <div class="col-md-3">
+                                                {{Form::text('LocA[]', 'A', ['class' => 'form-control', 'readonly'])}}
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'PeelTestA'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('PeelTestA') }}</small>
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::text('CriteriaA[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteriaA'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('criteriaA') }}</small>
+                                        </div>  
+                                        <div class="col-md-3">
+                                                {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarksA'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('remarksA') }}</small>
+                                        </div>                            
+                                </div><br>
+                                <div class="row">
+                                        <div class="col-md-3">
+                                                {{Form::text('LocB[]', 'B', ['class' => 'form-control', 'readonly'])}}
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltestB'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('peeltestB') }}</small>
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::text('CriteriaB[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteriaB'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('criteriaB') }}</small>
+                                        </div>  
+                                        <div class="col-md-3">
+                                                {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarksB'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('remarksB') }}</small>
+                                        </div>                           
+                                </div><br>
+                                <div class="row">
+                                        <div class="col-md-3">
+                                                {{Form::text('LocC[]', 'C', ['class' => 'form-control', 'readonly'])}}
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=> 'peeltestC'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('peeltestC') }}</small>
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::text('CriteriaC[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id' => 'criteriaC'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('criteriaC') }}</small>
+                                        </div>  
+                                        <div class="col-md-3">
+                                                {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id' => 'remarksC'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('remarksC') }}</small>
+                                        </div>                         
+                                </div><br>
+                                <div class="row">
+                                        <div class="col-md-3">
+                                                {{Form::text('LocD[]', 'D', ['class' => 'form-control', 'readonly'])}}
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id' => 'peeltestD'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('peeltestD') }}</small>
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::text('CriteriaD[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id' => 'criteriaD'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('criteriaD') }}</small>
+                                        </div>  
+                                        <div class="col-md-3">
+                                                {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=> 'remarksD'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('remarksD') }}</small>
+                                        </div>                              
                                 </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Site3', 'Site3:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site3', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 3'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site3') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Site4', 'Site4:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site4', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 4'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site4') }}</small>
-                                </div>
-                        </div><br>  
-                        <div class="row">
-                                <div class="col-md-1">
-                                    {{Form::label('Site5', 'Site5:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site5', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 5'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site5') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Site6', 'Site6:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site6', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 6'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site6') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Site7', 'Site7:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site7', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 7'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site7') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Site8', 'Site8:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site8', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 8'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site8') }}</small>
-                                </div>
-                        </div><br>
-                        <div class="row">
-                                <div class="col-md-1">
-                                    {{Form::label('Site9', 'Site9:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site9', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 9'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site9') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Site10', 'Site10:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site10', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 10'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site10') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Site11', 'Site11:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site11', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 11'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site11') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('Site12', 'Site12:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                        {{Form::text('Site12', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 12'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('Site12') }}</small>
-                                </div>
-                        </div><br>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {{Form::label('Site13', 'Site13:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                    {{Form::text('Site13', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 13'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Site13') }}</small>
+
                             </div>
-                            <div class="col-md-1">
-                                {{Form::label('Site14', 'Site14:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                    {{Form::text('Site14', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 14'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Site14') }}</small>
+                        </div>
+                        <div class="card">
+                                <div class="card-header"> Site 2</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{Form::label('Location', 'Location:')}}
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::label('Peel Test', 'Peel Test:')}}
+                                        </div>
+                                        <div class="col-md-3">
+                                                {{Form::label('Criteria', 'Criteria:')}}
+                                        </div>  
+                                        <div class="col-md-3">
+                                                {{Form::label('Remarks', 'Remarks:')}}
+                                        </div>                                 
+                                    </div>
+                                    <div class="row">
+                                            <div class="col-md-3">
+                                                    {{Form::text('LocA[]', 'A', ['class' => 'form-control', 'readonly'])}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest2A'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('peeltest2A') }}</small>
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::text('CriteriaA[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=> 'criteria2A'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('criteria2A') }}</small>
+                                            </div>  
+                                            <div class="col-md-3">
+                                                    {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks2A'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('remarks2A') }}</small>
+                                            </div>                            
+                                    </div><br>
+                                    <div class="row">
+                                            <div class="col-md-3">
+                                                    {{Form::text('LocB[]', 'B', ['class' => 'form-control', 'readonly'])}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=>'peeltest2B'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('peeltest2B') }}</small>
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::text('CriteriaB[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=>'criteria2B'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('criteria2B') }}</small>
+                                            </div>  
+                                            <div class="col-md-3">
+                                                    {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=>'remarks2B'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('remarks2B') }}</small>
+                                            </div>                           
+                                    </div><br>
+                                    <div class="row">
+                                            <div class="col-md-3">
+                                                    {{Form::text('LocC[]', 'C', ['class' => 'form-control', 'readonly'])}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=>'peeltest2C'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('peeltest2C') }}</small>
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::text('CriteriaC[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=>'criteria2C'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('criteria2C') }}</small>
+                                            </div>  
+                                            <div class="col-md-3">
+                                                    {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=>'remarks2C'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('remarks2C') }}</small>
+                                            </div>                         
+                                    </div><br>
+                                    <div class="row">
+                                            <div class="col-md-3">
+                                                    {{Form::text('LocD[]', 'D', ['class' => 'form-control', 'readonly'])}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=>'peeltest2D'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('peeltest2D') }}</small>
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::text('CriteriaD[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=>'criteria2D'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('criteria2D') }}</small>
+                                            </div>  
+                                            <div class="col-md-3">
+                                                    {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=>'remarks2D'])}}
+                                                    <small class="form-text text-danger">{{ $errors->first('remarks2D') }}</small>
+                                            </div>                              
+                                    </div>
+    
                                 </div>
-                            <div class="col-md-1">
-                                {{Form::label('Site15', 'Site15:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                    {{Form::text('Site15', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 15'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Site15') }}</small>
-                                </div>
-                            <div class="col-md-1">
-                                {{Form::label('Site16', 'Site16:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                    {{Form::text('Site16', '', ['class' => 'form-control', 'placeholder'=>'Stringer Site 16'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('Site16') }}</small>
                             </div>
-                        </div><br>
+                            <div class="card">
+                                    <div class="card-header"> Site 3</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                {{Form::label('Location', 'Location:')}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::label('Peel Test', 'Peel Test:')}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                    {{Form::label('Criteria', 'Criteria:')}}
+                                            </div>  
+                                            <div class="col-md-3">
+                                                    {{Form::label('Remarks', 'Remarks:')}}
+                                            </div>                                 
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-md-3">
+                                                        {{Form::text('LocA[]', 'A', ['class' => 'form-control', 'readonly'])}}
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3A'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('peeltest3A') }}</small>
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::text('CriteriaA[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteria3A'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('criteria3A') }}</small>
+                                                </div>  
+                                                <div class="col-md-3">
+                                                        {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3A'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('remarks3A') }}</small>
+                                                </div>                            
+                                        </div><br>
+                                        <div class="row">
+                                                <div class="col-md-3">
+                                                        {{Form::text('LocB[]', 'B', ['class' => 'form-control', 'readonly'])}}
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3B'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('peeltest3B') }}</small>
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::text('CriteriaB[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteria3B'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('criteria3B') }}</small>
+                                                </div>  
+                                                <div class="col-md-3">
+                                                        {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3B'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('remarks3B') }}</small>
+                                                </div>                           
+                                        </div><br>
+                                        <div class="row">
+                                                <div class="col-md-3">
+                                                        {{Form::text('LocC[]', 'C', ['class' => 'form-control', 'readonly'])}}
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3C'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('peeltest3C') }}</small>
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::text('CriteriaC[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteria3C'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('criteria3C') }}</small>
+                                                </div>  
+                                                <div class="col-md-3">
+                                                        {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3C'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('remarks3C') }}</small>
+                                                </div>                         
+                                        </div><br>
+                                        <div class="row">
+                                                <div class="col-md-3">
+                                                        {{Form::text('LocD[]', 'D', ['class' => 'form-control', 'readonly'])}}
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3D'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('peeltest3D') }}</small>
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::text('CriteriaD[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteria3D'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('criteria3D') }}</small>
+                                                </div>  
+                                                <div class="col-md-3">
+                                                        {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3D'])}}
+                                                        <small class="form-text text-danger">{{ $errors->first('remarks3D') }}</small>
+                                                </div>                              
+                                        </div>
+        
+                                    </div>
+                                </div>
+                                <div class="card">
+                                        <div class="card-header"> Site 4</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    {{Form::label('Location', 'Location:')}}
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::label('Peel Test', 'Peel Test:')}}
+                                                </div>
+                                                <div class="col-md-3">
+                                                        {{Form::label('Criteria', 'Criteria:')}}
+                                                </div>  
+                                                <div class="col-md-3">
+                                                        {{Form::label('Remarks', 'Remarks:')}}
+                                                </div>                                 
+                                            </div>
+                                            <div class="row">
+                                                    <div class="col-md-3">
+                                                            {{Form::text('LocA[]', 'A', ['class' => 'form-control', 'readonly'])}}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4A'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('peeltest4A') }}</small>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::text('CriteriaA[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=> 'criteria4A'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('criteria4A') }}</small>
+                                                    </div>  
+                                                    <div class="col-md-3">
+                                                            {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4A'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('remarks4A') }}</small>
+                                                    </div>                            
+                                            </div><br>
+                                            <div class="row">
+                                                    <div class="col-md-3">
+                                                            {{Form::text('LocB[]', 'B', ['class' => 'form-control', 'readonly'])}}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4B'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('peeltest4B') }}</small>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::text('CriteriaB[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=> 'criteria4B'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('criteria4B') }}</small>
+                                                    </div>  
+                                                    <div class="col-md-3">
+                                                            {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4B'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('remarks4B') }}</small>
+                                                    </div>                           
+                                            </div><br>
+                                            <div class="row">
+                                                    <div class="col-md-3">
+                                                            {{Form::text('LocC[]', 'C', ['class' => 'form-control', 'readonly'])}}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4C'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('peeltest4C') }}</small>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::text('CriteriaC[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=> 'criteria4C'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('criteria4C') }}</small>
+                                                    </div>  
+                                                    <div class="col-md-3">
+                                                            {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4C'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('remarks4C') }}</small>
+                                                    </div>                         
+                                            </div><br>
+                                            <div class="row">
+                                                    <div class="col-md-3">
+                                                            {{Form::text('LocD[]', 'D', ['class' => 'form-control', 'readonly'])}}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4D'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('peeltest4D') }}</small>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::text('CriteriaD[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=> 'criteria4D'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('criteria4D') }}</small>
+                                                    </div>  
+                                                    <div class="col-md-3">
+                                                            {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4D'])}}
+                                                            <small class="form-text text-danger">{{ $errors->first('remarks4D') }}</small>
+                                                    </div>                              
+                                            </div>
+            
+                                        </div>
+                                    </div>
+                        <br> 
                         {{Form::submit('&nbsp;&nbsp;Submit&nbsp;&nbsp;', ['class' => 'btn btn-primary' ])}}  &emsp; <a href="/stringerdata" class="btn btn-danger">Cancel</a>
                         {!! Form::close() !!}
                     </div>
