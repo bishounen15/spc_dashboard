@@ -24,15 +24,15 @@
             <div class="col-md-12">
                
         <div class="card">
-        <div class="card-header">Frame Qual Monitoring</div> 
+        <div class="card-header">Frame Qual Monitoring Data Input</div> 
  
             
-                <h1>&emsp;Add Record</h1>
+                <br/>
                 {!! Form::open(['action' => 'FrameController@store','method' => 'POST']) !!}
                 <div class="form-group" >
                     <div class="row" style="font-size:12px;">
                     <div class="col-md-11">
-                            <?php $seriallastval = "Frame Qual" ?>
+                            <?php $seriallastval = "Qual Frame" ?>
                             <?php $disableCellType = "False" ?>
                             <?php $disableShift = "False" ?>
                             <?php $targetLastVal = "" ?>
@@ -45,8 +45,8 @@
                             <?php $disableShift = "True" ?>
                             <?php $targetLastVal = $curVal->TargetParam ?>
                             <?php $ShiftLastVal = $curVal->shift ?>
-                            <?php $seriallastval ="Frame Qual" ?>
-                            @elseif( $curVal->qualResult == "pass" && $curVal->serialNo =="Frame Qual" )
+                            <?php $seriallastval ="Qual Frame" ?>
+                            @elseif( $curVal->qualResult == "pass" && $curVal->serialNo =="Qual Frame" )
                             <?php $seriallastval = "" ?>
                             <?php $disableCellType = "True" ?>
                             <?php $disableShift = "True" ?>
@@ -226,7 +226,7 @@
     <div class="row">
             <div class="col-md-12">
                     <div class="card">
-                            <div class="card-header" >Last Qual Records</div> 
+                            <div class="card-header" >Last Qual Record</div> 
                      
             <div>
                    
@@ -655,7 +655,7 @@ format: 'HH:mm'
 
 
      $(document).ready(function(){
-         if( $('#serialNo').val()=="Frame Qual")
+         if( $('#serialNo').val()=="Qual Frame")
          {    $('#serialNo').attr('readonly',true); } else {   $('#serialNo').attr('readonly',false); $('#serialNo').attr('placeholder','insert serial');}
         if($('#target').val()==""){
             $('#target').val($('.cellType').val());

@@ -45,7 +45,7 @@ class FrameController extends Controller
     {
         
 
-       $this->validate($request, [ 
+       $this->validate($request,[ 
        // 'shift' => 'required', 
        // 'date' => 'required',
         'qualTime' => 'required',
@@ -99,24 +99,21 @@ class FrameController extends Controller
             $post->remarks= $request ->input('remarks2');
        // $post->crossSection = $request->input('crossSection');
         $post->save();
-        if($request->input('remarks')=="fail" && $request->input('serialNo')=="Frame Qual" ){
+        if($request->input('remarks')=="fail" && $request->input('serialNo')=="Qual Frame" ){
             $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
-            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-         //return redirect('Frame/create')->with('frameLogs',$posts);
-          // return redirect()->route('create',['frameLogs'=>$posts]);
+          
          return Redirect::route('Frame.create')
                            ->with('frameLogs',$posts)
                           ->with('error','Qual Failed! record was added. Add Another qual.');
-           //->with('success','Qual Failed.Record was added.Add another qual.');
-            //return redirect('/Frame')->with('success','Record was successfully added!');
-        }elseif($request->input('remarks')=="pass" && $request->input('serialNo')=="Frame Qual" ){
+           //
+        }elseif($request->input('remarks')=="pass" && $request->input('serialNo')=="Qual Frame" ){
             $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
-            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-            return Redirect::route('Frame.create')
+          
+        return Redirect::route('Frame.create')
             ->with('frameLogs',$posts)
            ->with('success','Qual Passed! record was added. Add Another qual with Serial No.');
-            //return redirect('/Frame')->with('success','Record was successfully added!');
-        }elseif($request->input('remarks')=="fail" && $request->input('serialNo')!="Frame Qual" ){
+         
+        }elseif($request->input('remarks')=="fail" && $request->input('serialNo')!="Qual Frame" ){
             $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
             //$posts  = Post::orderBy('created_at','desc')->paginate(2);
             return Redirect::route('Frame.create')

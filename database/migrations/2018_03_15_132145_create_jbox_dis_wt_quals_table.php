@@ -15,14 +15,21 @@ class CreateJboxDisWtQualsTable extends Migration
     {
         Schema::create('jbox_dis_wt_quals', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('qualTransID');
+            $table->string('qualTime');
+          //  $table->integer('qualTransID');
             $table->string('shift');
-            $table->dateTime('date');
+            $table->date('date');
             $table->double('beadWt');
-            $table->string('materialPN');
+            $table->string('jBox');
+            $table->string('sealant');
+            $table->double('target');
+            //$table->string('materialPN');
             $table->double('cdaPressure');
-            $table->string('JBox');
-            $table->string('remarks');
+            $table->integer('mainCDASupply');
+            $table->integer('RAMCDA');
+            $table->integer('downStream');
+            $table->string('qualRes');
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

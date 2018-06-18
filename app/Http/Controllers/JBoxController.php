@@ -37,14 +37,23 @@ class JBoxController extends Controller
     public function store(Request $request)
     {
         $post = new jboxDisWtQual;
-        $post->qualTransID = $request->input('transID');
+     //   $post->qualTransID = $request->input('transID');
         $post->shift = $request->input('shift');
         $post->date = $request->input('fixture_date');
         $post->beadWt = $request->input('beadWt');
-        $post->materialPN = $request->input('materialPN');
+        $post->qualTime = $request -> input('qualTime');
+       // $post->materialPN = $request->input('materialPN');
+      //  $post->remarks = $request->input('remarks');
+        $post->jBox = $request->input('jBox');
+        $post->sealant = $request->input('sealant');
+        $post->target = $request->input('target');
+        $post->cdaPressure = $request->input('cdaPressure');
+        $post->mainCDASupply = $request->input('mainCDASup');
+        $post->RAMCDA = $request->input('ramCDA');
+        $post->downStream = $request->input('downStream');
+        $post->qualRes= $request->input('result');
         $post->remarks = $request->input('remarks');
-        $post->jBox = $request->input('jboxName');
-        $post->cdaPressure = $request->input('cdaPress');
+
        // $post->crossSection = $request->input('crossSection');
         $post->save();
 

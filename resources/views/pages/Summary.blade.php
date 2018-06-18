@@ -60,6 +60,7 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><a  href="/Frame">Framming Qual</a></li>
           <li class="list-group-item"><a  href="/Framming">Framming Squareness and Bowing</a></li>
+          <li class="list-group-item"><a href="/ELTest">EL Test Monitoring</a></li>
           <li class="list-group-item"><a href="/SolderTemp">J-Box Solder Temp</a></li>
           <li class="list-group-item"><a href="/JBox">J-Box Dispense Weight</a></li>
           <li class="list-group-item"><a href="/MixRatio">Pottant Mixing Ratio</a></li>

@@ -16,49 +16,147 @@
     
 
            
-    <div class="row">
+    <div class="row"  >
                
         <div class="card">
         <div class="card-header">J-Box Dispense Weight Monitoring</div> 
- 
-            
-                <h1>&emsp;Add Record</h1>
+ <br/>
                 {!! Form::open(['action' => 'JBoxController@store','method' => 'POST']) !!}
-                <div class="form-group">
-                        <div class = "row">
-                                <div class = "col-sm-1"> </div>
-                                <div class = "col-sm-1">    {{Form::label('shift','Shift'),['class'=>'form-control']}}  </div>
-                                <div class="col-sm-2">      {{Form::select('shift', array('A' => 'A 6am-2pm', 'B' => 'B 2pm-10pm','C' => 'C 10pm-6am'), 'S',['class'=>'form-control'])}} </div>
-                                <div class = "col-sm-1">    {{Form::label('date','Date'),['class'=>'form-control']}}  </div>
-                                <div class="col-sm-3">      {{Form::date('fixture_date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}}  </div>
-                                <div class = "col-sm-1">    {{Form::label('beadWt','Bead Wt.'),['class'=>'form-control']}}  </div>
-                                <div class="col-sm-2">     {{ Form::text('beadWt', '0',['class'=>'form-control'] )}}  </div>
-                                <div class = "col-sm-1"> {{Form::hidden('transID','1'),['class'=>'form-control']}} </div>
-                      
-                        </div>
-                        <br/>
-                        <div class = "row">
-                                <div class = "col-sm-1"> </div>
-                                <div class = "col-sm-1">   {{Form::label('MaterialPN','Material PN'),['class'=>'form-control']}}  </div>
-                                <div class="col-sm-2">     {{Form::text('materialPN','Material PN' ,['class'=>'form-control'])}} </div>
-                                <div class = "col-sm-1">    {{Form::label('J-Box','J-Box'),['class'=>'form-control']}}  </div>
-                                <div class="col-sm-3">     {{ Form::select('jboxName', array('Sunter' => 'Sunter'),'Sunter',['class'=>'form-control'] )}}  </div>
-                                <div class = "col-sm-1">   {{Form::label('cdaPressure','cda Pressure'),['class'=>'form-control']}}  </div>
-                                <div class="col-sm-2">    {{ Form::text('cdaPress', '0',['class'=>'form-control']) }} </div>
-                                <div class = "col-sm-1"> </div>
-                      
-                        </div>
-                        <br/>
-                        <div class = "row">
-                                <div class = "col-sm-1"> </div>
-                                <div class = "col-sm-1">   {{Form::label('remarks','remarks'),['class'=>'form-control']}}  </div>
-                                <div class= "col-sm-9">    {{ Form::text('remarks', 'Remarks',['class'=>'form-control']) }} </div>
-                    
+                <div class="form-group" style="font-size:12px;">
+
+                                <div class = "row">
+                                                <div class = "col-sm-1"> </div>
+
+                                                <div class = "col-sm-3"> 
+                                                                <div class = "row">
+                                                                        <div class = "col-sm-3">    {{Form::label('date','Date'),['class'=>'form-control']}}  </div>
+                                                                        <div class="col-sm-9">      {{Form::date('fixture_date', \Carbon\Carbon::now() ,['class'=>'form-control form-control-sm'] )}}  </div>
+                                                                </div>
+                                                </div>
+
+                                                <div class = "col-sm-2"> 
+                                                        <div class = "row">
+                                                           <div class = "col-sm-3">    {{Form::label('Shift','Shift'),['class'=>'form-control']}}  </div>
+                                                       <div class="col-sm-9">      {{Form::select('shift', array('A' => 'A 6am-2pm', 'B' => 'B 2pm-10pm','C' => 'C 10pm-6am'), 'S',['class'=>'form-control form-control-sm'])}} </div>
+                                                        </div>
+                                                 </div>
                            
+                                                               
+                                                <div class = "col-sm-4"> 
+                                                        <div class = "row">
+                                                <div class = "col-sm-2">  {{Form::label('qualtime','Qual Time'),['class'=>'form-control form-control-sm']}} </div>
+                                                    <div class = "col-sm-3">   {{ Form::text('qualTime', '00:00',['class'=>'timepicker form-control form-control-sm','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
+                                                      
+                                                    </div>
+                                                         <div class = "col-sm-3">    {{Form::label('Type'),['class'=>'form-control form-control-sm']}}  </div>
+                                                         <div class="col-sm-4">       {{Form::select('type', array('13' => 'Pail', '11.5' => 'Sausage'), 'S',['class'=>'type form-control form-control-sm']) }} </div>
+                                                        </div>
+                                                </div>
+                                                   
+                
+                                                <div class = "col-sm-2"> 
+                                                                <div class = "row">
+                                                                        <div class = "col-sm-3">    {{Form::label('Target',''),['class'=>'form-control']}}  </div>
+                                                                        <div class="col-sm-6">      {{ Form::text('target', '',['class'=>'target form-control form-control-sm','readonly'=>'true'] )}}   
+                                                                           
+                                                                            <small class="form-text text-danger">{{ $errors->first('serialNoTxt') }}</small>
+                                                                            {{Form::hidden('transID','1'),['class'=>'form-control form-control-sm']}} 
+                                                                         </div>
+                                                                         <div class = "col-sm-2"></div>
+                                                                </div>
+                                                </div>
+                                                <div class = "col-sm-1"></div>       
+                                </div>
+
+                                <div class = "row">
+                                                <div class = "col-sm-1"> </div>
+
+                                                <div class = "col-sm-3"> 
+                                                                <div class = "row">
+                                                                   <div class = "col-sm-3">    {{Form::label('JBox','JBox'),['class'=>'form-control']}}  </div>
+                                                               <div class="col-sm-9">      {{Form::select('jBox', array('sunter' => 'Sunter'), 'S',['class'=>'jBox form-control form-control-sm'])}} </div>
+                                                                </div>
+                                                         </div>
+
+                                                <div class = "col-sm-2"> 
+                                                        <div class = "row">
+                                                           <div class = "col-sm-3">    {{Form::label('Sealant','Sealant'),['class'=>'form-control']}}  </div>
+                                                       <div class="col-sm-9">      {{Form::select('sealant', array('Tonsan' => 'Tonsan'), 'S',['class'=>'sealant form-control form-control-sm'])}} </div>
+                                                        </div>
+                                                 </div>
+                           
+                                                               
+                                                <div class = "col-sm-4"> 
+                                                        <div class = "row">
+                                                <div class = "col-sm-2">  {{Form::label('beadWt','Bead Wt.'),['class'=>'form-control form-control-sm']}} </div>
+                                                    <div class = "col-sm-3">   {{ Form::text('beadWt', '0',['class'=>'beadWt form-control form-control-sm'] )}}  
+                                                      
+                                                    </div>
+                                                         <div class = "col-sm-3">    {{Form::label('cdaPressure','CDA/Robot Pressure'),['class'=>'cdaLabel form-control form-control-sm']}}  </div>
+                                                         <div class="col-sm-4">      {{ Form::text('cdaPressure', '0',['class'=>'cdaPressure form-control form-control-sm'] ) }} </div>
+                                                        </div>
+                                                </div>
+                                                   
+                
+                                                <div class = "col-sm-2"> 
+                                                                <div class = "row">
+                                                                        <div class = "col-sm-3">    {{Form::label('mainCDASupply','Main CDA Supply'),['class'=>'form-control']}}  </div>
+                                                                        <div class="col-sm-6">      {{ Form::text('mainCDASup', '0',['class'=>'mainCDASup form-control form-control-sm'] )}}   
+                                                                           
+                                                                       
+                
+                                                                         </div>
+                                                                         <div class = "col-sm-2"></div>
+                                                                </div>
+                                                </div>
+                                                <div class = "col-sm-1"></div>       
+                                </div>
                                
-                                <div class = "col-sm-1"> </div>
-                      
-                        </div>
+                                <div class = "row">
+                                                <div class = "col-sm-1"> </div>
+
+                                                <div class = "col-sm-3"> 
+                                                                <div class = "row">
+                                                                   <div class = "col-sm-3">     {{Form::label('RAMcda','RAM CDA'),['class'=>'form-control']}}   </div>
+                                                               <div class="col-sm-9">     {{ Form::text('ramCDA', '0',['class'=>'ramCDA form-control form-control-sm'] )}}  </div>
+                                                                </div>
+                                                         </div>
+
+                                                <div class = "col-sm-2"> 
+                                                        <div class = "row">
+                                                           <div class = "col-sm-3">   {{Form::label('downStream','Down Stream'),['class'=>'form-control']}}  </div>
+                                                       <div class="col-sm-9">      {{ Form::text('downStream', '0',['class'=>'downStream form-control form-control-sm'] )}} </div>
+                                                        </div>
+                                                 </div>
+                           
+                                                               
+                                                <div class = "col-sm-2"> 
+                                                        <div class = "row">
+                                                <div class = "col-sm-4">  {{Form::label('qualRes','Qual Res'),['class'=>'form-control form-control-sm']}} </div>
+                                                    <div class = "col-sm-8">   {{ Form::text('result', '0',['class'=>'qualRes form-control form-control-sm'] )}}  
+                                                      
+                                                    </div>
+                                                        
+                                                        </div>
+                                                </div>
+                                                   
+                
+                                                <div class = "col-sm-4"> 
+                                                                <div class = "row">
+                                                                                <div class = "col-sm-2">  {{Form::label('remarks','Remarks'),['class'=>'form-control form-control-sm']}} </div>
+                                                                                <div class = "col-sm-8">   {{ Form::text('remarks', '',['class'=>'remarks form-control form-control-sm'] )}}  </div>
+                                                                       
+                                                                                <div class = "col-sm-2"></div> 
+                                                                         </div>
+                                                                       
+                                                 </div>
+                                 </div>
+                                               
+
+                
+
+
+             
                     <br/>
            
                     </div>
@@ -77,3 +175,59 @@
  @endsection
 
  
+ @push('jscript')
+ <script>
+
+       $('.timepicker').datetimepicker({
+
+format: 'HH:mm'
+
+}); 
+
+ 
+ JQUERY4U = {
+	checkBeadWt: function(beadWt,target) {
+                var beadWtUL = parseFloat( target) + 1;
+                var beadWtLL = parseFloat( target) - 1;
+                if(beadWtLL <= beadWt && beadWt <= beadWtUL){
+                        return "passed";
+               // return beadWtUL;
+               }else{
+                 return "failed";
+                }
+        }
+
+        }
+
+         $('.type' ).change(function(){
+                $('.target').val( $('.type').val() );
+               var target = $('.type').val();
+           if( target == '11.5'){
+              $('.ramCDA').attr('readonly',true);
+              $('.mainCDASup').attr('readonly',true);
+              $('.downStream').attr('readonly',true);
+           }
+           if( target == '13'){
+              $('.ramCDA').attr('readonly', false);
+              $('.mainCDASup').attr('readonly', false);
+              $('.downStream').attr('readonly', false);
+           }
+          
+             
+
+              
+         });
+
+         $('.beadWt').keyup(function(){
+                 var beadWt = 0;
+                 var target = 0;
+                  beadWt =  $('.beadWt').val();
+                  target =  $('.target').val();
+            var res =  JQUERY4U.checkBeadWt(beadWt, target);
+                $('.qualRes').val(res);
+         });
+
+        
+  
+    </script>
+ @endpush

@@ -36,14 +36,28 @@ class solderTempController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [ 
+            //'tempBefAdj' => 'required'
+        ]);
+
+   
         $post = new SolderTemp;
-        $post->transID = $request->input('transID');
+        $post->transID = $request->input('qualTransID');
         $post->shift = $request->input('shift');
         $post->date = $request->input('fixture_date');
-        $post->tempBefAdj = $request->input('tempBefAdj');
-        $post->tempAftAdj = $request->input('tempAftAdj');
+        $post->qualTime = $request->input('qualTime');
+        $post->tempBefAdj1 = $request->input('AdjBeftTmp1');
+        $post->tempBefAdj2 = $request->input('AdjBeftTmp2');
+        $post->tempBefAdj3 = $request->input('AdjBeftTmp3');
+        $post->tempAftAdj1 = $request->input('AdjAftTmp1');
+        $post->tempAftAdj2 = $request->input('AdjAftTmp2');
+        $post->tempAftAdj3 = $request->input('AdjAftTmp3');
+        $post->tempAftAdjAve = $request->input('AdjAftAve');
+        $post->tempBefAdjAve = $request->input('AdjBeftAve');
+        $post->target = $request->input('target');
+        $post->result = $request->input('qualRes');
         $post->remarks = $request->input('remarks');
-        $post->jBox = $request->input('jboxName');
+        $post->jBox = $request->input('jBoxName');
        // $post->crossSection = $request->input('crossSection');
         $post->save();
 

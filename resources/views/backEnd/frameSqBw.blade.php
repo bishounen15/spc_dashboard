@@ -15,22 +15,23 @@
 <a href="/Framming/create" class="btn btn-success">Add Record</a>
             <table class="table table-striped">
             <tr>
-                <th>Seq</th>
-                <th>Date</th>
-                <th>Shift</th>
-                <th>Serial</th>
-                <th>L1</th>
-                <th>L2</th>
-                <th>L3</th>
-                <th>L-Diff</th>
-                <th>S1</th>
-                <th>S2</th>
-                <th>S3</th>
-                <th>S-Diff</th>
-                <th>D1</th>
-                <th>D2</th>
-                <th>D-Diff</th>
-                <th>Remarks</th>
+            <th>Seq</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Shift</th>
+            <th>Serial</th>
+            <th>L1</th>
+            <th>L2</th>
+            <th>L3</th>
+            <th>L-Diff</th>
+            <th>S1</th>
+            <th>S2</th>
+            <th>S3</th>
+            <th>S-Diff</th>
+            <th>D1</th>
+            <th>D2</th>
+            <th>D-Diff</th>
+            <th>Remarks</th>
             </tr>
 
              
@@ -38,8 +39,9 @@
                 @foreach($frameSBLogs as $potLog)
                  <tr>
                     <td>{{$potLog->id}}</td>
-                    <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->date}}</td>
+                    <td>{{$potLog->qualTime}}</td>
+                    <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->moduleID}}</td>
                     <td>{{$potLog->L1}}</td>
                     <td>{{$potLog->L2}}</td>
