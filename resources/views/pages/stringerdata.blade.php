@@ -25,8 +25,8 @@
                       <tr>
                         <th scope="row">1</th>
                         <td><b>Ave (Ind)</b></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{$avefront}}</td>
+                      <td>{{$aveback}}</td>
                       </tr>
                       <tr>
                         <th scope="row">2</th>

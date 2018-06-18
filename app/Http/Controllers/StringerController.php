@@ -15,10 +15,12 @@ class StringerController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT AVG(PeelTest) FROM stringers'); 
+        $avefront = number_format(DB::table('stringers')->where('side','=','Front')->avg('PeelTest'),2);
+        $aveback = number_format(DB::table('stringers')->where('side','=','Back')->avg('PeelTest'),2); 
         //$posts = Post::orderBy('created_at','desc')->paginate(2);
         return view('pages.stringerdata')  
-                    ->with('alldata',$posts);
+                    ->with('avefront',$avefront)
+                    ->with('aveback',$aveback);
 
         
     }
