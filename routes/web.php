@@ -49,7 +49,9 @@ Route::resource('Frame','FrameController');
 Route::resource('Framming','SqBwController');
 Route::resource('MixRatio','MixRatioController');
 
-Route::resource('Yield','yieldController');
+// Route::resource('Yield','yieldController');
+Route::get('/Yield/create','yieldController@create')->name('create_yield');
+Route::post('/Yield/store','yieldController@store')->name('store_yield');
 
 });
 
