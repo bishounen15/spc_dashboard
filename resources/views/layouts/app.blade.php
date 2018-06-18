@@ -19,6 +19,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
     {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> --}}
@@ -51,7 +52,7 @@
                         @else
                             <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li>
                             <li><a class="nav-link" href="{{ route('spc_entry') }}">{{ __('SPC Dashboard') }}</a></li>
-                            <li><a class="nav-link" href="/Yield/create">{{ __('Yield Dashboard') }}</a></li>
+                            <li><a class="nav-link" href="{{route('list_yield')}}">{{ __('Yield Dashboard') }}</a></li>
                         @endguest
                     </ul>
 
@@ -87,12 +88,16 @@
         </nav>
 
         <main class="py-4">
-            <div align= "center">
+            <div class="container" align= "center">
             @include('inc.messages')
             </div>
             @yield('content')
         </main>
     </div>
+
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}" defer></script>
+    <script src="{{ asset('js/dataTables.buttons.min.js') }}" defer></script>
+    <script src="{{ asset('js/buttons.print.min.js') }}" defer></script>
     @stack('jscript')
 </body>
 </html>

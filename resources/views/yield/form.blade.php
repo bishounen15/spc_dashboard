@@ -3,7 +3,7 @@
 <form method="POST" action="{{route('store_yield')}}" id="YieldForm"> 
     @csrf 
     <div class="container">
-        <h3>Yield Data Entry Form</h3>
+        <h3>Yield Data Entry Form ({{$from}} - {{$to}})</h3>
             <div class="card">
                 <div class="card-header">
                     General Information
@@ -135,11 +135,11 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">String Produced (STR)</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="str_produced" id="str_produced">
+                                <input type="number" step="1" class="form-control form-control-sm" name="str_produced" id="str_produced" value="0">
                             </div>
                             <div class="form-group">
                                 <label for="">String Defect (STR)</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="str_defect" id="str_defect">
+                                <input type="number" step="1" class="form-control form-control-sm" name="str_defect" id="str_defect" value="0">
                                 <small class="form-text text-danger" id="err_str_defect"></small>
                             </div>
                         </div>
@@ -152,11 +152,11 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">EL1 Inspected (MTX)</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="el1_inspected" id="el1_inspected">
+                                <input type="number" step="1" class="form-control form-control-sm" name="el1_inspected" id="el1_inspected" value="0">
                             </div>
                             <div class="form-group">
                                 <label for="">EL1 Defect (MTX)</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="el1_defect" id="el1_defect">
+                                <input type="number" step="1" class="form-control form-control-sm" name="el1_defect" id="el1_defect" value="0">
                                 <small class="form-text text-danger" id="err_el1_defect"></small>
                             </div>
                         </div>
@@ -278,7 +278,7 @@
             <div class="card">
                 {{-- <button type="submit" class="btn btn-success">Save Employee</button> --}}
                 <a href="#" role="button" class="btn btn-success" id="submit" onclick="Validate()">Save Record</a>
-                <a href="#" role="button" class="btn btn-danger">Cancel</a>
+                <a href="{{route('list_yield')}}" role="button" class="btn btn-danger">Cancel</a>
             </div>
     </div>
 

@@ -7,6 +7,8 @@ use App\ProductionTeam as ProductionTeam;
 use App\mesData as mesData;
 use App\YieldData as YieldData;
 
+use DataTables;
+
 class yieldController extends Controller
 {
     //
@@ -15,6 +17,10 @@ class yieldController extends Controller
         $this->team = $team->all();
     }    
 
+    public function list() {
+        return view('yield.list');
+    }
+
     public function create() {
         $data = [];
 
@@ -22,9 +28,9 @@ class yieldController extends Controller
 
         $data['teams'] = $this->team;
 
-        $date = date("Y-m-d",strtotime("-5 Days"));
-        // $time = date('H:i');
-        $time = date('06:00');
+        $date = date("Y-m-d",strtotime("-3 Days"));
+        $time = date('H:i');
+        // $time = date('06:00');
         
         if ($time < "06:00") {
             $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
@@ -41,8 +47,8 @@ class yieldController extends Controller
             $last_trx = $this->getStart($date,$shift);
         }
 
-        // $dt = date("Y-m-d H:i",strtotime("-3 Days"));
-        $dt = date("Y-m-d 06:00",strtotime("-4 Days"));
+        $dt = date("Y-m-d",strtotime("-3 Days")) . " " . $time;
+        // $dt = date("Y-m-d 06:00",strtotime("-4 Days"));
 
         // dd($dt);
         
@@ -109,12 +115,7 @@ class yieldController extends Controller
         return view('yield.form', $data);
     }
 
-    function store(Request $request) {
-        // $validatedData = $request->validate([
-        //     'team' => 'required',
-        //     'product_size' => 'required',
-        // ]);
-
+    public function store(Request $request) {
         $data = [];
 
         $data['team'] = $request->input('team');
@@ -161,7 +162,7 @@ class yieldController extends Controller
         // dd($data);
 
         YieldData::create($data);
-        return redirect('/Yield/create');
+        return redirect('/Yield/list')->with("success","Record Successfully Created.");
     }
 
     private function getShift($time) {
@@ -186,5 +187,13 @@ class yieldController extends Controller
         }
 
         return $retval;
+    }
+
+    public function load()
+    {
+        $yield = YieldData::selectRaw("id, YEAR(date) as yr, CONCAT('Q',QUARTER(date)) as qtr, CONCAT('W',WEEK(date,1)) as wk, CONCAT('W',WEEK(date,1),'.',WEEKDAY(date) + 1) as wkd, date, input_cell, input_mod, inprocess_cell, ccd_cell, visualdefect_cell, cell_defect, cell_class_b, cell_class_c, product_size, str_produced, str_defect, el1_inspected, el1_defect, be_inspected, be_defect, be_class_b, be_class_c, man, mac, mat, met, env, el2_class_a, el2_defect, el2_class_b, el2_class_c, el2_low_power, build, target, ROUND(py,2) as py, ey")
+        ->orderByRaw("date ASC, shift ASC");
+
+        return Datatables::of($yield)->make(true);
     }
 }

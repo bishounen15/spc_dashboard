@@ -121,8 +121,6 @@ return [
 
     'providers' => [
 
-        Yajra\DataTables\DataTablesServiceProvider::class,
-
         /*
          * Laravel Framework Service Providers...
          */
@@ -165,6 +163,7 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Yajra\DataTables\ButtonsServiceProvider::class,
 
     ],
 
