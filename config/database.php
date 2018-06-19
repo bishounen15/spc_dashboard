@@ -35,11 +35,11 @@ return [
 
         'yield' => [
             'driver' => 'mysql',
-            'host' => '127.0.0.1',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'sp_yield',
-            'username' => 'root',
-            'password' => '',
+            'username' => 'laravel_user',
+            'password' => 'password@1',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -50,11 +50,11 @@ return [
 
         'spc' => [
             'driver' => 'mysql',
-            'host' => '127.0.0.1',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'sp_spc',
-            'username' => 'root',
-            'password' => '',
+            'username' => 'laravel_user',
+            'password' => 'password@1',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

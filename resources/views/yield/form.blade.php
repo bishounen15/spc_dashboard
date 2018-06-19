@@ -382,8 +382,13 @@
             if ($('#el1_inspected').val() != "") { el1_inspected = parseInt($('#el1_inspected').val()); } else { el1_inspected = 0; }
             if ($('#el1_defect').val() != "") { el1_defect = parseInt($('#el1_defect').val()); } else { el1_defect = 0; }
 
-            $("#py").val( ( ( (input_cell - (inprocess_cell + ccd_cell + visualdefect_cell + cell_defect) ) / input_cell) * 100 ).toFixed(2) );
-            $("#ey").val( ( ( ( input_cell - (inprocess_cell + ccd_cell + visualdefect_cell + cell_class_c) ) / input_cell ) * 100 ).toFixed(2) );
+            if (input_cell == 0) {
+                $("#py").val("0.00");
+                $("#ey").val("0.00");
+            } else {
+                $("#py").val( ( ( (input_cell - (inprocess_cell + ccd_cell + visualdefect_cell + cell_defect) ) / input_cell) * 100 ).toFixed(2) );
+                $("#ey").val( ( ( ( input_cell - (inprocess_cell + ccd_cell + visualdefect_cell + cell_class_c) ) / input_cell ) * 100 ).toFixed(2) );
+            }
             
             if (str_produced == 0) { $("#srr").val('0.00'); } else { $("#srr").val( ( ( str_defect / str_produced ) * 100 ).toFixed(2) ); }
             if (el1_inspected == 0) { $("#mrr").val('0.00'); } else { $("#mrr").val( ( ( el1_defect / el1_inspected ) * 100 ).toFixed(2) ); }

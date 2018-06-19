@@ -40,6 +40,7 @@
             <td class="table-warning"><strong>ENV</strong></td>
 
             <td class="table-info"><strong>EL2 Class A (MOD)</strong></td>
+            <td class="table-info"><strong>EL2 Class A w/ Crack (MOD)</strong></td>
             <td class="table-info"><strong>EL2 Defect (MOD)</strong></td>
             <td class="table-info"><strong>EL2 Class B (MOD)</strong></td>
             <td class="table-info"><strong>EL2 Class C (MOD)</strong></td>
@@ -114,6 +115,7 @@
                 { data: 'met' },
                 { data: 'env' },
                 { data: 'el2_class_a' },
+                { data: null, defaultContent: '0' },
                 { data: 'el2_defect' },
                 { data: 'el2_class_b' },
                 { data: 'el2_class_c' },

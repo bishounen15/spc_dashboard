@@ -39,6 +39,21 @@ class yieldController extends Controller
 
         $shift = $this->getShift($time);
 
+        $last_yield = YieldData::orderBy("id","desc")->first();
+        
+        if ($last_yield != null) {
+            if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
+                $date = $last_yield->date;
+                $shift = $last_yield->shift;
+
+                $dt = $this->getEnd($date,$last_yield->shift);
+            } else {
+                $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+            }
+        } else {
+            $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+        }
+
         $last_trx = YieldData::where([
             ["date", $date],
             ["shift", $shift],
@@ -47,11 +62,6 @@ class yieldController extends Controller
         if ($last_trx == null) {
             $last_trx = $this->getStart($date,$shift);
         }
-
-        $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
-        // $dt = date("Y-m-d 06:00",strtotime("-4 Days"));
-
-        // dd($dt);
         
         $input_mod = mesData::where([
             ["TRXDATE",">=",$last_trx],
@@ -160,8 +170,6 @@ class yieldController extends Controller
         $data['srr'] = $request->input('srr');
         $data['mrr'] = $request->input('mrr');
 
-        // dd($data);
-
         YieldData::create($data);
         return redirect('/Yield/list')->with("success","Record Successfully Created.");
     }
@@ -190,10 +198,23 @@ class yieldController extends Controller
         return $retval;
     }
 
+    private function getEnd($date, $shift) {
+        if ($shift == "A") {
+            $retval = $date . " 14:00:00";
+        } else if ($shift == "B") {
+            $retval = $date . " 22:00:00";
+        } else {
+            $retval = $date . " 06:00:00";
+        }
+
+        return $retval;
+    }
+
     public function load()
     {
-        $yield = YieldData::selectRaw("id, YEAR(date) as yr, CONCAT('Q',QUARTER(date)) as qtr, CONCAT('W',WEEK(date,1)) as wk, CONCAT('W',WEEK(date,1),'.',WEEKDAY(date) + 1) as wkd, date, input_cell, input_mod, inprocess_cell, ccd_cell, visualdefect_cell, cell_defect, cell_class_b, cell_class_c, product_size, str_produced, str_defect, el1_inspected, el1_defect, be_inspected, be_defect, be_class_b, be_class_c, man, mac, mat, met, env, el2_class_a, el2_defect, el2_class_b, el2_class_c, el2_low_power, build, target, ROUND(py,2) as py, ey")
-        ->orderByRaw("date ASC, shift ASC");
+        $yield = YieldData::selectRaw("YEAR(date) as yr, CONCAT('Q',QUARTER(date)) as qtr, CONCAT('W',WEEK(date,1)) as wk, CONCAT('W',WEEK(date,1),'.',WEEKDAY(date) + 1) as wkd, date, sum(input_cell) as input_cell, sum(input_mod) as input_mod, sum(inprocess_cell) as inprocess_cell, sum(ccd_cell) as ccd_cell, sum(visualdefect_cell) as visualdefect_cell, sum(cell_defect) as cell_defect, sum(cell_class_b) as cell_class_b, sum(cell_class_c) as cell_class_c, sum(product_size) as product_size, sum(str_produced) as str_produced, sum(str_defect) as str_defect, sum(el1_inspected) as el1_inspected, sum(el1_defect) as el1_defect, sum(be_inspected) as be_inspected, sum(be_defect) as be_defect, sum(be_class_b) as be_class_b, sum(be_class_c) as be_class_c, sum(man) as man, sum(mac) as mac, sum(mat) as mat, sum(met) as met, sum(env) as env, sum(el2_class_a) as el2_class_a, sum(el2_defect) as el2_defect, sum(el2_class_b) as el2_class_b, sum(el2_class_c) as el2_class_c, sum(el2_low_power) as el2_low_power, build, target, ROUND(AVG(py),2) as py, ROUND(AVG(ey),2) ey")
+        ->orderByRaw("date ASC, shift ASC")
+        ->groupBy("date","build","target");
 
         return Datatables::of($yield)->make(true);
     }
