@@ -15,12 +15,14 @@ class CreateCuringTestsTable extends Migration
     {
         Schema::create('curing_tests', function (Blueprint $table) {
             $table->increments('id');
+          //  $table->string('qualTime');
             $table->string('shift');
             $table->string('serialNo');
-            $table->dateTime('date');
+            $table->date('date');
             $table->string('snapTime');
             $table->string('pottingTime');
-            $table->string('condition');
+            $table->string('condition'); 
+             $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

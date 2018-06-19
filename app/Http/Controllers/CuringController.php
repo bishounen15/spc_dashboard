@@ -43,9 +43,10 @@ class CuringController extends Controller
         $post->shift = $request->input('shift');
         $post->date = $request->input('fixture_date');
         $post->serialNo = $request->input('serialNo');
-        $post->snapTime = $request->input('snaptestTime');
+        $post->snapTime = $request->input('snapTime');
         $post->pottingTime = $request->input('pottingTime');
         $post->condition = $request->input('condition');
+        $post->remarks = $request->input('remarks');
        // $post->crossSection = $request->input('crossSection');
         $post->save();
 

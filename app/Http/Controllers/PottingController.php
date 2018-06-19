@@ -51,12 +51,17 @@ class PottingController extends Controller
             //create Post
             $post = new POttingQual;
             $post->shift = $request->input('shift');
-            $post->time = $request->input('fixture_date');
-            $post->pottantName = $request->input('pottantName');
-            $post->jBoxName = $request->input('jboxName');
+            $post->date = $request->input('fixture_date');
+            $post->time = $request -> input('qualTime');
+            $post->pottantName = $request->input('sealant');
+            $post->jBoxName = $request->input('jBox');
+          //  $post->sealant = $request->input('sealant');
             $post->pottantWeight = $request->input('pottantWt');
             $post->snapTime = $request->input('snapTime');
-            $post->crossSection = $request->input('crossSection');
+            $post->target = $request->input('target');
+            $post->qualRes = $request->input('qualRes');
+            $post->crossSection = $request->input('crossSec');
+            $post->remarks = $request->input('remarks');
             $post->save();
 
             return redirect('/Potting')->with('success','Record was successfully added!');

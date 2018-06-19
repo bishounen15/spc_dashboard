@@ -184,6 +184,12 @@ format: 'HH:mm'
 
 }); 
 
+ $(document).ready(function () {
+        
+        $('.type select').val("13");
+        $('.target').val("13");
+});
+
  
  JQUERY4U = {
 	checkBeadWt: function(beadWt,target) {
