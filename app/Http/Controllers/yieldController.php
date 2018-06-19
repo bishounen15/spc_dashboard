@@ -22,7 +22,7 @@ class yieldController extends Controller
     }
 
     public function create() {
-        // date_default_timezone_set('Asia/Manila');
+        date_default_timezone_set('Asia/Manila');
         $data = [];
 
         $data['team'] = "";
