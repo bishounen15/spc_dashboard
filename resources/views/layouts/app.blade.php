@@ -19,7 +19,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/Datatables-1.10.16/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/buttons.dataTables.min.css') }}" rel="stylesheet">
     {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> --}}
@@ -33,6 +34,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>  
+
+    <style>
+        div.dt-buttons {
+            float: right;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -51,7 +58,7 @@
                         @guest
                         @else
                             <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li>
-                            <li><a class="nav-link" href="{{ route('spc_entry') }}">{{ __('SPC Dashboard') }}</a></li>
+                            {{-- <li><a class="nav-link" href="{{ route('spc_entry') }}">{{ __('SPC Dashboard') }}</a></li> --}}
                             <li><a class="nav-link" href="{{route('list_yield')}}">{{ __('Yield Dashboard') }}</a></li>
                         @endguest
                     </ul>
@@ -97,7 +104,12 @@
 
     <script src="{{ asset('js/jquery.dataTables.min.js') }}" defer></script>
     <script src="{{ asset('js/dataTables.buttons.min.js') }}" defer></script>
+    <script src="{{ asset('js/buttons.html5.min.js') }}" defer></script>
     <script src="{{ asset('js/buttons.print.min.js') }}" defer></script>
+    <script src="{{ asset('js/pdfmake.min.js') }}" defer></script>
+    <script src="{{ asset('js/jszip.min.js') }}" defer></script>
+    <script src="{{ asset('js/buttons.flash.min.js') }}" defer></script>
+
     @stack('jscript')
 </body>
 </html>

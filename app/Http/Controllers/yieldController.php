@@ -22,13 +22,14 @@ class yieldController extends Controller
     }
 
     public function create() {
+        date_default_timezone_set('Asia/Manila');
         $data = [];
 
         $data['team'] = "";
 
         $data['teams'] = $this->team;
 
-        $date = date("Y-m-d",strtotime("-3 Days"));
+        $date = date("Y-m-d",strtotime("Today"));
         $time = date('H:i');
         // $time = date('06:00');
         
@@ -47,7 +48,7 @@ class yieldController extends Controller
             $last_trx = $this->getStart($date,$shift);
         }
 
-        $dt = date("Y-m-d",strtotime("-3 Days")) . " " . $time;
+        $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
         // $dt = date("Y-m-d 06:00",strtotime("-4 Days"));
 
         // dd($dt);

@@ -3,7 +3,8 @@
 <div class="container">
     <h3>Yield Dashboard</h3>
     <a href="{{route('create_yield')}}" role="button" class="btn btn-primary">Add Yield Record</a>
-
+    <br><br>
+    <div>
     <table class="table table-condensed table-striped table-sm" id="yield-list" style="width: 100%;">
         <thead class="thead-dark" style="font-size: 0.7em;">
             <td class="table-primary"><strong>Year</strong></td>
@@ -54,6 +55,7 @@
             
         </tbody>
     </table>
+    </div>
 </div>
 @endsection
 
@@ -64,8 +66,25 @@
             "scrollX": true,
             "order": [],
             ajax: '{!! route('yield_data') !!}',
-            // dom: 'Bfrtip',
-            // buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+            dom: 'Blfrtip',
+            buttons: [
+                "print",
+                {
+                    extend:     'excel',
+                    text:       'Excel',
+                    filename: "yield_excel"
+                },
+                {
+                    extend:     'csv',
+                    text:       'CSV',
+                    filename: "yield_csv"
+                },
+                // {
+                //     extend:     'pdf',
+                //     text:       'PDF',
+                //     filename: "yield_pdf"
+                // },
+            ],
             columns: [
                 { data: 'yr' },
                 { data: 'qtr' },

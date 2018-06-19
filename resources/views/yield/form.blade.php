@@ -175,15 +175,15 @@
                             <input type="text" class="form-control form-control-sm" name="be_inspected" id="be_inspected" value="{{$be_inspected}}" readonly>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="">BE Defect (MOD)</label>
-                            <input type="text" class="form-control form-control-sm" name="be_defect" id="be_defect" value="{{$be_defect}}" readonly>
+                            <label for="">BE Class B (MOD)</label>
+                            <input type="text" class="form-control form-control-sm" name="be_class_b" id="be_class_b" value="{{$be_class_b}}" readonly>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col-sm-6">
-                            <label for="">BE Class B (MOD)</label>
-                            <input type="text" class="form-control form-control-sm" name="be_class_b" id="be_class_b" value="{{$be_class_b}}" readonly>
+                            <label for="">BE Defect (MOD)</label>
+                            <input type="text" class="form-control form-control-sm" name="be_defect" id="be_defect" value="{{$be_defect}}" readonly>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="">BE Class C (MOD)</label>
