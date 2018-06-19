@@ -16,7 +16,9 @@
 // });
 
 Route::get('/', 'PagesController@index');
-Route::get('/link','PagesController@link')->name('portal_link');
+Route::get('/link','LinkAccountController@index')->name('portal_link');
+Route::post('/check','LinkAccountController@check')->name('check_account');
+Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
 Route::group(['middleware'=>['auth','revalidate']], function() {
 
@@ -50,7 +52,7 @@ Route::resource('Framming','SqBwController');
 Route::resource('MixRatio','MixRatioController');
 
 // Route::resource('Yield','yieldController');
-Route::get('/employee/list/data', 'yieldController@load')->name('yield_data');
+Route::get('/yield/list/data', 'yieldController@load')->name('yield_data');
 Route::get('/Yield/list','yieldController@list')->name('list_yield');
 Route::get('/Yield/create','yieldController@create')->name('create_yield');
 Route::post('/Yield/store','yieldController@store')->name('store_yield');
