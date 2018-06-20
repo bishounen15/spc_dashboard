@@ -18,8 +18,7 @@
                         </div>    
                         <div class="col-md-3">
                             {{Form::select('Stringer', array('Stringer 1A' => 'Stringer 1A', 'Stringer 2B' => 'Stringer 2B',
-                            'Stringer 3A' => 'Stringer 3A', 'Stringer 3B' => 'Stringer 3B',
-                            'StrinG Rework' => 'String Rework', 'Solder Temp' => 'Solder Temp'), '',['class'=>'form-control','placeholder'=>'Select Stringer'])}}
+                            'Stringer 3A' => 'Stringer 3A', 'Stringer 3B' => 'Stringer 3B'), '',['class'=>'form-control','placeholder'=>'Select Stringer'])}}
                             <small class="form-text text-danger">{{ $errors->first('Stringer') }}</small>
                         </div>
                         <div class="col-md-1">
@@ -94,7 +93,8 @@
                                                 <small class="form-text text-danger">{{ $errors->first('PeelTestA') }}</small>
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::text('CriteriaA[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteriaA'])}}
+                                                {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B',
+                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaA'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('criteriaA') }}</small>
                                         </div>  
                                         <div class="col-md-3">
@@ -111,7 +111,8 @@
                                                 <small class="form-text text-danger">{{ $errors->first('peeltestB') }}</small>
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::text('CriteriaB[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteriaB'])}}
+                                                {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B',
+                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaB'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('criteriaB') }}</small>
                                         </div>  
                                         <div class="col-md-3">
@@ -128,7 +129,8 @@
                                                 <small class="form-text text-danger">{{ $errors->first('peeltestC') }}</small>
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::text('CriteriaC[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id' => 'criteriaC'])}}
+                                                {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B',
+                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaC'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('criteriaC') }}</small>
                                         </div>  
                                         <div class="col-md-3">
@@ -145,7 +147,8 @@
                                                 <small class="form-text text-danger">{{ $errors->first('peeltestD') }}</small>
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::text('CriteriaD[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id' => 'criteriaD'])}}
+                                                {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B',
+                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaD'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('criteriaD') }}</small>
                                         </div>  
                                         <div class="col-md-3">
@@ -182,7 +185,8 @@
                                                     <small class="form-text text-danger">{{ $errors->first('peeltest2A') }}</small>
                                             </div>
                                             <div class="col-md-3">
-                                                    {{Form::text('CriteriaA[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=> 'criteria2A'])}}
+                                                        {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B',
+                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2A'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('criteria2A') }}</small>
                                             </div>  
                                             <div class="col-md-3">
@@ -199,7 +203,8 @@
                                                     <small class="form-text text-danger">{{ $errors->first('peeltest2B') }}</small>
                                             </div>
                                             <div class="col-md-3">
-                                                    {{Form::text('CriteriaB[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=>'criteria2B'])}}
+                                                        {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B',
+                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2B'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('criteria2B') }}</small>
                                             </div>  
                                             <div class="col-md-3">
@@ -216,7 +221,8 @@
                                                     <small class="form-text text-danger">{{ $errors->first('peeltest2C') }}</small>
                                             </div>
                                             <div class="col-md-3">
-                                                    {{Form::text('CriteriaC[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=>'criteria2C'])}}
+                                                        {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B',
+                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2C'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('criteria2C') }}</small>
                                             </div>  
                                             <div class="col-md-3">
@@ -233,7 +239,8 @@
                                                     <small class="form-text text-danger">{{ $errors->first('peeltest2D') }}</small>
                                             </div>
                                             <div class="col-md-3">
-                                                    {{Form::text('CriteriaD[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=>'criteria2D'])}}
+                                                        {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B',
+                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2D'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('criteria2D') }}</small>
                                             </div>  
                                             <div class="col-md-3">
@@ -270,7 +277,8 @@
                                                         <small class="form-text text-danger">{{ $errors->first('peeltest3A') }}</small>
                                                 </div>
                                                 <div class="col-md-3">
-                                                        {{Form::text('CriteriaA[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteria3A'])}}
+                                                                {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B',
+                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3A'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('criteria3A') }}</small>
                                                 </div>  
                                                 <div class="col-md-3">
@@ -287,7 +295,8 @@
                                                         <small class="form-text text-danger">{{ $errors->first('peeltest3B') }}</small>
                                                 </div>
                                                 <div class="col-md-3">
-                                                        {{Form::text('CriteriaB[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteria3B'])}}
+                                                        {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B',
+                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3B'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('criteria3B') }}</small>
                                                 </div>  
                                                 <div class="col-md-3">
@@ -304,7 +313,8 @@
                                                         <small class="form-text text-danger">{{ $errors->first('peeltest3C') }}</small>
                                                 </div>
                                                 <div class="col-md-3">
-                                                        {{Form::text('CriteriaC[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteria3C'])}}
+                                                                {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B',
+                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3C'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('criteria3C') }}</small>
                                                 </div>  
                                                 <div class="col-md-3">
@@ -321,7 +331,8 @@
                                                         <small class="form-text text-danger">{{ $errors->first('peeltest3D') }}</small>
                                                 </div>
                                                 <div class="col-md-3">
-                                                        {{Form::text('CriteriaD[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria', 'id'=>'criteria3D'])}}
+                                                                {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B',
+                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3D'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('criteria3D') }}</small>
                                                 </div>  
                                                 <div class="col-md-3">
@@ -358,7 +369,8 @@
                                                             <small class="form-text text-danger">{{ $errors->first('peeltest4A') }}</small>
                                                     </div>
                                                     <div class="col-md-3">
-                                                            {{Form::text('CriteriaA[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=> 'criteria4A'])}}
+                                                                {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B',
+                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4A'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('criteria4A') }}</small>
                                                     </div>  
                                                     <div class="col-md-3">
@@ -375,7 +387,8 @@
                                                             <small class="form-text text-danger">{{ $errors->first('peeltest4B') }}</small>
                                                     </div>
                                                     <div class="col-md-3">
-                                                            {{Form::text('CriteriaB[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=> 'criteria4B'])}}
+                                                                {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B',
+                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4B'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('criteria4B') }}</small>
                                                     </div>  
                                                     <div class="col-md-3">
@@ -392,7 +405,8 @@
                                                             <small class="form-text text-danger">{{ $errors->first('peeltest4C') }}</small>
                                                     </div>
                                                     <div class="col-md-3">
-                                                            {{Form::text('CriteriaC[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=> 'criteria4C'])}}
+                                                                {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B',
+                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4C'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('criteria4C') }}</small>
                                                     </div>  
                                                     <div class="col-md-3">
@@ -409,7 +423,8 @@
                                                             <small class="form-text text-danger">{{ $errors->first('peeltest4D') }}</small>
                                                     </div>
                                                     <div class="col-md-3">
-                                                            {{Form::text('CriteriaD[]', '', ['class' => 'form-control', 'placeholder'=>'Criteria','id'=> 'criteria4D'])}}
+                                                                {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B',
+                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4D'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('criteria4D') }}</small>
                                                     </div>  
                                                     <div class="col-md-3">

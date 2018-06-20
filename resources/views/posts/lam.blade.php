@@ -89,12 +89,52 @@
                                     <small class="form-text text-danger">{{ $errors->first('LXM1') }}</small>
                                 </div>
                                 <div class="col-md-1">
+                                    {{Form::label('LXMA', 'Average:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXMA', $lam->LXMA, ['class' => 'form-control', 'placeholder'=>'LXM Average', 'id' => 'LXMA', 'readonly'])}}
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel1', 'RelGel1:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel1', $lam->RelGel1, ['class' => 'form-control', 'placeholder'=>'RelGel1' , 'id' => 'RelGel1'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel1') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGelA', 'Average:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGelA', $lam->RelGelA, ['class' => 'form-control', 'placeholder'=>'RelGelA Average','id'=> 'RelGelA','readonly'])}}
+                                </div>
+                        </div><br>  
+                        <div class="row">
+                                <div class="col-md-1">
                                     {{Form::label('Site2', 'Site2:')}}
                                 </div>    
                                 <div class="col-md-2">
                                     {{Form::text('LXM2',$lam->LXM2, ['class' => 'form-control', 'placeholder'=>'LXM2', 'id' => 'LXM2' , 'onkeyup' => 'calc()'])}}
                                     <small class="form-text text-danger">{{ $errors->first('LXM2') }}</small>
                                 </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel2', 'RelGel2:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel2', $lam->RelGel2, ['class' => 'form-control', 'placeholder'=>'RelGel2','id' =>'RelGel2', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel2') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
                                 <div class="col-md-1">
                                     {{Form::label('Site3', 'Site3:')}}
                                 </div>    
@@ -103,250 +143,349 @@
                                     <small class="form-text text-danger">{{ $errors->first('LXM3') }}</small>
                                 </div>
                                 <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel3', 'RelGel3:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel3', $lam->RelGel3, ['class' => 'form-control', 'placeholder'=>'RelGel3', 'id' => 'RelGel3', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel3') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
                                     {{Form::label('Site4', 'Site4:')}}
                                 </div>    
                                 <div class="col-md-2">
                                     {{Form::text('LXM4', $lam->LXM4, ['class' => 'form-control', 'placeholder'=>'LXM4' , 'id' => 'LXM4'  , 'onkeyup' => 'calc()'])}}
                                     <small class="form-text text-danger">{{ $errors->first('LXM4') }}</small>
                                 </div>
-                        </div><br>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {{Form::label('Site5', 'Site5:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('LXM5', $lam->LXM5, ['class' => 'form-control', 'placeholder'=>'LXM5' , 'id' => 'LXM5'  , 'onkeyup' => 'calc()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('LXM5') }}</small>
-                            </div>
-                            <div class="col-md-1">
-                                {{Form::label('Site6', 'Site6:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('LXM6', $lam->LXM6, ['class' => 'form-control', 'placeholder'=>'LXM6' , 'id' => 'LXM6'  , 'onkeyup' => 'calc()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('LXM6') }}</small>
-                            </div>
-                            <div class="col-md-1">
-                                {{Form::label('Site7', 'Site7:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('LXM7', $lam->LXM7, ['class' => 'form-control', 'placeholder'=>'LXM7', 'id' => 'LXM7'  , 'onkeyup' => 'calc()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('LXM7') }}</small>
-                            </div>
-                            <div class="col-md-1">
-                                {{Form::label('Site8', 'Site8:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('LXM8', $lam->LXM8, ['class' => 'form-control', 'placeholder'=>'LXM8' , 'id' => 'LXM8'  , 'onkeyup' => 'calc()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('LXM8') }}</small>
-                            </div>
-                    </div><br>
-                    <div class="row">
-                        <div class="col-md-1">
-                            {{Form::label('Site9', 'Site9:')}}
-                        </div>    
-                        <div class="col-md-2">
-                            {{Form::text('LXM9', $lam->LXM9, ['class' => 'form-control', 'placeholder'=>'LXM9' , 'id' => 'LXM9'  , 'onkeyup' => 'calc()'])}}
-                            <small class="form-text text-danger">{{ $errors->first('LXM9') }}</small>
-                        </div>
-                        <div class="col-md-1">
-                            {{Form::label('Site10', 'Site10:')}}
-                        </div>    
-                        <div class="col-md-2">
-                            {{Form::text('LXM10', $lam->LXM10, ['class' => 'form-control', 'placeholder'=>'LXM10' , 'id' => 'LXM10'  , 'onkeyup' => 'calc()'])}}
-                            <small class="form-text text-danger">{{ $errors->first('LXM10') }}</small>
-                        </div>
-                        <div class="col-md-1">
-                            {{Form::label('Site11', 'Site11:')}}
-                        </div>    
-                        <div class="col-md-2">
-                            {{Form::text('LXM11', $lam->LXM11, ['class' => 'form-control', 'placeholder'=>'LXM11' , 'id' => 'LXM11'  , 'onkeyup' => 'calc()'])}}
-                            <small class="form-text text-danger">{{ $errors->first('LXM11') }}</small>
-                        </div>
-                        <div class="col-md-1">
-                            {{Form::label('Site12', 'Site12:')}}
-                        </div>    
-                        <div class="col-md-2">
-                            {{Form::text('LXM12', $lam->LXM12, ['class' => 'form-control', 'placeholder'=>'LXM12' , 'id' => 'LXM12'  , 'onkeyup' => 'calc()'])}}
-                            <small class="form-text text-danger">{{ $errors->first('LXM12') }}</small>
-                        </div>
-                </div><br>
-                <div class="row">
-                    <div class="col-md-1">
-                        {{Form::label('Site13', 'Site13:')}}
-                    </div>    
-                    <div class="col-md-2">
-                        {{Form::text('LXM13', $lam->LXM13, ['class' => 'form-control', 'placeholder'=>'LXM13' , 'id' => 'LXM13'  , 'onkeyup' => 'calc()'])}}
-                        <small class="form-text text-danger">{{ $errors->first('LXM13') }}</small>
-                    </div>
-                    <div class="col-md-1">
-                        {{Form::label('Site14', 'Site14:')}}
-                    </div>    
-                    <div class="col-md-2">
-                        {{Form::text('LXM14', $lam->LXM14, ['class' => 'form-control', 'placeholder'=>'LXM14' , 'id' => 'LXM14','onkeyup'=>'calc()'])}}
-                        <small class="form-text text-danger">{{ $errors->first('LXM14') }}</small>
-                    </div>
-                    <div class="col-md-1">
-                        {{Form::label('Site15', 'Site15:')}}
-                    </div>    
-                    <div class="col-md-2">
-                        {{Form::text('LXM15', $lam->LXM15, ['class' => 'form-control', 'placeholder'=>'LXM15', 'id' => 'LXM15'  , 'onkeyup' => 'calc()'])}}
-                        <small class="form-text text-danger">{{ $errors->first('LXM15') }}</small>
-                    </div>
-                    <div class="col-md-1">
-                        {{Form::label('Site16', 'Site16:')}}
-                    </div>    
-                    <div class="col-md-2">
-                        {{Form::text('LXM16', $lam->LXM16, ['class' => 'form-control', 'placeholder'=>'LXM16','id'=>'LXM16', 'onkeyup'=>'calc()'])}}
-                        <small class="form-text text-danger">{{ $errors->first('LXM16') }}</small>
-                    </div>
-                </div><br>
-                <div class="row">
-                    <div class="col-md-1"></div>    
-                    <div class="col-md-2"></div>
-                    <div class="col-md-1">
-                        {{Form::label('LXMA', 'Average:')}}
-                </div>    
-                <div class="col-md-3">
-                        {{Form::text('LXMA', $lam->LXMA, ['class' => 'form-control', 'placeholder'=>'LXM Average', 'id' => 'LXMA', 'readonly'])}}
-                </div>
-                </div>
-            </div>
-            </div><br>
-            <div class="card">
-                <h5 class="card-header">Rel Gel Data Details</h5>
-                    <div class="card-body">
-                            <div class="row">
                                 <div class="col-md-1">
-                                    {{Form::label('RelGel1', 'RelGel1:')}}
                                 </div>    
                                 <div class="col-md-2">
-                                    {{Form::text('RelGel1', '0', ['class' => 'form-control', 'placeholder'=>'RelGel1' , 'id' => 'RelGel1','onkeyup'=>'ave()'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('RelGel1') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('RelGel2', 'RelGel2:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('RelGel2', '0', ['class' => 'form-control', 'placeholder'=>'RelGel2','id' =>'RelGel2','onkeyup'=>'ave()'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('RelGel2') }}</small>
-                                </div>
-                                <div class="col-md-1">
-                                    {{Form::label('RelGel3', 'RelGel3:')}}
-                                </div>    
-                                <div class="col-md-2">
-                                    {{Form::text('RelGel3', '0', ['class' => 'form-control', 'placeholder'=>'RelGel3', 'id' => 'RelGel3','onkeyup'=>'ave()'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('RelGel3') }}</small>
+                                    
                                 </div>
                                 <div class="col-md-1">
                                     {{Form::label('RelGel4', 'RelGel4:')}}
                                 </div>    
                                 <div class="col-md-2">
-                                    {{Form::text('RelGel4', '0', ['class' => 'form-control', 'placeholder'=>'RelGel4', 'id' => 'RelGel4','onkeyup'=>'ave()'])}}
+                                    {{Form::text('RelGel4', $lam->RelGel4, ['class' => 'form-control', 'placeholder'=>'RelGel4', 'id' => 'RelGel4', 'onkeyup' => 'ave()'])}}
                                     <small class="form-text text-danger">{{ $errors->first('RelGel4') }}</small>
                                 </div>
-                            </div><br>
-                            <div class="row">
-                                    <div class="col-md-1">
-                                        {{Form::label('RelGel5', 'RelGel5:')}}
-                                    </div>    
-                                    <div class="col-md-2">
-                                        {{Form::text('RelGel5', '0', ['class' => 'form-control', 'placeholder'=>'RelGel5', 'id' => 'RelGel5','onkeyup'=>'ave()'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('RelGel5') }}</small>
-                                     </div>
-                                    <div class="col-md-1">
-                                        {{Form::label('RelGel6', 'RelGel6:')}}
-                                    </div>    
-                                    <div class="col-md-2">
-                                        {{Form::text('RelGel6', '0', ['class' => 'form-control', 'placeholder'=>'RelGel6', 'id' => 'RelGel6','onkeyup'=>'ave()'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('RelGel6') }}</small>
-                                    </div>
-                                    <div class="col-md-1">
-                                        {{Form::label('RelGel7', 'RelGel7:')}}
-                                    </div>    
-                                    <div class="col-md-2">
-                                        {{Form::text('RelGel7', '0', ['class' => 'form-control', 'placeholder'=>'RelGel7', 'id' => 'RelGel7','onkeyup'=>'ave()'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('RelGel7') }}</small>
-                                    </div>
-                                    <div class="col-md-1">
-                                        {{Form::label('RelGel8', 'RelGel8:')}}
-                                    </div>    
-                                    <div class="col-md-2">
-                                        {{Form::text('RelGel8', '0', ['class' => 'form-control', 'placeholder'=>'RelGel8', 'id' => 'RelGel8','onkeyup'=>'ave()'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('RelGel8') }}</small>
-                                    </div>
-                        </div><br>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {{Form::label('RelGel9', 'RelGel9:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('RelGel9','0', ['class' => 'form-control', 'placeholder'=>'RelGel9', 'id' => 'RelGel9','onkeyup'=>'ave()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('RelGel9') }}</small>
-                            </div>
-                            <div class="col-md-1">
-                                {{Form::label('RelGel10', 'RelGel10:')}}
-                            </div>    
+                                <div class="col-md-1">
+                                </div>    
                                 <div class="col-md-2">
-                                {{Form::text('RelGel10', '0', ['class' => 'form-control', 'placeholder'=>'RelGel10', 'id' => 'RelGel10','onkeyup'=>'ave()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('RelGel10') }}</small>
-                            </div>
-                            <div class="col-md-1">
-                                {{Form::label('RelGel11', 'RelGel11:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('RelGel11', '0', ['class' => 'form-control', 'placeholder'=>'RelGel11', 'id' => 'RelGel11','onkeyup'=>'ave()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('RelGel11') }}</small>
-                            </div>
-                            <div class="col-md-1">
-                                {{Form::label('RelGel12', 'RelGel12:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('RelGel12', '0', ['class' => 'form-control', 'placeholder'=>'RelGel12', 'id' => 'RelGel12','onkeyup'=>'ave()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('RelGel12') }}</small>
-                            </div>
+                                </div>
                         </div><br>
                         <div class="row">
-                            <div class="col-md-1">
-                                {{Form::label('RelGel13', 'RelGel13:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('RelGel13', '0', ['class' => 'form-control', 'placeholder'=>'RelGel13', 'id' => 'RelGel13','onkeyup'=>'ave()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('RelGel13') }}</small>
-                            </div>
-                            <div class="col-md-1">
-                                {{Form::label('RelGel14', 'RelGel14:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('RelGel14', '0', ['class' => 'form-control', 'placeholder'=>'RelGel14', 'id' => 'RelGel14','onkeyup'=>'ave()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('RelGel14') }}</small>
-                            </div>
-                            <div class="col-md-1">
-                                {{Form::label('RelGel15', 'RelGel15:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('RelGel15', '0', ['class' => 'form-control', 'placeholder'=>'RelGel15', 'id' => 'RelGel15','onkeyup'=>'ave()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('RelGel15') }}</small>
-                            </div>
-                            <div class="col-md-1">
-                                {{Form::label('RelGel16', 'RelGel16:')}}
-                            </div>    
-                            <div class="col-md-2">
-                                {{Form::text('RelGel16', '0', ['class' => 'form-control', 'placeholder'=>'RelGel16', 'id' => 'RelGel16','onkeyup'=>'ave()'])}}
-                                <small class="form-text text-danger">{{ $errors->first('RelGel16') }}</small>
-                            </div>
+                                <div class="col-md-1">
+                                    {{Form::label('Site5', 'Site5:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM5', $lam->LXM5, ['class' => 'form-control', 'placeholder'=>'LXM5' , 'id' => 'LXM5'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM5') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel5', 'RelGel5:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel5', $lam->RelGel5, ['class' => 'form-control', 'placeholder'=>'RelGel5', 'id' => 'RelGel5', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel5') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
                         </div><br>
                         <div class="row">
-                            <div class="col-md-1"></div>    
-                            <div class="col-md-2"></div>
-                            <div class="col-md-1">
-                                {{Form::label('RelGelA', 'Average:')}}
-                            </div>    
-                            <div class="col-md-3">
-                                {{Form::text('RelGelA','0', ['class' => 'form-control', 'placeholder'=>'RelGelA Average','id'=> 'RelGelA','readonly'])}}
-                            </div>
-                        </div><br>  
-                            {{Form::submit('Submit', ['class' => 'btn btn-primary'])}} &emsp; <a href="/lamdata" class="btn btn-danger">Cancel</a>  
-                            {!! Form::close() !!}
+                                <div class="col-md-1">
+                                    {{Form::label('Site6', 'Site6:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM6', $lam->LXM6, ['class' => 'form-control', 'placeholder'=>'LXM6' , 'id' => 'LXM6'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM6') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel6', 'RelGel6:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel6', $lam->RelGel6, ['class' => 'form-control', 'placeholder'=>'RelGel6','id' => 'RelGel6', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel6') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site7', 'Site7:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM7', $lam->LXM7, ['class' => 'form-control', 'placeholder'=>'LXM7', 'id' => 'LXM7'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM7') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel7', 'RelGel7:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel7', $lam->RelGel7, ['class' => 'form-control', 'placeholder'=>'RelGel7', 'id' => 'RelGel7', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel7') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site8', 'Site8:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM8', $lam->LXM8, ['class' => 'form-control', 'placeholder'=>'LXM8' , 'id' => 'LXM8'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM8') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel8', 'RelGel8:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel8', $lam->RelGel8, ['class' => 'form-control', 'placeholder'=>'RelGel8', 'id' => 'RelGel8', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel8') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site9', 'Site9:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM9', $lam->LXM9, ['class' => 'form-control', 'placeholder'=>'LXM9' , 'id' => 'LXM9'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM9') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel9', 'RelGel9:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel9', $lam->RelGel9, ['class' => 'form-control', 'placeholder'=>'RelGel9', 'id' => 'RelGel9', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel9') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site10', 'Site10:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM10', $lam->LXM10, ['class' => 'form-control', 'placeholder'=>'LXM10' , 'id' => 'LXM10'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM10') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel10', 'RelGel10:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel10', $lam->RelGel10, ['class' => 'form-control', 'placeholder'=>'RelGel10','id' => 'RelGel10', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel10') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site11', 'Site11:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM11', $lam->LXM11, ['class' => 'form-control', 'placeholder'=>'LXM11' , 'id' => 'LXM11'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM11') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel11', 'RelGel11:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel11', $lam->RelGel11, ['class' => 'form-control', 'placeholder'=>'RelGel11','id' => 'RelGel11', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel11') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site12', 'Site12:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM12', $lam->LXM12, ['class' => 'form-control', 'placeholder'=>'LXM12' , 'id' => 'LXM12'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM12') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel12', 'RelGel12:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel12', $lam->RelGel12, ['class' => 'form-control', 'placeholder'=>'RelGel12', 'id' => 'RelGel12', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel12') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site13', 'Site13:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM13', $lam->LXM13, ['class' => 'form-control', 'placeholder'=>'LXM13' , 'id' => 'LXM13'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM13') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel13', 'RelGel13:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel13', $lam->RelGel13, ['class' => 'form-control', 'placeholder'=>'RelGel13', 'id' => 'RelGel13', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel13') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site14', 'Site14:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM14', $lam->LXM14, ['class' => 'form-control', 'placeholder'=>'LXM14' , 'id' => 'LXM14','onkeyup'=>'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM14') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel14', 'RelGel14:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel14', $lam->RelGel14, ['class' => 'form-control', 'placeholder'=>'RelGel14','id' => 'RelGel14', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel14') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site15', 'Site15:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM15', $lam->LXM15, ['class' => 'form-control', 'placeholder'=>'LXM15', 'id' => 'LXM15'  , 'onkeyup' => 'calc()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM15') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel15', 'RelGel15:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel15', $lam->RelGel15, ['class' => 'form-control', 'placeholder'=>'RelGel15', 'id' => 'RelGel15', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel15') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        <div class="row">
+                                <div class="col-md-1">
+                                    {{Form::label('Site16', 'Site16:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('LXM16', $lam->LXM16, ['class' => 'form-control', 'placeholder'=>'LXM16','id'=>'LXM16', 'onkeyup'=>'calc()', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('LXM16') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    {{Form::label('RelGel16', 'RelGel16:')}}
+                                </div>    
+                                <div class="col-md-2">
+                                    {{Form::text('RelGel16', $lam->RelGel16, ['class' => 'form-control', 'placeholder'=>'RelGel16', 'id' => 'RelGel16', 'onkeyup' => 'ave()'])}}
+                                    <small class="form-text text-danger">{{ $errors->first('RelGel16') }}</small>
+                                </div>
+                                <div class="col-md-1">
+                                </div>    
+                                <div class="col-md-2">
+                                </div>
+                        </div><br>
+                        {{Form::submit('Submit', ['class' => 'btn btn-primary'])}} &emsp; <a href="/lamdata" class="btn btn-danger">Cancel</a>  
+                        {!! Form::close() !!}
                     </div>
             </div>
     </div>
