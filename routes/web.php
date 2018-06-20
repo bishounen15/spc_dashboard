@@ -40,3 +40,6 @@ Route::resource('JBox','JBoxController');
 Route::resource('Frame','FrameController');
 Route::resource('Framming','SqBwController');
 Route::resource('MixRatio','MixRatioController');
+
+Route::get('datatable', 'StringerController@datatable');
+Route::get('datatable/getdata', 'StringerController@getPosts')->Name('datatable/getdata');

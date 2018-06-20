@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Stringer;
 use DB;
+use datatable;
 
 class StringerController extends Controller
 {
@@ -13,14 +14,36 @@ class StringerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function datatable()
+    {
+        return view('pages.datatable');
+    }
+
+    public function getPosts()
+    {
+        return \DataTables::of(DB::query('Select * FROM Stringers'))->make(true);
+    }
+
     public function index()
     {
-        $avefront = number_format(DB::table('stringers')->where('side','=','Front')->avg('PeelTest'),2);
-        $aveback = number_format(DB::table('stringers')->where('side','=','Back')->avg('PeelTest'),2); 
+        $start = '2017-06-07';
+        $end = '2017-06-08';
+
+        $avefront = number_format(DB::table('stringers')->where([
+            ['side','=','Front']
+        ])->avg('PeelTest'),2);
+        
+        $aveback = number_format(DB::table('stringers')->where([
+            ['side','=','Back'],
+            ['PeelTest','>',0],
+        ])->avg('PeelTest'),2);
+
+        $aveback1 = (DB::table('stringers')->where('side','=','Back')->whereBetween('Date',['$start','$end'])->avg('PeelTest'));
         //$posts = Post::orderBy('created_at','desc')->paginate(2);
         return view('pages.stringerdata')  
                     ->with('avefront',$avefront)
-                    ->with('aveback',$aveback);
+                    ->with('aveback',$aveback)
+                    ->with('aveback1',$aveback1);
 
         
     }

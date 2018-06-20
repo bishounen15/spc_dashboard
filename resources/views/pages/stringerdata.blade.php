@@ -26,13 +26,13 @@
                         <th scope="row">1</th>
                         <td><b>Ave (Ind)</b></td>
                         <td>{{$avefront}}</td>
-                      <td>{{$aveback}}</td>
+                        <td>{{$aveback}}</td>
                       </tr>
                       <tr>
                         <th scope="row">2</th>
                         <td><b>Stdev (Ind)</b></td>
                         <td></td>
-                        <td></td>
+                        <td>{{$aveback1}}</td>
                       </tr>
                       <tr>
                       <th scope="row">3</th>
