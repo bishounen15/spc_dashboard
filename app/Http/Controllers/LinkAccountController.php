@@ -40,6 +40,6 @@ class LinkAccountController extends Controller
         $data['email'] = $request->input('-');
 
         User::create($data);
-        return redirect('/login');
+        return redirect('/login')->with("success","You have successfully linked your web portal account. You can now login to the app.");
     }
 }
