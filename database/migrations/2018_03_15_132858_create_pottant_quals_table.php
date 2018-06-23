@@ -17,8 +17,9 @@ class CreatePottantQualsTable extends Migration
             $table->increments('id');
             $table->integer('qualTransID');
             $table->string('shift');
-            $table->dateTime('date');
-            $table->integer('sampleCount');
+            $table->date('date');
+            $table->time('qualTime');
+            $table->integer('sampleCount')->nullable();
             $table->double('befDispenseWtA');
             $table->double('befDispenseWtB');
             $table->double('dispensedWtA');
@@ -26,9 +27,11 @@ class CreatePottantQualsTable extends Migration
             $table->double('weightA');
             $table->double('weightB');
             $table->double('totalWt');
-            $table->double('targetParam')->nullable();
-            $table->integer('ratio');
-
+            $table->double('targetWt');
+            $table->double('ratioVal');
+            $table->double('ratioTargetS');
+            $table->double('ratioTargetE');
+            $table->string('qualRes');
             $table->timestamps();
         });
     }
