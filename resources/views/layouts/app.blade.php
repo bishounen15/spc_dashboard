@@ -57,8 +57,22 @@
                     <ul class="navbar-nav mr-auto">
                         @guest
                         @else
-                            <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li>
-                            {{-- <li><a class="nav-link" href="{{ route('spc_entry') }}">{{ __('SPC Dashboard') }}</a></li> --}}
+                            {{-- <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li> --}}
+                            
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Office Supplies
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <h6 class="dropdown-header">Setup</h6>
+                                <a class="dropdown-item" href="{{route('list_categories')}}">Category Master</a>
+                                <a class="dropdown-item" href="{{route('list_uofm')}}">U of M Master</a>
+                                <a class="dropdown-item" href="{{route('list_items')}}">Item Master</a>
+                                <h6 class="dropdown-header">Transactions</h6>
+                                <a class="dropdown-item" href="#">Requisition and Inventory</a>
+                                </div>
+                            </li>
+
                             <li><a class="nav-link" href="{{route('list_yield')}}">{{ __('Yield Dashboard') }}</a></li>
                         @endguest
                     </ul>

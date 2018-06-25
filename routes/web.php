@@ -57,6 +57,30 @@ Route::get('/Yield/list','yieldController@list')->name('list_yield');
 Route::get('/Yield/create','yieldController@create')->name('create_yield');
 Route::post('/Yield/store','yieldController@store')->name('store_yield');
 
+Route::get('/os/category/list/data', 'OSCategoryController@load')->name('category_data');
+Route::get('/os/category/list','OSCategoryController@list')->name('list_categories');
+Route::get('/os/category/create','OSCategoryController@create')->name('create_category');
+Route::post('/os/category/create','OSCategoryController@create')->name('store_category');
+Route::get('/os/category/{id}','OSCategoryController@show')->name('show_category');
+Route::post('/os/category/{id}','OSCategoryController@modify')->name('modify_category');
+Route::post('/os/category/remove/{id}','OSCategoryController@destroy')->name('remove_category');
+
+Route::get('/os/uofm/list/data', 'OSUofMController@load')->name('uofm_data');
+Route::get('/os/uofm/list','OSUofMController@list')->name('list_uofm');
+Route::get('/os/uofm/create','OSUofMController@create')->name('create_uofm');
+Route::post('/os/uofm/create','OSUofMController@create')->name('store_uofm');
+Route::get('/os/uofm/{id}','OSUofMController@show')->name('show_uofm');
+Route::post('/os/uofm/{id}','OSUofMController@modify')->name('modify_uofm');
+Route::post('/os/uofm/remove/{id}','OSUofMController@destroy')->name('remove_uofm');
+
+Route::get('/os/item/list/data', 'OSController@load')->name('item_data');
+Route::get('/os/item/list','OSController@list')->name('list_items');
+Route::get('/os/item/create','OSController@create')->name('create_item');
+Route::post('/os/item/create','OSController@create')->name('store_item');
+Route::get('/os/item/{id}','OSController@show')->name('show_item');
+Route::post('/os/item/{id}','OSController@modify')->name('modify_item');
+Route::post('/os/item/remove/{id}','OSUofMController@destroy')->name('remove_item');
+
 });
 
 Auth::routes();
