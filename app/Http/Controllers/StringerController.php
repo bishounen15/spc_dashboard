@@ -26,25 +26,88 @@ class StringerController extends Controller
 
     public function index()
     {
-        $start = '2017-06-07';
-        $end = '2017-06-08';
-
-        $avefront = number_format(DB::table('stringers')->where([
-            ['side','=','Front']
-        ])->avg('PeelTest'),2);
+    
+    // --------------STRINGER 1A---------------------------------//
+        //AVE(IND) FRONT
+        $avefront = number_format(DB::table('stringers')
+        ->where([['Side','=','Front'],
+                ['PeelTest','>',0],])
+        ->avg('PeelTest'),2);
+        //AVE(IND) BACK
+        $aveback = number_format(DB::table('stringers')
+        ->where([['side','=','Back'],
+                ['PeelTest','>',0],])
+        ->avg('PeelTest'),2);
+        //STD(IND) FRONT
+        $stdfront = DB::table('stringers')
+        ->select(DB::raw('STDDEV(PeelTest) as Peeltest'))
+        ->where([['Side','=','Front']])
+        ->get();
+        $stdfront = number_format($stdfront[0]->Peeltest,2);
+         //STD(IND) BACK
+         $stdback = DB::table('stringers')
+         ->select(DB::raw('STDDEV(PeelTest) as Peeltest'))
+         ->where([['Side','=','Back']])
+         ->get();
+         $stdback = number_format($stdback[0]->Peeltest,2);
+        //XBB AVE OF AVE (FRONT)
+        $xbbfront = DB::table('stringers')
+        ->select(DB::raw('AVG(PeelTest) as PeelTest'))
+        ->whereBetween('Date', [Date('Y-m-d',strtotime("-30 days")), Date('Y-m-d')])
+        ->where([['Side','=','front']])
+        ->groupBy('date')
+        ->get();
+        $xbbfront = number_format($xbbfront->avg('PeelTest'),2);
+         //XBB AVE OF AVE (BACK)
+        $xbbback = DB::table('stringers')
+        ->select(DB::raw('AVG(PeelTest) as PeelTest'))
+        ->whereBetween('Date', [Date('Y-m-d',strtotime("-30 days")), Date('Y-m-d')])
+        ->where([['Side','=','Back']])
+        ->groupBy('date')
+        ->get();
+        $xbbback = number_format($xbbback->avg('PeelTest'),2);
+        //STD AVE (FRONT)
+        $stdavg = DB::table(DB::raw("(SELECT AVG(PeelTest) as PeelTest FROM stringers WHERE Side = 'Front' and Date BETWEEN '".Date('Y-m-d',strtotime("-30 days"))."' AND '".Date('Y-m-d')."' GROUP BY Date) as temp"))
+        //date BETWEEN from AND to
+        ->select(DB::raw('STDDEV(PeelTest) as PeelTest'))
+        ->get();
+        $stdavg = number_format($stdavg->avg('PeelTest'),2);
+        //STD AVE (BACK)
+        $stdavgback = DB::table(DB::raw("(SELECT AVG(PeelTest) as PeelTest FROM Stringers WHERE Side = 'Back' and Date BETWEEN '".Date('Y-m-d',strtotime("-30 days"))."' AND '".Date('Y-m-d')."' GROUP BY Date) as temp"))
+        //date BETWEEN from AND to
+        ->select(DB::raw('STDDEV(PeelTest) as PeelTest'))
+        ->get();
+        $stdavgback = number_format($stdavgback->avg('PeelTest'),2);
+        //MEDIAN (FRONT)
+        $medianfront = DB::table('stringers')
+        ->select(DB::raw('AVG(PeelTest) as PeelTest'))
+        ->whereBetween('Date', [Date('Y-m-d',strtotime("-30 days")), Date('Y-m-d')])
+        ->groupBy('Date')
+        ->where([['Side','=','Front']])
+        ->get();
+        $medianfront = number_format($medianfront->median('PeelTest'),2);
+        //MEDIAN (BACK)
+        $medianback = DB::table('stringers')
+        ->select(DB::raw('AVG(PeelTest) as PeelTest'))
+        ->whereBetween('Date', [Date('Y-m-d',strtotime("-30 days")), Date('Y-m-d')])
+        ->groupBy('Date')
+        ->where([['Side','=','Back']])
+        ->get();
+        $medianback = number_format($medianback->median('PeelTest'),2);
         
-        $aveback = number_format(DB::table('stringers')->where([
-            ['side','=','Back'],
-            ['PeelTest','>',0],
-        ])->avg('PeelTest'),2);
 
-        $aveback1 = (DB::table('stringers')->where('side','=','Back')->whereBetween('Date',['$start','$end'])->avg('PeelTest'));
-        //$posts = Post::orderBy('created_at','desc')->paginate(2);
         return view('pages.stringerdata')  
                     ->with('avefront',$avefront)
                     ->with('aveback',$aveback)
-                    ->with('aveback1',$aveback1);
-
+                    ->with('stdfront',$stdfront)
+                    ->with('stdback',$stdback)
+                    ->with('xbbfront',$xbbfront)
+                    ->with('xbbback',$xbbback)
+                    ->with('stdavg',$stdavg)
+                    ->with('stdavgback',$stdavgback)
+                    ->with('medianfront',$medianfront)
+                    ->with('medianback',$medianback);
+     // --------------END STRINGER 1A-----------------------------------------------------------------//
         
     }
 
@@ -74,6 +137,8 @@ class StringerController extends Controller
             'Ribbon' => 'required',
             'Side' => 'required',
             'CellNo' => 'required',
+            'PeeltestA' => 'required',
+
             
         ]);
 

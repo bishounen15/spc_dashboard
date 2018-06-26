@@ -89,16 +89,15 @@
                                                 {{Form::text('LocA[]', 'A', ['class' => 'form-control', 'readonly'])}}
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'PeelTestA'])}}
-                                                <small class="form-text text-danger">{{ $errors->first('PeelTestA') }}</small>
+                                                {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'required' => 'true'])}}
+                                                <small class="form-text text-danger">{{ $errors->first('peeltestA') }}</small>
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B',
-                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaA'])}}
+                                                {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaA', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('criteriaA') }}</small>
                                         </div>  
                                         <div class="col-md-3">
-                                                {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarksA'])}}
+                                                {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarksA', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('remarksA') }}</small>
                                         </div>                            
                                 </div><br>
@@ -107,16 +106,15 @@
                                                 {{Form::text('LocB[]', 'B', ['class' => 'form-control', 'readonly'])}}
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltestB'])}}
+                                                {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('peeltestB') }}</small>
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B',
-                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaB'])}}
+                                                {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaB', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('criteriaB') }}</small>
                                         </div>  
                                         <div class="col-md-3">
-                                                {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarksB'])}}
+                                                {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarksB', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('remarksB') }}</small>
                                         </div>                           
                                 </div><br>
@@ -125,16 +123,15 @@
                                                 {{Form::text('LocC[]', 'C', ['class' => 'form-control', 'readonly'])}}
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=> 'peeltestC'])}}
+                                                {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=> 'peeltestC', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('peeltestC') }}</small>
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B',
-                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaC'])}}
+                                                {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaC', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('criteriaC') }}</small>
                                         </div>  
                                         <div class="col-md-3">
-                                                {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id' => 'remarksC'])}}
+                                                {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id' => 'remarksC', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('remarksC') }}</small>
                                         </div>                         
                                 </div><br>
@@ -143,16 +140,15 @@
                                                 {{Form::text('LocD[]', 'D', ['class' => 'form-control', 'readonly'])}}
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id' => 'peeltestD'])}}
+                                                {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id' => 'peeltestD', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('peeltestD') }}</small>
                                         </div>
                                         <div class="col-md-3">
-                                                {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B',
-                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaD'])}}
+                                                {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteriaD', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('criteriaD') }}</small>
                                         </div>  
                                         <div class="col-md-3">
-                                                {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=> 'remarksD'])}}
+                                                {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=> 'remarksD', 'required' => 'true'])}}
                                                 <small class="form-text text-danger">{{ $errors->first('remarksD') }}</small>
                                         </div>                              
                                 </div>
@@ -181,16 +177,15 @@
                                                     {{Form::text('LocA[]', 'A', ['class' => 'form-control', 'readonly'])}}
                                             </div>
                                             <div class="col-md-3">
-                                                    {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest2A'])}}
+                                                    {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest2A', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('peeltest2A') }}</small>
                                             </div>
                                             <div class="col-md-3">
-                                                        {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B',
-                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2A'])}}
+                                                        {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2A', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('criteria2A') }}</small>
                                             </div>  
                                             <div class="col-md-3">
-                                                    {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks2A'])}}
+                                                    {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks2A', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('remarks2A') }}</small>
                                             </div>                            
                                     </div><br>
@@ -199,16 +194,15 @@
                                                     {{Form::text('LocB[]', 'B', ['class' => 'form-control', 'readonly'])}}
                                             </div>
                                             <div class="col-md-3">
-                                                    {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=>'peeltest2B'])}}
+                                                    {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=>'peeltest2B', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('peeltest2B') }}</small>
                                             </div>
                                             <div class="col-md-3">
-                                                        {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B',
-                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2B'])}}
+                                                        {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2B', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('criteria2B') }}</small>
                                             </div>  
                                             <div class="col-md-3">
-                                                    {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=>'remarks2B'])}}
+                                                    {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=>'remarks2B', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('remarks2B') }}</small>
                                             </div>                           
                                     </div><br>
@@ -217,16 +211,15 @@
                                                     {{Form::text('LocC[]', 'C', ['class' => 'form-control', 'readonly'])}}
                                             </div>
                                             <div class="col-md-3">
-                                                    {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=>'peeltest2C'])}}
+                                                    {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=>'peeltest2C', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('peeltest2C') }}</small>
                                             </div>
                                             <div class="col-md-3">
-                                                        {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B',
-                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2C'])}}
+                                                        {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2C', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('criteria2C') }}</small>
                                             </div>  
                                             <div class="col-md-3">
-                                                    {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=>'remarks2C'])}}
+                                                    {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=>'remarks2C', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('remarks2C') }}</small>
                                             </div>                         
                                     </div><br>
@@ -235,16 +228,15 @@
                                                     {{Form::text('LocD[]', 'D', ['class' => 'form-control', 'readonly'])}}
                                             </div>
                                             <div class="col-md-3">
-                                                    {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=>'peeltest2D'])}}
+                                                    {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=>'peeltest2D', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('peeltest2D') }}</small>
                                             </div>
                                             <div class="col-md-3">
-                                                        {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B',
-                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2D'])}}
+                                                        {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria2D', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('criteria2D') }}</small>
                                             </div>  
                                             <div class="col-md-3">
-                                                    {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=>'remarks2D'])}}
+                                                    {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=>'remarks2D', 'required' => 'true'])}}
                                                     <small class="form-text text-danger">{{ $errors->first('remarks2D') }}</small>
                                             </div>                              
                                     </div>
@@ -273,16 +265,15 @@
                                                         {{Form::text('LocA[]', 'A', ['class' => 'form-control', 'readonly'])}}
                                                 </div>
                                                 <div class="col-md-3">
-                                                        {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3A'])}}
+                                                        {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3A', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('peeltest3A') }}</small>
                                                 </div>
                                                 <div class="col-md-3">
-                                                                {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B',
-                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3A'])}}
+                                                        {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3A', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('criteria3A') }}</small>
                                                 </div>  
                                                 <div class="col-md-3">
-                                                        {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3A'])}}
+                                                        {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3A', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('remarks3A') }}</small>
                                                 </div>                            
                                         </div><br>
@@ -291,16 +282,15 @@
                                                         {{Form::text('LocB[]', 'B', ['class' => 'form-control', 'readonly'])}}
                                                 </div>
                                                 <div class="col-md-3">
-                                                        {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3B'])}}
+                                                        {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3B', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('peeltest3B') }}</small>
                                                 </div>
                                                 <div class="col-md-3">
-                                                        {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B',
-                                                        'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3B'])}}
+                                                        {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3B', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('criteria3B') }}</small>
                                                 </div>  
                                                 <div class="col-md-3">
-                                                        {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3B'])}}
+                                                        {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3B', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('remarks3B') }}</small>
                                                 </div>                           
                                         </div><br>
@@ -309,16 +299,15 @@
                                                         {{Form::text('LocC[]', 'C', ['class' => 'form-control', 'readonly'])}}
                                                 </div>
                                                 <div class="col-md-3">
-                                                        {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3C'])}}
+                                                        {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3C', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('peeltest3C') }}</small>
                                                 </div>
                                                 <div class="col-md-3">
-                                                                {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B',
-                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3C'])}}
+                                                        {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3C', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('criteria3C') }}</small>
                                                 </div>  
                                                 <div class="col-md-3">
-                                                        {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3C'])}}
+                                                        {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3C', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('remarks3C') }}</small>
                                                 </div>                         
                                         </div><br>
@@ -327,16 +316,15 @@
                                                         {{Form::text('LocD[]', 'D', ['class' => 'form-control', 'readonly'])}}
                                                 </div>
                                                 <div class="col-md-3">
-                                                        {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3D'])}}
+                                                        {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test', 'id'=>'peeltest3D', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('peeltest3D') }}</small>
                                                 </div>
                                                 <div class="col-md-3">
-                                                                {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B',
-                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3D'])}}
+                                                                {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria3D', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('criteria3D') }}</small>
                                                 </div>  
                                                 <div class="col-md-3">
-                                                        {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3D'])}}
+                                                        {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ', 'id'=>'remarks3D', 'required' => 'true'])}}
                                                         <small class="form-text text-danger">{{ $errors->first('remarks3D') }}</small>
                                                 </div>                              
                                         </div>
@@ -365,16 +353,15 @@
                                                             {{Form::text('LocA[]', 'A', ['class' => 'form-control', 'readonly'])}}
                                                     </div>
                                                     <div class="col-md-3">
-                                                            {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4A'])}}
+                                                            {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4A', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('peeltest4A') }}</small>
                                                     </div>
                                                     <div class="col-md-3">
-                                                                {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B',
-                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4A'])}}
+                                                                {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4A', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('criteria4A') }}</small>
                                                     </div>  
                                                     <div class="col-md-3">
-                                                            {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4A'])}}
+                                                            {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4A', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('remarks4A') }}</small>
                                                     </div>                            
                                             </div><br>
@@ -383,16 +370,15 @@
                                                             {{Form::text('LocB[]', 'B', ['class' => 'form-control', 'readonly'])}}
                                                     </div>
                                                     <div class="col-md-3">
-                                                            {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4B'])}}
+                                                            {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4B', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('peeltest4B') }}</small>
                                                     </div>
                                                     <div class="col-md-3">
-                                                                {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B',
-                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4B'])}}
+                                                                {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4B', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('criteria4B') }}</small>
                                                     </div>  
                                                     <div class="col-md-3">
-                                                            {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4B'])}}
+                                                            {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4B', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('remarks4B') }}</small>
                                                     </div>                           
                                             </div><br>
@@ -401,16 +387,15 @@
                                                             {{Form::text('LocC[]', 'C', ['class' => 'form-control', 'readonly'])}}
                                                     </div>
                                                     <div class="col-md-3">
-                                                            {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4C'])}}
+                                                            {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4C', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('peeltest4C') }}</small>
                                                     </div>
                                                     <div class="col-md-3">
-                                                                {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B',
-                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4C'])}}
+                                                                {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4C', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('criteria4C') }}</small>
                                                     </div>  
                                                     <div class="col-md-3">
-                                                            {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4C'])}}
+                                                            {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4C', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('remarks4C') }}</small>
                                                     </div>                         
                                             </div><br>
@@ -419,16 +404,15 @@
                                                             {{Form::text('LocD[]', 'D', ['class' => 'form-control', 'readonly'])}}
                                                     </div>
                                                     <div class="col-md-3">
-                                                            {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4D'])}}
+                                                            {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4D', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('peeltest4D') }}</small>
                                                     </div>
                                                     <div class="col-md-3">
-                                                                {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B',
-                                                                'C' => 'C', 'D' => 'D'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4D'])}}
+                                                                {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4D', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('criteria4D') }}</small>
                                                     </div>  
                                                     <div class="col-md-3">
-                                                            {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4D'])}}
+                                                            {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4D', 'required' => 'true'])}}
                                                             <small class="form-text text-danger">{{ $errors->first('remarks4D') }}</small>
                                                     </div>                              
                                             </div>
