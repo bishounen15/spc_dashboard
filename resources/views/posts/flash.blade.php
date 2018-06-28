@@ -17,7 +17,7 @@
                                     {{Form::label('Difference', '%Difference:')}}
                                 </div>    
                                 <div class="col-md-3">
-                                        {{Form::text('Difference', '', ['class' => 'form-control', 'placeholder'=>'Difference'])}}
+                                        {{Form::text('Difference', '', ['class' => 'form-control', 'placeholder'=>'Difference','required'=>'true'])}}
                                     <small class="form-text text-danger">{{ $errors->first('Difference') }}</small>
                                 </div>
                                 <div class="col-md-1">

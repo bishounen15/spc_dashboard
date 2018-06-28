@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\MatrixPullTest;
-use DB;
+//use DB;
 
 
 class MatrixPullTestsController extends Controller

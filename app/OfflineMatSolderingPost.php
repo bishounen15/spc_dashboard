@@ -10,7 +10,7 @@ class OfflineMatSolderingPost extends Model
     protected $table = 'offlinematsoldering';
     //Primary Key
     public $primarykey = 'id';
-    //Timestamps
+    //Primary Key
     public $timestamps = true;
 }
 

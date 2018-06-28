@@ -36,7 +36,7 @@
                     <ul class="navbar-nav mr-auto">
                         @guest
                         @else
-                            <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li>
+                            <li><a class="nav-link" href="/Summary">{{ __('SPC Dashboard') }}</a></li>
                         @endguest
                     </ul>
 

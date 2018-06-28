@@ -16,8 +16,34 @@ class OfflineBtoBPullTestController extends Controller
     public function index()
     {
         //$post = Post::all();
-        $posts = DB::select('SELECT * FROM btobpulltest ORDER BY id DESC');
-        return view('matrix.btobpulltest')->with('btobpulltest', $posts);
+        //$posts = DB::select('SELECT * FROM btobpulltest ORDER BY id DESC');
+        //return view('matrix.btobpulltest')->with('btobpulltest', $posts);
+
+        $avefront = DB::table(DB::raw("(SELECT SUM(pulltest1 + pulltest2 +pulltest3) as pulltest FROM btobpulltest) as temp"))
+        //date BETWEEN from AND to
+        ->select(DB::raw('AVG(pulltest/3) as pulltest'))
+        ->get();
+        $avefront = number_format($avefront->avg('pulltest'),2);
+
+        $pulltests1 = DB::table('btobpulltest')
+            ->select('pulltest1 AS pulltest');
+        $pulltests2 = DB::table('btobpulltest')
+            ->select('pulltest2 AS pulltest');
+
+        $pulltests3 = DB::table('btobpulltest')
+            ->select('pulltest3 AS pulltest')
+            ->unionAll($pulltests1)
+            ->unionAll($pulltests2)
+          // ->STDDEV('pulltest AS pulltest')
+            ->get();
+
+       
+        
+      //  $stdave = number_format($stdave->avg('pulltest'),2);
+      $stdave = number_format($pulltests3->avg('pulltest'),2);
+        return view('matrix.btobpulltest') 
+        ->with('avefront',$avefront)
+        ->with('stdave',$stdave);
     }
 
     /**
@@ -44,7 +70,7 @@ class OfflineBtoBPullTestController extends Controller
                 'location' => 'required',
                 'shift' => 'required',
                 'node'=> 'required',
-                'supplier' => 'required',
+                'supplier' => 'required',  
                 'site1' => 'required',
                 'pulltest1' => 'required|numeric',
                 'site2' => 'required',

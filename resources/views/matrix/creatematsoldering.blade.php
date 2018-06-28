@@ -60,7 +60,7 @@
                                 {{Form::label('Date', 'Date:')}}
                             </div>    
                             <div class="col-md-3">
-                                {{Form::date('Date', \Carbon\Carbon::now() ,['class'=>'form-control', 'readonly'] )}}
+                                {{Form::date('Date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}}
                             </div>
                             </div></br>
                         </div> 
