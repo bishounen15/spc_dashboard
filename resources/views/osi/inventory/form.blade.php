@@ -14,7 +14,7 @@
                 </div>
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <input type="text" class="form-control form-control-sm" name="description" id="description" placeholder="Item Description" value="{{ old('description') ? old('description') : $description }}">
+                    <input type="text" class="form-control form-control-sm" name="description" id="description" placeholder="Item Description" value="{{ old('description') ? old('description') : $description }}" autocomplete="false" autofocus>
                     <small class="form-text text-danger">{{ $errors->first('description') }}</small>
                 </div>
 
