@@ -28,13 +28,13 @@
                 <th>Remarks</th>
            
             </tr>
-
+<?php $i=0; ?>
              
                 @if(count($MixLogs) > 0)
                 @foreach($MixLogs as $potLog)
-             
+                <?php $i++ ?>
                  <tr>
-                    <td>{{$potLog->id}}</td>
+                    <td>{{ $i }}</td>
                     <td>{{$potLog->date}}</td>
                     <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->sampleCount}}</td>

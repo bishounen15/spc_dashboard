@@ -16,6 +16,7 @@
 // });
 
 Route::get('/', 'PagesController@index');
+//Route::get('/solder', 'solderTempController@index');
 Route::get('/Summary', 'PagesController@Summary');
 Route::get('/pulltest', 'PagesController@pulltest');
 //Route::get('/create', 'FrameController@store');

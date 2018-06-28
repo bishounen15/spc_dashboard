@@ -70,7 +70,7 @@
                         <div class = "col-sm-2"> 
                                         <div class = "row">
                                                 <div class = "col-sm-3">    {{Form::label('Target Wt.',''),['class'=>'form-control']}}  </div>
-                                                <div class="col-sm-6">      {{ Form::text('target', '33',['class'=>'target form-control form-control-sm'] )}}   </div>
+                                                <div class="col-sm-6">      {{ Form::text('target', '34',['class'=>'target form-control form-control-sm'] )}}   </div>
                                                  <div class = "col-sm-2"> {{ Form::hidden('transID', '',['class'=>'target form-control form-control-sm'] )}}</div>
                                         </div>
                         </div>
@@ -89,7 +89,7 @@
                             <div class = "col-sm-1">   
                                     <div class="row">  
                                             <div class = "col-sm-9"> 
-                                        {{Form::label('A','Sample'),['class'=>'form-control']}}  </div>
+                                         </div>
                                       </div>  <div class = "col-sm-3"> </div>     
                             </div>
                    
@@ -106,7 +106,7 @@
                         <div class = "col-sm-1"> 
                           <div class="row">  
                                 <div class = "col-sm-9"> 
-                           {{ Form::text('sampleCount', '',['class'=>'sampCount form-control form-control-sm','readonly'=>'true'] )}}  </div>
+                           {{ Form::hidden('sampleCount', '',['class'=>'sampCount form-control form-control-sm','readonly'=>'true'] )}}  </div>
                           </div>  <div class = "col-sm-3"> </div> 
                         </div>
                 </div>
@@ -137,7 +137,77 @@
       
         </div>
     </div>      
-    
+
+
+    <div class="row">
+        <div class="col-md-12">
+                <div class="card">
+                        <div class="card-header" >Last Qual Record</div> 
+                 
+        <div>
+               
+            <table class="table table-striped" style="font-size:10px;">
+                <tr>
+                    <th>Seq</th>
+                    <th>Date</th>
+                    <th>Shift</th>
+                    <th>Sample No.</th>
+                    <th>Part</th>
+                    <th>Before <br/>Dispense Wt</th>
+                    <th>Dispensed <br/>Wt</th>
+                    <th>Weight</th>
+                    <th>Total Wt</th>
+                    <th>Ratio</th>
+                    <th>Remarks</th>
+               
+                </tr>
+    <?php $i=0; ?>
+                 
+                    @if(count($frameLogs) > 0)
+                    @foreach($frameLogs as $potLog)
+                    <?php $i++ ?>
+                     <tr>
+                        <td>{{ $i }}</td>
+                        <td>{{$potLog->date}}</td>
+                        <td>{{$potLog->shift}}</td>
+                        <td>{{$potLog->sampleCount}}</td>
+                        <td>A</td>
+                        <td>{{$potLog->befDispenseWtA }}</td>
+                        <td>{{$potLog->dispensedWtA }}</td>
+                        <td>{{$potLog->weightA}}</td>
+                        <td>{{$potLog->totalWt}}</td>
+                        <td>{{$potLog->ratioVal}}</td>
+                        <td>{{$potLog->qualRes}}</td>
+                 
+                     </tr>
+                     <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>B</td>
+                        <td>{{$potLog->befDispenseWtB }}</td>
+                        <td>{{$potLog->dispensedWtB }}</td>
+                        <td>{{$potLog->weightB}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                 
+                 
+                     </tr>
+                @endforeach  
+            </table>
+            @else
+            <p>No Records Found</p>
+                
+        @endif
+        </div>
+        </div>
+        </div>
+</div>
+
+
+
     
 </div>
 

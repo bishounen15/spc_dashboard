@@ -265,6 +265,61 @@ format: 'HH:mm'
         $('.jBoxName').val( $('.jBox').text());
     });
 
+
+    //// After Adjustment
+
+     $('#AdjAftTmp1').keyup(function(){
+        var A1 = $('#AdjAftTmp1').val();
+        var A2 = $('#AdjAftTmp2').val();
+        var A3 = $('#AdjAftTmp3').val();
+        var target = $('.target').val();
+        var uLlL = $('.ULLL').val();
+        var resQual = '';
+        var val = JQUERY4U.getAve(A1,A2,A3);
+        $('#AdjAftAve').val(val);
+        resQual = JQUERY4U.getQualRes(val,target,uLlL);
+        $('#qualRes').val(resQual);
+        JQUERY4U.checkPassFail( $('#qualRes').val());
+        $('.jBoxName').val( $('.jBox').text());
+
+        
+   
+    });
+    $('#AdjAftTmp2').keyup(function(){
+        var A1 = $('#AdjAftTmp1').val();
+        var A2 = $('#AdjAftTmp2').val();
+        var A3 = $('#AdjAftTmp3').val();
+        var target = $('.target').val();
+        var uLlL = $('.ULLL').val();
+        var resQual = '';
+        var val = JQUERY4U.getAve(A1,A2,A3);
+        $('#AdjAftAve').val(val);
+        resQual = JQUERY4U.getQualRes(val,target,uLlL);
+        $('#qualRes').val(resQual);
+        JQUERY4U.checkPassFail( $('#qualRes').val());
+        $('.jBoxName').val( $('.jBox').text());
+    });
+    
+    $('#AdjAftTmp3').keyup(function(){
+        var A1 = $('#AdjAftTmp1').val();
+        var A2 = $('#AdjAftTmp2').val();
+        var A3 = $('#AdjAftTmp3').val();
+        var target = $('.target').val();
+        var uLlL = $('.ULLL').val();
+        var resQual = '';
+        var val = JQUERY4U.getAve(A1,A2,A3);
+        $('#AdjAftAve').val(val);
+        resQual = JQUERY4U.getQualRes(val,target,uLlL);
+        $('#qualRes').val(resQual);
+        JQUERY4U.checkPassFail( $('#qualRes').val());
+        $('.jBoxName').val( $('.jBox').text());
+    });
+
+
+    
+
+    
+
     
     </script>
  @endpush
