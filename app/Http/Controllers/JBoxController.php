@@ -36,6 +36,12 @@ class JBoxController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'beadWt' =>'required|integer|min:1',
+          //  'snapTime' => 'required',
+            'qualTime' => 'required'
+        ]);
+       
         $post = new jboxDisWtQual;
      //   $post->qualTransID = $request->input('transID');
         $post->shift = $request->input('shift');

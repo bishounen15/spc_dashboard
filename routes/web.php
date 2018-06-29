@@ -11,9 +11,11 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+ Route::get('/solderTemp', function () {
+     $posts = DB::select('SELECT * FROM solder_temps');                                        
+        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+         return view('backEnd.solderTemp')->with('tempLogs',$posts);
+ });
 
 Route::get('/', 'PagesController@index');
 //Route::get('/solder', 'solderTempController@index');

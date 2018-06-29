@@ -45,7 +45,7 @@ class SqBwController extends Controller
     {
         $this->validate($request,[ 
           'serialNoTxt' => 'required',
-          
+          'qualTime' => 'required',
           'L1txt' => 'required',
           'L2txt' => 'required',
           'L3txt' => 'required',

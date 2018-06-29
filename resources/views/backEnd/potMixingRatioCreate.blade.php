@@ -49,8 +49,8 @@
                         <div class = "col-sm-4"> 
                                 <div class = "row">
                         <div class = "col-sm-2">  {{Form::label('qualtime','Qual Time'),['class'=>'form-control form-control-sm']}} </div>
-                            <div class = "col-sm-3">   {{ Form::text('qualTime', '00:00',['class'=>'timepicker form-control form-control-sm','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
-                              
+                            <div class = "col-sm-3">   {{ Form::text('qualTime', '',['class'=>'timepicker form-control form-control-sm','placeholder'=>'00:00','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
+                                <small class="form-text text-danger">{{ $errors->first('qualTime') }}</small>
                             </div>
                                  <div class = "col-sm-2">    {{Form::label('Ratio Range'),['class'=>'form-control form-control-sm']}}  </div>
                                  <div class="col-sm-5">    
@@ -98,7 +98,7 @@
                         <div class = "col-sm-1">   </div>
                         <div class = "col-sm-1">   {{Form::label('A','PartA'),['class'=>'form-control']}}  </div>
                         <div class="col-sm-2">     {{ Form::text('befDispenseWtA', '0',['class'=>'form-control', 'id'=>'befDispenseWtA'] )}} </div>
-                        <div class = "col-sm-2">   {{ Form::text('dispensedWtA', '0',['class'=>'form-control', 'id'=>'dispensedWtA' ] )}}    </div>
+                        <div class = "col-sm-2">   {{ Form::text('dispensedWtA', '0',['class'=>'form-control', 'id'=>'dispensedWtA' ] )}}  <small class="form-text text-danger">{{ $errors->first('dispensedWtA') }}</small>    </div>
                         <div class="col-sm-1">     {{ Form::text('weightA', '0',['class'=>'form-control','id'=>'weightA','readonly'=>'true'] )}}  </div>
                         <div class = "col-sm-1">    {{ Form::text('totalWt', '0',['class'=>'form-control', 'id'=>'totalWt','readonly'=>'true'] )}}   </div>
                         <div class = "col-sm-2">    {{ Form::text('ratio', '0',['class'=>'form-control', 'id'=>'ratio','readonly'=>'true'] )}}   </div>
@@ -114,7 +114,7 @@
                     <div class = "col-sm-1">  </div>
                     <div class = "col-sm-1">   {{Form::label('B','PartB'),['class'=>'form-control']}}  </div>
                     <div class = "col-sm-2">   {{ Form::text('befDispenseWtB', '0',['class'=>'form-control','id'=>'befDispenseWtB'] )}} </div>
-                    <div class = "col-sm-2">   {{ Form::text('dispensedWtB', '0',['class'=>'form-control', 'id'=>'dispensedWtB'] )}}    </div>
+                    <div class = "col-sm-2">   {{ Form::text('dispensedWtB', '0',['class'=>'form-control', 'id'=>'dispensedWtB'] )}}    <small class="form-text text-danger">{{ $errors->first('dispensedWtB') }}</small> </div>
                     <div class = "col-sm-1">   {{ Form::text('weightB', '0',['class'=>'form-control','id'=>'weightB','readonly'=>'true'] )}}  </div>
                     <div class = "col-sm-1">  </div>
                     <div class = "col-sm-2">  </div>
@@ -161,18 +161,23 @@
                     <th>Remarks</th>
                
                 </tr>
-    <?php $i=0; ?>
+    <?php $i=0 ?>
+    <?php $ii=0 ?>
+    <?php $lastDisValA= 0 ?>
+    <?php $lastDisValB= 0 ?>
                  
                     @if(count($frameLogs) > 0)
+                    <?php $ii = count($frameLogs) - 1 ?>
                     @foreach($frameLogs as $potLog)
                     <?php $i++ ?>
+                   
                      <tr>
                         <td>{{ $i }}</td>
                         <td>{{$potLog->date}}</td>
                         <td>{{$potLog->shift}}</td>
                         <td>{{$potLog->sampleCount}}</td>
                         <td>A</td>
-                        <td>{{$potLog->befDispenseWtA }}</td>
+                        <td>{{$potLog->befDispenseWtA }}  </td>
                         <td>{{$potLog->dispensedWtA }}</td>
                         <td>{{$potLog->weightA}}</td>
                         <td>{{$potLog->totalWt}}</td>
@@ -186,7 +191,7 @@
                         <td></td>
                         <td></td>
                         <td>B</td>
-                        <td>{{$potLog->befDispenseWtB }}</td>
+                        <td>{{$potLog->befDispenseWtB }} </td>
                         <td>{{$potLog->dispensedWtB }}</td>
                         <td>{{$potLog->weightB}}</td>
                         <td></td>
@@ -195,11 +200,17 @@
                  
                  
                      </tr>
+                    
                 @endforeach  
             </table>
+                     <?php $lastDisValA = $frameLogs[$ii]->dispensedWtA  ?>
+                     <?php $lastDisValB = $frameLogs[$ii]->dispensedWtB  ?> 
+                     {{ Form::hidden('befDisALastVal', $lastDisValA,['class'=>'form-control','id'=>'befDisALastVal'] )}}
+                     {{ Form::hidden('befDisBLastVal', $lastDisValB,['class'=>'form-control','id'=>'befDisBLastVal'] )}}
             @else
+
             <p>No Records Found</p>
-                
+          
         @endif
         </div>
         </div>
@@ -222,6 +233,11 @@
 format: 'HH:mm'
 
 }); 
+
+ $(document).ready(function () {
+    $('#befDispenseWtA').val( $('#befDisALastVal').val());
+    $('#befDispenseWtB').val( $('#befDisBLastVal').val());
+ });
 
 JQUERY4U = {
     getDiff:function(aftDis,befDis){

@@ -40,7 +40,8 @@
                                                 <div class = "col-sm-6"> 
                                                 <div class = "row">
                                                 <div class = "col-sm-1">  {{Form::label('qualtime','Qual Time'),['class'=>'form-control form-control-sm']}} </div>
-                                                <div class = "col-sm-2">   {{ Form::text('qualTime', '00:00',['class'=>'timepicker form-control form-control-sm','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}                            
+                                                <div class = "col-sm-2">   {{ Form::text('qualTime', '',['class'=>'timepicker form-control form-control-sm','placeholder'=>'00:00','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}    
+                                                        <small class="form-text text-danger">{{ $errors->first('qualTime') }}</small>                         
                                                         {{ Form::hidden('qualTransID', '1',['class'=>'form-control form-control-sm'] )}}
                                                 </div>
                                                 <div class = "col-sm-2">    {{Form::label('J-Box'),['class'=>'form-control form-control-sm']}}  </div>
@@ -84,17 +85,17 @@
                                                         <div class = "col-sm-5"> 
                                                             <div class="row">
                                                                  
-                                                                    <div class="col-sm-3">     {{ Form::text('AdjBeftTmp1', '',['class'=>'form-control form-control-sm','id'=>'AdjBeftTmp1'] )}}  </div>
-                                                                    <div class = "col-sm-3">   {{ Form::text('AdjBeftTmp2', '',['class'=>'form-control form-control-sm','id'=>'AdjBeftTmp2'] )}}   </div>
-                                                                    <div class="col-sm-3">     {{ Form::text('AdjBeftTmp3', '',['class'=>'form-control form-control-sm','id'=>'AdjBeftTmp3'] )}}   </div>
+                                                                    <div class="col-sm-3">     {{ Form::text('AdjBeftTmp1', '',['class'=>'form-control form-control-sm','id'=>'AdjBeftTmp1'] )}} <small class="form-text text-danger">{{ $errors->first('AdjBeftTmp1') }}</small>  </div>
+                                                                    <div class = "col-sm-3">   {{ Form::text('AdjBeftTmp2', '',['class'=>'form-control form-control-sm','id'=>'AdjBeftTmp2'] )}} <small class="form-text text-danger">{{ $errors->first('AdjBeftTmp2') }}</small>  </div>
+                                                                    <div class="col-sm-3">     {{ Form::text('AdjBeftTmp3', '',['class'=>'form-control form-control-sm','id'=>'AdjBeftTmp3'] )}}  <small class="form-text text-danger">{{ $errors->first('AdjBeftTmp3') }}</small> </div>
                                                                     <div class = "col-sm-3">   {{ Form::text('AdjBeftAve', '0',['class'=>'form-control form-control-sm', 'id'=>'AdjBeftAve','readonly'=>'true'] )}}   </div>
                                                             </div>
                                                         </div>
                                                         <div class = "col-sm-5"> 
                                                             <div class="aftVal row" >
-                                                                        <div class="col-sm-3">     {{ Form::text('AdjAftTmp1', '0',['class'=>'form-control form-control-sm','id'=>'AdjAftTmp1'] )}}  </div>
-                                                                        <div class = "col-sm-3">   {{ Form::text('AdjAftTmp2', '0',['class'=>'form-control form-control-sm','id'=>'AdjAftTmp2'] )}}   </div>
-                                                                        <div class="col-sm-3">     {{ Form::text('AdjAftTmp3', '0',['class'=>'form-control form-control-sm','id'=>'AdjAftTmp3'] )}}   </div>
+                                                                        <div class="col-sm-3">     {{ Form::text('AdjAftTmp1', '',['class'=>'form-control form-control-sm','id'=>'AdjAftTmp1'] )}} <small class="form-text text-danger">{{ $errors->first('AdjAftTmp1') }}</small> </div>
+                                                                        <div class = "col-sm-3">   {{ Form::text('AdjAftTmp2', '',['class'=>'form-control form-control-sm','id'=>'AdjAftTmp2'] )}} <small class="form-text text-danger">{{ $errors->first('AdjAftTmp2') }}</small>  </div>
+                                                                        <div class="col-sm-3">     {{ Form::text('AdjAftTmp3', '',['class'=>'form-control form-control-sm','id'=>'AdjAftTmp3'] )}}  <small class="form-text text-danger">{{ $errors->first('AdjAftTmp3') }}</small> </div>
                                                                         <div class = "col-sm-3">   {{ Form::text('AdjAftAve', '0',['class'=>'form-control form-control-sm', 'id'=>'AdjAftAve','readonly'=>'true'] )}}   </div>
                                                             </div>
                                                         </div>
@@ -181,14 +182,23 @@ format: 'HH:mm'
                         $('#AdjAftTmp1').attr('readonly',true);
                         $('#AdjAftTmp2').attr('readonly',true);
                         $('#AdjAftTmp3').attr('readonly',true);
+                       $('#AdjAftTmp1').val('0');
+                       $('#AdjAftTmp2').val('0');
+                       $('#AdjAftTmp3').val('0');
+                      // $('#AdjAftTmp1').attr('style','background-color:#F08080');
                 }
                 if(resQual =='failed'){
                         $('#AdjAftTmp1').attr('readonly',false);
                         $('#AdjAftTmp2').attr('readonly',false);
                         $('#AdjAftTmp3').attr('readonly',false);
+                      //  $('#AdjAftTmp1').val('');
+                      //  $('#AdjAftTmp2').val('');
+                     //   $('#AdjAftTmp3').val('');
                       //  alert( $('#AdjAftTmp1').attr('readonly'));
+                     // $('#AdjAftTmp1').attr('style','background-color:#F08080');
                 }
-        } 
+        },
+        //checkEaachAveVal: function()
      
 
 
@@ -197,12 +207,15 @@ format: 'HH:mm'
  $(document).ready(function () {
         
          $('.target').val('380');
-         $('.target').attr('readonly','true');
+         $('.target').attr('readonly',true);
          $('.jBox').val('380');
 
-           /// $('#AdjAftTmp1').attr('readonly','true');
-              //          $('#AdjAftTmp2').attr('readonly','true');
-                //        $('#AdjAftTmp3').attr('readonly','true');
+          $('#AdjAftTmp1').val('');
+                        $('#AdjAftTmp2').val('');
+                        $('#AdjAftTmp3').val('');
+        //    $('#AdjAftTmp1').attr('readonly',true);
+         //   $('#AdjAftTmp2').attr('readonly',true);
+         //  $('#AdjAftTmp3').attr('readonly',true);
  });
 
 

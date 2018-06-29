@@ -10,7 +10,7 @@
             <div class="card-header">J-Box Solder Temperature Monitoring</div> 
             <div class="card-body">
                 
-<a href="/Summary" class="btn btn-secondary">Go Back</a>
+<a href="/SolderTemp" class="btn btn-secondary">Go Back</a>
 <a href="/SolderTemp/create" class="btn btn-success">Add Record</a>
             <table class="table table-striped" style="font-size:10px;">
             <tr>

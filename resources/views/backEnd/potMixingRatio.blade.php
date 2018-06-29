@@ -16,7 +16,7 @@
             <table class="table table-striped" style="font-size:10px;">
             <tr>
                 <th>Seq</th>
-                <th>Date</th>
+                <th>Date <br/> Qual Time</th>
                 <th>Shift</th>
                 <th>Sample No.</th>
                 <th>Part</th>
@@ -35,7 +35,7 @@
                 <?php $i++ ?>
                  <tr>
                     <td>{{ $i }}</td>
-                    <td>{{$potLog->date}}</td>
+                 <td>{{$potLog->date}} &nbsp; {{$potLog->qualTime}}</td>
                     <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->sampleCount}}</td>
                     <td>A</td>

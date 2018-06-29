@@ -40,7 +40,12 @@ class ELTestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+       $this->validate($request,[ 
+        'serialNo'=> 'required',
+        'qualTime' => 'required'
+       ]);
+
         $post = new ELTest;
         //$post->id = $request->input('qualTransID');
         $post->shift = $request->input('shift');

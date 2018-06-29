@@ -95,7 +95,7 @@
                        
                         <div class = "row">
                                 <div class = "col-sm-1"> </div>
-                                <div class = "col-sm-1">    {{ Form::text('qualTime', '00:00',['class'=>'timepicker form-control form-control-sm','style'=>'padding:0;padding-bottom:0.5em;padding-top:0.5em'] )}}   <small class="form-text text-danger">{{ $errors->first('qualTime') }}</small></div>
+                                <div class = "col-sm-1">    {{ Form::text('qualTime', '',['class'=>'timepicker form-control form-control-sm','placeholder'=>'00:00','style'=>'padding:0;padding-bottom:0.5em;padding-top:0.5em'] )}}   <small class="form-text text-danger">{{ $errors->first('qualTime') }}</small></div>
                                
                                 <div class="col-sm-2">      {{ Form::text('serialNo',  $seriallastval,['class'=>'form-control form-control-sm'] )}} <small class="form-text text-danger">{{ $errors->first('serialNo') }}</small> </div>
                                 

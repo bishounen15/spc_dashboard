@@ -39,33 +39,30 @@ $tempBefAve = DB::table('solder_temps')
 ->select('tempBefAdjAve AS tempAve')
 ->where('tempAftAdjAve','0')
 ->unionAll($tempAftAve)
+->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
 ->get();
 
 $tempAve = number_format($tempBefAve->avg('tempAve'),2);
 
 
-//->avg('tempAve'),2);
-//->select(DB::raw('AVG(tempAve AS tempAve)'))
 
-//->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
+//stdInd
 
-         // average
+$tempBefAveSTD = DB::table(DB::raw("((SELECT tempAftAdjAve as tempAve,date FROM `solder_temps` WHERE tempAftAdjAve != 0) UNION ALL (SELECT tempBefAdjAve as tempAve,date FROM `solder_temps` WHERE tempAftAdjAve = 0) ) as temp"))
+->select(DB::raw('STDDEV(tempAve) as  tempAve','date'))
+->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
+->get();
+$tempBefAveSTD = number_format($tempBefAveSTD[0]->tempAve,2);
+
 
 /*
-$avefront = number_format(DB::table('solder_temps')
-//date BETWEEN from AND to
-->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
-->where('temp')
-->avg('tempBefAdjAve'),2);
-*/
-
 $stdfront = DB::table('solder_temps')
 ->select(DB::raw('STDDEV(tempBefAdjAve) as tempBefAdjAve'))
 ->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
 ->get();
 $stdfront = number_format($stdfront[0]->tempBefAdjAve,2);
 
-
+*/
 $xbbfront = DB::table('solder_temps')
 ->select(DB::raw('AVG(tempBefAdjAve) as tempBefAdjAve'))
 ->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
@@ -94,7 +91,7 @@ $median = number_format($median->median('tempBefAdjAve'),2);
 //$posts = Post::orderBy('created_at','desc')->paginate(2);
 return view('backEnd.solderTempSum') 
 ->with('avefront',$tempAve)
-->with('stdfront',$stdfront)
+->with('stdfront',$tempBefAveSTD)
 ->with('xbbfront',$xbbfront)
 ->with('stdavg',$stdavg)
 ->with('median',$median);
@@ -121,7 +118,14 @@ return view('backEnd.solderTempSum')
     public function store(Request $request)
     {
         $this->validate($request, [ 
-            //'tempBefAdj' => 'required'
+            'AdjBeftTmp1' => 'required',
+            'AdjBeftTmp2' => 'required',
+            'AdjBeftTmp3' => 'required',
+
+            'AdjAftTmp1' => 'required',
+            'AdjAftTmp2' => 'required',
+            'AdjAftTmp3' => 'required',
+            'qualTime' => 'required'
         ]);
 
    
