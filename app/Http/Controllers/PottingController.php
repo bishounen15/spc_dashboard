@@ -43,10 +43,11 @@ class PottingController extends Controller
      */
     public function store(Request $request)
     {
-     //  $this->validate($request,[
-           // 'title' =>'required',
-            //'body' => 'required'
-      //  ]);
+      $this->validate($request,[
+            'pottantWt' =>'required|integer|min:1',
+            'snapTime' => 'required',
+            'qualTime' => 'required'
+        ]);
        
             //create Post
             $post = new POttingQual;

@@ -45,8 +45,8 @@
                                                 <div class = "col-sm-4"> 
                                                         <div class = "row">
                                                 <div class = "col-sm-2">  {{Form::label('qualtime','Qual Time'),['class'=>'form-control form-control-sm']}} </div>
-                                                    <div class = "col-sm-3">   {{ Form::text('qualTime', '00:00',['class'=>'timepicker form-control form-control-sm','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
-                                                      
+                                                    <div class = "col-sm-3">   {{ Form::text('qualTime', '',['class'=>'timepicker form-control form-control-sm','placeholder'=>'00:00','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
+                                                        <small class="form-text text-danger">{{ $errors->first('qualTime') }}</small>
                                                     </div>
                                                          <div class = "col-sm-3">    {{Form::label('Type'),['class'=>'form-control form-control-sm']}}  </div>
                                                          <div class="col-sm-4">       {{Form::select('type', array('13' => 'Pail', '11.5' => 'Sausage'), 'S',['class'=>'type form-control form-control-sm']) }} </div>
@@ -90,7 +90,7 @@
                                                         <div class = "row">
                                                 <div class = "col-sm-2">  {{Form::label('beadWt','Bead Wt.'),['class'=>'form-control form-control-sm']}} </div>
                                                     <div class = "col-sm-3">   {{ Form::text('beadWt', '0',['class'=>'beadWt form-control form-control-sm'] )}}  
-                                                      
+                                                        <small class="form-text text-danger">{{ $errors->first('beadWt') }}</small>
                                                     </div>
                                                          <div class = "col-sm-3">    {{Form::label('cdaPressure','CDA/Robot Pressure'),['class'=>'cdaLabel form-control form-control-sm']}}  </div>
                                                          <div class="col-sm-4">      {{ Form::text('cdaPressure', '0',['class'=>'cdaPressure form-control form-control-sm'] ) }} </div>

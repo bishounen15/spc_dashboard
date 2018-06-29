@@ -21,13 +21,15 @@
             <th>Pottant Wt.</th>
             <th>Snap Time</th>
             <th>Cross Section</th>
-            <th>Actions</th>
+           
             </tr>
     
             @if(count($potLogs) > 0)
+            <?php $i=0 ?>
             @foreach($potLogs as $potLog)
+            <?php $i++ ?>
              <tr>
-                <td>{{$potLog->id}}</td>
+                <td>{{ $i }}</td>
                 <td>{{$potLog->shift}}</td>
                 <td>{{$potLog->time}}</td>
                 <td>{{$potLog->pottantName}}</td>
@@ -35,10 +37,7 @@
                 <td>{{$potLog->pottantWeight}}</td>
                 <td>{{$potLog->snapTime}}</td>
                 <td>{{$potLog->crossSection}}</td>
-                <td>{!!Form::open(['action' => ['PottingController@destroy', $potLog->id],'method'=>'POST','class'=> 'pull-right'])!!}
-                    {{Form::hidden('_method','DELETE')}}
-                    {{Form::submit('Delete',['class'=> 'btn btn-danger'])}}
-                </td>
+               
              </tr>
             @endforeach  
         @else

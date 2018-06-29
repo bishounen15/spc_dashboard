@@ -42,12 +42,12 @@
                                 <div class = "col-sm-3"> 
                                         <div class = "row">
                                 <div class = "col-sm-2">  {{Form::label('snaptime','Snap Time'),['class'=>'form-control form-control-sm']}} </div>
-                                    <div class = "col-sm-4">   {{ Form::text('snapTime', '00:00',['class'=>'timepicker form-control form-control-sm','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
-                                      
+                                    <div class = "col-sm-4">   {{ Form::text('snapTime', '',['class'=>'timepicker form-control form-control-sm','placeholder'=>'00:00','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
+                                        <small class="form-text text-danger">{{ $errors->first('snapTime') }}</small>
                                     </div>
                                     <div class = "col-sm-2">  {{Form::label('pottingtime','Potting Time'),['class'=>'form-control form-control-sm']}} </div>
-                                    <div class = "col-sm-4">   {{ Form::text('pottingTime', '00:00',['class'=>'timepicker form-control form-control-sm','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
-                                      
+                                    <div class = "col-sm-4">   {{ Form::text('pottingTime', '',['class'=>'timepicker form-control form-control-sm','placeholder'=>'00:00','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
+                                        <small class="form-text text-danger">{{ $errors->first('pottingTime') }}</small>
                                     </div>
                                         </div></div>
                                    
@@ -75,7 +75,7 @@
                                 <div class = "col-sm-1">    {{Form::label('SerialNo',''),['class'=>'form-control']}}  </div>
                                 <div class="col-sm-2">      {{ Form::text('serialNo', '',['class'=>'form-control form-control-sm','id'=>'serialNo'] )}}   
                                    
-                                    <small class="form-text text-danger">{{ $errors->first('serialNoTxt') }}</small>
+                                    <small class="form-text text-danger">{{ $errors->first('serialNo') }}</small>
                                   
                                  </div>
                                 <div class = "col-sm-1">   {{Form::label('Remarks','Remarks'),['class'=>'form-control form-control-sm']}}  </div>

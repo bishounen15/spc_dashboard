@@ -25,9 +25,11 @@
 
              
                 @if(count($curLogs) > 0)
+                <?php $i=0 ?>
                 @foreach($curLogs as $potLog)
+                <?php $i++ ?>
                  <tr>
-                    <td>{{$potLog->id}}</td>
+                    <td>{{ $i }}</td>
                     <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->serialNo}}</td>
                     <td>{{$potLog->date}}</td>

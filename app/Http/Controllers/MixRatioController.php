@@ -55,7 +55,13 @@ class MixRatioController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $this->validate($request,[
+           // 'pottantWt' =>'required|integer|min:1',
+         //   'snapTime' => 'required',
+            'qualTime' => 'required',
+            'dispensedWtA' => 'required|numeric|min:1',
+            'dispensedWtB' => 'required|numeric|min:1'
+        ]);
         $post = new pottantQual;
       //  $post->qualTransID = $request->input('transID');
         $post->shift = $request->input('shift');

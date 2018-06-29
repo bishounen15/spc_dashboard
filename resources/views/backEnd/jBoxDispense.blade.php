@@ -30,11 +30,12 @@
                 <th>Remarks</th>
             </tr>
 
-             
+             <?php $i=0 ?>
                 @if(count($disLogs) > 0)
                 @foreach($disLogs as $potLog)
+                <?php $i++ ?>
                  <tr>
-                    <td>{{$potLog->id}}</td>
+                    <td>{{ $i }}</td>
                     <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->date}}</td>
                     <td>{{$potLog->qualTime}}</td>

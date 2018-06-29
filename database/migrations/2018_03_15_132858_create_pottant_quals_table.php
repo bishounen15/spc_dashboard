@@ -18,7 +18,7 @@ class CreatePottantQualsTable extends Migration
             $table->integer('qualTransID');
             $table->string('shift');
             $table->date('date');
-            $table->time('qualTime');
+            $table->string('qualTime');
             $table->integer('sampleCount')->nullable();
             $table->double('befDispenseWtA');
             $table->double('befDispenseWtB');

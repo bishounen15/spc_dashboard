@@ -39,6 +39,12 @@ class CuringController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request,[ 
+            'serialNo' => 'required', 
+            'snapTime' => 'required',
+            'pottingTime' => 'required'
+           ]);
+    
         $post = new CuringTest;
         $post->shift = $request->input('shift');
         $post->date = $request->input('fixture_date');

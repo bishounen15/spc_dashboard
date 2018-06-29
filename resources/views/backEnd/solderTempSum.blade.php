@@ -11,20 +11,19 @@
             <div class="card-body">
                 
 <a href="/Summary" class="btn btn-secondary">Go Back</a>
-<a href="/SolderTemp/create" class="btn btn-success">Add Record</a>
-            
-table of computation
+<a href="/solderTemp" class="btn btn-success">View Records</a>
+<a href="/SolderTemp/create" class="btn btn-success">Add Record</a>           
+
 <div class="container">
 <br>
 <div class="col-md-12">
 <div class="row">
 {{-- <div class="col-md-12"> --}}
 <div class="card">
-<div class="card-header">STRINGER MONITORING</div> 
+<div class="card-header">Table of computation for J-Box Solder Temperature Monitoring </div> 
 {{-- <div class="card"> --}}
 <div class="card-body">
-<a href="/stringer/create" class="btn btn-primary">ADD STRINGER DATA</a>
-<br><br>
+
 <table class="table table-hover table table-bordered">
 <thead>
 <tr>

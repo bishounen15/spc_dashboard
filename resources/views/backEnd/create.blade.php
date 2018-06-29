@@ -45,8 +45,8 @@
                                                 <div class = "col-sm-4"> 
                                                         <div class = "row">
                                                 <div class = "col-sm-2">  {{Form::label('qualtime','Qual Time'),['class'=>'form-control form-control-sm']}} </div>
-                                                    <div class = "col-sm-3">   {{ Form::text('qualTime', '00:00',['class'=>'timepicker form-control form-control-sm','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
-                                                      
+                                                    <div class = "col-sm-3">   {{ Form::text('qualTime', '',['class'=>'timepicker form-control form-control-sm','placeholder'=>'00:00','style'=>'padding:0;padding-bottom:0.3em;padding-top:0.3em'] )}}  
+                                                        <small class="form-text text-danger">{{ $errors->first('qualTime') }}</small>
                                                     </div>
                                                          <div class = "col-sm-3">    {{Form::label('Qual Result'),['class'=>'form-control form-control-sm']}}  </div>
                                                          <div class="col-sm-4">       {{Form::text('qualRes','',['class'=>'qualRes form-control form-control-sm','readonly'=>'true']) }} </div>
@@ -59,7 +59,7 @@
                                                                         <div class = "col-sm-3">    {{Form::label('Target',''),['class'=>'form-control']}}  </div>
                                                                         <div class="col-sm-6">      {{ Form::text('target', '33',['class'=>'target form-control form-control-sm','readonly'=>'true'] )}}   
                                                                            
-                                                                            <small class="form-text text-danger">{{ $errors->first('serialNoTxt') }}</small>
+                                                                          
                                                                             {{Form::hidden('transID','1'),['class'=>'form-control form-control-sm']}} 
                                                                          </div>
                                                                          <div class = "col-sm-2"></div>
@@ -89,11 +89,13 @@
                                                 <div class = "col-sm-4"> 
                                                         <div class = "row">
                                                 <div class = "col-sm-2">  {{Form::label('PottantWt','Pottant Wt.'),['class'=>'form-control form-control-sm']}} </div>
-                                                    <div class = "col-sm-3">   {{ Form::text('pottantWt', '0',['class'=>'pottantWt form-control form-control-sm'] )}}  
-                                                      
+                                                    <div class = "col-sm-3">   {{ Form::text('pottantWt', '',['class'=>'pottantWt form-control form-control-sm','placeholder'=>'0'] )}}  
+                                                        <small class="form-text text-danger">{{ $errors->first('pottantWt') }}</small>
                                                     </div>
                                                          <div class = "col-sm-3">    {{Form::label('snapTime','Snap Time'),['class'=>'cdaLabel form-control form-control-sm']}}  </div>
-                                                         <div class="col-sm-4">      {{ Form::text('snapTime', '',['class'=>'snapTime form-control form-control-sm','placeholder'=>'in mins'] ) }} </div>
+                                                         <div class="col-sm-4">      {{ Form::text('snapTime', '',['class'=>'snapTime form-control form-control-sm','placeholder'=>'in mins'] ) }} 
+                                                                <small class="form-text text-danger">{{ $errors->first('snapTime') }}</small>
+                                                        </div>
                                                         </div>
                                                 </div>
                                                    

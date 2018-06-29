@@ -17,7 +17,7 @@ class CreatePOttingQualsTable extends Migration
             $table->increments('id');
             $table->date('date');
             $table->string('shift');
-            $table->time('time');
+            $table->string('time');
             $table->string('pottantName');
             $table->string('jBoxName');
          //   $table->string('sealant');
