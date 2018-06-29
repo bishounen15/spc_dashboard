@@ -15,7 +15,7 @@ class CreateStringersTable extends Migration
     {
         Schema::create('stringers', function (Blueprint $table) {
             $table->increments('id');
-            $table->String('Date');
+            $table->Date('Date');
             $table->String('Stringer');
             $table->String('Shift');
             $table->String('Cell');
