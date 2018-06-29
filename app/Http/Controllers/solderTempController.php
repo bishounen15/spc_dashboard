@@ -13,9 +13,93 @@ class solderTempController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM solder_temps');                                        
+      //  $posts = DB::select('SELECT * FROM solder_temps');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-          return view('backEnd.solderTemp')->with('tempLogs',$posts);
+        //  return view('backEnd.solderTemp')->with('tempLogs',$posts);
+
+//new ave
+/*
+$pulltests1 = DB::table('btobpulltest')
+->select('pulltest1 AS pulltest');
+$pulltests2 = DB::table('btobpulltest')
+->select('pulltest2 AS pulltest');
+
+$pulltests3 = DB::table('btobpulltest')
+->select('pulltest3 AS pulltest')
+->unionAll($pulltests1)
+->unionAll($pulltests2)
+// ->STDDEV('pulltest AS pulltest')
+->get();
+*/
+$tempAftAve = DB::table('solder_temps')
+->select('tempAftAdjAve AS tempAve')
+->where('tempAftAdjAve','!=','0');
+
+$tempBefAve = DB::table('solder_temps')
+->select('tempBefAdjAve AS tempAve')
+->where('tempAftAdjAve','0')
+->unionAll($tempAftAve)
+->get();
+
+$tempAve = number_format($tempBefAve->avg('tempAve'),2);
+
+
+//->avg('tempAve'),2);
+//->select(DB::raw('AVG(tempAve AS tempAve)'))
+
+//->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
+
+         // average
+
+/*
+$avefront = number_format(DB::table('solder_temps')
+//date BETWEEN from AND to
+->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
+->where('temp')
+->avg('tempBefAdjAve'),2);
+*/
+
+$stdfront = DB::table('solder_temps')
+->select(DB::raw('STDDEV(tempBefAdjAve) as tempBefAdjAve'))
+->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
+->get();
+$stdfront = number_format($stdfront[0]->tempBefAdjAve,2);
+
+
+$xbbfront = DB::table('solder_temps')
+->select(DB::raw('AVG(tempBefAdjAve) as tempBefAdjAve'))
+->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
+->groupBy('date')
+->get();
+$xbbfront = number_format($xbbfront->avg('tempBefAdjAve'),2);
+//$xbbfront = number_format($xbbfront,2);
+
+
+$stdavg = DB::table(DB::raw("(SELECT AVG(tempBefAdjAve) as tempBefAdjAve FROM solder_temps WHERE date BETWEEN '".date('Y-m-d',strtotime("-30 days"))."' AND '".date('Y-m-d')."' GROUP BY date) as temp"))
+//date BETWEEN from AND to
+->select(DB::raw('STDDEV(tempBefAdjAve) as tempBefAdjAve'))
+->get();
+$stdavg = number_format($stdavg->avg('tempBefAdjAve'),2);
+
+$median = DB::table('solder_temps')
+->select(DB::raw('AVG(tempBefAdjAve) as tempBefAdjAve'))
+->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
+->groupBy('date')
+->get();
+
+
+$median = number_format($median->median('tempBefAdjAve'),2);
+
+//$aveback1 = (DB::table('stringers')->where('side','=','Back')->whereBetween('Date',['$start','$end'])->avg('PeelTest'));
+//$posts = Post::orderBy('created_at','desc')->paginate(2);
+return view('backEnd.solderTempSum') 
+->with('avefront',$tempAve)
+->with('stdfront',$stdfront)
+->with('xbbfront',$xbbfront)
+->with('stdavg',$stdavg)
+->with('median',$median);
+//->with('aveback',$aveback)
+//->with('aveback1',$aveback1);
     }
 
     /**
@@ -36,14 +120,28 @@ class solderTempController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [ 
+            //'tempBefAdj' => 'required'
+        ]);
+
+   
         $post = new SolderTemp;
-        $post->transID = $request->input('transID');
+        $post->transID = $request->input('qualTransID');
         $post->shift = $request->input('shift');
         $post->date = $request->input('fixture_date');
-        $post->tempBefAdj = $request->input('tempBefAdj');
-        $post->tempAftAdj = $request->input('tempAftAdj');
+        $post->qualTime = $request->input('qualTime');
+        $post->tempBefAdj1 = $request->input('AdjBeftTmp1');
+        $post->tempBefAdj2 = $request->input('AdjBeftTmp2');
+        $post->tempBefAdj3 = $request->input('AdjBeftTmp3');
+        $post->tempAftAdj1 = $request->input('AdjAftTmp1');
+        $post->tempAftAdj2 = $request->input('AdjAftTmp2');
+        $post->tempAftAdj3 = $request->input('AdjAftTmp3');
+        $post->tempAftAdjAve = $request->input('AdjAftAve');
+        $post->tempBefAdjAve = $request->input('AdjBeftAve');
+        $post->target = $request->input('target');
+        $post->result = $request->input('qualRes');
         $post->remarks = $request->input('remarks');
-        $post->jBox = $request->input('jboxName');
+        $post->jBox = $request->input('jBoxName');
        // $post->crossSection = $request->input('crossSection');
         $post->save();
 

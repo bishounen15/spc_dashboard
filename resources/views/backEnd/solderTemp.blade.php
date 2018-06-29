@@ -12,15 +12,25 @@
                 
 <a href="/Summary" class="btn btn-secondary">Go Back</a>
 <a href="/SolderTemp/create" class="btn btn-success">Add Record</a>
-            <table class="table table-striped">
+            <table class="table table-striped" style="font-size:10px;">
             <tr>
                 <th>Seq</th>
                 <th>Shift</th>
+                <th>Qual Time</th>
                 <th>Date</th>
-                <th>Temp Before <br/> Adjustment</th>
-                <th>Temp After  <br/>Adjustment</th>
-                <th>Remarks</th>
+                <th>Temp Before <br/> Adjustment 1</th>
+                <th>Temp Before <br/> Adjustment 2</th>
+                <th>Temp Before <br/> Adjustment 3</th>
+                <th>Temp Before <br/> Adj. Ave</th>
+                <th>Temp After  <br/>Adjustment 1</th>
+                <th>Temp After  <br/>Adjustment 2</th>
+                <th>Temp After  <br/>Adjustment 3</th>
+                <th>Temp After <br/> Adj. Ave</th>
                 <th>J-Box</th>
+                <th>Target</th>
+                <th>Qual<br/>Result</th>
+                <th>Remarks</th>
+               
             </tr>
 
              
@@ -29,11 +39,21 @@
                  <tr>
                     <td>{{$potLog->id}}</td>
                     <td>{{$potLog->shift}}</td>
+                    <td>{{$potLog->qualTime}}</td>
                     <td>{{$potLog->date}}</td>
-                    <td>{{$potLog->tempBefAdj}}</td>
-                    <td>{{$potLog->tempAftAdj}}</td>
-                    <td>{{$potLog->remarks}}</td>
+                    <td>{{$potLog->tempBefAdj1}}</td>
+                    <td>{{$potLog->tempBefAdj2}}</td>
+                    <td>{{$potLog->tempBefAdj3}}</td>
+                    <td>{{$potLog->tempBefAdjAve}}</td>
+                    <td>{{$potLog->tempAftAdj1}}</td>
+                    <td>{{$potLog->tempAftAdj2}}</td>
+                    <td>{{$potLog->tempAftAdj3}}</td>
+                    <td>{{$potLog->tempAftAdjAve}}</td>
                     <td>{{$potLog->jBox}}</td>
+                    <td>{{$potLog->target}}</td>
+                    <td>{{$potLog->result}}</td>
+                    <td>{{$potLog->remarks}}</td>
+                    
                  </tr>
             @endforeach  
         @else

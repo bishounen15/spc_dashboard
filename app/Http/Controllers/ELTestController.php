@@ -1,13 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
-use App\frameSqBw;
+use App\ELTest;
 
-class SqBwController extends Controller
+class ELTestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +14,9 @@ class SqBwController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM frame_sq_bws');                                        
+        $posts = DB::select('SELECT * FROM EL_Test');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-          return view('backEnd.frameSqBw')->with('frameSBLogs',$posts);
+          return view('backEnd.ELTest')->with('ELTestLogs',$posts);
     }
 
     /**
@@ -28,11 +26,10 @@ class SqBwController extends Controller
      */
     public function create()
     {
-       // return view('backEnd.frameSqBwCreate');
-
-        $posts = DB::select('SELECT * FROM frame_sq_bws ORDER BY ID DESC LIMIT 1');                                        
+        $posts = DB::select('SELECT * FROM  EL_Test ORDER BY ID DESC LIMIT 1');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-       return view('backEnd.frameSqBwCreate')->with('frameSBLogs',$posts);
+       return view('backEnd.ELTestCreate')->with('ELTestLogs',$posts);
+       // return view('backEnd.ELTestCreate');
     }
 
     /**
@@ -43,42 +40,20 @@ class SqBwController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,[ 
-          'serialNoTxt' => 'required',
-          
-          'L1txt' => 'required',
-          'L2txt' => 'required',
-          'L3txt' => 'required',
-          'S1txt' => 'required',
-          'S2txt' => 'required',
-          'S3txt' => 'required',
-           'D1txt' => 'required',
-           'D2txt' => 'required' 
-             ]); 
-
-        $post = new frameSqBw;
-        $post->qualTransID = $request->input('transID');
+        //
+        $post = new ELTest;
+        //$post->id = $request->input('qualTransID');
         $post->shift = $request->input('shift');
         $post->date = $request->input('fixture_date');
-        $post->moduleID = $request->input('serialNoTxt');
         $post->qualTime = $request->input('qualTime');
-        $post->cellCount = $request->input('cellType');
-            $post->L1= $request ->input('L1txt');
-            $post->L2= $request ->input('L2txt');
-            $post->L3= $request ->input('L3txt');
-            $post->S1= $request ->input('S1txt');
-            $post->S2= $request ->input('S2txt');
-            $post->S3= $request ->input('S3txt');
-            $post->D1= $request ->input('D1txt');
-            $post->D2= $request ->input('D2txt');
-            $post->LDiff= $request ->input('LDiff');
-            $post->SDiff= $request ->input('SDiff');
-            $post->DDiff= $request ->input('DDiff');
-            $post->remarks= $request ->input('remarkstxt');
+        $post->serialNo = $request->input('serialNo');
+        $post->result = $request->input('result');
+        $post->remarks = $request->input('remarks');
+        
        // $post->crossSection = $request->input('crossSection');
         $post->save();
 
-        return redirect('/Framming')->with('success','Record was successfully added!');
+        return redirect('/ELTest')->with('success','Record was successfully added!');
     }
 
     /**

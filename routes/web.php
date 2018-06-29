@@ -16,7 +16,10 @@
 // });
 
 Route::get('/', 'PagesController@index');
+//Route::get('/solder', 'solderTempController@index');
 Route::get('/Summary', 'PagesController@Summary');
+Route::get('/pulltest', 'PagesController@pulltest');
+//Route::get('/create', 'FrameController@store');
 
 Route::resource('lam', 'LamController');
 Route::resource('laytec', 'LaytecController');
@@ -43,3 +46,4 @@ Route::resource('MixRatio','MixRatioController');
 
 Route::get('datatable', 'StringerController@datatable');
 Route::get('datatable/getdata', 'StringerController@getPosts')->Name('datatable/getdata');
+Route::resource('ELTest','ELTestController');

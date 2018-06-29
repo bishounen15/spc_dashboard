@@ -15,13 +15,18 @@ class CreatePOttingQualsTable extends Migration
     {
         Schema::create('potting_quals', function (Blueprint $table) {
             $table->increments('id');
+            $table->date('date');
             $table->string('shift');
-            $table->dateTime('time');
+            $table->time('time');
             $table->string('pottantName');
             $table->string('jBoxName');
+         //   $table->string('sealant');
             $table->double('pottantWeight');
             $table->integer('snapTime');
+            $table->string('target');
+            $table->string('qualRes');
             $table->string('crossSection');
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

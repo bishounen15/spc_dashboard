@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class frameSqBw extends Model
+class ELTest extends Model
 {
     // //   //
       //Table Name
-      protected $table = 'frame_sq_bws';
+      protected $table = 'EL_Test';
       //Primary Key
       protected $primaryKey = 'id';
       //Timestamp

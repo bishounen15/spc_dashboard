@@ -12,16 +12,21 @@
                 
 <a href="/Summary" class="btn btn-secondary">Go Back</a>
 <a href="/JBox/create" class="btn btn-success">Add Record</a>
-            <table class="table table-striped">
+            <table class="table table-striped" style="font-size:12px;">
             <tr>
                 <th>Seq</th>
-               
                 <th>Shift</th>
                 <th>Date</th>
+                <th>Qual Time</th>
+                <th>JBox</th>
+                <th>Sealant</th>
+                <th>Target</th>
                 <th>Bead Wt.</th>
-                <th>Material PN</th>
-                <th>cda Pressure</th>
-                <th>J-Box</th>
+                <th>CDA Pressure</th>
+                <th>Main CDA <br/> Supply</th>
+                <th>RAM CDA</th>
+                <th>Down <br/> Stream</th>
+                <th>Result</th>
                 <th>Remarks</th>
             </tr>
 
@@ -32,10 +37,16 @@
                     <td>{{$potLog->id}}</td>
                     <td>{{$potLog->shift}}</td>
                     <td>{{$potLog->date}}</td>
+                    <td>{{$potLog->qualTime}}</td>
+                    <td>{{$potLog->jBox}}</td>
+                    <td>{{$potLog->sealant}}</td>
+                    <td>{{$potLog->target}}</td>
                     <td>{{$potLog->beadWt}}</td>
-                    <td>{{$potLog->materialPN}}</td>
                     <td>{{$potLog->cdaPressure}}</td>
-                    <td>{{$potLog->JBox}}</td>
+                    <td>{{$potLog->mainCDASupply}}</td>
+                    <td>{{$potLog->RAMCDA}}</td>
+                    <td>{{$potLog->downStream}}</td>
+                    <td>{{$potLog->qualRes}}</td>
                     <td>{{$potLog->remarks}}</td>
                  </tr>
             @endforeach  

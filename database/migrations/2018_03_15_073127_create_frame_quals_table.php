@@ -15,9 +15,9 @@ class CreateFrameQualsTable extends Migration
     {
         Schema::create('frame_quals', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('qualTransID');
+            $table->integer('qualTransID')->nullable();
             $table->string('shift');
-            $table->dateTime('date');
+            $table->date('date');
             $table->string('qualTime');
             $table->string('serialNo');
             $table->double('L1woSealantWt');
@@ -38,7 +38,8 @@ class CreateFrameQualsTable extends Migration
             $table->double('mainPressure');
             $table->string('paramID')->nullable();
             $table->double('TargetParam')->nullable();
-            $table->string('remarks');
+            $table->string('qualResult')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }
