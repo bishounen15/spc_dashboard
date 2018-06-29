@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\MatrixPullTest;
-//use DB;
+use App\OfflineBtoBPullTestPost;
 
 
-class MatrixPullTestsController extends Controller
+class OfflineBtoBPullTestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,36 +15,62 @@ class MatrixPullTestsController extends Controller
      */
     public function index()
     {
-       // $post = MatrixPullTest::all();
-        $posts = DB::select('SELECT * FROM rtobpull ORDER BY id DESC');
-        return view('matrix.matrixpulltest')->with('rtobpulltest', $posts);
+        //$post = Post::all();
+        //$posts = DB::select('SELECT * FROM btobpulltest ORDER BY id DESC');
+        //return view('matrix.btobpulltest')->with('btobpulltest', $posts);
+
+        $avefront = DB::table(DB::raw("(SELECT SUM(pulltest1 + pulltest2 +pulltest3) as pulltest FROM btobpulltest) as temp"))
+        //date BETWEEN from AND to
+        ->select(DB::raw('AVG(pulltest/3) as pulltest'))
+        ->get();
+        $avefront = number_format($avefront->avg('pulltest'),2);
+
+        $pulltests1 = DB::table('btobpulltest')
+            ->select('pulltest1 AS pulltest');
+        $pulltests2 = DB::table('btobpulltest')
+            ->select('pulltest2 AS pulltest');
+
+        $pulltests3 = DB::table('btobpulltest')
+            ->select('pulltest3 AS pulltest')
+            ->unionAll($pulltests1)
+            ->unionAll($pulltests2)
+          // ->STDDEV('pulltest AS pulltest')
+            ->get();
+
+       
+        
+      //  $stdave = number_format($stdave->avg('pulltest'),2);
+      $stdave = number_format($pulltests3->avg('pulltest'),2);
+        return view('matrix.btobpulltest') 
+        ->with('avefront',$avefront)
+        ->with('stdave',$stdave);
     }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
-     */ 
+     */
     public function create()
     {
-        return view('matrix.creatematrixpulltest');
+        return view('matrix.createofflinebtobpulltest');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $request   
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //Validate
-                $this->validate($request, [         
-                'employeeid' => 'required|numeric',
+            $this->validate($request, [  
+                'employeeid' => 'required|numeric',       
                 'location' => 'required',
                 'shift' => 'required',
                 'node'=> 'required',
-                'supplier' => 'required',
+                'supplier' => 'required',  
                 'site1' => 'required',
                 'pulltest1' => 'required|numeric',
                 'site2' => 'required',
@@ -53,12 +78,12 @@ class MatrixPullTestsController extends Controller
                 'site3' => 'required',
                 'pulltest3' => 'required|numeric',
                 'remarks' => 'required',
-                'average' => 'required'
+                'average' => 'required',
             ]);
 
         //Create Post
         //$post = $request->post;
-        $post = new MatrixPullTest;
+        $post = new OfflineBtoBPullTestPost;
         $post->EmployeeID = $request->input('employeeid');
         $post->Location = $request->input('location');
         $post->Shift = $request->input('shift');
@@ -72,9 +97,9 @@ class MatrixPullTestsController extends Controller
         $post->PullTest3 = $request->input('pulltest3');
         $post->Remarks = $request->input('remarks');
         $post->Average = $request->input('average');
-
+        $post->created_at = $request->input('date');
         $post->save ();
-        return redirect('/matrixpulltest')->with('success', 'Data Created');
+        return redirect('/offlinebtob')->with('success', 'Data Created');
     }
 
     /**
@@ -85,9 +110,7 @@ class MatrixPullTestsController extends Controller
      */
     public function show($id)
     {
-
-        //return redirect('/posts/create')->with('success', 'Data Created');
-
+        //return redirect('/posts/creatematsoldering')->with('success', 'Data Created');
     }
 
     /**
@@ -98,8 +121,8 @@ class MatrixPullTestsController extends Controller
      */
     public function edit($id)
     {
-        $post = MatrixPullTest::find($id);
-        return view('pages.show')->with('post', $post);
+        $post = OfflineBtoBPullTestPost::find($id);
+        return view('pages.about')->with('offlinebtobpulltest', $post);
     }
 
     /**
@@ -114,7 +137,7 @@ class MatrixPullTestsController extends Controller
         //Validate
         
         //Create Post
-        $post = MatrixPullTest::find($id);
+        $post = OfflineBtoBPullTest::find($id);
         $post->string = $request->input('location');
         $post->string = $request->input('station');
         $post->string = $request->input('shift');
@@ -128,7 +151,7 @@ class MatrixPullTestsController extends Controller
         $post->string = $request->input('average');
         $post->string = $request->input('remarks');
         $post->save();
-        return redirect('/matrix/create')->with('success', 'Data Updated');
+        return redirect('/offlinebtobpulltest')->with('success', 'Data Updated');
     }
 
     /**
@@ -139,8 +162,8 @@ class MatrixPullTestsController extends Controller
      */
     public function destroy($id)
     {
-        $post = MatrixPullTest::find($id);
+        $post = OfflineBtoBPullTest::find($id);
         $post->delete();
-        return redirect('/matrix')->with('success', 'Data Deleted');
+        return redirect('/offlinebtobpulltest')->with('success', 'Data Deleted');
     }
 }

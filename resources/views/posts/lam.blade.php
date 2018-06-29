@@ -33,7 +33,7 @@
                                     {{Form::label('Recipe', 'Recipe:')}}
                                 </div>    
                                 <div class="col-md-3">
-                                    {{Form::text('Recipe', '', ['class' => 'form-control', 'placeholder'=>'Recipe'])}}
+                                    {{Form::text('Recipe', '', ['class' => 'form-control', 'placeholder'=>'Recipe','required'=>'true'])}}
                                     <small class="form-text text-danger">{{ $errors->first('Recipe') }}</small>
                                 </div>
                                 <div class="col-md-1">

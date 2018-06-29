@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pulltest extends Model
 {
-    protected $table = 'pull_tests';
+    // Table Name
+    protected $table = 'rtobpull';
+    //Primary Key
     public $primaryKey = 'id';
+    //Primary Key
+    public $timestamps = true;
 }

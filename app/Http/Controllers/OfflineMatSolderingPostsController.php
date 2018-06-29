@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\MatSolderingPost;
+use App\OfflineMatSolderingPost;
 
 
-class MatSolderingPostsController extends Controller
+class OfflineMatSolderingPostsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class MatSolderingPostsController extends Controller
     public function index()
     {
         //$post = Post::all();
-        $posts = DB::select('SELECT * FROM mat_soldering ORDER BY id DESC');
-        return view('matrix.matsolderingtemp')->with('matsolderingtemp', $posts);
+        $posts = DB::select('SELECT * FROM offlinematsoldering ORDER BY id DESC');
+        return view('matrix.offlinematsolderingtemp')->with('offlinematsolderingtemp', $posts);
     }
 
     /**
@@ -27,7 +27,7 @@ class MatSolderingPostsController extends Controller
      */
     public function create()
     {
-        return view('matrix.creatematsoldering');
+        return view('matrix.createofflinematsoldering');
     }
 
     /**
@@ -45,29 +45,29 @@ class MatSolderingPostsController extends Controller
                 'shift' => 'required',
                 'node'=> 'required',
                 'supplier' => 'required',
-                'temp1' => 'required|numeric',
-                'temp2' => 'required|numeric',
-                'temp3' => 'required|numeric',
+                'temp1' =>  'required|numeric',
+                'temp2' =>  'required|numeric',
+                'temp3' =>  'required|numeric',
                 'remarks' => 'required',
                 'average' => 'required',
             ]);
 
         //Create Post
         //$post = $request->post;
-        $post = new MatSolderingPost;
+        $post =  new OfflineMatSolderingPost;
         $post->Station = $request->input('station');
         $post->Location = $request->input('location');
         $post->Shift = $request->input('shift');
         $post->Node = $request->input('node');
         $post->Supplier = $request->input('supplier');
-        $post->temp1 = $request->input('temp1');
-        $post->temp2 = $request->input('temp2');
-        $post->temp3 = $request->input('temp3');
+        $post->Temp1 = $request->input('temp1');
+        $post->Temp2 = $request->input('temp2');
+        $post->Temp3 = $request->input('temp3');
         $post->Remarks = $request->input('remarks');
         $post->Average = $request->input('average');
         $post->created_at = $request->input('date');
         $post->save ();
-        return redirect('/matsolder')->with('success', 'Data Created');
+        return redirect('/offlinematsolder')->with('success', 'Data Created');
     }
 
     /**
@@ -89,8 +89,8 @@ class MatSolderingPostsController extends Controller
      */
     public function edit($id)
     {
-        $post = MatSolderingPost::find($id);
-        return view('pages.about')->with('matsolderingpost', $post);
+        $post = OfflineMatSolderingPost::find($id);
+        return view('pages.about')->with('offlinematsoldering', $post);
     }
 
     /**
@@ -105,7 +105,7 @@ class MatSolderingPostsController extends Controller
         //Validate
         
         //Create Post
-        $post = MatSolderingPost::find($id);
+        $post = OfflineMatSolderingPost::find($id);
         $post->string = $request->input('location');
         $post->string = $request->input('station');
         $post->string = $request->input('shift');
@@ -118,7 +118,7 @@ class MatSolderingPostsController extends Controller
         $post->float = $request->input('average');
         $post->string = $request->input('date');
         $post->save();
-        return redirect('/matsolderingposts')->with('success', 'Data Updated');
+        return redirect('/offlinematsolderingposts')->with('success', 'Data Updated');
     }
 
     /**
@@ -129,8 +129,8 @@ class MatSolderingPostsController extends Controller
      */
     public function destroy($id)
     {
-        $post = MatSolderingPost::find($id);
+        $post = OfflineMatSolderingPost::find($id);
         $post->delete();
-        return redirect('/matsolderingposts')->with('success', 'Data Deleted');
+        return redirect('/offlinematsolderingposts')->with('success', 'Data Deleted');
     }
 }

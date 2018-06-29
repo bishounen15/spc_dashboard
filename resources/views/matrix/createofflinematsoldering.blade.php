@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    {!! Form::open(['action' => 'MatSolderingPostsController@store', 'method' => 'POST']) !!}
+    {!! Form::open(['action' => 'OfflineMatSolderingPostsController@store', 'method' => 'POST']) !!}
     <div class="container" style="width:120%">
         <div class="card">
-            <h5 class="card-header">Matrix Soldering Temp Data Inputs</h5>
+            <h5 class="card-header">Offline Matrix Soldering Temp Data Inputs</h5>
                 <div class="card-body">
-                        <div class="jumbotron text-center">
-                            <div class="row">
-                                <div class="col-md-1">
-                                    {{Form::label('station', 'Station')}}
+                    <div class="jumbotron text-center">
+                        <div class="row">
+                            <div class="col-md-1">
+                                {{Form::label('station', 'Station')}}
                                 </div>  
                                 <div class="col-md-5">  
                                         {{ Form::text('station', 'Busbar Prep',['class'=>'form-control'] )}}
@@ -18,7 +18,7 @@
                                 <div class="col-md-1">
                                     {{Form::label('location', 'Location')}}
                                 </div>  
-                                <div class="col-md-5">       
+                                <div class="col-md-5">  
                                         {{ Form::text('location', 'Busbar Prep',['class'=>'form-control'] )}}
                                     <small class="form-text text-danger">{{ $errors->first('location') }}</small>
                                 </div>
@@ -35,9 +35,9 @@
                                             {{Form::label('node', 'Node')}}
                                     </div>  
                                     <div class="col-md-5">  
-                                        {{ Form::text('node', 'Soldering Temp',['class'=>'form-control'] )}}
-                                        <small class="form-text text-danger">{{ $errors->first('node') }}</small> 
-                                    </div>
+                                        {{ Form::text('node', 'Soldering Temp',['class'=>'form-control'] )}} 
+                                        <small class="form-text text-danger">{{ $errors->first('node') }}</small>
+                                    </div>    
                             </div></br>
                             <div class="row">
                                     <div class="col-md-1">        
@@ -55,18 +55,18 @@
                                         <small class="form-text text-danger">{{ $errors->first('remarks') }}</small>
                                     </div>
                             </div></br>
-                            <div class="row">
-                            <div class="col-md-1">      
-                                {{Form::label('Date', 'Date:')}}
-                            </div>    
-                            <div class="col-md-3">
-                                {{Form::date('Date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}}
-                            </div>
+                            <div class="row">     
+                                    <div class="col-md-1">
+                                        {{Form::label('Date', 'Date:')}}
+                                    </div>    
+                                    <div class="col-md-3">
+                                            {{Form::date('fixture_date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}}  </div> 
+                                    </div>
                             </div></br>
                         </div> 
                         
                         <div class="card">
-                                <h5 class="card-header">Soldering Temp Data Details</h5>
+                                <h5 class="card-header">Offline Matrix Soldering Temp Data Details</h5>
                                     <div class="card-body">
                             <div class="jumbotron text-center">
                             <div class="row">
@@ -74,7 +74,7 @@
                                         {{Form::label('temp1', 'Temp 1:')}}
                                     </div>
                                     <div class="col-md-5">           
-                                        {{Form::text('temp1','', ['class' => 'temp1 form-control','placeholder' => 'Temp 1', 'id' => 'temp1', 'onkeyup' => 'calc()'])}}
+                                        {{Form::text('temp1','', ['class' => 'form-control','placeholder' => 'Temp 1', 'id' => 'temp1', 'onkeyup' => 'calc()'])}}
                                         <small class="form-text text-danger">{{ $errors->first('temp1') }}</small>
                                     </div> 
                                 
@@ -82,7 +82,7 @@
                                         {{Form::label('average', 'Average:')}}
                                     </div>
                                     <div class="col-md-5">
-                                        {{Form::text('average','', ['class' => ' average form-control','placeholder' => 'Average', 'id' => 'average', 'onkeyup' => 'calc()'])}}
+                                        {{Form::text('average','', ['class' => 'form-control','placeholder' => 'Average', 'id' => 'average', 'onkeyup' => 'calc()'])}}
                                         <small class="form-text text-danger">{{ $errors->first('average') }}</small>
                                     </div>     
                             </div></br> 
@@ -92,7 +92,7 @@
                                             {{Form::label('temp2', 'Temp 2:')}}
                                         </div>
                                         <div class="col-md-5">           
-                                            {{Form::text('temp2','', ['class' => 'temp2 form-control','placeholder' => 'Temp 2', 'id' => 'temp2', 'onkeyup' => 'calc()'])}}
+                                            {{Form::text('temp2','', ['class' => 'form-control','placeholder' => 'Temp 2', 'id' => 'temp2', 'onkeyup' => 'calc()'])}}
                                             <small class="form-text text-danger">{{ $errors->first('temp2') }}</small>
                                         </div>  
                             </div></br> 
@@ -102,26 +102,23 @@
                                         {{Form::label('temp3', 'Temp 3:')}}
                                     </div>
                                     <div class="col-md-5">           
-                                        {{Form::text('temp3','', ['class' => 'temp3 form-control','placeholder' => 'Temp 3', 'id' => 'temp3', 'onkeyup' => 'calc()'])}}
-                                        <small class="form-text text-danger">{{ $errors->first('temp3') }}</small>  
+                                        {{Form::text('temp3','', ['class' => 'form-control','placeholder' => 'Temp 3', 'id' => 'temp3', 'onkeyup' => 'calc()'])}}
+                                        <small class="form-text text-danger">{{ $errors->first('temp3') }}</small>
                                     </div>      
                             </div></br>
                         </div>
                     </div>
-                </div>
-            </div>   
-            </div>       
-                    {{Form::submit('Submit',['class'=>'btn btn-primary'])}} 
+                </div>        
+                    {{Form::submit('Submit',['class'=>'btn btn-primary'])}}
                     {!! Form::close() !!}
-        @endsection
-
-        @push('jscript')
-            <script>
-                function calc(){
-                    document.getElementById('average').value = ((
-                    parseFloat(document.getElementById('temp1').value) + 
-                    parseFloat(document.getElementById('temp2').value) + 
-                    parseFloat(document.getElementById('temp3').value)) / 3);
-                    }           
-            </script>
-        @endpush
+@endsection
+                @push('jscript')
+                    <script>
+                        function calc(){
+                            document.getElementById('average').value = ((
+                            parseFloat(document.getElementById('temp1').value) + 
+                            parseFloat(document.getElementById('temp2').value) + 
+                            parseFloat(document.getElementById('temp3').value)) / 3);
+                        }           
+                    </script>
+                @endpush
