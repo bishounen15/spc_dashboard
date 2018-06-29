@@ -8,7 +8,7 @@ class CuringTest extends Model
 {
        //
       //Table Name
-      protected $connection = 'spc';
+      // protected $connection = 'spc';
       protected $table = 'curing_tests';
       //Primary Key
       protected $primaryKey = 'id';
