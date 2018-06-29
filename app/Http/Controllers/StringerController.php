@@ -21,7 +21,7 @@ class StringerController extends Controller
 
     public function getPosts()
     {
-        return \DataTables::of(DB::query('Select * FROM Stringers'))->make(true);
+        return \DataTables::of(DB::query('Select * FROM stringers'))->make(true);
     }
 
     public function index()
@@ -73,7 +73,7 @@ class StringerController extends Controller
         ->get();
         $stdavg = number_format($stdavg->avg('PeelTest'),2);
         //STD AVE (BACK)
-        $stdavgback = DB::table(DB::raw("(SELECT AVG(PeelTest) as PeelTest FROM Stringers WHERE Side = 'Back' and Date BETWEEN '".Date('Y-m-d',strtotime("-30 days"))."' AND '".Date('Y-m-d')."' GROUP BY Date) as temp"))
+        $stdavgback = DB::table(DB::raw("(SELECT AVG(PeelTest) as PeelTest FROM stringers WHERE Side = 'Back' and Date BETWEEN '".Date('Y-m-d',strtotime("-30 days"))."' AND '".Date('Y-m-d')."' GROUP BY Date) as temp"))
         //date BETWEEN from AND to
         ->select(DB::raw('STDDEV(PeelTest) as PeelTest'))
         ->get();
