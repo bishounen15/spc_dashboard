@@ -182,9 +182,7 @@ format: 'HH:mm'
                         $('#AdjAftTmp1').attr('readonly',true);
                         $('#AdjAftTmp2').attr('readonly',true);
                         $('#AdjAftTmp3').attr('readonly',true);
-                       $('#AdjAftTmp1').val('0');
-                       $('#AdjAftTmp2').val('0');
-                       $('#AdjAftTmp3').val('0');
+                     
                       // $('#AdjAftTmp1').attr('style','background-color:#F08080');
                 }
                 if(resQual =='failed'){
