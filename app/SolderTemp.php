@@ -8,7 +8,7 @@ class SolderTemp extends Model
 {
     // //
       //Table Name
-      protected $connection = 'spc';
+      // protected $connection = 'spc';
       protected $table = 'solder_temps';
       //Primary Key
       protected $primaryKey = 'id';
