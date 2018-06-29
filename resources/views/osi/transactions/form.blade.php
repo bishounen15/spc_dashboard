@@ -35,6 +35,14 @@
                         </div>
                     </div>
                 </div>
+                      
+                <div class="form-row">
+                    <div class="form-group text-right">
+                        &nbsp;
+                        <a href="#" id="add-item" role="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="addItem()">Add</a>
+                        <a href="#" role="button" class="btn btn-danger btn-sm" style="width: 100px;">Remove</a>
+                    </div>
+                </div>    
 
                 <table class="table table-condensed table-sm" style="font-size: 0.7em;">
                     <thead class="table-dark">
@@ -49,7 +57,7 @@
                         </tr>
                     </thead>
                     <tbody id="item-list">
-                        <tr>
+                        <tr class="tr-clone">
                             <td>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
@@ -87,13 +95,7 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
-            <div class="form-row">
-                <div class="form-group">
-                    <a href="#" role="button" class="btn btn-danger" style="width: 200px;">Cancel</a>
-                    <a href="#" role="button" class="btn btn-danger" style="width: 200px;">Cancel</a>
-                </div>
-            </div>                
+                </table>      
             </div>        
             
             <div class="card-footer">
@@ -102,10 +104,24 @@
                         <input type="submit" class="btn btn-success" name="save" id="save" value="Save Transaction" style="width: 200px;">
                     </div>
                     <div class="form-group col-sm-6 text-right">
-                        <a href="{{route('list_items')}}" role="button" class="btn btn-danger" style="width: 200px;">Cancel</a>
+                        <a href="{{route('list_trx')}}" role="button" class="btn btn-danger" style="width: 200px;">Cancel</a>
                     </div>
                 </div>
             </div>
     </div> 
 </form>
 @endsection
+
+@push('jscript')
+<script>
+    var $tr;
+    function addItem() {
+        var $clone = $tr.clone();
+        $("#item-list").append($clone);
+    }
+
+    $(document).ready(function () {
+        $tr = $(".tr-clone");
+    });
+</script>
+@endpush

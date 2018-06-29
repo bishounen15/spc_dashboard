@@ -2,8 +2,8 @@
 @section('content')
 <div class="container">
     <h3>Office Supplies Inventory</h3>
-    <a href="{{route('create_trx',['Incoming'])}}" role="button" class="btn btn-primary">Incoming Transaction</a>
-    <a href="{{route('create_trx',['Request'])}}" role="button" class="btn btn-primary">Request Office Supplies</a>
+    <a href="{{route('create_trx',['Incoming'])}}" role="button" class="btn btn-success" style="width: 200px;">Incoming Transaction</a>
+    <a href="{{route('create_trx',['Request'])}}" role="button" class="btn btn-info" style="width: 200px;">Request Office Supplies</a>
     <br><br>
     <table class="table table-condensed table-striped table-sm" id="trx-list" style="width: 100%;">
         <thead class="thead-dark" style="font-size: 0.7em;">
