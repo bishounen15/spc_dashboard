@@ -15,7 +15,7 @@ class LamController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM lams ORDER BY ID DESC'); 
+        $posts = DB::select('SELECT * FROM Lams ORDER BY ID DESC'); 
         //$posts = Post::orderBy('created_at','desc')->paginate(2);
         return view('pages.lamdata')  
                     ->with('alldata',$posts);
