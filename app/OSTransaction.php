@@ -31,7 +31,7 @@ class OSTransaction extends Model implements Auditable
     public static function GenerateCode($type) {
         $pfx = substr($type,0,1);
 
-        $trx = $this::orderBy("control_no","desc")
+        $trx = OSTransaction::orderBy("control_no","desc")
                             ->whereRaw("control_no LIKE '".$pfx.date("ym")."%'")
                             ->first();
 

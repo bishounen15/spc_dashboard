@@ -69,7 +69,7 @@
                                 <a class="dropdown-item" href="{{route('list_uofm')}}">U of M Master</a>
                                 <a class="dropdown-item" href="{{route('list_items')}}">Item Master</a>
                                 <h6 class="dropdown-header">Transactions</h6>
-                                <a class="dropdown-item" href="#">Requisition and Inventory</a>
+                                <a class="dropdown-item" href="{{route('list_trx')}}">Requisition and Inventory</a>
                                 </div>
                             </li>
 
