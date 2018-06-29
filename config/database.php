@@ -35,7 +35,7 @@ return [
 
         'yield' => [
             'driver' => 'mysql',
-            'host' => '127.0.0.1',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'sp_yield',
             'username' => 'laravel_user',
@@ -50,7 +50,7 @@ return [
 
         'spc' => [
             'driver' => 'mysql',
-            'host' => '127.0.0.1',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'spc',
             'username' => 'laravel_user',
