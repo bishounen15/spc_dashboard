@@ -52,7 +52,7 @@ return [
             'driver' => 'mysql',
             'host' => '127.0.0.1',
             'port' => '3306',
-            'database' => 'sp_spc',
+            'database' => 'spc',
             'username' => 'root',
             'password' => '',
             'unix_socket' => '',
