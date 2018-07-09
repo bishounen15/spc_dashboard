@@ -17,7 +17,7 @@ class PulltestController extends Controller
     //Dito showing ng lahat ng list
     public function index()
     {
-        $posts = DB::select('SELECT * FROM pull_tests'); 
+        $posts = Pulltest::all(); 
         //$posts = Post::orderBy('created_at','desc')->paginate(2);
         return view('pages.pulltestdata')  
                     ->with('alldata',$posts);
