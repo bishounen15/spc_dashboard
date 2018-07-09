@@ -40,16 +40,16 @@
                     <div class="form-group text-right">
                         &nbsp;
                         <a href="#" id="add-item" role="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="addItem()">Add</a>
-                        <a href="#" role="button" class="btn btn-danger btn-sm" style="width: 100px;">Remove</a>
+                        <a href="#" id="rem-item" role="button" class="btn btn-danger btn-sm" style="width: 100px;">Remove</a>
                     </div>
                 </div>    
 
                 <table class="table table-condensed table-sm" style="font-size: 0.7em;">
                     <thead class="table-dark">
                         <tr>
-                            <th width="5%">#</th>
+                            <th width="3%">#</th>
                             <th width="25%">Category</th>
-                            <th width="30%">Item</th>
+                            <th width="32%">Item</th>
                             <th width="10%">Stock</th>
                             <th width="10%">Qty</th>
                             <th width="10%">Unit Cost</th>
@@ -60,37 +60,48 @@
                         <tr class="tr-clone">
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                    <input class="form-check-input" type="checkbox" name="line-item[]" value="1" id="defaultCheck1">
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <select class="form-control form-control-sm" name="" id=""></select>
+                                    <select class="form-control form-control-sm" name="category[]">
+                                        <option readonly selected value> -- select an option -- </option>
+                                        @foreach($categories as $category)
+                                        <option value="{{$category['id']}}"
+                                        {{-- @if ($category->id == old('category_id', $category_id))
+                                            selected="selected"
+                                        @endif --}}
+                                        >{{$category['description']}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <select class="form-control form-control-sm" name="" id=""></select>
+                                    <select class="form-control form-control-sm" name="item[]">
+                                        <option readonly selected value> -- select an option -- </option>
+                                    </select>
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-sm" readonly>
+                                    <input type="text" class="form-control form-control-sm" name="stock[]" value="0" readonly>
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-sm">
+                                    <input type="number" step="1" class="form-control form-control-sm" name="qty[]" value="0">
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-sm" readonly>
+                                    <input type="text" class="form-control form-control-sm" name="unit-cost[]" value="0" readonly>
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-sm" readonly>
+                                    <input type="text" class="form-control form-control-sm" name="total-cost[]" value="0" readonly>
                                 </div>
                             </td>
                         </tr>
@@ -116,12 +127,85 @@
 <script>
     var $tr;
     function addItem() {
-        var $clone = $tr.clone();
+        var $clone = $tr.clone().find("input,textarea").val("0").end();
         $("#item-list").append($clone);
     }
 
     $(document).ready(function () {
         $tr = $(".tr-clone");
+
+        $("#rem-item").click(function() {
+            selected = $('input[name="line-item[]"]:checked');
+            if ($(selected).length > 0) {
+                $(selected).closest('tr').remove();
+                // $(selected).closest('tr').hide('slow', function(){ $(selected).closest('tr').remove(); });
+            }
+        });
+
+        $(document).on('change', 'select[name="category[]"]', function(index) {
+            i = $('select[name="category[]"]').index(this);
+            
+            var token = $('input[name=_token]');
+            var formData = new FormData();
+            formData.append('category_id', $(this).val());
+
+            $.ajax({
+                url: "{{route('get_item_list')}}",
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': token.val()
+                },
+                success: function (items) {
+                    selitems = "<option disabled selected value> -- select an option -- </option>";
+                    $.each(items, function(i, v) {
+                        selitems += '<option value="' + v.id + '">' + v.description + '</option>';
+                    });
+                    $('select[name="item[]"]').eq(i).html(selitems);
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    alert (errorThrown);
+                }	
+            });
+        });
+
+        $(document).on('change', 'select[name="item[]"]', function(index) {
+            i = $('select[name="item[]"]').index(this);
+            
+            var token = $('input[name=_token]');
+            var formData = new FormData();
+            formData.append('item_id', $(this).val());
+
+            $.ajax({
+                url: "{{route('get_item_details')}}",
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': token.val()
+                },
+                success: function (details) {
+                    
+                    $('input[name="stock[]"]').eq(i).val(details.stock_limit);
+                    $('input[name="unit-cost[]"]').eq(i).val((details.unit_cost).toFixed(2));
+                    $('input[name="total-cost[]"]').eq(i).val( (parseInt($('input[name="qty[]"]').eq(i).val()) * details.unit_cost).toFixed(2) );
+                    
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    alert (errorThrown);
+                }	
+            });
+        });
+
+        $(document).on('change', 'input[name="qty[]"]', function(index) {
+            i = $('input[name="qty[]"]').index(this);
+            $('input[name="total-cost[]"]').eq(i).val(parseInt( ($('input[name="qty[]"]').eq(i).val()) * parseFloat($('input[name="unit-cost[]"]').eq(i).val())).toFixed(2) );
+        });
     });
 </script>
 @endpush

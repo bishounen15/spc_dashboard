@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\OSTransaction;
 use App\OSCategory;
+use App\OfficeSupplies;
 
 Use DataTables;
+Use Response;
 
 class OSTransactionController extends Controller
 {
@@ -54,5 +56,15 @@ class OSTransactionController extends Controller
         // dd($data);
 
         return view('osi.transactions.form', $data);
+    }
+
+    public function GetItems(Request $request) {
+        $items = OSCategory::find($request->input('category_id'))->items->all();
+        return Response::json($items);
+    }
+
+    public function GetItemDetails(Request $request) {
+        $item = OfficeSupplies::find($request->input('item_id'));
+        return Response::json($item);
     }
 }

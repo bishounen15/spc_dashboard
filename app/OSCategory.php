@@ -35,4 +35,8 @@ class OSCategory extends Model implements Auditable
 
         return $code;
     }
+
+    public function items() {
+        return $this->hasMany('App\OfficeSupplies','category_id','id');
+    }
 }
