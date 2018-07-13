@@ -87,7 +87,7 @@ Route::post('/item_details','OSTransactionController@GetItemDetails')->name('get
 Route::get('/os/transaction/list/data', 'OSTransactionController@load')->name('trx_data');
 Route::get('/os/transaction/list','OSTransactionController@list')->name('list_trx');
 Route::get('/os/transaction/create/{tid}','OSTransactionController@create')->name('create_trx');
-Route::post('/os/transaction/create','OSTransactionController@create')->name('store_trx');
+Route::post('/os/transaction/create/{tid}','OSTransactionController@create')->name('store_trx');
 Route::get('/os/transaction/edit/{id}','OSTransactionController@show')->name('show_trx');
 Route::post('/os/transaction/edit/{id}','OSTransactionController@modify')->name('modify_trx');
 Route::post('/os/transaction/remove/{id}','OSTransactionController@destroy')->name('remove_trx');

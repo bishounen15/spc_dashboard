@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<form method="POST" action="#" id="TrxForm"> 
+<form method="POST" action="{{route('create_trx',[old('type') ? old('type') : $type])}}" id="TrxForm"> 
     @csrf 
     <div class="container">
         <h3>{{$trx}}</h3>
@@ -17,7 +17,7 @@
 
                         <div class="form-group">
                             <label for="type">Transaction Type</label>
-                            <input type="text" class="form-control form-control-sm" name="type" id="type" placeholder="Item Description" value="{{ old('type') ? old('type') : $type }}" readonly>
+                            <input type="text" class="form-control form-control-sm" name="type" id="type" placeholder="Transaction Type" value="{{ old('type') ? old('type') : $type }}" readonly>
                             <small class="form-text text-danger">{{ $errors->first('type') }}</small>
                         </div>
                     </div>
@@ -25,12 +25,12 @@
                     <div class="form-group col-sm-6">
                         <div class="form-group">
                             <label for="date">Date</label>
-                            <input type="date" class="form-control form-control-sm" name="date" id="date" placeholder="Item Description" value="{{ old('date') ? old('date') : $date }}" readonly>
+                            <input type="date" class="form-control form-control-sm" name="date" id="date" placeholder="Transaction Date" value="{{ old('date') ? old('date') : $date }}" readonly>
                             <small class="form-text text-danger">{{ $errors->first('date') }}</small>
                         </div>
                         <div class="form-group">
                             <label for="status">Status</label>
-                            <input type="text" class="form-control form-control-sm" name="status" id="status" placeholder="Item Description" value="{{ old('status') ? old('status') : $status }}" readonly>
+                            <input type="text" class="form-control form-control-sm" name="status" id="status" placeholder="Status" value="{{ old('status') ? old('status') : $status }}" readonly>
                             <small class="form-text text-danger">{{ $errors->first('status') }}</small>
                         </div>
                     </div>
@@ -75,6 +75,7 @@
                                         >{{$category['description']}}</option>
                                         @endforeach
                                     </select>
+                                    <span class="form-text text-danger" id="err_category[]"></span>
                                 </div>
                             </td>
                             <td>
@@ -82,6 +83,7 @@
                                     <select class="form-control form-control-sm" name="item[]">
                                         <option readonly selected value> -- select an option -- </option>
                                     </select>
+                                    <span class="form-text text-danger" id="err_item[]"></span>
                                 </div>
                             </td>
                             <td>
@@ -92,6 +94,7 @@
                             <td>
                                 <div class="form-group">
                                     <input type="number" step="1" class="form-control form-control-sm" name="qty[]" value="0">
+                                    <span class="form-text text-danger" id="err_qty[]"></span>
                                 </div>
                             </td>
                             <td>
@@ -106,13 +109,20 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>      
+                </table>
+                
+                <div class="form-group">
+                    <label for="remarks">Remarks</label>
+                    <textarea class="form-control form-control-sm" name="remarks" id="remarks" rows="3"></textarea>
+                    <small class="form-text text-danger">{{ $errors->first('type') }}</small>
+                </div>
             </div>        
             
             <div class="card-footer">
                 <div class="form-row">
                     <div class="form-group col-sm-6">
-                        <input type="submit" class="btn btn-success" name="save" id="save" value="Save Transaction" style="width: 200px;">
+                        {{-- <input type="submit" class="btn btn-success" name="save" id="save" value="Save Transaction" style="width: 200px;"> --}}
+                        <a href="#" role="button" class="btn btn-success" id="save-trx" style="width: 200px;" onclick="validate()">Save Transaction</a>
                     </div>
                     <div class="form-group col-sm-6 text-right">
                         <a href="{{route('list_trx')}}" role="button" class="btn btn-danger" style="width: 200px;">Cancel</a>
@@ -131,6 +141,52 @@
         $("#item-list").append($clone);
     }
 
+    function validate() {
+        var validated = true;
+
+        $('select[name^="category"]').each( function() {
+            i = $('select[name="category[]"]').index(this);
+            
+            if ($(this).val() == "") {
+                $('span[id="err_category[]"]').eq(i).html("You have not selected a category.");
+                validated = false;
+            } else {
+                $('span[id="err_category[]"]').eq(i).html("");
+            }
+        });
+
+        $('select[name^="item"]').each( function() {
+            i = $('select[name="item[]"]').index(this);
+            
+            if ($(this).val() == "") {
+                $('span[id="err_item[]"]').eq(i).html("You have not selected an item.");
+                validated = false;
+            } else {
+                $('span[id="err_item[]"]').eq(i).html("");
+            }
+        });
+
+        $('input[name^="qty"]').each( function() {
+            i = $('input[name="qty[]"]').index(this);
+            cqty = parseInt($(this).val());
+            if (cqty > 0) {
+                if ($("#type").val() == "Request" && parseInt($('input[name="stock[]"]').eq(i).val()) < cqty) {
+                    $('span[id="err_qty[]"]').eq(i).html("Your request exceeds the current stock.");
+                    validated = false;
+                } else {
+                    $('span[id="err_qty[]"]').eq(i).html("");
+                }
+            } else {
+                $('span[id="err_qty[]"]').eq(i).html("Quantity must be greater than 0.");
+                validated = false;
+            }
+        });
+
+        if (validated == true) {
+            $("#TrxForm").submit();
+        }
+    }
+
     $(document).ready(function () {
         $tr = $(".tr-clone");
 
@@ -138,7 +194,6 @@
             selected = $('input[name="line-item[]"]:checked');
             if ($(selected).length > 0) {
                 $(selected).closest('tr').remove();
-                // $(selected).closest('tr').hide('slow', function(){ $(selected).closest('tr').remove(); });
             }
         });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\OSTransaction;
+use App\OSTransactionDetail;
 use App\OSCategory;
 use App\OfficeSupplies;
 
@@ -19,7 +20,7 @@ class OSTransactionController extends Controller
 
     public function load()
     {
-        $trx = OSTransaction::selectRaw("transactions.id, transactions.control_no, transactions.type, '' as department, transactions.date, transactions.status, SUM(transaction_details.total_cost) as total_cost")
+        $trx = OSTransaction::selectRaw("transactions.id, transactions.control_no, transactions.type, '' as department, transactions.date, transactions.status, FORMAT(SUM(transaction_details.total_cost),2) as total_cost")
         ->join("transaction_details","transactions.id","=","transaction_details.transaction_id")
         ->orderByRaw("control_no ASC")
         ->groupBy("transactions.id", "transactions.control_no", "transactions.type", "transactions.date", "transactions.status");
@@ -45,9 +46,29 @@ class OSTransactionController extends Controller
                 'status' => 'required',
                 'remarks' => 'required',
             ]);
+            
+            // dd($data);
 
-            OSTransactions::create($data);
-            return redirect('os/transactions/list')->with("success","Item [".$data["description"]."] successfully added.");
+            OSTransaction::create($data);
+
+            $trx = OSTransaction::where("control_no",$data['control_no'])->first();
+            $item = $request->input('item');
+            $qty = $request->input('qty');
+            $unit_cost = $request->input('unit-cost');
+            $total_cost = $request->input('total-cost');
+
+            foreach( $item as $key => $n ) {
+                $details = [];
+                $details["transaction_id"] = $trx->id;
+                $details["item_id"] = $n;
+                $details["qty"] = $qty[$key];
+                $details["unit_cost"] = $unit_cost[$key];
+                $details["total_cost"] = $total_cost[$key];
+
+                OSTransactionDetail::create($details);
+            }
+
+            return redirect('os/transaction/list')->with("success","Transaction [".$data["control_no"]."] successfully created.");
         }
 
         $data['categories'] = OSCategory::orderBy("code","asc")->get();

@@ -14,7 +14,7 @@
             <th>Date</th>
             <th>Status</th>
             <th>Total Cost</th>
-            <th>Actions</th>
+            <th>-</th>
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
             
@@ -65,8 +65,7 @@
                 { data: 'status' },
                 { data: 'total_cost' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
-                    return '<div class="row"><div class="col-sm-6"><a href="/os/transaction/'+full.id+'" role="button" class="btn btn-sm btn-success" style="width: 100%;">Edit</a></div>' +
-                           '<div class="col-sm-6"><a href="#" data-href="/os/transaction/remove/'+full.id+'" role="button" class="btn btn-sm btn-danger disabled" data-toggle="modal" data-target="#confirm-delete" id="'+full.description+'" style="width: 100%;">Remove</a></div></div>';
+                    return '<div class="row"><div class="col-sm-12"><a href="/os/transaction/'+full.id+'" role="button" class="btn btn-sm btn-success" style="width: 100%;">View Details</a></div></div>';
                 }},
             ],
         });
