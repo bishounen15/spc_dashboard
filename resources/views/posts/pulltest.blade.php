@@ -17,7 +17,7 @@
                                     {{Form::label('Laminator', 'Laminator:')}}
                                 </div>    
                                 <div class="col-md-3">
-                                    {{Form::select('Laminator', array('Laminator 1' => 'Laminator 1', 'Laminator 2' => 'Laminator 2'),'',['class'=>'form-control','placeholder'=>'Select Laminator'])}}
+                                    {{Form::select('Laminator', array('Laminator 1' => 'Laminator 1', 'Laminator 2' => 'Laminator 2','Laminator 3' => 'Laminator 3'),'',['class'=>'form-control','placeholder'=>'Select Laminator'])}}
                                     <small class="form-text text-danger">{{ $errors->first('Laminator') }}</small>
                                 </div>
                                 <div class="col-md-1">
@@ -44,21 +44,14 @@
                                     <small class="form-text text-danger">{{ $errors->first('Glass') }}</small>
                                 </div>
                                 <div class="col-md-1">
-                                    {{Form::label('ModuleID', 'ModuleID:')}}
-                                </div>    
-                                <div class="col-md-3">
-                                    {{Form::text('ModuleID', '', ['class' => 'form-control', 'placeholder'=>'ModuleID'])}}
-                                    <small class="form-text text-danger">{{ $errors->first('ModuleID') }}</small>
-                                </div>
-                        </div><br>
-                        <div class="row">
-                                <div class="col-md-1">
                                     {{Form::label('EVA', 'EVA:')}}
                                 </div>    
                                 <div class="col-md-3">
                                     {{Form::text('EVA', '', ['class' => 'form-control', 'placeholder'=>'EVA'])}}
                                     <small class="form-text text-danger">{{ $errors->first('EVA') }}</small>
                                 </div>
+                        </div><br>
+                        <div class="row">
                                 <div class="col-md-1">
                                     {{Form::label('Backsheet', 'Backsheet:')}}
                                 </div>    

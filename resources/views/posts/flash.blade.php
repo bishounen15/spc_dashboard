@@ -47,17 +47,17 @@
                         </div><br>  
                         <div class="row">
                                 <div class="col-md-1.3">
-                                    {{Form::label('IMPP', '&nbsp;&nbsp;IMPP:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')}}
+                                    {{Form::label('IMPP', '&nbsp;&nbsp;IMPP:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')}}
                                 </div>    
                                 <div class="col-md-3">
                                     {{Form::text('IMPP', '', ['class' => 'form-control', 'placeholder'=>'IMPP'])}}
                                     <small class="form-text text-danger">{{ $errors->first('IMPP') }}</small>
                                 </div>
                                 <div class="col-md-1.3">
-                                    {{Form::label('UMPP', 'ISC:&nbsp;&nbsp;&nbsp;&nbsp;')}}
+                                    {{Form::label('VMPP', 'VMPP:&nbsp;&nbsp;&nbsp;')}}
                                 </div>    
                                 <div class="col-md-3">
-                                    {{Form::text('UMPP', '', ['class' => 'form-control', 'placeholder'=>'UMPP'])}}
+                                    {{Form::text('VMPP', '', ['class' => 'form-control', 'placeholder'=>'VMPP'])}}
                                     <small class="form-text text-danger">{{ $errors->first('UMPP') }}</small>
                                 </div>
                                 <div class="col-md-1.3">
