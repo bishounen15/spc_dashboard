@@ -20,7 +20,6 @@ class CreatePulltestsTable extends Migration
             $table->String('Shift');
             $table->String('Recipe');
             $table->String('Glass');
-            $table->String('ModuleID');
             $table->String('EVA');
             $table->String('Backsheet');
             $table->String('Location');

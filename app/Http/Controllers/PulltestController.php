@@ -53,7 +53,6 @@ class PulltestController extends Controller
             'Shift' => 'required',
             'Recipe' => 'required|alpha_num|max:25',
             'Glass' => 'required|alpha_num|max:25',
-            'ModuleID' => 'required|alpha_num|max:15|min:13',
             'EVA' => 'required',
             'Backsheet' => 'required|alpha_num|max:25',
             'Location' => 'required|alpha_num|max:25',
@@ -97,7 +96,6 @@ class PulltestController extends Controller
         $pulltest->Shift = $request->input('Shift');
         $pulltest->Recipe = $request->input('Recipe');
         $pulltest->Glass = $request->input('Glass');
-        $pulltest->ModuleID = $request->input('ModuleID');
         $pulltest->EVA = $request->input('EVA');
         $pulltest->Backsheet = $request->input('Backsheet');
         $pulltest->Location = $request->input('Location');

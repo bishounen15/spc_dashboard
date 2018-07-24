@@ -22,7 +22,6 @@
             <th>Shift &nbsp;&nbsp;&nbsp;</th>
             <th>Recipe &nbsp;&nbsp;&nbsp;</th>
             <th>Glass &nbsp;&nbsp;&nbsp;</th>
-            <th>ModuleID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
             <th>EVA&nbsp;&nbsp;&nbsp;</th>
             <th>Backsheet&nbsp;&nbsp;&nbsp;</th>
             <th>Location&nbsp;&nbsp;&nbsp;</th>
@@ -40,7 +39,6 @@
             <td>{{$pulltest->Shift}}</td>
             <td>{{$pulltest->Recipe}}</td>
             <td>{{$pulltest->Glass}}</td>
-            <td>{{$pulltest->ModuleID}}</td>
             <td>{{$pulltest->EVA}}</td>
             <td>{{$pulltest->Backsheet}}</td>
             <td>{{$pulltest->Location}}</td>
