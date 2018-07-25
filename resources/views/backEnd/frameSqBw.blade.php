@@ -31,6 +31,7 @@
             <th>D1</th>
             <th>D2</th>
             <th>D-Diff</th>
+            <th>Qual</br>Result</th>
             <th>Remarks</th>
             </tr>
 
@@ -54,6 +55,7 @@
                     <td>{{$potLog->D1}}</td>
                     <td>{{$potLog->D2}}</td>
                     <td>{{$potLog->DDiff}}</td>
+                    <td>{{$potLog->qualRes}}</td>
                     <td>{{$potLog->remarks}}</td>
                  </tr>
             @endforeach  

@@ -95,14 +95,58 @@
                     </div>
                 </div>
         </div>
+
+    
         </div>
     </div>  
    
     
+  
+
+<div class="row">
+    <div class="col-md-12">
+            <div class="card">
+                    <div class="card-header" >Last Qual Record</div> 
+             
+    <div>
+<table class="table table-striped default">
+    <tr>
+        <th>Row</th>
+        <th>Serial</th>
+        <th>Shift</th>
+        <th>Date</th>
+        <th>Snap Testing Time</th>
+        <th>Potting Time</th>
+        <th>Condition</th>
+    </tr>
+
+     
+        @if(count($curLogs) > 0)
+        <?php $i=0 ?>
+        @foreach($curLogs as $potLog)
+        <?php $i++ ?>
+         <tr>
+            <td>{{ $i }}</td>
+            <td>{{$potLog->shift}}</td>
+            <td>{{$potLog->serialNo}}</td>
+            <td>{{$potLog->date}}</td>
+            <td>{{$potLog->snapTime}}</td>
+            <td>{{$potLog->pottingTime}}</td>
+            <td>{{$potLog->condition}}</td>
+         </tr>
+    @endforeach  
+@else
+<p>No Records Found</p>
+@endif
+    </table>
     </div>
-    
+            </div>
+    </div>
 </div>
 
+</div>
+    
+</div>
  @endsection
 
  @push('jscript')

@@ -73,6 +73,8 @@ class SqBwController extends Controller
             $post->D2= $request ->input('D2txt');
             $post->LDiff= $request ->input('LDiff');
             $post->SDiff= $request ->input('SDiff');
+            $post->qualRes= $request ->input('qualRes');
+            $post->target= $request ->input('target');
             $post->DDiff= $request ->input('DDiff');
             $post->remarks= $request ->input('remarkstxt');
        // $post->crossSection = $request->input('crossSection');
