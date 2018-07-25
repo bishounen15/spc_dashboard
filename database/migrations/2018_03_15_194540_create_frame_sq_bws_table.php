@@ -32,8 +32,8 @@ class CreateFrameSqBwsTable extends Migration
             $table->double('D1');
             $table->double('D2');
             $table->double('DDiff');
-            $table->string('qualRes');
-            $table->double('target');
+           // $table->string('qualRes');
+           // $table->double('target');
             $table->string('remarks');
             $table->timestamps();
         });
