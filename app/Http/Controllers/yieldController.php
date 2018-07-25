@@ -38,15 +38,16 @@ class yieldController extends Controller
         }
 
         $shift = $this->getShift($time);
-
-        $last_yield = YieldData::orderBy("id","desc")->first();
         
+        $last_yield = YieldData::where("date",$date)->orderBy("id","desc")->first();
+        // dd($shift);
         if ($last_yield != null) {
             if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
                 $date = $last_yield->date;
                 $shift = $last_yield->shift;
 
                 $dt = $this->getEnd($date,$last_yield->shift);
+                // dd($dt);
             } else {
                 $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
             }
@@ -62,6 +63,9 @@ class yieldController extends Controller
         if ($last_trx == null) {
             $last_trx = $this->getStart($date,$shift);
         }
+
+        // $last_trx = "2018-07-13 06:00";
+        // $dt = "2018-07-13 14:00";
         
         $input_mod = mesData::where([
             ["TRXDATE",">=",$last_trx],
@@ -204,7 +208,7 @@ class yieldController extends Controller
         } else if ($shift == "B") {
             $retval = $date . " 22:00:00";
         } else {
-            $retval = $date . " 06:00:00";
+            $retval = date("Y-m-d",strtotime("+1 days",strtotime($date))) . " 06:00:00";
         }
 
         return $retval;
