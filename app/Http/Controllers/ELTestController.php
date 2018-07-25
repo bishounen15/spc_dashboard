@@ -14,7 +14,7 @@ class ELTestController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM EL_Test');                                        
+        $posts = DB::select('SELECT * FROM EL_Test ORDER BY ID ASC');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
           return view('backEnd.ELTest')->with('ELTestLogs',$posts);
     }

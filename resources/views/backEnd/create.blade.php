@@ -162,8 +162,52 @@
         </div>
     </div>      
     
-    
+    <div class="row">
+        <div class="col-md-12">
+                <div class="card">
+                        <div class="card-header" >Last Qual Record</div> 
+                 
+        <div>
+                        <table class="table table-striped">
+                                        <tr>
+                                        <th>Row</th>
+                                        <th>Shift</th>
+                                        <th>Time</th>
+                                        <th>Pottant Name</th>
+                                        <th>JBox Name</th>
+                                        <th>Pottant Wt.</th>
+                                        <th>Snap Time</th>
+                                        <th>Cross Section</th>
+                                       
+                                        </tr>
+                                
+                                        @if(count($potLogs) > 0)
+                                        <?php $i=0 ?>
+                                        @foreach($potLogs as $potLog)
+                                        <?php $i++ ?>
+                                         <tr>
+                                            <td>{{ $i }}</td>
+                                            <td>{{$potLog->shift}}</td>
+                                            <td>{{$potLog->time}}</td>
+                                            <td>{{$potLog->pottantName}}</td>
+                                            <td>{{$potLog->jBoxName}}</td>
+                                            <td>{{$potLog->pottantWeight}}</td>
+                                            <td>{{$potLog->snapTime}}</td>
+                                            <td>{{$potLog->crossSection}}</td>
+                                           
+                                         </tr>
+                                        @endforeach  
+                                    @else
+                                    <p>No Records Found</p>
+                                    @endif
+                                        </table>
+        </div>
+                </div>
+        </div>
+    </div>
 </div>
+</div>
+
 
  @endsection
 

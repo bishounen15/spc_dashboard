@@ -39,7 +39,10 @@ $tempBefAve = DB::table('solder_temps')
 ->select('tempBefAdjAve AS tempAve')
 ->where('tempAftAdjAve','0')
 ->unionAll($tempAftAve)
-->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
+//->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
+//->whereNotNull('date')
+->distinct('date')
+->limit(30)
 ->get();
 
 $tempAve = number_format($tempBefAve->avg('tempAve'),2);
@@ -73,7 +76,6 @@ $xbbfront = number_format($xbbfront->avg('tempBefAdjAve'),2);
 
 
 $stdavg = DB::table(DB::raw("(SELECT AVG(tempBefAdjAve) as tempBefAdjAve FROM solder_temps WHERE date BETWEEN '".date('Y-m-d',strtotime("-30 days"))."' AND '".date('Y-m-d')."' GROUP BY date) as temp"))
-//date BETWEEN from AND to
 ->select(DB::raw('STDDEV(tempBefAdjAve) as tempBefAdjAve'))
 ->get();
 $stdavg = number_format($stdavg->avg('tempBefAdjAve'),2);
@@ -106,7 +108,11 @@ return view('backEnd.solderTempSum')
      */
     public function create()
     {
-        return view('backEnd.solderTempCreate');
+        // return view('backEnd.curingTestCreate');
+       $posts = DB::select('SELECT * FROM solder_temps ORDER BY ID DESC LIMIT 1');                                        
+       //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+         return view('backEnd.solderTempCreate')->with('tempLogs',$posts);
+        //return view('backEnd.solderTempCreate');
     }
 
     /**
@@ -122,9 +128,9 @@ return view('backEnd.solderTempSum')
             'AdjBeftTmp2' => 'required',
             'AdjBeftTmp3' => 'required',
 
-            'AdjAftTmp1' => 'required',
-            'AdjAftTmp2' => 'required',
-            'AdjAftTmp3' => 'required',
+            'AdjAftTmp1' => 'required|numeric|min:0',
+            'AdjAftTmp2' =>  'required|numeric|min:0',
+            'AdjAftTmp3' => 'required|numeric|min:0',
             'qualTime' => 'required'
         ]);
 

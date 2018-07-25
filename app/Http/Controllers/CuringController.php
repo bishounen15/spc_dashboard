@@ -16,7 +16,7 @@ class CuringController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM curing_tests');                                        
+        $posts = DB::select('SELECT * FROM curing_tests ORDER BY ID ASC');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
           return view('backEnd.curingTest')->with('curLogs',$posts);
     }
@@ -28,8 +28,12 @@ class CuringController extends Controller
      */
     public function create()
     {
-        return view('backEnd.curingTestCreate');
-    }
+       // return view('backEnd.curingTestCreate');
+       $posts = DB::select('SELECT * FROM curing_tests ORDER BY ID DESC LIMIT 1');                                        
+       //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+         return view('backEnd.curingTestCreate')->with('curLogs',$posts);
+   }
+    
 
     /**
      * Store a newly created resource in storage.

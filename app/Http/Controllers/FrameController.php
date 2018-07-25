@@ -17,9 +17,23 @@ class FrameController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC');                                        
+      //  $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-        return view('backEnd.frameQual')->with('frameLogs',$posts);
+     //   return view('backEnd.frameQual')->with('frameLogs',$posts);
+
+     $tempAve = 0;
+     $tempBefAveSTD = 0;
+     $xbbfront = 0;
+     $stdavg = 0;
+     $median = 0;
+     return view('backEnd.frameSum') 
+->with('avefront',$tempAve)
+->with('stdfront',$tempBefAveSTD)
+->with('xbbfront',$xbbfront)
+->with('stdavg',$stdavg)
+->with('median',$median);
+
+
     }
 
     /**
@@ -45,31 +59,74 @@ class FrameController extends Controller
     {
         
 
-       $this->validate($request,[ 
-       // 'shift' => 'required', 
-       // 'date' => 'required',
-        'qualTime' => 'required',
-        'serialNo'=> 'required',
-        'L1woSealant' => 'required|numeric|min:700',
-        'L1wSealant' => 'required|numeric|min:700',
-        'L2woSealant' => 'required|numeric|min:700',
-        'L2wSealant' => 'required|numeric|min:700',
-        'S1wSealant' => 'required|numeric|min:500',
-        'S1woSealant' => 'required|numeric|min:500',
-        'S2wSealant' => 'required|numeric|min:500',
-        'S2woSealant' => 'required|numeric|min:500',
-     //   'S2diff' => 'required',
-       // 'S1diff' => 'required',
-        //'L2diff' => 'required',
-        //'L1diff' => 'required',
-        //'S2diff' => 'required',
-        //'sum' =>  'required|numeric',
-        'remarks' => 'required',
-       //'remarks2' => 'required',
-        'beadScale' => 'required|integer|min:1',
-        'facilitySupply' => 'required|integer|min:1',
-        'mainPressure' => 'required|integer|min:1'  
-            ]); 
+       
+
+            if($request ->input('target')=='180'){
+                $this->validate($request,[ 
+                'L1diff' => 'required|numeric|between:50.00,70.00',
+                'L2diff' => 'required|numeric|between:50.00,70.00',
+                'S1diff' => 'required|numeric|between:20.00,40.00',
+                'S2diff' => 'required|numeric|between:20.00,40.00',
+                  // 'shift' => 'required', 
+                // 'date' => 'required',
+                'qualTime' => 'required',
+                'serialNo'=> 'required',
+                'L1woSealant' => 'required|numeric|min:700',
+                'L1wSealant' => 'required|numeric|min:700',
+                'L2woSealant' => 'required|numeric|min:700',
+                'L2wSealant' => 'required|numeric|min:700',
+                'S1wSealant' => 'required|numeric|min:500',
+                'S1woSealant' => 'required|numeric|min:500',
+                'S2wSealant' => 'required|numeric|min:500',
+                'S2woSealant' => 'required|numeric|min:500',
+               // 'L1diff' => 'required|between:50,70',
+             //   'S2diff' => 'required',
+               // 'S1diff' => 'required',
+                //'L2diff' => 'required',
+                //'L1diff' => 'required',
+                //'S2diff' => 'required',
+                //'sum' =>  'required|numeric',
+                'remarks' => 'required',
+               //'remarks2' => 'required',
+                'beadScale' => 'required|numeric|between:50.00,120.00',
+                'facilitySupply' => 'required|numeric|between:30.00,70.00',
+                'mainPressure' => 'required|numeric|between:30.00,70.00'  
+              ]);
+           }else{
+
+
+            $this->validate($request,[ 
+                // 'shift' => 'required', 
+                // 'date' => 'required',
+                'L1diff' => 'required|numeric|between:37.00,57.00',
+                'L2diff' => 'required|numeric|between:37.00,57.00',
+                'S1diff' => 'required|numeric|between:18.00,38.00',
+                'S2diff' => 'required|numeric|between:18.00,38.00',
+                 'qualTime' => 'required',
+                 'serialNo'=> 'required',
+                 'L1woSealant' => 'required|numeric|min:700',
+                 'L1wSealant' => 'required|numeric|min:700',
+                 'L2woSealant' => 'required|numeric|min:700',
+                 'L2wSealant' => 'required|numeric|min:700',
+                 'S1wSealant' => 'required|numeric|min:500',
+                 'S1woSealant' => 'required|numeric|min:500',
+                 'S2wSealant' => 'required|numeric|min:500',
+                 'S2woSealant' => 'required|numeric|min:500',
+               //  'L1diff' => 'required|between:50,70',
+              //   'S2diff' => 'required',
+                // 'S1diff' => 'required',
+                 //'L2diff' => 'required',
+                 //'L1diff' => 'required',
+                 //'S2diff' => 'required',
+                 //'sum' =>  'required|numeric',
+                 'remarks' => 'required',
+                //'remarks2' => 'required',
+                'beadScale' => 'required|numeric|between:50.00,120.00',
+                'facilitySupply' => 'required|numeric|between:30.00,70.00',
+                'mainPressure' => 'required|numeric|between:30.00,70.00'  
+                     ]); 
+
+           }
             
         $post = new frameQual;
         $post->qualTransID = $request->input('transID');

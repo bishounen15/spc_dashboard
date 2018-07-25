@@ -167,6 +167,53 @@
         </div>
       
         </div>
+
+
+        <div class="row">
+                <table class="table table-striped" style="font-size:12px;">
+                        <tr>
+                            <th>Seq</th>
+                            <th>Shift</th>
+                            <th>Date</th>
+                            <th>Qual Time</th>
+                            <th>JBox</th>
+                            <th>Sealant</th>
+                            <th>Target</th>
+                            <th>Bead Wt.</th>
+                            <th>CDA Pressure</th>
+                            <th>Main CDA <br/> Supply</th>
+                            <th>RAM CDA</th>
+                            <th>Down <br/> Stream</th>
+                            <th>Result</th>
+                            <th>Remarks</th>
+                        </tr>
+            
+                         <?php $i=0 ?>
+                            @if(count($disLogs) > 0)
+                            @foreach($disLogs as $potLog)
+                            <?php $i++ ?>
+                             <tr>
+                                <td>{{ $i }}</td>
+                                <td>{{$potLog->shift}}</td>
+                                <td>{{$potLog->date}}</td>
+                                <td>{{$potLog->qualTime}}</td>
+                                <td>{{$potLog->jBox}}</td>
+                                <td>{{$potLog->sealant}}</td>
+                                <td>{{$potLog->target}}</td>
+                                <td>{{$potLog->beadWt}}</td>
+                                <td>{{$potLog->cdaPressure}}</td>
+                                <td>{{$potLog->mainCDASupply}}</td>
+                                <td>{{$potLog->RAMCDA}}</td>
+                                <td>{{$potLog->downStream}}</td>
+                                <td>{{$potLog->qualRes}}</td>
+                                <td>{{$potLog->remarks}}</td>
+                             </tr>
+                        @endforeach  
+                    @else
+                    <p>No Records Found</p>
+                    @endif
+                        </table>
+        </div>
     </div>      
     
     

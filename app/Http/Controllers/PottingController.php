@@ -32,7 +32,10 @@ class PottingController extends Controller
      */
     public function create()
     {
-        return view('backEnd.create');
+        //return view('backEnd.create');
+        $posts = DB::select('SELECT * FROM potting_quals ORDER BY ID DESC LIMIT 1');                                        
+        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+          return view('backEnd.create')->with('potLogs',$posts);
     }
 
     /**
@@ -44,7 +47,7 @@ class PottingController extends Controller
     public function store(Request $request)
     {
       $this->validate($request,[
-            'pottantWt' =>'required|integer|min:1',
+            'pottantWt' =>'required|between:1.00,34.00',
             'snapTime' => 'required',
             'qualTime' => 'required'
         ]);

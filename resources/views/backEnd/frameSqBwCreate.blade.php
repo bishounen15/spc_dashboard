@@ -56,12 +56,7 @@
                                 
                                 <div class = "col-sm-3"> 
                                                 <div class = "row">
-                                                        <div class = "col-sm-3">    {{Form::label('SerialNo',''),['class'=>'form-control']}}  </div>
-                                                        <div class="col-sm-8">      {{ Form::text('serialNoTxt', '',['class'=>'form-control form-control-sm','id'=>'serialNo'] )}}   
-                                                           
-                                                            <small class="form-text text-danger">{{ $errors->first('serialNoTxt') }}</small>
-                                                            {{Form::hidden('transID','1'),['class'=>'form-control form-control-sm']}} 
-                                                         </div>
+                                                       
                                                        
                                                 </div></div>
 
@@ -69,6 +64,32 @@
 
                                
                        
+                        </div>
+                        <div class = "row">
+                        <div class = "col-sm-1"> </div>
+
+                        <div class = "col-sm-3"> 
+                                <div class = "row">
+                                        <div class = "col-sm-3">    {{Form::label('SerialNo',''),['class'=>'form-control']}}  </div>
+                                        <div class="col-sm-8">      {{ Form::text('serialNoTxt', '',['class'=>'form-control form-control-sm','id'=>'serialNo'] )}}   
+                                           
+                                            <small class="form-text text-danger">{{ $errors->first('serialNoTxt') }}</small>
+                                            {{Form::hidden('transID','1'),['class'=>'form-control form-control-sm']}} 
+                                         </div>
+                                </div></div>
+                        
+                        <div class = "col-sm-2"> 
+                                <div class = "row">
+                                        <div class = "col-sm-3">    {{Form::label('Target',''),['class'=>'form-control']}}  </div>
+                                        <div class="col-sm-9">      {{ Form::text('target', '1.5',['class'=>'form-control form-control-sm','id'=>'target'] )}} </div>
+                                </div></div>
+                                <div class = "col-sm-3"> 
+                                    <div class = "row">
+                                            <div class = "col-sm-3">    {{Form::label('Qual Result',''),['class'=>'form-control']}}  </div>
+                                            <div class="col-sm-9">      {{ Form::text('qualRes', 'passed',['class'=>'form-control form-control-sm','id'=>'qualRes','readonly'=>'true'] )}} </div>
+                                    </div>
+                                </div>
+                                <div class = "col-sm-3"> </div>
                         </div>
                         <br/>
                         
@@ -181,6 +202,7 @@
             <th>D1</th>
             <th>D2</th>
             <th>D-Diff</th>
+            <th>Qual</br>Result</th>
             <th>Remarks</th>
         </tr>
 
@@ -204,6 +226,7 @@
                 <td>{{$potLog->D1}}</td>
                 <td>{{$potLog->D2}}</td>
                 <td>{{$potLog->DDiff}}</td>
+                <td>{{$potLog->qualRes}}</td>
                 <td>{{$potLog->remarks}}</td>
              </tr>
         @endforeach  
@@ -238,37 +261,92 @@ format: 'HH:mm'
 
     
     JQUERY4U = {
-	getDiff43: function(L1,L2,L3) {
-            
+	getDiff43V2: function(L1,L2,L3) {     
         var L1val = parseFloat(L1);
         var L2val = parseFloat(L2);
         var L3val = parseFloat(L3);
-        if(L1val == L2val && L1val == L3val){
-            return 0;
-        }else if(L1val < L2val && L2val > L3val && L1val == L3val){
-            return 1;
-        }else if(L1val > L2val && L2val < L3val && L1val == L3val ){
-            return -1;
-        }else if(L1val >= L2val && L2val == L3val){
-            return 0;
-        }else if(L1val == L2val && L2val <= L3val){
-            return 0;
-        }else if(L1val <= L2val && L2val == L3val){
-            return 0;
-        }else if(L1val == L2val && L2val >= L3val){
-            return 0;
-        }else if(L1val < L2val && L2val > L3val && L1val > L3val){
-            return 1;
-        }else if(L1val < L2val && L2val > L3val && L1val < L3val){
-            return 1;
-        }else if(L1val > L2val && L2val < L3val && L1val > L3val){
-            return -1;
-        }else if(L1val > L2val && L2val < L3val && L1val < L3val){
-            return -1;
-        }else{
-            return 0;
+        var middle = 0;
+        var max = 0;
+        var returnVal =0;
+        if(L1val<L3val && L2val>L3val || L2val<L3val && L1val>L3val ){
+        middle= L3val;
+	    }else if(L3val<L1val && L2val>L1val || L2val<L1val && L3val>L1val ){
+        middle= L1val;
+	    }else if(L3val<L2val && L1val>L2val || L2val<L2val && L3val>L2val ){
+        middle= L2val;
+	    }
+        if(middle!=0){
+        if(middle<L3val){
+        max= L3val;
+	    }else if(middle<L2val){
+        max= L2val;
+	    }else if(middle<L1val){
+        max= L1val;
+	    }
         }
+        returnVal = parseFloat( max - middle);
+        return returnVal;
+
+
+        
 	},
+    checkTargetPass: function(Sdiff,Ldiff,target) {     
+        var L1val = parseFloat(Sdiff);
+        var L2val = parseFloat(Ldiff);
+        var target = parseFloat(target);
+        var negVal = -Math.abs(target);
+       
+       if(L1val <= target && L1val >= negVal && L2val <= target && L2val >= negVal){
+        return 'passed';
+       }else if(L1val == 0 && L2val == 0){
+        return 'passed';
+           }else{
+           return 'failed';
+       }
+      
+        
+	},
+    getDiff43: function(L1,L2,L3) {
+            
+            var L1val = parseFloat(L1);
+            var L2val = parseFloat(L2);
+            var L3val = parseFloat(L3);
+            var min = 0;
+            var max = 0;
+            var retVal = 0;
+            
+            if(L1val == L2val && L1val == L3val){
+                return 0;
+            }else if(L1val < L2val && L2val > L3val && L1val == L3val){
+                retVal = L2val - L3val;
+                return retVal ;
+            }else if(L1val > L2val && L2val < L3val && L1val == L3val ){
+                retVal = L3val - L2val;
+                return retVal ;
+            }else if(L1val >= L2val && L2val == L3val){
+                return 0;
+            }else if(L1val == L2val && L2val <= L3val){
+                return 0;
+            }else if(L1val <= L2val && L2val == L3val){
+                return 0;
+            }else if(L1val == L2val && L2val >= L3val){
+                return 0;
+            }else if(L1val < L2val && L2val > L3val && L1val > L3val){
+                retVal = L2val - L1val;
+                return retVal;
+            }else if(L1val < L2val && L2val > L3val && L1val < L3val){
+                retVal = L2val - L3val;
+                return retVal;
+            }else if(L1val > L2val && L2val < L3val && L1val > L3val){
+                retVal = L1val - L3val;
+                return retVal;
+            }else if(L1val > L2val && L2val < L3val && L1val < L3val){
+                retVal = L3val - L1val;
+                return retVal;
+            }else{
+                return 0;
+            }
+        },
     getDiff42: function(D1,D2) {
             
             var D1val = parseFloat(D1);
@@ -293,7 +371,7 @@ format: 'HH:mm'
 
 
    //for 72 cell
-             $('#L1').val('1956');
+            $('#L1').val('1956');
             $('#L2').val('1956');
             $('#L3').val('1956');
             $('#S1').val('990');
@@ -319,7 +397,13 @@ format: 'HH:mm'
         var L3 = $('#L3').val();
         var val = JQUERY4U.getDiff43(L1,L2,L3);
         $('#LDiff').val(val);
-       
+
+        var Sdiff = $('#SDiff').val();
+        var Ldiff = $('#LDiff').val();
+        var tar = $('#target').val();
+
+        var res = JQUERY4U.checkTargetPass(Sdiff,Ldiff,tar);
+        $('#qualRes').val(res);
     });
     
     $('#L2' ).keyup(function(){
@@ -329,6 +413,12 @@ format: 'HH:mm'
         var val = JQUERY4U.getDiff43(L1,L2,L3);
         $('#LDiff').val(val);
         
+        var Sdiff = $('#SDiff').val();
+        var Ldiff = $('#LDiff').val();
+        var tar = $('#target').val();
+
+        var res = JQUERY4U.checkTargetPass(Sdiff,Ldiff,tar);
+        $('#qualRes').val(res);
       
     });
     
@@ -341,7 +431,12 @@ format: 'HH:mm'
         $('#LDiff').val(val);
             
        
-        
+        var Sdiff = $('#SDiff').val();
+        var Ldiff = $('#LDiff').val();
+        var tar = $('#target').val();
+
+        var res = JQUERY4U.checkTargetPass(Sdiff,Ldiff,tar);
+        $('#qualRes').val(res);
     });
 
 
@@ -353,6 +448,12 @@ format: 'HH:mm'
         var val = JQUERY4U.getDiff43(S1,S2,S3);
         $('#SDiff').val(val);
         
+        var Sdiff = $('#SDiff').val();
+        var Ldiff = $('#LDiff').val();
+        var tar = $('#target').val();
+
+        var res = JQUERY4U.checkTargetPass(Sdiff,Ldiff,tar);
+        $('#qualRes').val(res);
     });
     
     $('#S2' ).keyup(function(){
@@ -362,6 +463,13 @@ format: 'HH:mm'
         var S3 = $('#S3').val();
         var val = JQUERY4U.getDiff43(S1,S2,S3);
         $('#SDiff').val(val);
+
+         var Sdiff = $('#SDiff').val();
+        var Ldiff = $('#LDiff').val();
+        var tar = $('#target').val();
+
+        var res = JQUERY4U.checkTargetPass(Sdiff,Ldiff,tar);
+        $('#qualRes').val(res);
         
     });
     
@@ -372,6 +480,13 @@ format: 'HH:mm'
         var S3 = $('#S3').val();
         var val = JQUERY4U.getDiff43(S1,S2,S3);
         $('#SDiff').val(val);
+
+         var Sdiff = $('#SDiff').val();
+        var Ldiff = $('#LDiff').val();
+        var tar = $('#target').val();
+
+        var res = JQUERY4U.checkTargetPass(Sdiff,Ldiff,tar);
+        $('#qualRes').val(res);
     });
 
     
@@ -382,6 +497,7 @@ format: 'HH:mm'
      
         var val = JQUERY4U.getDiff42(D1,D2);
         $('#DDiff').val(val);
+
     });
     
     $('#D2' ).keyup(function(){
@@ -390,6 +506,8 @@ format: 'HH:mm'
      
         var val = JQUERY4U.getDiff42(D1,D2);
         $('#DDiff').val(val);
+
+
         
     });
 

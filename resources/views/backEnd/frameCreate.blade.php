@@ -116,7 +116,7 @@
                             <div class = "col-sm-1">    {{Form::label('L2','L2'),['class'=>'form-control form-control-sm']}}  </div>
                             <div class="col-sm-1">      {{ Form::text('L2woSealant', '0',['class'=>'form-control form-control-sm','id'=>'L2woSealant'] )}} <small class="form-text text-danger"> {{ $errors->first('L2woSealant') }}</small></div>
                             <div class = "col-sm-1">    {{ Form::text('L2wSealant', '0',['class'=>'form-control form-control-sm','id'=>'L2wSealant'] )}}  <small class="form-text text-danger">{{ $errors->first('L2wSealant') }}</small></div>
-                            <div class="col-sm-1">        {{ Form::text('L2diff', '0',['class'=>'form-control form-control-sm','id'=>'L2diff','readonly'=>'true'] )}}  </div>
+                            <div class="col-sm-1">        {{ Form::text('L2diff', '0',['class'=>'form-control form-control-sm','id'=>'L2diff','readonly'=>'true'] )}}  <small class="form-text text-danger">{{ $errors->first('L2diff') }} </small> </div>
                             <div class = "col-sm-1">    </div>
                             <div class = "col-sm-3">    </div>
                    
@@ -129,7 +129,7 @@
                         <div class = "col-sm-1">    {{Form::label('S1','S1'),['class'=>'form-control form-control-sm']}}  </div>
                         <div class="col-sm-1">      {{ Form::text('S1woSealant', '0',['class'=>'form-control form-control-sm','id'=>'S1woSealant'] )}}  <small class="form-text text-danger">{{ $errors->first('S1woSealant') }} </small></div>
                         <div class = "col-sm-1">    {{ Form::text('S1wSealant', '0',['class'=>'form-control form-control-sm','id'=>'S1wSealant'] )}}  <small class="form-text text-danger">{{ $errors->first('S1wSealant') }}</small></div>
-                        <div class="col-sm-1">        {{ Form::text('S1diff', '0',['class'=>'form-control form-control-sm','id'=>'S1diff','readonly'=>'true'] )}}  </div>
+                        <div class="col-sm-1">        {{ Form::text('S1diff', '0',['class'=>'form-control form-control-sm','id'=>'S1diff','readonly'=>'true'] )}}  <small class="form-text text-danger">{{ $errors->first('S1diff') }} </small>  </div>
                         <div class = "col-sm-1">      </div>
                         <div class = "col-sm-3">    </div>
                
@@ -142,7 +142,7 @@
                     <div class = "col-sm-1">    {{Form::label('S2','S2'),['class'=>'form-control form-control-sm']}}  </div>
                     <div class="col-sm-1">      {{ Form::text('S2woSealant', '0',['class'=>'form-control form-control-sm','id'=>'S2woSealant'] )}} </div>
                     <div class = "col-sm-1">    {{ Form::text('S2wSealant', '0',['class'=>'form-control form-control-sm','id'=>'S2wSealant'] )}} </div>
-                    <div class="col-sm-1">        {{ Form::text('S2diff', '0',['class'=>'form-control form-control-sm','id'=>'S2diff','readonly'=>'true'] )}}  </div>
+                    <div class="col-sm-1">        {{ Form::text('S2diff', '0',['class'=>'form-control form-control-sm','id'=>'S2diff','readonly'=>'true'] )}}  <small class="form-text text-danger">{{ $errors->first('S2diff') }} </small>   </div>
                     <div class = "col-sm-1">      </div>
                     <div class = "col-sm-3">    </div>
                 </div>

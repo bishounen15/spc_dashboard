@@ -25,7 +25,13 @@ class JBoxController extends Controller
      */
     public function create()
     {
-        return view('backEnd.jBoxDisCreate');
+       // return view('backEnd.jBoxDisCreate');
+
+        $posts = DB::select('SELECT * FROM jbox_dis_wt_quals ORDER BY ID DESC LIMIT 1');                                        
+        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+       return view('backEnd.jBoxDisCreate')->with('disLogs',$posts);
+        
+    
     }
 
     /**
@@ -37,7 +43,7 @@ class JBoxController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'beadWt' =>'required|integer|min:1',
+            'beadWt' =>'required|between:0,14.00',
           //  'snapTime' => 'required',
             'qualTime' => 'required'
         ]);
