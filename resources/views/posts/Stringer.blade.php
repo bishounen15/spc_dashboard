@@ -17,7 +17,7 @@
                             {{Form::label('Stringer', 'Stringer:')}}
                         </div>    
                         <div class="col-md-3">
-                            {{Form::select('Stringer', array('Stringer 1A' => 'Stringer 1A', 'Stringer 2B' => 'Stringer 2B',
+                            {{Form::select('Stringer', array('Stringer 1A' => 'Stringer 1A','Stringer 1B' => 'Stringer 1B', 'Stringer 2A' => 'Stringer 2A', 'Stringer 2B' => 'Stringer 2B',
                             'Stringer 3A' => 'Stringer 3A', 'Stringer 3B' => 'Stringer 3B'), '',['class'=>'form-control','placeholder'=>'Select Stringer'])}}
                             <small class="form-text text-danger">{{ $errors->first('Stringer') }}</small>
                         </div>

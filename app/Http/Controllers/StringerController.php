@@ -30,13 +30,11 @@ class StringerController extends Controller
     // --------------STRINGER 1A---------------------------------//
         //AVE(IND) FRONT
         $avefront = number_format(DB::table('stringers')
-        ->where([['Side','=','Front'],
-                ['PeelTest','>',0],])
+        ->where([['Side','=','Front']])
         ->avg('PeelTest'),2);
         //AVE(IND) BACK
         $aveback = number_format(DB::table('stringers')
-        ->where([['side','=','Back'],
-                ['PeelTest','>',0],])
+        ->where([['side','=','Back']])
         ->avg('PeelTest'),2);
         //STD(IND) FRONT
         $stdfront = DB::table('stringers')
@@ -55,7 +53,7 @@ class StringerController extends Controller
         ->select(DB::raw('AVG(PeelTest) as PeelTest'))
         ->whereBetween('Date', [Date('Y-m-d',strtotime("-30 days")), Date('Y-m-d')])
         ->where([['Side','=','front']])
-        ->groupBy('date')
+        ->groupBy('Date')
         ->get();
         $xbbfront = number_format($xbbfront->avg('PeelTest'),2);
          //XBB AVE OF AVE (BACK)
@@ -63,7 +61,7 @@ class StringerController extends Controller
         ->select(DB::raw('AVG(PeelTest) as PeelTest'))
         ->whereBetween('Date', [Date('Y-m-d',strtotime("-30 days")), Date('Y-m-d')])
         ->where([['Side','=','Back']])
-        ->groupBy('date')
+        ->groupBy('Date')
         ->get();
         $xbbback = number_format($xbbback->avg('PeelTest'),2);
         //STD AVE (FRONT)

@@ -15,7 +15,7 @@ class FlashController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM flashes'); 
+        $posts = DB::select('SELECT * FROM flashes ORDER BY ID DESC'); 
         //$posts = Post::orderBy('created_at','desc')->paginate(2);
         return view('pages.ftd')  
                     ->with('alldata',$posts);
@@ -49,7 +49,6 @@ class FlashController extends Controller
             'PMPP' => 'required',
             'ShuntResist' => 'required',
             'FF' => 'required',
-            'BIN' => 'required',
         ]);
 
         //Create
@@ -63,10 +62,9 @@ class FlashController extends Controller
         $flash->PMPP = $request->input('PMPP');
         $flash->ShuntResist = $request->input('ShuntResist');
         $flash->FF = $request->input('FF');
-        $flash->BIN = $request->input('BIN');
         $flash->save();
 
-        return redirect('/flash/create')->with('success', 'Successfully Created');
+        return redirect('/ftd')->with('success', 'Successfully Created');
     }
 
     /**

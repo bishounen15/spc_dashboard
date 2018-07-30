@@ -24,7 +24,6 @@ class CreateFlashesTable extends Migration
             $table->String('PMPP');
             $table->String('ShuntResist');
             $table->String('FF');
-            $table->String('BIN');
             $table->timestamps();
         });
     }

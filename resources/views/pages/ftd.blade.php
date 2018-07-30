@@ -27,7 +27,6 @@
             <th>PMPP&nbsp;&nbsp;&nbsp;</th>
             <th>Shunt Resistance&nbsp;&nbsp;&nbsp;</th>
             <th>FF&nbsp;&nbsp;</th>
-            <th>BIN&nbsp;&nbsp;</th>
             </tr>
             @if(count($alldata) > 0)
             <?php $i=0 ?>
@@ -45,7 +44,6 @@
             <td>{{$pulltest->PMPP}}</td>
             <td>{{$pulltest->ShuntResist}}</td>
             <td>{{$pulltest->FF}}</td>
-            <td>{{$pulltest->BIN}}</td>
             </tr>
             @endforeach 
             @else
