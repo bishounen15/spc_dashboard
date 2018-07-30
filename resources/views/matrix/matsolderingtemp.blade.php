@@ -26,7 +26,13 @@
                 <th>Temp 3</th>
                 <th>Remarks</th>
                 <th>Average</th>
+                <th>Bottom 1</th>
+                <th>Bottom 2</th>
+                <th>Bottom 3</th>
+                <th>Bottom Average</th>
                 <th>Date</th>
+
+
             </tr>
 
                 @if(count($matsolderingtemp) > 0)
@@ -35,7 +41,7 @@
                 <?php $i++ ?>
                  <tr>
                  <td>
-                    <td>{{$potLog->Station}}</td>
+                    <td>{{$potLog->EmployeeID}}</td>
                     <td>{{$potLog->Location}}</td>
                     <td>{{$potLog->Shift}}</td>
                     <td>{{$potLog->Supplier}}</td>
@@ -45,6 +51,10 @@
                     <td>{{$potLog->Temp3}}</td>
                     <td>{{$potLog->Remarks}}</td>
                     <td style="font-size:12px;">{{$potLog->Average}}</td>
+                    <td>{{$potLog->botTemp1}}</td>
+                    <td>{{$potLog->botTemp2}}</td>
+                    <td>{{$potLog->botTemp3}}</td>
+                    <td style="font-size:12px;">{{$potLog->botAverage}}</td>
                     <td>{{$potLog->created_at}}</td>
                  </tr>
             @endforeach  

@@ -40,7 +40,7 @@ class OfflineMatSolderingPostsController extends Controller
     {
         //Validate
             $this->validate($request, [  
-                'station' => 'required',       
+                'employeeid' => 'required',       
                 'location' => 'required',
                 'shift' => 'required',
                 'node'=> 'required',
@@ -55,7 +55,7 @@ class OfflineMatSolderingPostsController extends Controller
         //Create Post
         //$post = $request->post;
         $post =  new OfflineMatSolderingPost;
-        $post->Station = $request->input('station');
+        $post->EmployeeID = $request->input('employeeid');
         $post->Location = $request->input('location');
         $post->Shift = $request->input('shift');
         $post->Node = $request->input('node');

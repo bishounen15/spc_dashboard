@@ -16,7 +16,7 @@ class MatSolderingPostsController extends Controller
     public function index()
     {
         //$post = Post::all();
-        $posts = DB::select('SELECT * FROM mat_soldering ORDER BY id DESC');
+        $posts = DB::select('SELECT * FROM mat_solderings ORDER BY id DESC');
         return view('matrix.matsolderingtemp')->with('matsolderingtemp', $posts);
     }
 
@@ -40,7 +40,8 @@ class MatSolderingPostsController extends Controller
     {
         //Validate
             $this->validate($request, [  
-                'station' => 'required',       
+                //'station' => 'required', //added
+                'employeeid' => 'required',       
                 'location' => 'required',
                 'shift' => 'required',
                 'node'=> 'required',
@@ -48,14 +49,19 @@ class MatSolderingPostsController extends Controller
                 'temp1' => 'required|numeric',
                 'temp2' => 'required|numeric',
                 'temp3' => 'required|numeric',
+                'average' => 'required', 
+                'bottemp1' => 'required|numeric',
+                'bottemp2' => 'required|numeric',
+                'bottemp3' => 'required|numeric', 
+                'botaverage' => 'required',               
                 'remarks' => 'required',
-                'average' => 'required',
+                
             ]);
 
         //Create Post
         //$post = $request->post;
         $post = new MatSolderingPost;
-        $post->Station = $request->input('station');
+        $post->EmployeeID = $request->input('employeeid');
         $post->Location = $request->input('location');
         $post->Shift = $request->input('shift');
         $post->Node = $request->input('node');
@@ -63,8 +69,12 @@ class MatSolderingPostsController extends Controller
         $post->temp1 = $request->input('temp1');
         $post->temp2 = $request->input('temp2');
         $post->temp3 = $request->input('temp3');
-        $post->Remarks = $request->input('remarks');
         $post->Average = $request->input('average');
+        $post->bottemp1 = $request->input('bottemp1');
+        $post->bottemp2 = $request->input('bottemp2');
+        $post->bottemp3 = $request->input('bottemp3');
+        $post->botAverage = $request->input('botaverage');
+        $post->Remarks = $request->input('remarks');
         $post->created_at = $request->input('date');
         $post->save ();
         return redirect('/matsolder')->with('success', 'Data Created');
@@ -90,7 +100,7 @@ class MatSolderingPostsController extends Controller
     public function edit($id)
     {
         $post = MatSolderingPost::find($id);
-        return view('pages.about')->with('matsolderingpost', $post);
+        return view('pages.about')->with('matsolderingposts', $post);
     }
 
     /**
@@ -110,11 +120,11 @@ class MatSolderingPostsController extends Controller
         $post->string = $request->input('station');
         $post->string = $request->input('shift');
         $post->string = $request->input('node');
+        $post->string = $request->input('remarks');
         $post->string = $request->input('supplier');
         $post->string = $request->input('temp1');
         $post->string = $request->input('temp2');
         $post->string = $request->input('temp3');
-        $post->string = $request->input('remarks');
         $post->float = $request->input('average');
         $post->string = $request->input('date');
         $post->save();

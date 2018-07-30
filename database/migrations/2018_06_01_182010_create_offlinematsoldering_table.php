@@ -13,20 +13,22 @@ class CreateOfflinematsolderingTable extends Migration
      */
     public function up()
     {
+        
+
         Schema::create('offlinematsoldering', function (Blueprint $table) {
-            $table->increments('id');
-            $table->String('station');
-            $table->String('location');
-            $table->String('shift');
-            $table->String('node');
-            $table->String('supplier');
-            $table->String('temp1');
-            $table->String('temp2');
-            $table->String('temp3');
-            $table->String('remarks');
-            $table->String('average');
-            $table->timestamps();
-        });
+                $table->increments('id');
+                $table->String('employeeid');
+                $table->String('location');
+                $table->String('shift');
+                $table->String('node');
+                $table->String('supplier');
+                $table->String('temp1');
+                $table->String('temp2');
+                $table->String('temp3');
+                $table->String('remarks');
+                $table->String('average');
+                $table->timestamps();
+            });
     }
 
     /**
@@ -36,6 +38,7 @@ class CreateOfflinematsolderingTable extends Migration
      */
     public function down()
     {
+        // Schema::dropIfExists('offlinematsoldering');
         Schema::dropIfExists('offlinematsoldering');
     }
 }

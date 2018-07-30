@@ -24,12 +24,11 @@ class OfflineBtoBPullTestController extends Controller
         ->select(DB::raw('AVG(pulltest/3) as pulltest'))
         ->get();
         $avefront = number_format($avefront->avg('pulltest'),2);
-
+    
         $pulltests1 = DB::table('btobpulltest')
             ->select('pulltest1 AS pulltest');
         $pulltests2 = DB::table('btobpulltest')
             ->select('pulltest2 AS pulltest');
-
         $pulltests3 = DB::table('btobpulltest')
             ->select('pulltest3 AS pulltest')
             ->unionAll($pulltests1)
@@ -37,15 +36,13 @@ class OfflineBtoBPullTestController extends Controller
           // ->STDDEV('pulltest AS pulltest')
             ->get();
 
-       
-        
-      //  $stdave = number_format($stdave->avg('pulltest'),2);
-      $stdave = number_format($pulltests3->avg('pulltest'),2);
-        return view('matrix.btobpulltest') 
-        ->with('avefront',$avefront)
-        ->with('stdave',$stdave);
+        //  $stdave = number_format($stdave->avg('pulltest'),2);
+        $stdave = number_format($pulltests3->avg('pulltest'),2);
+            return view('matrix.btobpulltest') 
+            ->with('avefront',$avefront)
+            ->with('stdave',$stdave);
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
