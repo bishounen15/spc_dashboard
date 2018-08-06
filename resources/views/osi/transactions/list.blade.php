@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
+    @csrf
     <h3>Office Supplies Inventory</h3>
     <a href="{{route('create_trx',['Incoming'])}}" role="button" class="btn btn-success" style="width: 200px;">Incoming Transaction</a>
     <a href="{{route('create_trx',['Request'])}}" role="button" class="btn btn-info" style="width: 200px;">Request Office Supplies</a>
@@ -20,12 +21,88 @@
             
         </tbody>
     </table>
+
+    <div class="modal fade" id="TrxDetails" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Transaction Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm" style="font-size: 0.9em;">
+                    <tr>
+                        <th>Control No.</th><td id="cno"></td><th>Date</th><td id="date"></td>
+                    </tr>
+                    <tr>
+                        <th>Type</th><td id="type"></td><th>Status</th><td id="stat"></td>
+                    </tr>
+                </table>
+
+                <table class="table table-condensed table-striped table-sm" style="width: 100%;">
+                    <thead class="thead-dark" style="font-size: 0.7em;">
+                        <th width="15%">Category</th>
+                        <th width="40%">Item</th>
+                        <th width="15%">Qty</th>
+                        <th width="15%">Unit Cost</th>
+                        <th width="15%">Total Cost</th>
+                    </thead>
+                    <tbody id="item-details" class="tbody-light" style="font-size: 0.75em;">
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info btn-sm" style="width: 100px;">Edit</button>
+                <button type="button" class="btn btn-success btn-sm" style="width: 100px;">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" style="width: 100px;">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
 </div>
 @endsection
 
 @include('layouts.modal')
 @push('jscript')
 <script>
+    $(document).on("click",".view-details", function() {
+        var token = $('input[name=_token]');
+        var formData = new FormData();
+        formData.append('transaction_id', $(this).attr("id"));
+
+        $.ajax({
+            url: "{{route('get_trx_info')}}",
+            method: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': token.val()
+            },
+            success: function (trx) {
+                // alert(trx);
+                $("#cno").html(trx[0].control_no);
+                $("#date").html(trx[0].date);
+                $("#type").html(trx[0].type);
+                $("#stat").html(trx[0].status);
+                myRows = "";
+
+                $.each(trx, function(i, v) {
+                    myRows += '<tr><td>'+v.category+'</td><td>'+v.item+'</td><td>'+v.qty+'</td><td>'+v.unit_cost+'</td><td>'+v.total_cost+'</td></tr>';
+                });
+
+                $("#item-details").html(myRows);
+            },
+            error: function(xhr, textStatus, errorThrown){
+                alert (errorThrown);
+            }	
+        });
+    });
+
     $(document).ready(function() {
         $('#trx-list').DataTable({
             // "scrollX": true,
@@ -65,7 +142,7 @@
                 { data: 'status' },
                 { data: 'total_cost' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
-                    return '<div class="row"><div class="col-sm-12"><a href="/os/transaction/'+full.id+'" role="button" class="btn btn-sm btn-success" style="width: 100%;">View Details</a></div></div>';
+                    return '<div class="row"><div class="col-sm-12"><a href="#" id="'+full.id+'" role="button" class="btn btn-sm btn-success view-details" style="width: 100%;" data-toggle="modal" data-target="#TrxDetails">View Details</a></div></div>';
                 }},
             ],
         });

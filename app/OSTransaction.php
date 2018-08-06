@@ -45,4 +45,8 @@ class OSTransaction extends Model implements Auditable
 
         return $code;
     }
+
+    public function details() {
+        return $this->hasMany('App\OSTransactionDetail', 'transaction_id', 'id');
+    }
 }

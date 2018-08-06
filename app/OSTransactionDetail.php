@@ -27,4 +27,8 @@ class OSTransactionDetail extends Model implements Auditable
         'unit_cost',
         'total_cost',
     ];
+
+    public function item() {
+        return $this->hasOne('App\OfficeSupplies', 'id', 'item_id');
+    }
 }

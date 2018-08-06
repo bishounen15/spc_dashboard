@@ -44,4 +44,8 @@ class OfficeSupplies extends Model implements Auditable
 
         return $code;
     }
+
+    public function category() {
+        return $this->hasOne('App\OSCategory', 'id', 'category_id');
+    }
 }

@@ -79,6 +79,32 @@ class OSTransactionController extends Controller
         return view('osi.transactions.form', $data);
     }
 
+    public function submit(Request $request) {
+        
+    }
+
+    public function GetTrxInfo(Request $request) {
+        $trx_info = [];
+        $data = [];
+        $trx = OSTransaction::find($request->input('transaction_id'));
+
+        $data["control_no"] = $trx->control_no;
+        $data["date"] = $trx->date;
+        $data["type"] = $trx->type;
+        $data["status"] = $trx->status;
+
+        foreach($trx->details as $detail) {
+            $data["category"] = $detail->item->category->description;
+            $data["item"] = $detail->item->description;
+            $data["qty"] = $detail->qty;
+            $data["unit_cost"] = $detail->unit_cost;
+            $data["total_cost"] = $detail->total_cost;
+            array_push($trx_info, $data);
+        }
+
+        return Response::json($trx_info);
+    }
+
     public function GetItems(Request $request) {
         $items = OSCategory::find($request->input('category_id'))->items->all();
         return Response::json($items);
