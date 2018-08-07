@@ -28,8 +28,8 @@
 <thead>
 <tr>
 <th scope="col">#</th>
-<th scope="col">VALUE</th>
-<th scope="col">FRONT</th>
+<th scope="col">Indicators</th>
+<th scope="col">Value</th>
 
 </tr>
 </thead>
@@ -45,107 +45,126 @@
 <td><b>Stdev (Ind)</b></td>
 <td>{{$stdfront}}</td>
 
-</tr>
 <tr>
-<th scope="row">3</th>
-<td><b>XBB (Ave of Ave)</b></td>
-<td>{{$xbbfront}}</td>
+    <th scope="row">3</th>
+    <td><b>N</b></td>
+    <td>30</td>
+    
+    </tr>
 
 </tr>
 <tr>
 <th scope="row">4</th>
+<td><b>Ave (Ave)</b></td>
+<td>{{$xbbfront}}</td>
+
+</tr>
+<tr>
+<th scope="row">5</th>
 <td><b>Stdev (Ave)</b></td>
 <td>{{$stdavg}}</td>
 
 </tr>
 <tr>
-<th scope="row">5</th>
+<th scope="row">6</th>
 <td><b>Median</b></td>
 <td>{{$median}}</td>
-<td></td>
-</tr>
-<tr>
-<th scope="row">6</th>
-<td><b>Percentile (0.00135)</b></td>
-<td></td>
 
 </tr>
 <tr>
 <th scope="row">7</th>
-<td><b>Percentile (0.99865)</b></td>
-<td></td>
+<td><b>Percentile (0.00135)</b></td>
+<td>{{$percentile}}</td>
 
 </tr>
 <tr>
 <th scope="row">8</th>
-<td><b>USL</b></td>
-<td></td>
+<td><b>Percentile (0.99865)</b></td>
+<td>{{$percentile2}}</td>
+
 
 </tr>
 <tr>
 <th scope="row">9</th>
-<td><b>LSL</b></td>
-<td></td>
+<td><b>USL</b></td>
+<td>{{$USL}}</td>
 
 </tr>
 <tr>
 <th scope="row">10</th>
-<td><b>Target</b></td>
-<td></td>
+<td><b>LSL</b></td>
+<td>{{$LSL}}</td>
 
 </tr>
 <tr>
 <th scope="row">11</th>
-<td><b>Z</b></td>
-<td></td>
+<td><b>Target</b></td>
+<td>{{$target}}</td>
 
 </tr>
 <tr>
 <th scope="row">12</th>
-<td><b>CpU</b></td>
-<td></td>
+<td><b>Z</b></td>
+<td>{{$zValue}}</td>
 
 </tr>
 <tr>
 <th scope="row">13</th>
-<td><b>CpL</b></td>
-<td></td>
+<td><b>CpU</b></td>
+<td>{{$CpU}}</td>
 
 </tr>
 <tr>
 <th scope="row">14</th>
-<td><b>Cpk</b></td>
-<td></td>
+<td><b>CpL</b></td>
+<td>{{$CpL}}</td>
 
 </tr>
 <tr>
 <th scope="row">15</th>
-<td><b>CpN U</b></td>
-<td></td>
+<td><b>Cpk</b></td>
+<td>{{$Cpk}}</td>
 
 </tr>
 <tr>
 <th scope="row">16</th>
-<td><b>CpN L</b></td>
-<td></td>
+<td><b>UCL</b></td>
+<td>{{$UCL}}</td>
 
 </tr>
 <tr>
 <th scope="row">17</th>
-<td><b>CpN</b></td>
-<td></td>
+<td><b>LCL</b></td>
+<td>{{$LCL}}</td>
 
 </tr>
 <tr>
 <th scope="row">18</th>
-<td><b>UCL</b></td>
-<td></td>
+<td><b>CL</b></td>
+<td>{{$CL}}</td>
 
 </tr>
+
 <tr>
 <th scope="row">19</th>
-<td><b>
+<td><b>Cpn</b></td>
+<td>{{$Cpn}}</td>
+</tr>
 
+<tr>
+<th scope="row">20</th>
+<td><b>CpnL</b></td>
+<td>{{$CpnL}}</td>
+</tr>
+
+<tr>
+<th scope="row">21</th>
+<td><b>CpnL</b></td>
+<td>{{$CpnU}}</td>
+</tr>
+
+</tbody>
+</table>
 
             </div>
             </div>

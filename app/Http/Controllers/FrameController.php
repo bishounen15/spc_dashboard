@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
@@ -21,18 +20,88 @@ class FrameController extends Controller
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
      //   return view('backEnd.frameQual')->with('frameLogs',$posts);
 
-     $tempAve = 0;
-     $tempBefAveSTD = 0;
+
+
+
+$weightAve = DB::table(DB::select("SELECT AVG(weight) as aveWt FROM (SELECT weight FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview"));
+//->select(DB::raw("AVG(weight) as aveWt"))
+// ->get();
+
+$wtAve = number_format($weightAve->from[0]->aveWt,2);
+
+$weightStd = DB::table(DB::select("SELECT STDDEV_SAMP(weight) as aveStd FROM (SELECT weight FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview"));
+$wtStd = number_format($weightStd->from[0]->aveStd,2);
+
+$weightAveOfAve = DB::table(DB::select("SELECT AVG(aveWt) as aveOfAve FROM (SELECT AVG(weight) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date) as tbl_avgOfAvg"));
+$wtAveOfAve = number_format($weightAveOfAve->from[0]->aveOfAve,2);
+
+$weightStdOfStd = DB::table(DB::select("SELECT STDDEV_SAMP(stdWt) as stdOfStd FROM (SELECT AVG(weight) as stdWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date) as tbl_stdOfStd"));
+$wtStdOfStd = number_format($weightStdOfStd->from[0]->stdOfStd,2);
+
+$median = DB::table(DB::select("SELECT ROUND(AVG(weight),2) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date ORDER BY aveWt ASC"));
+$medianVal1 = number_format($median->from[14]->aveWt,2);  
+$medianVal2 = number_format($median->from[15]->aveWt,2);
+$medianAve = number_format((($medianVal1 + $medianVal2)/2),2);
+// $wtAve = 0;
+$wtAveList = DB::table(DB::select("SELECT AVG(weight) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date"));
+//dd($wtAveList);
+$arrAve = array();
+
+
+
+//foreach($wtAveList as $arr){
+//
+//$arrAve = array(185.875,187.333333333333,186,180.666666666667,183.375,184.166666666667,184.625,179.833333333333,182.5,181.5,182.5,178.166666666667,174,183.5,178.833333333333,177.714285714286,180.142857142857,177.625,186.285714285714,182,181.833333333333,180,180.166666666667,180,177.5,179.666666666667,184.333333333333,179.666666666667,178.166666666667,180.5
+//);
+$arrVal= "";
+for($i=0;$i<30;$i++){
+  //  $arrVal= $arrVal.$wtAveList->from[$i]->aveWt.',';
+    array_push($arrAve,$wtAveList->from[$i]->aveWt);
+}
+
+
+$percentile = $this->mypercentile($arrAve,0.00135);
+$percentile2 = $this->mypercentile($arrAve,0.99865);
+$zValue = number_format(($wtAveOfAve-181)/$wtStdOfStd,2);
+     //$tempBefAveSTD = 0;
+     $UCL=195;
+$LCL=167;
+$CL = (($UCL-$LCL)/2)+$LCL;
+$target = 180;
+$USL = $target + 25;
+$LSL = $target - 20;
+$CpL = ($wtAveOfAve-$LCL)/(3*$wtStdOfStd);
+$CpU = ($UCL-$wtAveOfAve)/(3*$wtStdOfStd);
+$arrValForCpk = array($CpU,$CpL);
+$Cpk = min($arrValForCpk);
+$CpnU = ($USL - $medianAve)/($percentile2 - $medianAve);
+$CpnL = ($medianAve - $LSL)/($medianAve - $percentile);
+$arrValForCpn = array($CpnU,$CpnL);
+$Cpn = min($arrValForCpn);
      $xbbfront = 0;
      $stdavg = 0;
      $median = 0;
      return view('backEnd.frameSum') 
-->with('avefront',$tempAve)
-->with('stdfront',$tempBefAveSTD)
-->with('xbbfront',$xbbfront)
-->with('stdavg',$stdavg)
-->with('median',$median);
-
+->with('avefront',$wtAve)
+->with('stdfront',$wtStd)
+->with('xbbfront',$wtAveOfAve)
+->with('stdavg',$wtStdOfStd)
+->with('median',$medianAve)
+->with('percentile',$percentile)
+->with('percentile2',$percentile2)
+->with('zValue',$zValue)
+->with('UCL',$UCL)
+->with('LCL',$LCL)
+->with('CL',$CL)
+->with('target',$target)
+->with('USL',$USL)
+->with('LSL',$LSL)
+->with('CpL',number_format($CpL,2))
+->with('CpU',number_format($CpU,2))
+->with('Cpk',number_format($Cpk,2))
+->with('Cpn',number_format($Cpn,2))
+->with('CpnU',number_format($CpnU,2))
+->with('CpnL',number_format($CpnL,2));
 
     }
 
@@ -227,4 +296,41 @@ class FrameController extends Controller
     {
         //
     }
+   public function mypercentile($data,$percentile){ 
+        if( 0 < $percentile && $percentile < 1 ) { 
+            $p = $percentile; 
+        }else if( 1 < $percentile && $percentile <= 100 ) { 
+            $p = $percentile * .01; 
+        }else { 
+            return ""; 
+        } 
+        $count = count($data); 
+        $allindex = ($count-1)*$p; 
+        $intvalindex = intval($allindex); 
+        $floatval = $allindex - $intvalindex; 
+        sort($data); 
+        if(!is_float($floatval)){ 
+            $result = $data[$intvalindex]; 
+        }else { 
+            if($count > $intvalindex+1) 
+                $result = number_format(($floatval*($data[$intvalindex+1] - $data[$intvalindex]) + $data[$intvalindex]),2); 
+            else 
+                $result = $data[$intvalindex]; 
+        } 
+        return $result; 
+    } 
+   /* public function get_percentile($percentile, $array) {
+        sort($array);
+        $index = ($percentile/100) * count($array);
+        if (floor($index) == $index) {
+             $result = ($array[$index-1] + $array[$index])/2;
+        }
+        else {
+            $result = $array[floor($index)];
+        }
+        return $result;
+    }*/
+
+  
+    
 }
