@@ -37,13 +37,13 @@
         <tr>
         <th scope="row">1</th>
         <td><b>Ave (Ind)</b></td>
-        <td></td>
+        <td>{{ $aveInd }}</td>
         
         </tr>
         <tr>
         <th scope="row">2</th>
         <td><b>Stdev (Ind)</b></td>
-        <td></td>
+        <td>{{ $stdInd }}</td>
         
         <tr>
             <th scope="row">3</th>

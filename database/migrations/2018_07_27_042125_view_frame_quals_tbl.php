@@ -14,7 +14,7 @@ class ViewFrameQualsTbl extends Migration
     public function up()
     {
      
-        DB::statement('CREATE VIEW view_frameQuals AS SELECT DISTINCT(date) FROM frame_quals ORDER BY date DESC Limit 30');
+        DB::statement('CREATE VIEW view_framequals AS SELECT DISTINCT(date) FROM frame_quals ORDER BY date DESC Limit 30');
 
     }
 
