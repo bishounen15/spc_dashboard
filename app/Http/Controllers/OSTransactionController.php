@@ -7,6 +7,7 @@ use App\OSTransaction;
 use App\OSTransactionDetail;
 use App\OSCategory;
 use App\OfficeSupplies;
+use App\OSTrxStatus;
 
 Use DataTables;
 Use Response;
@@ -14,6 +15,11 @@ Use Response;
 class OSTransactionController extends Controller
 {
     //
+    public function __construct( OSTrxStatus $status )
+    {
+        $this->status = $status->all();
+    }  
+
     public function list() {
         return view('osi.transactions.list');
     }
@@ -79,8 +85,42 @@ class OSTransactionController extends Controller
         return view('osi.transactions.form', $data);
     }
 
-    public function submit(Request $request) {
+    public function updateStatus(Request $request) {
+        $id = $request->input('transaction_id');
+        $status = $request->input('status');
+        $new_status = '';
+
+        $trx_statuses = $this->status;
+
+        foreach ($trx_statuses as $trx_status) {
+            if ($trx_status['status'] == $status) {
+                $new_status = $trx_status['next'];
+                break;
+            }
+        }
+
+        $trx = OSTransaction::find($id);
+        $trx->status = $new_status;
+        $trx->save();
+
+        if ($trx->type == "Submitted" && $trx->type == "Incoming") {
+            $operation = "+";
+        } else if ($trx->type == "Issued" && $trx->type == "Outgoing") {
+            $operation = "-";
+        } else {
+            $operation = "";
+        }
+
+        if ($operation != "") {
+            foreach ($trx->details as $detail) {
+                $item = OfficeSupplies::find($detail->item_id);
+                $opr = $item->current_stock . $operation . $detail->qty;
+                eval("\$item->current_stock = " . $opr . ";");
+                $item->save();
+            }
+        }
         
+        return "true";
     }
 
     public function GetTrxInfo(Request $request) {
@@ -88,6 +128,7 @@ class OSTransactionController extends Controller
         $data = [];
         $trx = OSTransaction::find($request->input('transaction_id'));
 
+        $data["id"] = $trx->id;
         $data["control_no"] = $trx->control_no;
         $data["date"] = $trx->date;
         $data["type"] = $trx->type;

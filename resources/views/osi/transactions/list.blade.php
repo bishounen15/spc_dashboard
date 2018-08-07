@@ -32,6 +32,7 @@
               </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="trx-id">
                 <table class="table table-sm" style="font-size: 0.9em;">
                     <tr>
                         <th>Control No.</th><td id="cno"></td><th>Date</th><td id="date"></td>
@@ -56,7 +57,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info btn-sm" style="width: 100px;">Edit</button>
-                <button type="button" class="btn btn-success btn-sm" style="width: 100px;">Submit</button>
+                <button type="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="updateStatus()">Submit</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" style="width: 100px;">Close</button>
             </div>
           </div>
@@ -68,6 +69,36 @@
 @include('layouts.modal')
 @push('jscript')
 <script>
+    function updateStatus() {
+        id = $("#trx-id").val();
+        status = $("#stat").html();
+
+        var token = $('input[name=_token]');
+        var formData = new FormData();
+        formData.append('transaction_id', id);
+        formData.append('status', status);
+
+        $.ajax({
+            url: "{{route('os_status')}}",
+            method: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            dataType: 'boolean',
+            headers: {
+                'X-CSRF-TOKEN': token.val()
+            },
+            success: function (result) {
+                if (result == true) {
+                    $("#TrxDetails").modal("toggle");
+                }
+            },
+            error: function(xhr, textStatus, errorThrown){
+                alert (errorThrown);
+            }	
+        });
+    }
+
     $(document).on("click",".view-details", function() {
         var token = $('input[name=_token]');
         var formData = new FormData();
@@ -85,6 +116,7 @@
             },
             success: function (trx) {
                 // alert(trx);
+                $("#trx-id").val(trx[0].id);
                 $("#cno").html(trx[0].control_no);
                 $("#date").html(trx[0].date);
                 $("#type").html(trx[0].type);

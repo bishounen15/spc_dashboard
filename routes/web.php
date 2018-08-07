@@ -84,6 +84,7 @@ Route::post('/os/item/remove/{id}','OSController@destroy')->name('remove_item');
 Route::post('/item_list','OSTransactionController@GetItems')->name('get_item_list');
 Route::post('/item_details','OSTransactionController@GetItemDetails')->name('get_item_details');
 Route::post('/trx_info','OSTransactionController@GetTrxInfo')->name('get_trx_info');
+Route::post('/os_status','OSTransactionController@updateStatus')->name('os_status');
 
 Route::get('/os/transaction/list/data', 'OSTransactionController@load')->name('trx_data');
 Route::get('/os/transaction/list','OSTransactionController@list')->name('list_trx');
