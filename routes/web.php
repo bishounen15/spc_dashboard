@@ -52,6 +52,8 @@ Route::resource('Framming','SqBwController');
 Route::resource('MixRatio','MixRatioController');
 
 // Route::resource('Yield','yieldController');
+Route::post('/yield/date','yieldController@getYieldPerDate')->name('yield_per_date');
+
 Route::get('/yield/list/data', 'yieldController@load')->name('yield_data');
 Route::get('/Yield/list','yieldController@list')->name('list_yield');
 Route::get('/Yield/create','yieldController@create')->name('create_yield');

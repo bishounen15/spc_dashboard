@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\ProductionTeam as ProductionTeam;
 use App\mesData as mesData;
 use App\YieldData as YieldData;
+use App\User as User;
 
 use DataTables;
+Use Response;
 
 class yieldController extends Controller
 {
@@ -221,5 +223,56 @@ class yieldController extends Controller
         ->groupBy("date","build","target", "product_size");
 
         return Datatables::of($yield)->make(true);
+    }
+
+    public function GetYieldPerDate(Request $request) {
+        $trx_info = [];
+        $data = [];
+        $trx = YieldData::where("date",$request->input("date"))->get();
+        
+        foreach($trx as $detail) {
+            $t = YieldData::find($detail->id);
+
+            $data["from"] = $detail->from;
+            $data["to"] = $detail->to;
+            $data["input_cell"] = $detail->input_cell;
+            $data["input_mod"] = $detail->input_mod;
+            $data["inprocess_cell"] = $detail->inprocess_cell;
+            $data["ccd_cell"] = $detail->ccd_cell;
+            $data["visualdefect_cell"] = $detail->visualdefect_cell;
+            $data["cell_defect"] = $detail->cell_defect;
+            $data["cell_class_b"] = $detail->cell_class_b;
+            $data["cell_class_c"] = $detail->cell_class_c;
+            $data["product_size"] = $detail->product_size;
+            $data["str_produced"] = $detail->str_produced;
+            $data["str_defect"] = $detail->str_defect;
+            $data["el1_inspected"] = $detail->el1_inspected;
+            $data["el1_defect"] = $detail->el1_defect;
+            $data["be_inspected"] = $detail->be_inspected;
+            $data["be_defect"] = $detail->be_defect;
+            $data["be_class_b"] = $detail->be_class_b;
+            $data["be_class_c"] = $detail->be_class_c;
+            $data["man"] = $detail->man;
+            $data["mac"] = $detail->mac;
+            $data["mat"] = $detail->mat;
+            $data["met"] = $detail->met;
+            $data["env"] = $detail->env;
+            $data["el2_class_a"] = $detail->el2_class_a;
+            $data["el2_class_a_crack"] = 0;
+            $data["el2_defect"] = $detail->el2_defect;
+            $data["el2_class_b"] = $detail->el2_class_b;
+            $data["el2_class_c"] = $detail->el2_class_c;
+            $data["el2_low_power"] = $detail->el2_low_power;
+            $data["build"] = $detail->build;
+            $data["target"] = $detail->target;
+            $data["py"] = $detail->py;
+            $data["ey"] = $detail->ey;
+
+            $encoder = User::find($t->audits->first()->user_id);
+            $data["user"] = $encoder->name;
+            
+            array_push($trx_info, $data);
+        }
+        return Response::json($trx_info);
     }
 }
