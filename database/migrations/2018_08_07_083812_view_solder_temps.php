@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ViewSolderTemp extends Migration
+class ViewSolderTemps extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class ViewSolderTemp extends Migration
      */
     public function up()
     {
-        DB::statement('CREATE VIEW view_solderTemps AS SELECT DISTINCT(date) FROM solder_temps ORDER BY date DESC Limit 30');
+        DB::statement('CREATE VIEW view_soldertemps AS SELECT DISTINCT(date) FROM solder_temps ORDER BY date DESC Limit 30');
     }
 
     /**

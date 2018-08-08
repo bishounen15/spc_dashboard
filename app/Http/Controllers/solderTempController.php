@@ -13,90 +13,15 @@ class solderTempController extends Controller
      */
     public function index()
     {
-      //  $posts = DB::select('SELECT * FROM solder_temps');                                        
-        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-        //  return view('backEnd.solderTemp')->with('tempLogs',$posts);
-
-//new ave
-/*
-$pulltests1 = DB::table('btobpulltest')
-->select('pulltest1 AS pulltest');
-$pulltests2 = DB::table('btobpulltest')
-->select('pulltest2 AS pulltest');
-
-$pulltests3 = DB::table('btobpulltest')
-->select('pulltest3 AS pulltest')
-->unionAll($pulltests1)
-->unionAll($pulltests2)
-// ->STDDEV('pulltest AS pulltest')
-->get();
-*/
-/*$tempAftAve = DB::table('solder_temps')
-->select('tempAftAdjAve AS tempAve')
-->where('tempAftAdjAve','!=','0');
-
-$tempBefAve = DB::table('solder_temps')
-->select('tempBefAdjAve AS tempAve')
-->where('tempAftAdjAve','0')
-->unionAll($tempAftAve)
-*/
-
-//->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
-//->whereNotNull('date')
-//->get();
-
-$tempAveInd = DB::table(DB::select("SELECT AVG(tempAve) FROM (SELECT date,tempAftAdjAve AS tempAve FROM `solder_temps` WHERE tempAftAdjAve != 0 UNION SELECT date,tempBefAdjAve AS tempAve FROM `solder_temps` WHERE tempAftAdjAve = 0)as tblview WHERE date IN (SELECT * FROM view_soldertemps)"));
-
-//$tempAve = number_format($tempBefAve->avg('tempAve'),2);
-
-
-
-//stdInd
-
-$tempBefAveSTD = DB::table(DB::raw("((SELECT tempAftAdjAve as tempAve,date FROM `solder_temps` WHERE tempAftAdjAve != 0) UNION ALL (SELECT tempBefAdjAve as tempAve,date FROM `solder_temps` WHERE tempAftAdjAve = 0) ) as temp"))
-->select(DB::raw('STDDEV(tempAve) as  tempAve','date'))
-->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
-->get();
-$tempBefAveSTD = number_format($tempBefAveSTD[0]->tempAve,2);
-
-
-/*
-$stdfront = DB::table('solder_temps')
-->select(DB::raw('STDDEV(tempBefAdjAve) as tempBefAdjAve'))
-->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
-->get();
-$stdfront = number_format($stdfront[0]->tempBefAdjAve,2);
-
-*/
-$xbbfront = DB::table('solder_temps')
-->select(DB::raw('AVG(tempBefAdjAve) as tempBefAdjAve'))
-->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
-->groupBy('date')
-->get();
-$xbbfront = number_format($xbbfront->avg('tempBefAdjAve'),2);
-//$xbbfront = number_format($xbbfront,2);
-
-
-$stdavg = DB::table(DB::raw("(SELECT AVG(tempBefAdjAve) as tempBefAdjAve FROM solder_temps WHERE date BETWEEN '".date('Y-m-d',strtotime("-30 days"))."' AND '".date('Y-m-d')."' GROUP BY date) as temp"))
-->select(DB::raw('STDDEV(tempBefAdjAve) as tempBefAdjAve'))
-->get();
-$stdavg = number_format($stdavg->avg('tempBefAdjAve'),2);
-
-$median = DB::table('solder_temps')
-->select(DB::raw('AVG(tempBefAdjAve) as tempBefAdjAve'))
-->whereBetween('date', [date('Y-m-d',strtotime("-30 days")), date('Y-m-d')])
-->groupBy('date')
-->get();
-
-
-$median = number_format($median->median('tempBefAdjAve'),2);
-
-//$aveback1 = (DB::table('stringers')->where('side','=','Back')->whereBetween('Date',['$start','$end'])->avg('PeelTest'));
-//$posts = Post::orderBy('created_at','desc')->paginate(2);
-return view('backEnd.solderTempSum') 
-->with('aveInd',$tempAveInd);
-//->with('stdfront',$tempBefAveSTD)
-//->with('xbbfront',$xbbfront)
+      
+$tempAveInd = DB::table(DB::select("SELECT AVG(tempAve) AS AveInd FROM (SELECT date,tempAftAdjAve AS tempAve FROM `solder_temps` WHERE tempAftAdjAve != 0 UNION SELECT date,tempBefAdjAve AS tempAve FROM `solder_temps` WHERE tempAftAdjAve = 0)as tblview WHERE date IN (SELECT * FROM view_soldertemps)"));
+$AveInd = number_format($tempAveInd->from[0]->AveInd,2);
+      
+$StdAveInd = DB::table(DB::select("SELECT STDDEV(tempAve) AS StdInd FROM (SELECT date,tempAftAdjAve AS tempAve FROM `solder_temps` WHERE tempAftAdjAve != 0 UNION SELECT date,tempBefAdjAve AS tempAve FROM `solder_temps` WHERE tempAftAdjAve = 0)as tblview WHERE date IN (SELECT * FROM view_soldertemps)"));
+$StdInd = number_format($StdAveInd->from[0]->StdInd,2);
+return view('backEnd.solderTempSum')
+->with('aveInd',$AveInd)
+->with('stdInd',$StdInd);
 //->with('stdavg',$stdavg)
 //->with('median',$median);
 //->with('aveback',$aveback)

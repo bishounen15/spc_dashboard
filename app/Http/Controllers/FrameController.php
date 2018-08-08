@@ -38,13 +38,14 @@ $wtAveOfAve = number_format($weightAveOfAve->from[0]->aveOfAve,2);
 $weightStdOfStd = DB::table(DB::select("SELECT STDDEV_SAMP(stdWt) as stdOfStd FROM (SELECT AVG(weight) as stdWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date) as tbl_stdOfStd"));
 $wtStdOfStd = number_format($weightStdOfStd->from[0]->stdOfStd,2);
 
-$median = DB::table(DB::select("SELECT ROUND(AVG(weight),2) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date ORDER BY aveWt ASC"));
-$medianVal1 = number_format($median->from[14]->aveWt,2);  
-$medianVal2 = number_format($median->from[15]->aveWt,2);
+$median = DB::table(DB::select("SELECT ROUND(AVG(weight),4) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date ORDER BY aveWt ASC"));
+$medianVal1 = number_format($median->from[14]->aveWt,4);  
+$medianVal2 = number_format($median->from[15]->aveWt,4);
 $medianAve = number_format((($medianVal1 + $medianVal2)/2),2);
+//$medianAve = $median::count();
 // $wtAve = 0;
 $wtAveList = DB::table(DB::select("SELECT AVG(weight) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date"));
-//dd($wtAveList);
+//dd($medianAve);
 $arrAve = array();
 
 
