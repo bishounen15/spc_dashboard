@@ -19,12 +19,16 @@ class CreateTriggerOnTrxSubmit extends Migration
             BEGIN
                 UPDATE office_supplies A INNER JOIN transaction_details B ON A.id = B.item_id
                 SET A.current_stock = A.current_stock + (B.qty * 
-                    CASE WHEN old.status <> new.status AND new.status = 'Submitted' AND new.type IN ('Incoming','Outgoing') THEN
-                        CASE WHEN new.type = 'Incoming' THEN 1 ELSE -1 END
-                    ELSE
-                        0
-                    END
-                ) WHERE B.transaction_id = new.id AND old.status <> new.status AND new.status = 'Submitted' AND new.type IN ('Incoming','Outgoing');
+                    CASE WHEN old.status <> new.status THEN
+                        CASE WHEN new.status = 'Submitted' AND new.type = 'Incoming' THEN
+                            1
+                        WHEN new.status = 'Issued' AND new.type = 'Request' THEN
+                            -1
+                        ELSE
+                            0
+                        END
+                    ELSE 0 END
+                ) WHERE B.transaction_id = new.id AND old.status <> new.status AND ((new.status = 'Submitted' AND new.type = 'Incoming') OR (new.status = 'Issued' AND new.type = 'Request'));
             END
         ");
     }

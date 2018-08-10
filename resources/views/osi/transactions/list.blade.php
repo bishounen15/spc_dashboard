@@ -56,9 +56,11 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info btn-sm" style="width: 100px;">Edit</button>
-                <button type="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="updateStatus()">Submit</button>
-                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" style="width: 100px;">Close</button>
+                <button id="btnEdit" type="button" class="btn btn-info btn-sm" style="width: 100px;">Edit</button>
+                <button id="btnRelease" type="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="updateStatus()">For Release</button>
+                <button id="btnIssue" type="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="updateStatus()">Issue</button>
+                <button id="btnSubmit" type="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="updateStatus()">Submit</button>
+                <button id="btnClose" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" style="width: 100px;">Close</button>
             </div>
           </div>
         </div>
@@ -116,6 +118,43 @@
             },
             success: function (trx) {
                 // alert(trx);
+                
+                if (trx[0].type == "Incoming") {
+                    if (trx[0].status == "Open") {
+                        $("#btnSubmit").show();
+                        $("#btnEdit").show();
+                        $("#btnRelease").hide();
+                        $("#btnIssue").hide();
+                    } else {
+                        $("#btnSubmit").hide();
+                        $("#btnEdit").hide();
+                        $("#btnRelease").hide();
+                        $("#btnIssue").hide();
+                    }
+                } else if (trx[0].type == "Request") {
+                    if (trx[0].status == "Open") {
+                        $("#btnSubmit").show();
+                        $("#btnEdit").show();
+                        $("#btnRelease").hide();
+                        $("#btnIssue").hide();
+                    } else if (trx[0].status == "Submitted") { 
+                        $("#btnSubmit").hide();
+                        $("#btnEdit").show();
+                        $("#btnRelease").show();
+                        $("#btnIssue").hide();
+                    } else if (trx[0].status == "For Release") { 
+                        $("#btnSubmit").hide();
+                        $("#btnEdit").hide();
+                        $("#btnRelease").hide();
+                        $("#btnIssue").show();
+                    } else {
+                        $("#btnSubmit").hide();
+                        $("#btnEdit").hide();
+                        $("#btnRelease").hide();
+                        $("#btnIssue").hide();
+                    }
+                }
+
                 $("#trx-id").val(trx[0].id);
                 $("#cno").html(trx[0].control_no);
                 $("#date").html(trx[0].date);
