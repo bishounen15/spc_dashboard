@@ -102,25 +102,8 @@ class OSTransactionController extends Controller
         $trx = OSTransaction::find($id);
         $trx->status = $new_status;
         $trx->save();
-
-        if ($trx->type == "Submitted" && $trx->type == "Incoming") {
-            $operation = "+";
-        } else if ($trx->type == "Issued" && $trx->type == "Outgoing") {
-            $operation = "-";
-        } else {
-            $operation = "";
-        }
-
-        if ($operation != "") {
-            foreach ($trx->details as $detail) {
-                $item = OfficeSupplies::find($detail->item_id);
-                $opr = $item->current_stock . $operation . $detail->qty;
-                eval("\$item->current_stock = " . $opr . ";");
-                $item->save();
-            }
-        }
         
-        return "true";
+        // return "true";
     }
 
     public function GetTrxInfo(Request $request) {

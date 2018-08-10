@@ -69,6 +69,8 @@
 @include('layouts.modal')
 @push('jscript')
 <script>
+    var table;
+
     function updateStatus() {
         id = $("#trx-id").val();
         status = $("#stat").html();
@@ -84,14 +86,12 @@
             contentType: false,
             processData: false,
             data: formData,
-            dataType: 'boolean',
             headers: {
                 'X-CSRF-TOKEN': token.val()
             },
             success: function (result) {
-                if (result == true) {
-                    $("#TrxDetails").modal("toggle");
-                }
+                $("#TrxDetails").modal("toggle");
+                table.ajax.reload();
             },
             error: function(xhr, textStatus, errorThrown){
                 alert (errorThrown);
@@ -136,7 +136,7 @@
     });
 
     $(document).ready(function() {
-        $('#trx-list').DataTable({
+        table = $('#trx-list').DataTable({
             // "scrollX": true,
             "order": [],
             ajax: '{!! route('trx_data') !!}',

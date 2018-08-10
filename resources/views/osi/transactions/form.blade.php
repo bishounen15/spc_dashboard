@@ -246,7 +246,7 @@
                 },
                 success: function (details) {
                     
-                    $('input[name="stock[]"]').eq(i).val(details.stock_limit);
+                    $('input[name="stock[]"]').eq(i).val(details.current_stock);
                     $('input[name="unit-cost[]"]').eq(i).val((details.unit_cost).toFixed(2));
                     $('input[name="total-cost[]"]').eq(i).val( (parseInt($('input[name="qty[]"]').eq(i).val()) * details.unit_cost).toFixed(2) );
                     
