@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
+{{-- <div class="container"> --}}
     <h3>Office Supplies Inventory</h3>
     <a href="{{route('create_item')}}" role="button" class="btn btn-primary">Create Item</a>
     <br><br>
@@ -18,7 +18,7 @@
             
         </tbody>
     </table>
-</div>
+{{-- </div> --}}
 @endsection
 
 @include('layouts.modal')

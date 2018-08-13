@@ -50,7 +50,7 @@ class OSTransactionController extends Controller
                 'type' => 'required',
                 'date' => 'required|date',
                 'status' => 'required',
-                'remarks' => 'required',
+                // 'remarks' => 'required',
             ]);
             
             // dd($data);
@@ -120,9 +120,10 @@ class OSTransactionController extends Controller
         foreach($trx->details as $detail) {
             $data["category"] = $detail->item->category->description;
             $data["item"] = $detail->item->description;
-            $data["qty"] = $detail->qty;
-            $data["unit_cost"] = $detail->unit_cost;
-            $data["total_cost"] = $detail->total_cost;
+            $data["current_stock"] = $detail->item->current_stock;
+            $data["qty"] = number_format($detail->qty);
+            $data["unit_cost"] = number_format($detail->unit_cost,2);
+            $data["total_cost"] = number_format($detail->total_cost,2);
             array_push($trx_info, $data);
         }
 

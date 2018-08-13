@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
+{{-- <div class="container"> --}}
     <h3>U of M Master</h3>
     <a href="{{route('create_uofm')}}" role="button" class="btn btn-primary">Create U of M</a>
     <br><br>
@@ -15,7 +15,7 @@
             
         </tbody>
     </table>
-</div>
+{{-- </div> --}}
 @endsection
 
 @include('layouts.modal')

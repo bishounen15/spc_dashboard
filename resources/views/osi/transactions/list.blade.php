@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
+{{-- <div class="container"> --}}
     @csrf
     <h3>Office Supplies Inventory</h3>
     <a href="{{route('create_trx',['Incoming'])}}" role="button" class="btn btn-success" style="width: 200px;">Incoming Transaction</a>
@@ -46,9 +46,10 @@
                     <thead class="thead-dark" style="font-size: 0.7em;">
                         <th width="15%">Category</th>
                         <th width="40%">Item</th>
-                        <th width="15%">Qty</th>
-                        <th width="15%">Unit Cost</th>
-                        <th width="15%">Total Cost</th>
+                        <th width="15%" class="stock">Stock</th>
+                        <th width="10%"><span id="trx-label"></span> Qty</th>
+                        <th width="10%">Unit Cost</th>
+                        <th width="10%">Total Cost</th>
                     </thead>
                     <tbody id="item-details" class="tbody-light" style="font-size: 0.75em;">
                         
@@ -56,7 +57,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button id="btnEdit" type="button" class="btn btn-info btn-sm" style="width: 100px;">Edit</button>
+                <button id="btnEdit" type="button" class="btn btn-info btn-sm" style="width: 100px;" disabled>Edit</button>
                 <button id="btnRelease" type="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="updateStatus()">For Release</button>
                 <button id="btnIssue" type="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="updateStatus()">Issue</button>
                 <button id="btnSubmit" type="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="updateStatus()">Submit</button>
@@ -65,7 +66,7 @@
           </div>
         </div>
     </div>
-</div>
+{{-- </div> --}}
 @endsection
 
 @include('layouts.modal')
@@ -75,6 +76,7 @@
 
     function updateStatus() {
         id = $("#trx-id").val();
+        cno = $("#cno").html();
         status = $("#stat").html();
 
         var token = $('input[name=_token]');
@@ -92,8 +94,9 @@
                 'X-CSRF-TOKEN': token.val()
             },
             success: function (result) {
-                $("#TrxDetails").modal("toggle");
                 table.ajax.reload();
+                $("#sys-messages").html('<div class="alert alert-success" id="success-msg">Transaction ['+ cno +'] successfully updated.</div>');
+                $("#TrxDetails").modal("toggle");
             },
             error: function(xhr, textStatus, errorThrown){
                 alert (errorThrown);
@@ -117,8 +120,22 @@
                 'X-CSRF-TOKEN': token.val()
             },
             success: function (trx) {
-                // alert(trx);
+                $('table .stock').show();
+
+                $("#trx-id").val(trx[0].id);
+                $("#cno").html(trx[0].control_no);
+                $("#date").html(trx[0].date);
+                $("#type").html(trx[0].type);
+                $("#stat").html(trx[0].status);
+                myRows = "";
+
+                $.each(trx, function(i, v) {
+                    myRows += '<tr><td>'+v.category+'</td><td>'+v.item+'</td><td class="stock">'+v.current_stock+'</td><td>'+v.qty+'</td><td>'+v.unit_cost+'</td><td>'+ v.total_cost +'</td></tr>';
+                });
+
+                $("#item-details").html(myRows);
                 
+                $("#trx-label").html(trx[0].type);
                 if (trx[0].type == "Incoming") {
                     if (trx[0].status == "Open") {
                         $("#btnSubmit").show();
@@ -130,6 +147,8 @@
                         $("#btnEdit").hide();
                         $("#btnRelease").hide();
                         $("#btnIssue").hide();
+
+                        $('table .stock').hide();
                     }
                 } else if (trx[0].type == "Request") {
                     if (trx[0].status == "Open") {
@@ -152,21 +171,12 @@
                         $("#btnEdit").hide();
                         $("#btnRelease").hide();
                         $("#btnIssue").hide();
+
+                        $('table .stock').hide();
                     }
                 }
 
-                $("#trx-id").val(trx[0].id);
-                $("#cno").html(trx[0].control_no);
-                $("#date").html(trx[0].date);
-                $("#type").html(trx[0].type);
-                $("#stat").html(trx[0].status);
-                myRows = "";
-
-                $.each(trx, function(i, v) {
-                    myRows += '<tr><td>'+v.category+'</td><td>'+v.item+'</td><td>'+v.qty+'</td><td>'+v.unit_cost+'</td><td>'+v.total_cost+'</td></tr>';
-                });
-
-                $("#item-details").html(myRows);
+                $("#TrxDetails").modal("toggle");
             },
             error: function(xhr, textStatus, errorThrown){
                 alert (errorThrown);
@@ -213,7 +223,7 @@
                 { data: 'status' },
                 { data: 'total_cost' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
-                    return '<div class="row"><div class="col-sm-12"><a href="#" id="'+full.id+'" role="button" class="btn btn-sm btn-success view-details" style="width: 100%;" data-toggle="modal" data-target="#TrxDetails">View Details</a></div></div>';
+                    return '<div class="row"><div class="col-sm-12"><a href="#" id="'+full.id+'" role="button" class="btn btn-sm btn-success view-details" style="width: 100%;">View Details</a></div></div>';
                 }},
             ],
         });

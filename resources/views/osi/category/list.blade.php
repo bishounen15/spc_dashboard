@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
+{{-- <div class="container"> --}}
     <h3>Category Master</h3>
     <a href="{{route('create_category')}}" role="button" class="btn btn-primary">Create Category</a>
     <br><br>
@@ -15,7 +15,7 @@
             
         </tbody>
     </table>
-</div>
+{{-- </div> --}}
 @endsection
 
 @include('layouts.modal')

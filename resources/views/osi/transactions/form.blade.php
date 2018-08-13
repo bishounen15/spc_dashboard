@@ -112,7 +112,7 @@
                 </table>
                 
                 <div class="form-group">
-                    <label for="remarks">Remarks</label>
+                    <label for="remarks">Remarks (Optional)</label>
                     <textarea class="form-control form-control-sm" name="remarks" id="remarks" rows="3"></textarea>
                     <small class="form-text text-danger">{{ $errors->first('type') }}</small>
                 </div>
@@ -129,7 +129,7 @@
                     </div>
                 </div>
             </div>
-    </div> 
+    </div> </div>
 </form>
 @endsection
 

@@ -1,3 +1,4 @@
+<div id="sys-messages">
 @if(session('success'))
     <div class="alert alert-success" id="success-msg">
         {{session('success')}}
@@ -9,3 +10,4 @@
         {{session('error')}}
     </div>
 @endif
+</div>
