@@ -74,6 +74,17 @@
                             </li>
 
                             <li><a class="nav-link" href="{{route('list_yield')}}">{{ __('Yield Dashboard') }}</a></li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                System Setup
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {{-- <h6 class="dropdown-header">Setup</h6> --}}
+                                <a class="dropdown-item" href="#">User Master</a>
+                                <a class="dropdown-item" href="{{route('list_depts')}}">Department Master</a>
+                                </div>
+                            </li>
                         @endguest
                     </ul>
 
@@ -109,7 +120,7 @@
         </nav>
 
         <main class="py-4">
-            <div class="container" align= "center">
+            <div align= "center">
             @include('inc.messages')
             </div>
             @yield('content')

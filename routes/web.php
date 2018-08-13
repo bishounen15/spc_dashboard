@@ -94,6 +94,14 @@ Route::get('/os/transaction/edit/{id}','OSTransactionController@show')->name('sh
 Route::post('/os/transaction/edit/{id}','OSTransactionController@modify')->name('modify_trx');
 Route::post('/os/transaction/remove/{id}','OSTransactionController@destroy')->name('remove_trx');
 
+Route::get('/dept/list/data', 'DepartmentController@load')->name('dept_data');
+Route::get('/dept/list','DepartmentController@list')->name('list_depts');
+Route::get('/dept/create','DepartmentController@create')->name('create_dept');
+Route::post('/dept/create','DepartmentController@create')->name('store_dept');
+Route::get('/dept/{id}','DepartmentController@show')->name('show_dept');
+Route::post('/dept/{id}','DepartmentController@modify')->name('modify_dept');
+Route::post('/dept/remove/{id}','DepartmentController@destroy')->name('remove_dept');
+
 });
 
 Auth::routes();
