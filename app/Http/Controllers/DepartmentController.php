@@ -4,20 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Department;
+use App\CostCenter;
 
 use DataTables;
 
 class DepartmentController extends Controller
 {
     //
+
+
     public function list() {
         return view('system.departments.list');
     }
 
     public function load()
     {
-        $depts = Department::selectRaw("id, description, abbrv, cost_center, head, head_email")
-        ->orderByRaw("cost_center ASC");
+        $depts = Department::selectRaw("departments.id, departments.description, departments.abbrv, CONCAT(cost_centers.code,' - ',cost_centers.description) as cost_center, departments.head, departments.head_email")
+        ->join("cost_centers","departments.cost_center_id","=","cost_centers.id")
+        ->orderByRaw("departments.description ASC");
 
         return Datatables::of($depts)->make(true);
     }
@@ -27,15 +31,17 @@ class DepartmentController extends Controller
 
         $data['description'] = $request->input('description');
         $data['abbrv'] = $request->input('abbrv');
-        $data['cost_center'] = $request->input('cost_center');
+        $data['cost_center_id'] = $request->input('cost_center_id');
         $data['head'] = $request->input('head');
         $data['head_email'] = $request->input('head_email');
 
         if ($request->isMethod('post')) {
+            // dd($request);
+
             $this->validate($request, [
                 'description' => 'required|max:50|unique:departments',
                 'abbrv' => 'required|max:15|unique:departments',
-                'cost_center' => 'required|max:15|unique:departments',
+                'cost_center_id' => 'required',
                 'head' => 'string|nullable|max:50',
                 'head_email' => 'email|nullable|max:50|unique:departments',
             ]);
@@ -47,6 +53,7 @@ class DepartmentController extends Controller
         }
 
         $data['modify'] = 0;
+        $data['cost_centers'] = CostCenter::orderBy("code","ASC")->get();
         return view('system.departments.form', $data);
     }
 
@@ -60,10 +67,11 @@ class DepartmentController extends Controller
 
         $data['description'] = $dept->description;
         $data['abbrv'] = $dept->abbrv;
-        $data['cost_center'] = $dept->cost_center;
+        $data['cost_center_id'] = $dept->cost_center_id;
         $data['head'] = $dept->head;
         $data['head_email'] = $dept->head_email;
 
+        $data['cost_centers'] = CostCenter::orderBy("code","ASC")->get();
         return view('system.departments.form', $data);
     }
 
@@ -73,7 +81,7 @@ class DepartmentController extends Controller
 
         $data['description'] = $request->input('description');
         $data['abbrv'] = $request->input('abbrv');
-        $data['cost_center'] = $request->input('cost_center');
+        $data['cost_center_id'] = $request->input('cost_center_id');
         $data['head'] = $request->input('head');
         $data['head_email'] = $request->input('head_email');
         
@@ -83,22 +91,23 @@ class DepartmentController extends Controller
             $this->validate($request, [
                 'description' => 'required|max:50|unique:departments,description,'.$dept->id,
                 'abbrv' => 'required|max:15|unique:departments,abbrv,'.$dept->id,
-                'cost_center' => 'required|max:15|unique:departments,cost_center,'.$dept->id,
+                'cost_center_id' => 'required',
                 'head' => 'string|nullable|max:50',
                 'head_email' => 'email|nullable|max:50|unique:departments,head_email,'.$dept->id,
             ]);
 
             $dept->description = $data['description'];
             $dept->abbrv = $data['abbrv'];
-            $dept->cost_center = $data['cost_center'];
+            $dept->cost_center_id = $data['cost_center_id'];
             $dept->head = $data['head'];
             $dept->head_email = $data['head_email'];
             
             $dept->save();
-            return redirect('dept/list')->with("success","Category [".$data["description"]."] successfully updated.");
+            return redirect('cost_center/list')->with("success","Category [".$data["description"]."] successfully updated.");
         }
 
         $data['modify'] = 1;
-        return view('osi.category.form', $data);
+        $data['cost_centers'] = CostCenter::orderBy("code","ASC")->get();
+        return view('system.departments.form', $data);
     }
 }

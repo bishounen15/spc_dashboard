@@ -9,7 +9,7 @@
             <div class="card-body">
                 <div class="form-group">
                     <label for="description">Department</label>
-                    <input type="text" class="form-control form-control-sm" name="description" id="description" placeholder="Department" value="{{ old('description') ? old('description') : $description }}">
+                    <input type="text" class="form-control form-control-sm" name="description" id="description" placeholder="Department" value="{{ old('description') ? old('description') : $description }}" autofocus>
                     <small class="form-text text-danger">{{ $errors->first('description') }}</small>
                 </div>
                 <div class="form-group">
@@ -19,8 +19,17 @@
                 </div>
                 <div class="form-group">
                     <label for="cost_center">Cost Center</label>
-                    <input type="text" class="form-control form-control-sm" name="cost_center" id="cost_center" placeholder="Cost Center" value="{{ old('cost_center') ? old('cost_center') : $cost_center }}">
-                    <small class="form-text text-danger">{{ $errors->first('cost_center') }}</small>
+                    <select class="form-control form-control-sm" name="cost_center_id" id="cost_center_id">
+                        <option readonly selected value> -- select an option -- </option>
+                        @foreach($cost_centers as $ccenter)
+                        <option value="{{$ccenter['id']}}"
+                        @if ($ccenter->id == old('cost_center_id', $cost_center_id))
+                            selected="selected"
+                        @endif
+                        >{{$ccenter['code']}} - {{$ccenter['description']}}</option>
+                        @endforeach
+                    </select>
+                    <small class="form-text text-danger">{{ $errors->first('cost_center_id') }}</small>
                 </div>
                 <div class="form-group">
                     <label for="head">Department Head</label>

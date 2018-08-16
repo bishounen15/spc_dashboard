@@ -17,9 +17,9 @@ class AddlFieldsForUsers extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('dept_id')->nullable()->after('name');
             $table->boolean('osi_access')->nullable()->after('password');
-            $table->boolean('osi_role')->nullable()->after('osi_access');
+            $table->string('osi_role')->nullable()->after('osi_access');
             $table->boolean('yield_access')->nullable()->after('osi_role');
-            $table->boolean('yield_role')->nullable()->after('yield_access');
+            $table->string('yield_role')->nullable()->after('yield_access');
         });
     }
 

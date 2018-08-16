@@ -26,10 +26,12 @@ class OSTransactionController extends Controller
 
     public function load()
     {
-        $trx = OSTransaction::selectRaw("transactions.id, transactions.control_no, transactions.type, '' as department, transactions.date, transactions.status, FORMAT(SUM(transaction_details.total_cost),2) as total_cost")
+        $trx = OSTransaction::selectRaw("transactions.id, transactions.control_no, transactions.type, sp_admin.departments.description as department, transactions.date, transactions.status, FORMAT(SUM(transaction_details.total_cost),2) as total_cost")
+        ->join("sp_admin.users","transactions.user_id","=","sp_admin.users.id")
+        ->join("sp_admin.departments","sp_admin.users.dept_id","=","sp_admin.departments.id")
         ->join("transaction_details","transactions.id","=","transaction_details.transaction_id")
         ->orderByRaw("control_no ASC")
-        ->groupBy("transactions.id", "transactions.control_no", "transactions.type", "transactions.date", "transactions.status");
+        ->groupBy("transactions.id", "transactions.control_no", "transactions.type", "sp_admin.departments.description", "transactions.date", "transactions.status");
 
         return Datatables::of($trx)->make(true);
     }

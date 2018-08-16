@@ -81,8 +81,9 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 {{-- <h6 class="dropdown-header">Setup</h6> --}}
-                                <a class="dropdown-item" href="{{route('list_users')}}">User Master</a>
-                                <a class="dropdown-item" href="{{route('list_depts')}}">Department Master</a>
+                                <a class="dropdown-item" href="{{route('list_users')}}">Users</a>
+                                <a class="dropdown-item" href="{{route('list_cost_centers')}}">Cost Centers</a>
+                                <a class="dropdown-item" href="{{route('list_depts')}}">Departments</a>
                                 </div>
                             </li>
                         @endguest

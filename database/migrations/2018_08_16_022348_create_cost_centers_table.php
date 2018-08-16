@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDepartmentsTable extends Migration
+class CreateCostCentersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateDepartmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('cost_centers', function (Blueprint $table) {
             $table->increments('id');
+
+            $table->string('code');
             $table->string('description');
-            $table->string('abbrv');
-            $table->integer('cost_center_id');
-            $table->string('head');
-            $table->string('head_email')->nullable();
+            $table->string('owner');
+            $table->string('designation');
+            
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateDepartmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('cost_centers');
     }
 }

@@ -5,23 +5,21 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Department extends Model implements Auditable
+class CostCenter extends Model implements Auditable 
 {
     //
     protected $fillable = [
+        'code',
         'description',
-        'abbrv',
-        'cost_center_id',
-        'head',
-        'head_email',
+        'owner',
+        'designation',
     ];
 
     use \OwenIt\Auditing\Auditable;
     protected $auditInclude = [
+        'code',
         'description',
-        'abbrv',
-        'cost_center_id',
-        'head',
-        'head_email',
+        'owner',
+        'designation',
     ];
 }

@@ -94,6 +94,14 @@ Route::get('/os/transaction/edit/{id}','OSTransactionController@show')->name('sh
 Route::post('/os/transaction/edit/{id}','OSTransactionController@modify')->name('modify_trx');
 Route::post('/os/transaction/remove/{id}','OSTransactionController@destroy')->name('remove_trx');
 
+Route::get('/cost_center/list/data', 'CostCenterController@load')->name('cost_center_data');
+Route::get('/cost_center/list','CostCenterController@list')->name('list_cost_centers');
+Route::get('/cost_center/create','CostCenterController@create')->name('create_cost_center');
+Route::post('/cost_center/create','CostCenterController@create')->name('store_cost_center');
+Route::get('/cost_center/{id}','CostCenterController@show')->name('show_cost_center');
+Route::post('/cost_center/{id}','CostCenterController@modify')->name('modify_cost_center');
+Route::post('/cost_center/remove/{id}','CostCenterController@destroy')->name('remove_cost_center');
+
 Route::get('/dept/list/data', 'DepartmentController@load')->name('dept_data');
 Route::get('/dept/list','DepartmentController@list')->name('list_depts');
 Route::get('/dept/create','DepartmentController@create')->name('create_dept');
