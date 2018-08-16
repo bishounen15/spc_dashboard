@@ -48,6 +48,21 @@ return [
             'engine' => null,
         ],
 
+        'osi' => [
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'port' => '3306',
+            'database' => 'sp_osi',
+            'username' => 'laravel_user',
+            'password' => 'password@1',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'spc' => [
             'driver' => 'mysql',
             'host' => 'localhost',

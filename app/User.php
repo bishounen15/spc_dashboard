@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_id', 'name', 'email', 'password',
+        'user_id', 'name', 'dept_id', 'email', 'password', 'osi_access', 'osi_role', 'yield_access', 'yield_role',
     ];
 
     /**
@@ -26,4 +26,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function department() {
+        return $this->hasOne('App\Department', 'id');
+    }
 }

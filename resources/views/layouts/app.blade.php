@@ -44,7 +44,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-            <div class="container">
+            {{-- <div class="container"> --}}
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -57,9 +57,54 @@
                     <ul class="navbar-nav mr-auto">
                         @guest
                         @else
-                            <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li>
-                            {{-- <li><a class="nav-link" href="{{ route('spc_entry') }}">{{ __('SPC Dashboard') }}</a></li> --}}
-                            <li><a class="nav-link" href="{{route('list_yield')}}">{{ __('Yield Dashboard') }}</a></li>
+                            {{-- <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li> --}}
+                            
+                            @if(Auth::user()->osi_access == 1 || Auth::user()->sysadmin == 1)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Office Supplies
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                @if(Auth::user()->osi_role == "CUST" || Auth::user()->sysadmin == 1)
+                                <h6 class="dropdown-header">Setup</h6>
+                                <a class="dropdown-item" href="{{route('list_categories')}}">Category Master</a>
+                                <a class="dropdown-item" href="{{route('list_uofm')}}">U of M Master</a>
+                                <a class="dropdown-item" href="{{route('list_items')}}">Item Master</a>
+                                @endif
+                                <h6 class="dropdown-header">Transactions</h6>
+                                <a class="dropdown-item" href="{{route('list_trx')}}">Requisition and Inventory</a>
+                                </div>
+                            </li>
+                            @endif
+
+                            @if(Auth::user()->yield_access == 1 || Auth::user()->sysadmin == 1)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Yield Dashboard
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <h6 class="dropdown-header">Setup</h6>
+                                <a class="dropdown-item" href="#">Global Parameters</a>
+                                <a class="dropdown-item" href="#">Email Distribution</a>
+                                <h6 class="dropdown-header">Transactions</h6>
+                                <a class="dropdown-item" href="{{route('list_yield')}}">Data Entry</a>
+                                </div>
+                            </li>
+                            @endif
+
+                            @if(Auth::user()->sysadmin == 1)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                System Setup
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {{-- <h6 class="dropdown-header">Setup</h6> --}}
+                                <a class="dropdown-item" href="{{route('list_users')}}">Users</a>
+                                <a class="dropdown-item" href="{{route('list_cost_centers')}}">Cost Centers</a>
+                                <a class="dropdown-item" href="{{route('list_depts')}}">Departments</a>
+                                </div>
+                            </li>
+                            @endif
                         @endguest
                     </ul>
 
@@ -91,11 +136,11 @@
                         @endguest
                     </ul>
                 </div>
-            </div>
+            {{-- </div> --}}
         </nav>
 
         <main class="py-4">
-            <div class="container" align= "center">
+            <div align= "center">
             @include('inc.messages')
             </div>
             @yield('content')
