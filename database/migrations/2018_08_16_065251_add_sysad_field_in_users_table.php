@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUserIdFieldOnTrx extends Migration
+class AddSysadFieldInUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class AddUserIdFieldOnTrx extends Migration
     public function up()
     {
         //
-        Schema::connection('osi')->table('transactions', function (Blueprint $table) {
-            $table->integer('user_id')->nullable()->after('type')->default(1);
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('sysadmin')->after('email');
         });
     }
 
@@ -27,8 +27,8 @@ class AddUserIdFieldOnTrx extends Migration
     public function down()
     {
         //
-        Schema::connection('osi')->table('transactions', function (Blueprint $table) {
-            $table->dropColumn('user_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('sysadmin');
         });
     }
 }

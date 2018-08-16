@@ -36,6 +36,14 @@
                     <input type="email" class="form-control form-control-sm" name="email" id="email" placeholder="Email Address" value="{{ old('email') ? old('email') : $email }}">
                     <small class="form-text text-danger">{{ $errors->first('email') }}</small>
                 </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="sysadmin" id="sysadmin" {{old('sysadmin', $sysadmin) == 1 ? "checked" : ""}}>
+                    <label class="form-check-label" for="defaultCheck1">
+                        Check this is the user is a System Administrator
+                    </label>
+                </div>
+                <br>
                 <table class="table">
                     <tr>
                         <th colspan="4" class="table-dark text-center">User Access</th>

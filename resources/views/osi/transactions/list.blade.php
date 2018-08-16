@@ -3,7 +3,9 @@
 {{-- <div class="container"> --}}
     @csrf
     <h3>Office Supplies Inventory</h3>
+    @if(Auth::user()->osi_role == "CUST" || Auth::user()->sysadmin == 1)
     <a href="{{route('create_trx',['Incoming'])}}" role="button" class="btn btn-success" style="width: 200px;">Incoming Transaction</a>
+    @endif
     <a href="{{route('create_trx',['Request'])}}" role="button" class="btn btn-info" style="width: 200px;">Request Office Supplies</a>
     <br><br>
     <table class="table table-condensed table-striped table-sm" id="trx-list" style="width: 100%;">
@@ -11,6 +13,7 @@
             {{-- <th>#</th> --}}
             <th>Control No.</th>
             <th>Type</th>
+            <th>User</th>
             <th>Department</th>
             <th>Date</th>
             <th>Status</th>
@@ -152,20 +155,38 @@
                     }
                 } else if (trx[0].type == "Request") {
                     if (trx[0].status == "Open") {
-                        $("#btnSubmit").show();
-                        $("#btnEdit").show();
+                        if (trx[0].user_id == {!! Auth::user()->id !!}) {
+                            $("#btnSubmit").show();
+                            $("#btnEdit").show();
+                        } else {
+                            $("#btnSubmit").hide();
+                            $("#btnEdit").hide();
+                        }
+                        
                         $("#btnRelease").hide();
                         $("#btnIssue").hide();
                     } else if (trx[0].status == "Submitted") { 
                         $("#btnSubmit").hide();
-                        $("#btnEdit").show();
-                        $("#btnRelease").show();
+                        
+                        if ("CUST" == "{!! Auth::user()->osi_role !!}" || 1 == {!! Auth::user()->sysadmin !!}) {
+                            $("#btnEdit").show();
+                            $("#btnRelease").show();
+                        } else {
+                            $("#btnEdit").hide();
+                            $("#btnRelease").hide();
+                        }
+
                         $("#btnIssue").hide();
                     } else if (trx[0].status == "For Release") { 
                         $("#btnSubmit").hide();
                         $("#btnEdit").hide();
                         $("#btnRelease").hide();
-                        $("#btnIssue").show();
+                        
+                        if ("CUST" == "{!! Auth::user()->osi_role !!}" || 1 == {!! Auth::user()->sysadmin !!}) {
+                            $("#btnIssue").show();
+                        } else {
+                            $("#btnIssue").hide();
+                        }
                     } else {
                         $("#btnSubmit").hide();
                         $("#btnEdit").hide();
@@ -218,6 +239,7 @@
                 // { data: 'id' },
                 { data: 'control_no' },
                 { data: 'type' },
+                { data: 'name' },
                 { data: 'department' },
                 { data: 'date' },
                 { data: 'status' },

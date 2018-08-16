@@ -8,6 +8,7 @@ use App\OSTransactionDetail;
 use App\OSCategory;
 use App\OfficeSupplies;
 use App\OSTrxStatus;
+use Illuminate\Support\Facades\Auth;
 
 Use DataTables;
 Use Response;
@@ -26,12 +27,14 @@ class OSTransactionController extends Controller
 
     public function load()
     {
-        $trx = OSTransaction::selectRaw("transactions.id, transactions.control_no, transactions.type, sp_admin.departments.description as department, transactions.date, transactions.status, FORMAT(SUM(transaction_details.total_cost),2) as total_cost")
-        ->join("sp_admin.users","transactions.user_id","=","sp_admin.users.id")
-        ->join("sp_admin.departments","sp_admin.users.dept_id","=","sp_admin.departments.id")
-        ->join("transaction_details","transactions.id","=","transaction_details.transaction_id")
-        ->orderByRaw("control_no ASC")
-        ->groupBy("transactions.id", "transactions.control_no", "transactions.type", "sp_admin.departments.description", "transactions.date", "transactions.status");
+        $cond = Auth::user()->osi_role == "CUST" || Auth::user()->sysadmin == 1 ? "transactions.type IN ('Incoming','Request')" : "transactions.type = 'Request' AND transactions.user_id = " . Auth::user()->id;
+        $trx = OSTransaction::selectRaw("transactions.id, transactions.control_no, transactions.type, sp_admin.users.name, sp_admin.departments.description as department, transactions.date, transactions.status, FORMAT(SUM(transaction_details.total_cost),2) as total_cost")
+                    ->join("sp_admin.users","transactions.user_id","=","sp_admin.users.id")
+                    ->join("sp_admin.departments","sp_admin.users.dept_id","=","sp_admin.departments.id")
+                    ->join("transaction_details","transactions.id","=","transaction_details.transaction_id")
+                    ->whereRaw($cond)
+                    ->orderByRaw("control_no ASC")
+                    ->groupBy("transactions.id", "transactions.control_no", "transactions.type", "sp_admin.users.name", "sp_admin.departments.description", "transactions.date", "transactions.status");
 
         return Datatables::of($trx)->make(true);
     }
@@ -42,6 +45,7 @@ class OSTransactionController extends Controller
         $data['trx'] = "New " . $tid;
         $data['control_no'] = OSTransaction::GenerateCode($tid);
         $data['type'] = $request->input('type') ? $request->input('type') : $tid;
+        $data['user_id'] = Auth::user()->id;
         $data['date'] = date('Y-m-d');
         $data['status'] = $request->input('status') ? $request->input('status') : "Open" ;
         $data['remarks'] = $request->input('remarks');
@@ -115,6 +119,7 @@ class OSTransactionController extends Controller
 
         $data["id"] = $trx->id;
         $data["control_no"] = $trx->control_no;
+        $data["user_id"] = $trx->user_id;
         $data["date"] = $trx->date;
         $data["type"] = $trx->type;
         $data["status"] = $trx->status;

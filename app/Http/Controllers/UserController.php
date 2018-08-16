@@ -25,7 +25,7 @@ class UserController extends Controller
 
     public function load()
     {
-        $users = User::selectRaw("users.id, users.user_id, users.name, departments.description, users.email, CASE users.osi_access WHEN 1 THEN users.osi_role ELSE 'no access' END AS osi_access, CASE users.yield_access WHEN 1 THEN users.yield_role ELSE 'no access' END AS yield_access")
+        $users = User::selectRaw("users.id, CONCAT(users.user_id,CASE sysadmin WHEN 1 THEN '***' ELSE '' END) AS user_id, users.name, departments.description, users.email, CASE users.osi_access WHEN 1 THEN users.osi_role ELSE 'no access' END AS osi_access, CASE users.yield_access WHEN 1 THEN users.yield_role ELSE 'no access' END AS yield_access")
                         ->leftJoin("departments","users.dept_id","=","departments.id")
                         ->orderByRaw("users.user_id ASC");
 
@@ -44,6 +44,7 @@ class UserController extends Controller
         $data['name'] = $user->name;
         $data['dept_id'] = $user->dept_id;
         $data['email'] = $user->email;
+        $data['sysadmin'] = $user->sysadmin;
         $data['osi_access'] = $user->osi_access;
         $data['osi_role'] = $user->osi_role;
         $data['yield_access'] = $user->yield_access;
@@ -65,6 +66,7 @@ class UserController extends Controller
         $data['name'] = $request->input('name');
         $data['dept_id'] = $request->input('dept_id');
         $data['email'] = $request->input('email');
+        $data['sysadmin'] = $request->has('sysadmin');
         $data['osi_access'] = $request->has('osi_access');
         $data['osi_role'] = $request->input('osi_role');
         $data['yield_access'] = $request->has('yield_access');
@@ -84,6 +86,7 @@ class UserController extends Controller
             $user->name = $data['name'];
             $user->dept_id = $data['dept_id'];
             $user->email = $data['email'];
+            $user->sysadmin = $data['sysadmin'];
             $user->osi_access = $data['osi_access'];
             $user->osi_role = $data['osi_role'];
             $user->yield_access = $data['yield_access'];

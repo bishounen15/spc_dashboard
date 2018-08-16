@@ -59,22 +59,40 @@
                         @else
                             {{-- <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li> --}}
                             
+                            @if(Auth::user()->osi_access == 1 || Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Office Supplies
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                @if(Auth::user()->osi_role == "CUST" || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Setup</h6>
                                 <a class="dropdown-item" href="{{route('list_categories')}}">Category Master</a>
                                 <a class="dropdown-item" href="{{route('list_uofm')}}">U of M Master</a>
                                 <a class="dropdown-item" href="{{route('list_items')}}">Item Master</a>
+                                @endif
                                 <h6 class="dropdown-header">Transactions</h6>
                                 <a class="dropdown-item" href="{{route('list_trx')}}">Requisition and Inventory</a>
                                 </div>
                             </li>
+                            @endif
 
-                            <li><a class="nav-link" href="{{route('list_yield')}}">{{ __('Yield Dashboard') }}</a></li>
+                            @if(Auth::user()->yield_access == 1 || Auth::user()->sysadmin == 1)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Yield Dashboard
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <h6 class="dropdown-header">Setup</h6>
+                                <a class="dropdown-item" href="#">Global Parameters</a>
+                                <a class="dropdown-item" href="#">Email Distribution</a>
+                                <h6 class="dropdown-header">Transactions</h6>
+                                <a class="dropdown-item" href="{{route('list_yield')}}">Data Entry</a>
+                                </div>
+                            </li>
+                            @endif
 
+                            @if(Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 System Setup
@@ -86,6 +104,7 @@
                                 <a class="dropdown-item" href="{{route('list_depts')}}">Departments</a>
                                 </div>
                             </li>
+                            @endif
                         @endguest
                     </ul>
 
