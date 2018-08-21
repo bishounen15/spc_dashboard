@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<form method="POST" action="{{route('store_yield')}}" id="YieldForm"> 
+<form method="POST" action="{{$id == null ? route('store_yield') : route('modify_yield',[$id])}}" id="YieldForm"> 
     @csrf 
     <div class="container">
         <h3>Yield Data Entry Form ({{$from}} - {{$to}})</h3>
@@ -21,7 +21,7 @@
                                             <option readonly selected value> -- select an option -- </option>
                                             @foreach($teams as $pteam)
                                             <option value="{{$pteam['code']}}" 
-                                            @if ($pteam['description'] == old('team', $team))
+                                            @if ($pteam['code'] == old('team', $team))
                                                 selected="selected"
                                             @endif    
                                             >{{$pteam['description']}}</option>
@@ -63,8 +63,8 @@
                                     <div class="col-sm-6">
                                         <select class="form-control form-control-sm" name="product_size" id="product_size" onchange="inputCELL()">
                                             <option readonly selected value> -- select an option -- </option>
-                                            <option value="72">72-Cell</option>
-                                            <option value="60">60-Cell</option>
+                                            <option value="72" {{$product_size == 72 ? "selected" : ""}}>72-Cell</option>
+                                            <option value="60" {{$product_size == 60 ? "selected" : ""}}>60-Cell</option>
                                         </select>
                                         <small class="form-text text-danger" id="err_product_size"></small>
                                     </div>
@@ -74,7 +74,7 @@
                                 <div class="form-row">
                                     <div class="col-sm-6 text-right">Input (CELL)</div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-sm" name="input_cell" id="input_cell" readonly>
+                                        <input type="text" class="form-control form-control-sm" name="input_cell" id="input_cell" value="{{$input_cell ? $input_cell : ""}}" readonly>
                                     </div>
                                 </div> 
                             </div>
@@ -99,30 +99,30 @@
                     <div class="form-row">
                         <div class="form-group col-sm-4">
                             <label for="">In-Process (CELL)</label>
-                            <input type="number" step="1" class="form-control form-control-sm" name="inprocess_cell" id="inprocess_cell" value="0">
+                            <input type="number" step="1" class="form-control form-control-sm" name="inprocess_cell" id="inprocess_cell" value="{{$inprocess_cell}}">
                         </div>
                         <div class="form-group col-sm-4">
                             <label for="">CCD (CELL)</label>
-                            <input type="number" step="1" class="form-control form-control-sm" name="ccd_cell" id="ccd_cell" value="0">
+                            <input type="number" step="1" class="form-control form-control-sm" name="ccd_cell" id="ccd_cell" value="{{$ccd_cell}}">
                         </div>
                         <div class="form-group col-sm-4">
                             <label for="">Visual Defect (CELL)</label>
-                            <input type="number" step="1" class="form-control form-control-sm" name="visualdefect_cell" id="visualdefect_cell" value="0">
+                            <input type="number" step="1" class="form-control form-control-sm" name="visualdefect_cell" id="visualdefect_cell" value="{{$visualdefect_cell}}">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col-sm-4">
                             <label for="">BE Defect (CELL)</label>
-                            <input type="text" class="form-control form-control-sm" name="cell_defect" id="cell_defect" value="0" readonly>
+                            <input type="text" class="form-control form-control-sm" name="cell_defect" id="cell_defect" value="{{$cell_defect}}" readonly>
                         </div>
                         <div class="form-group col-sm-4">
                             <label for="">BE Class B (CELL)</label>
-                            <input type="text" class="form-control form-control-sm" name="cell_class_b" id="cell_class_b" value="0" readonly>
+                            <input type="text" class="form-control form-control-sm" name="cell_class_b" id="cell_class_b" value="{{$cell_class_b}}" readonly>
                         </div>
                         <div class="form-group col-sm-4">
                             <label for="">BE Class C (CELL)</label>
-                            <input type="text" class="form-control form-control-sm" name="cell_class_c" id="cell_class_c" value="0" readonly>
+                            <input type="text" class="form-control form-control-sm" name="cell_class_c" id="cell_class_c" value="{{$cell_class_c}}" readonly>
                         </div>
                     </div>
                 </div>
@@ -135,11 +135,11 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">String Produced (STR)</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="str_produced" id="str_produced" value="0">
+                                <input type="number" step="1" class="form-control form-control-sm" name="str_produced" id="str_produced" value="{{$str_produced}}">
                             </div>
                             <div class="form-group">
                                 <label for="">String Defect (STR)</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="str_defect" id="str_defect" value="0">
+                                <input type="number" step="1" class="form-control form-control-sm" name="str_defect" id="str_defect" value="{{$str_defect}}">
                                 <small class="form-text text-danger" id="err_str_defect"></small>
                             </div>
                         </div>
@@ -152,11 +152,11 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">EL1 Inspected (MTX)</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="el1_inspected" id="el1_inspected" value="0">
+                                <input type="number" step="1" class="form-control form-control-sm" name="el1_inspected" id="el1_inspected" value="{{$el1_inspected}}">
                             </div>
                             <div class="form-group">
                                 <label for="">EL1 Defect (MTX)</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="el1_defect" id="el1_defect" value="0">
+                                <input type="number" step="1" class="form-control form-control-sm" name="el1_defect" id="el1_defect" value="{{$el1_defect}}">
                                 <small class="form-text text-danger" id="err_el1_defect"></small>
                             </div>
                         </div>
@@ -206,7 +206,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="">EL2 Defect (MOD)</label>
-                                <input type="text" class="form-control form-control-sm" name="el2_defect" id="el2_defect" value="0" readonly>
+                                <input type="text" class="form-control form-control-sm" name="el2_defect" id="el2_defect" value="{{$el2_defect}}" readonly>
                             </div>
                         </div>
 
@@ -221,7 +221,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="">EL2 Low Power (MOD)</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="el2_low_power" id="el2_low_power" value="0" onchange="EL2Defect()">
+                                <input type="number" step="1" class="form-control form-control-sm" name="el2_low_power" id="el2_low_power" value="{{$el2_low_power}}" onchange="EL2Defect()">
                             </div>
                         </div>
                     </div>
@@ -237,37 +237,37 @@
                         <div class="form-group col-sm-6">
                             <div class="form-group">
                                 <label for="">MAN</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="man" id="man" value="0" onchange="total4M()">
+                                <input type="number" step="1" class="form-control form-control-sm" name="man" id="man" value="{{$man}}" onchange="total4M()">
                             </div>
                             <div class="form-group">
                                 <label for="">MAC</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="mac" id="mac" value="0" onchange="total4M()">
+                                <input type="number" step="1" class="form-control form-control-sm" name="mac" id="mac" value="{{$mac}}" onchange="total4M()">
                             </div>
                             <div class="form-group">
                                 <label for="">MAT</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="mat" id="mat" value="0" onchange="total4M()">
+                                <input type="number" step="1" class="form-control form-control-sm" name="mat" id="mat" value="{{$mat}}" onchange="total4M()">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
                             <div class="form-group">
                                 <label for="">MET</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="met" id="met" value="0" onchange="total4M()">
+                                <input type="number" step="1" class="form-control form-control-sm" name="met" id="met" value="{{$met}}" onchange="total4M()">
                             </div>
                             <div class="form-group">
                                 <label for="">ENV</label>
-                                <input type="number" step="1" class="form-control form-control-sm" name="env" id="env" value="0" onchange="total4M()">
+                                <input type="number" step="1" class="form-control form-control-sm" name="env" id="env" value="{{$env}}" onchange="total4M()">
                             </div>
                             
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <label for="">Total 4M</label>
-                                    <input type="text" class="form-control form-control-sm" readonly name="total_4m" id="total_4m" value="0">
+                                    <input type="text" class="form-control form-control-sm" readonly name="total_4m" id="total_4m" value="{{$total_4m}}">
                                     <small class="form-text text-danger" id="err_total_4m"></small>
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label for="">Total Defect</label>
-                                    <input type="text" class="form-control form-control-sm" readonly name="total_defect" id="total_defect" value="0">
+                                    <input type="text" class="form-control form-control-sm" readonly name="total_defect" id="total_defect" value="{{$total_defect}}">
                                 </div>
                             </div>
                         </div>

@@ -83,9 +83,12 @@
                                 Yield Dashboard
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {{-- Auth::user()->yield_role == "SUPV" ||  --}}
+                                @if(Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Setup</h6>
                                 <a class="dropdown-item" href="#">Global Parameters</a>
                                 <a class="dropdown-item" href="#">Email Distribution</a>
+                                @endif
                                 <h6 class="dropdown-header">Transactions</h6>
                                 <a class="dropdown-item" href="{{route('list_yield')}}">Data Entry</a>
                                 </div>
@@ -98,7 +101,7 @@
                                 System Setup
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                {{-- <h6 class="dropdown-header">Setup</h6> --}}
+                                <h6 class="dropdown-header">General Setup</h6>
                                 <a class="dropdown-item" href="{{route('list_users')}}">Users</a>
                                 <a class="dropdown-item" href="{{route('list_cost_centers')}}">Cost Centers</a>
                                 <a class="dropdown-item" href="{{route('list_depts')}}">Departments</a>

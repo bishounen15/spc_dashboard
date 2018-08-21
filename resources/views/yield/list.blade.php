@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
+{{-- <div class="container"> --}}
     <h3>Yield Dashboard</h3>
     <a href="{{route('create_yield')}}" role="button" class="btn btn-primary">Add Yield Record</a>
     <br><br>
@@ -71,6 +71,7 @@
         <div class="modal-body" style="overflow:auto;">
             <table class="table table-condensed table-hover table-sm" style="width: 100%;">
                 <thead class="thead-dark" style="font-size: 0.7em;">
+                    <td class="table-default data-edit"></td>
                     <td class="table-primary"><strong>Date Start</strong></td>
                     <td class="table-primary"><strong>Date End</strong></td>
         
@@ -124,7 +125,7 @@
         </div>
         </div>
     </div>
-</div>
+{{-- </div> --}}
 @endsection
 
 @push('jscript')
@@ -215,17 +216,43 @@
                 success: function (trx) {
                     console.log(trx);
                     $("#detail-list").html("")
-                    
+                    btnclass = "";
+                    disabled = "";
+
                     $.each(trx, function(i, v) {
                         myRows = '<tr>';
                         
                         $.each(v, function(i,v) {
-                            myRows += '<td>'+ v +'</td>';    
+                            // console.log(i);
+                            if (i == "edits") {
+                                if (v == 0) {
+                                    btnclass = "info";
+                                    disabled = "";
+                                } else if (v == 1) {
+                                    btnclass = "warning";
+                                    disabled = "";
+                                } else if (v == 2) {
+                                    btnclass = "danger";
+                                    disabled = "";
+                                } else {
+                                    btnclass = "secondary";
+                                    disabled = " disabled";
+                                }
+                            } else if (i == "id") {
+                                myRows += '<td class="data-edit"><a href="/Yield/edit/'+v+'" role="button" class="btn btn-'+btnclass+' btn-sm'+disabled+'">Edit</a></td>';    
+                            } else {
+                                myRows += '<td>'+ v +'</td>';
+                            }
                         });
 
                         myRows += '</tr>';
-                        console.log(myRows);
+                        // console.log(myRows);
                         $("#detail-list").append(myRows);
+
+                        $('table .data-edit').hide();
+                        if ("SUPV" == "{!! Auth::user()->yield_role !!}" || 1 == {!! Auth::user()->sysadmin !!}) {
+                            $('table .data-edit').show();
+                        }
                         $("#yield-details").modal("toggle");
                     });
                 },

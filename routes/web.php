@@ -57,6 +57,8 @@ Route::post('/yield/date','yieldController@getYieldPerDate')->name('yield_per_da
 Route::get('/yield/list/data', 'yieldController@load')->name('yield_data');
 Route::get('/Yield/list','yieldController@list')->name('list_yield');
 Route::get('/Yield/create','yieldController@create')->name('create_yield');
+Route::get('/Yield/edit/{id}','yieldController@create')->name('edit_yield');
+Route::post('/Yield/edit/{id}','yieldController@modify')->name('modify_yield');
 Route::post('/Yield/store','yieldController@store')->name('store_yield');
 
 Route::get('/os/category/list/data', 'OSCategoryController@load')->name('category_data');

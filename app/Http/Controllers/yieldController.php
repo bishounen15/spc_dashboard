@@ -23,47 +23,127 @@ class yieldController extends Controller
         return view('yield.list');
     }
 
-    public function create() {
+    public function create($id = null) {
         date_default_timezone_set('Asia/Manila');
         $data = [];
 
-        $data['team'] = "";
+        $data['id'] = $id;
+        $data['team'] = null;
+        $data['product_size'] = null;
+        $data['input_cell'] = 0;
+
+        $data['inprocess_cell'] = 0;
+        $data['ccd_cell'] = 0;
+        $data['visualdefect_cell'] = 0;
+        $data['cell_defect'] = 0;
+        $data['cell_class_b'] = 0;
+        $data['cell_class_c'] = 0;
+
+        $data['str_produced'] = 0;
+        $data['str_defect'] = 0;
+
+        $data['el1_inspected'] = 0;
+        $data['el1_defect'] = 0;
+
+        $data['be_inspected'] = 0;
+        $data['be_defect'] = 0;
+        $data['be_class_b'] = 0;
+        $data['be_class_c'] = 0;
+
+        $data['el2_class_a'] = 0;
+        $data['el2_defect'] = 0;
+        $data['el2_class_b'] = 0;
+        $data['el2_class_c'] = 0;
+        $data['el2_low_power'] = 0;
+
+        $data['man'] = 0;
+        $data['mac'] = 0;
+        $data['mat'] = 0;
+        $data['met'] = 0;
+        $data['env'] = 0;
+        $data['total_4m'] = 0;
+        $data['total_defect'] = 0;
 
         $data['teams'] = $this->team;
 
-        $date = date("Y-m-d",strtotime("Today"));
-        $time = date('H:i');
-        // $time = date('06:00');
-        
-        if ($time < "06:00") {
-            $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
-        }
+        if ($id == null) {
+            $date = date("Y-m-d",strtotime("Today"));
+            $time = date('H:i');
+            // $time = date('06:00');
+            
+            if ($time < "06:00") {
+                $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
+            }
 
-        $shift = $this->getShift($time);
-        
-        $last_yield = YieldData::where("date",$date)->orderBy("id","desc")->first();
-        // dd($shift);
-        if ($last_yield != null) {
-            if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
-                $date = $last_yield->date;
-                $shift = $last_yield->shift;
+            $shift = $this->getShift($time);
+            
+            $last_yield = YieldData::where("date",$date)->orderBy("id","desc")->first();
+            // dd($shift);
+            if ($last_yield != null) {
+                if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
+                    $date = $last_yield->date;
+                    $shift = $last_yield->shift;
 
-                $dt = $this->getEnd($date,$last_yield->shift);
-                // dd($dt);
+                    $dt = $this->getEnd($date,$last_yield->shift);
+                    // dd($dt);
+                } else {
+                    $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+                }
             } else {
                 $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
             }
+
+            $last_trx = YieldData::where([
+                ["date", $date],
+                ["shift", $shift],
+            ])->max("to");
+
+            if ($last_trx == null) {
+                $last_trx = $this->getStart($date,$shift);
+            }
         } else {
-            $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
-        }
+            $yield_data = YieldData::find($id);
 
-        $last_trx = YieldData::where([
-            ["date", $date],
-            ["shift", $shift],
-        ])->max("to");
+            $last_trx = $yield_data->from;
+            $dt = $yield_data->to;
+            $date = $yield_data->date;
+            $shift = $yield_data->shift;
 
-        if ($last_trx == null) {
-            $last_trx = $this->getStart($date,$shift);
+            $data['team'] = $yield_data->team;
+            $data['product_size'] = $yield_data->product_size;
+            $data['input_cell'] = $yield_data->input_cell;
+
+            $data['inprocess_cell'] = $yield_data->inprocess_cell;
+            $data['ccd_cell'] = $yield_data->ccd_cell;
+            $data['visualdefect_cell'] = $yield_data->visualdefect_cell;
+            $data['cell_defect'] = $yield_data->cell_defect;
+            $data['cell_class_b'] = $yield_data->cell_class_b;
+            $data['cell_class_c'] = $yield_data->cell_class_c;
+
+            $data['str_produced'] = $yield_data->str_produced;
+            $data['str_defect'] = $yield_data->str_defect;
+
+            $data['el1_inspected'] = $yield_data->el1_inspected;
+            $data['el1_defect'] = $yield_data->el1_defect;
+
+            // $data['be_inspected'] = $yield_data->be_inspected;
+            // $data['be_defect'] = $yield_data->be_defect;
+            // $data['be_class_b'] = $yield_data->be_class_b;
+            // $data['be_class_c'] = $yield_data->be_class_c;
+
+            // $data['el2_class_a'] = $yield_data->el2_class_a;
+            $data['el2_defect'] = $yield_data->el2_defect;
+            // $data['el2_class_b'] = $yield_data->el2_class_b;
+            // $data['el2_class_c'] = $yield_data->el2_class_c;
+            $data['el2_low_power'] = $yield_data->el2_low_power;
+
+            $data['man'] = $yield_data->man;
+            $data['mac'] = $yield_data->mac;
+            $data['mat'] = $yield_data->mat;
+            $data['met'] = $yield_data->met;
+            $data['env'] = $yield_data->env;
+            $data['total_4m'] = $yield_data->total_4m;
+            $data['total_defect'] = $yield_data->total_defect;
         }
 
         // $last_trx = "2018-07-13 06:00";
@@ -127,7 +207,7 @@ class yieldController extends Controller
         $data['el2_class_a'] = $el2_class_a;
         $data['el2_class_c'] = $el2_class_c;
         $data['el2_class_b'] = $el2_class_b;
-        $data['be_class_c'] = $be_class_c;
+        // $data['be_class_c'] = $be_class_c;
 
         return view('yield.form', $data);
     }
@@ -178,6 +258,54 @@ class yieldController extends Controller
 
         YieldData::create($data);
         return redirect('/Yield/list')->with("success","Record Successfully Created.");
+    }
+
+    public function modify(Request $request, $id) {
+        $yield_data = YieldData::find($id);
+
+        $yield_data->team = $request->input('team');
+        $yield_data->date = $request->input('date');
+        $yield_data->shift = $request->input('shift');
+        $yield_data->from = $request->input('from');
+        $yield_data->to = $request->input('to');
+        $yield_data->build = $request->input('build');
+        $yield_data->target = $request->input('target');
+        $yield_data->product_size = $request->input('product_size');
+        $yield_data->input_cell = $request->input('input_cell');
+        $yield_data->input_mod = $request->input('input_mod');
+        $yield_data->inprocess_cell = $request->input('inprocess_cell');
+        $yield_data->ccd_cell = $request->input('ccd_cell');
+        $yield_data->visualdefect_cell = $request->input('visualdefect_cell');
+        $yield_data->cell_defect = $request->input('cell_defect');
+        $yield_data->cell_class_b = $request->input('cell_class_b');
+        $yield_data->cell_class_c = $request->input('cell_class_c');
+        $yield_data->str_produced = $request->input('str_produced');
+        $yield_data->str_defect = $request->input('str_defect');
+        $yield_data->el1_inspected = $request->input('el1_inspected');
+        $yield_data->el1_defect = $request->input('el1_defect');
+        $yield_data->be_inspected = $request->input('be_inspected');
+        $yield_data->be_defect = $request->input('be_defect');
+        $yield_data->be_class_b = $request->input('be_class_b');
+        $yield_data->be_class_c = $request->input('be_class_c');
+        $yield_data->el2_class_a = $request->input('el2_class_a');
+        $yield_data->el2_defect = $request->input('el2_defect');
+        $yield_data->el2_class_b = $request->input('el2_class_b');
+        $yield_data->el2_class_c = $request->input('el2_class_c');
+        $yield_data->el2_low_power = $request->input('el2_low_power');
+        $yield_data->man = $request->input('man');
+        $yield_data->mac = $request->input('mac');
+        $yield_data->mat = $request->input('mat');
+        $yield_data->met = $request->input('met');
+        $yield_data->env = $request->input('env');
+        $yield_data->total_4m = $request->input('total_4m');
+        $yield_data->total_defect = $request->input('total_defect');
+        $yield_data->py = $request->input('py');
+        $yield_data->ey = $request->input('ey');
+        $yield_data->srr = $request->input('srr');
+        $yield_data->mrr = $request->input('mrr');
+
+        $yield_data->update();
+        return redirect('/Yield/list')->with("success","Record Successfully Updated.");
     }
 
     private function getShift($time) {
@@ -233,6 +361,10 @@ class yieldController extends Controller
         foreach($trx as $detail) {
             $t = YieldData::find($detail->id);
 
+            $edits = $t->audits->where("event","updated")->count();
+            $data["edits"] = $edits;
+
+            $data["id"] = $detail->id;
             $data["from"] = $detail->from;
             $data["to"] = $detail->to;
             $data["input_cell"] = $detail->input_cell;
