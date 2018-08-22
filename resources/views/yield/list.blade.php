@@ -72,8 +72,12 @@
             <table class="table table-condensed table-hover table-sm" style="width: 100%;">
                 <thead class="thead-dark" style="font-size: 0.7em;">
                     <td class="table-default data-edit"></td>
+
+                    <td class="table-default data-edit"><strong>Team</strong></td>
                     <td class="table-primary"><strong>Date Start</strong></td>
                     <td class="table-primary"><strong>Date End</strong></td>
+                    <td class="table-default data-edit"><strong>Trx Date</strong></td>
+                    <td class="table-default data-edit"><strong>Shift</strong></td>
         
                     <td class="table-danger"><strong>Input (CELL)</strong></td>
                     <td class="table-success"><strong>Input (MODULE)</strong></td>
@@ -114,6 +118,7 @@
                     <td class="table-default"><strong>PY</strong></td>
                     <td class="table-default"><strong>EY</strong></td>
                     <td class="table-default"><strong>Encoder</strong></td>
+                    <td class="table-default"><strong>Record Created</strong></td>
                 </thead>
                 <tbody class="tbody-light" id="detail-list" style="font-size: 0.75em;">
                     

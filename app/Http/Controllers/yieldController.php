@@ -155,19 +155,23 @@ class yieldController extends Controller
             ["LOCNCODE","=","PRELAM"],
         ])->count("SERIALNO");
 
-        $be_class_b = mesData::where([
-            ["TRXDATE",">=",$last_trx],
-            ["TRXDATE","<",$dt],
-            ["LOCNCODE","=","VI1"],
-            ["MODCLASS","=","B"],
-        ])->count("SERIALNO");
+        $be_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+                        ->where([ 
+                            ["mes01.TRXDATE",">=",$last_trx], 
+                            ["mes01.TRXDATE","<",$dt], 
+                            ["mes01.LOCNCODE","=","VI1"], 
+                            ["lbl02.MODCLASS","=","B"], 
+                            ["lbl02.LBLTYPE","=","1"], 
+                            ])->count("mes01.SERIALNO");
 
-        $be_class_c = mesData::where([
-            ["TRXDATE",">=",$last_trx],
-            ["TRXDATE","<",$dt],
-            ["LOCNCODE","=","VI1"],
-            ["MODCLASS","=","C"],
-        ])->count("SERIALNO");
+        $be_class_c = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+                        ->where([ 
+                            ["mes01.TRXDATE",">=",$last_trx], 
+                            ["mes01.TRXDATE","<",$dt], 
+                            ["mes01.LOCNCODE","=","VI1"], 
+                            ["lbl02.MODCLASS","=","C"], 
+                            ["lbl02.LBLTYPE","=","1"], 
+                            ])->count("mes01.SERIALNO");
         
         $el2_class_a = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
             ["lbl02.LBLTYPE","=",1],
@@ -346,7 +350,7 @@ class yieldController extends Controller
 
     public function load()
     {
-        $yield = YieldData::selectRaw("YEAR(date) as yr, CONCAT('Q',QUARTER(date)) as qtr, CONCAT('W',WEEK(date,1)) as wk, CONCAT('W',WEEK(date,1),'.',WEEKDAY(date) + 1) as wkd, date, sum(input_cell) as input_cell, sum(input_mod) as input_mod, sum(inprocess_cell) as inprocess_cell, sum(ccd_cell) as ccd_cell, sum(visualdefect_cell) as visualdefect_cell, sum(cell_defect) as cell_defect, sum(cell_class_b) as cell_class_b, sum(cell_class_c) as cell_class_c, product_size as product_size, sum(str_produced) as str_produced, sum(str_defect) as str_defect, sum(el1_inspected) as el1_inspected, sum(el1_defect) as el1_defect, sum(be_inspected) as be_inspected, sum(be_defect) as be_defect, sum(be_class_b) as be_class_b, sum(be_class_c) as be_class_c, sum(man) as man, sum(mac) as mac, sum(mat) as mat, sum(met) as met, sum(env) as env, sum(el2_class_a) as el2_class_a, sum(el2_defect) as el2_defect, sum(el2_class_b) as el2_class_b, sum(el2_class_c) as el2_class_c, sum(el2_low_power) as el2_low_power, build, target, ROUND(AVG(py),2) as py, ROUND(AVG(ey),2) ey")
+        $yield = YieldData::selectRaw("YEAR(date) as yr, CONCAT('Q',QUARTER(date)) as qtr, CONCAT('W',WEEK(date,1)) as wk, CONCAT('W',WEEK(date,1),'.',WEEKDAY(date) + 1) as wkd, date, sum(input_cell) as input_cell, sum(input_mod) as input_mod, sum(inprocess_cell) as inprocess_cell, sum(ccd_cell) as ccd_cell, sum(visualdefect_cell) as visualdefect_cell, sum(cell_defect) as cell_defect, sum(cell_class_b) as cell_class_b, sum(cell_class_c) as cell_class_c, product_size as product_size, sum(str_produced) as str_produced, sum(str_defect) as str_defect, sum(el1_inspected) as el1_inspected, sum(el1_defect) as el1_defect, sum(be_inspected) as be_inspected, sum(be_defect) as be_defect, sum(be_class_b) as be_class_b, sum(be_class_c) as be_class_c, sum(man) as man, sum(mac) as mac, sum(mat) as mat, sum(met) as met, sum(env) as env, sum(el2_class_a) as el2_class_a, sum(el2_defect) as el2_defect, sum(el2_class_b) as el2_class_b, sum(el2_class_c) as el2_class_c, sum(el2_low_power) as el2_low_power, build, target, ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_defect))) / SUM(input_cell)) * 100 , 2) as py, ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_class_c))) / SUM(input_cell)) * 100 , 2) as ey")
         ->orderByRaw("date ASC")
         ->groupBy("date","build","target", "product_size");
 
@@ -365,8 +369,11 @@ class yieldController extends Controller
             $data["edits"] = $edits;
 
             $data["id"] = $detail->id;
+            $data["team"] = $detail->team;
             $data["from"] = $detail->from;
             $data["to"] = $detail->to;
+            $data["date"] = $detail->date;
+            $data["shift"] = $detail->shift;
             $data["input_cell"] = $detail->input_cell;
             $data["input_mod"] = $detail->input_mod;
             $data["inprocess_cell"] = $detail->inprocess_cell;
@@ -402,9 +409,83 @@ class yieldController extends Controller
 
             $encoder = User::find($t->audits->first()->user_id);
             $data["user"] = $encoder->name;
+
+            $data["created_at"] = date("Y-m-d H:m:s",strtotime($detail->created_at));
             
             array_push($trx_info, $data);
         }
         return Response::json($trx_info);
+    }
+
+    public function getShiftOutput(Request $request) {
+        $start = $this->getStart($request->input('date'),$request->input('shift'));
+        $end = $this->getEnd($request->input('date'),$request->input('shift'));
+
+        $data = [];
+
+        $data["start"] = $start;
+        $data["end"] = $end;
+
+        $last_trx = $start;
+        $dt = $end;
+        
+        $input_mod = mesData::where([
+            ["TRXDATE",">=",$last_trx],
+            ["TRXDATE","<",$dt],
+            ["LOCNCODE","=","PRELAM"],
+        ])->count("SERIALNO");
+
+        $be_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+                        ->where([ 
+                            ["mes01.TRXDATE",">=",$last_trx], 
+                            ["mes01.TRXDATE","<",$dt], 
+                            ["mes01.LOCNCODE","=","VI1"], 
+                            ["lbl02.MODCLASS","=","B"], 
+                            ["lbl02.LBLTYPE","=","1"], 
+                            ])->count("mes01.SERIALNO");
+
+        $be_class_c = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+                        ->where([ 
+                            ["mes01.TRXDATE",">=",$last_trx], 
+                            ["mes01.TRXDATE","<",$dt], 
+                            ["mes01.LOCNCODE","=","VI1"], 
+                            ["lbl02.MODCLASS","=","C"], 
+                            ["lbl02.LBLTYPE","=","1"], 
+                            ])->count("mes01.SERIALNO");
+        
+        $el2_class_a = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
+            ["lbl02.LBLTYPE","=",1],
+            ["mes01.TRXDATE",">=",$last_trx],
+            ["mes01.TRXDATE","<",$dt],
+            ["mes01.LOCNCODE","=","TEST-EL"],
+            ["lbl02.MODCLASS","=","A"],
+        ])->count("mes01.SERIALNO");
+
+        $el2_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
+            ["lbl02.LBLTYPE","=",1],
+            ["mes01.TRXDATE",">=",$last_trx],
+            ["mes01.TRXDATE","<",$dt],
+            ["mes01.LOCNCODE","=","TEST-EL"],
+            ["lbl02.MODCLASS","=","B"],
+        ])->count("mes01.SERIALNO");
+
+        $el2_class_c = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
+            ["lbl02.LBLTYPE","=",1],
+            ["mes01.TRXDATE",">=",$last_trx],
+            ["mes01.TRXDATE","<",$dt],
+            ["mes01.LOCNCODE","=","TEST-EL"],
+            ["lbl02.MODCLASS","=","C"],
+        ])->count("mes01.SERIALNO");
+
+        $data['input_mod'] = $input_mod;
+        $data['be_inspected'] = $input_mod;
+        $data['be_defect'] = $be_class_b + $be_class_c;
+        $data['be_class_b'] = $be_class_b;
+        $data['be_class_c'] = $be_class_c;
+        $data['el2_class_a'] = $el2_class_a;
+        $data['el2_class_c'] = $el2_class_c;
+        $data['el2_class_b'] = $el2_class_b;
+
+        return Response::json($data);
     }
 }

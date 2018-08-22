@@ -3,7 +3,7 @@
 <form method="POST" action="{{$id == null ? route('store_yield') : route('modify_yield',[$id])}}" id="YieldForm"> 
     @csrf 
     <div class="container">
-        <h3>Yield Data Entry Form ({{$from}} - {{$to}})</h3>
+        <h3>Yield Data Entry Form (<span id="range-date">{{$from}} - {{$to}}</span>)</h3>
             <div class="card">
                 <div class="card-header">
                     General Information
@@ -34,23 +34,36 @@
                             <div class="form-group">
                                 <div class="form-row">
                                     <div class="col-sm-3 text-right">Transaction Date</div>
-                                    <div class="col-sm-3">
-                                    <input type="text" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" readonly>
+                                    <div class="col-sm-4">
+                                    @if(Auth::user()->sysadmin == 1)
+                                        <input type="date" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" onchange="changeShift()">
+                                    @else
+                                        <input type="text" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" readonly>
+                                    @endif
                                     </div>
                                     <div class="col-sm-3 text-right">Current Shift</div>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control form-control-sm"name="shift" id="shift" value="{{old('shift', $shift)}}" readonly>
+                                    <div class="col-sm-2">
+                                    @if(Auth::user()->sysadmin == 1)
+                                        <select class="form-control form-control-sm" name="shift" id="shift" onchange="changeShift()">
+                                            <option readonly selected value> -- select an option -- </option>
+                                            <option value="A" {{$shift == "A" ? "selected" : ""}}>A</option>
+                                            <option value="B" {{$shift == "B" ? "selected" : ""}}>B</option>
+                                            <option value="C" {{$shift == "C" ? "selected" : ""}}>C</option>
+                                        </select>
+                                    @else
+                                        <input type="text" class="form-control form-control-sm" name="shift" id="shift" value="{{old('shift', $shift)}}" readonly>
+                                    @endif
                                     </div>
                                 </div> 
                             </div>
                             <div class="form-group">
                                 <div class="form-row">
                                     <div class="col-sm-3 text-right">Build</div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <input type="text" class="form-control form-control-sm" name="build" id="build" value="GT" readonly>
                                     </div>
                                     <div class="col-sm-3 text-right">Target (%)</div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <input type="text" class="form-control form-control-sm" name="target" id="target" value="99.30" readonly>
                                     </div>
                                 </div> 
@@ -445,6 +458,45 @@
                 YieldCompute();
                 $("#YieldCompute").modal("toggle");
             }
+        }
+
+        function changeShift() {
+            var token = $('input[name=_token]');
+            var formData = new FormData();
+            formData.append('date', $("#date").val());
+            formData.append('shift', $("#shift").val());
+
+            $.ajax({
+                url: "{{route('refresh_yield_data')}}",
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': token.val()
+                },
+                success: function (details) {
+                    
+                    $('#range-date').html(details.start + " - " + details.end);
+                    $('#from').val(details.start);
+                    $('#to').val(details.end);
+
+                    $('#input_mod').val(details.input_mod);
+                    $('#be_inspected').val(details.be_inspected);
+                    $('#be_defect').val(details.be_defect);
+                    $('#be_class_b').val(details.be_class_b);
+                    $('#be_class_c').val(details.be_class_c);
+                    $('#el2_class_a').val(details.el2_class_a);
+                    $('#el2_class_c').val(details.el2_class_c);
+                    $('#el2_class_b').val(details.el2_class_b);
+
+                    EL2Defect();
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    alert (errorThrown);
+                }	
+            });
         }
 
         function SubmitForm() {
