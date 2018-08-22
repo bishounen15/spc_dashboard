@@ -52,6 +52,11 @@ Route::resource('Framming','SqBwController');
 Route::resource('MixRatio','MixRatioController');
 
 // Route::resource('Yield','yieldController');
+Route::get('/yield/email/data','YieldEmailsController@load')->name('email_yield_data');
+Route::get('/yield/email','YieldEmailsController@list')->name('list_email_yield');
+Route::post('/yield/email/store','YieldEmailsController@store')->name('store_email_yield');
+Route::get('/yield/email/remove/{id}','YieldEmailsController@destroy')->name('remove_email_yield');
+
 Route::post('/yield/date','yieldController@getYieldPerDate')->name('yield_per_date');
 
 Route::post('/yield/list/data', 'yieldController@getShiftOutput')->name('refresh_yield_data');
