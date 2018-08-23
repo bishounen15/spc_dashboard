@@ -7,9 +7,13 @@ use App\ProductionTeam as ProductionTeam;
 use App\mesData as mesData;
 use App\YieldData as YieldData;
 use App\User as User;
+use App\YieldEmail;
+use Illuminate\Support\Facades\Auth;
 
 use DataTables;
 Use Response;
+
+use App\Jobs\UpdateNotification;
 
 class yieldController extends Controller
 {
@@ -309,6 +313,32 @@ class yieldController extends Controller
         $yield_data->mrr = $request->input('mrr');
 
         $yield_data->update();
+
+        $emails = YieldEmail::all();
+
+        $receiverAddress = [];
+
+        foreach ($emails as $email) {
+            array_push($receiverAddress,$email->email);
+        }
+        
+        $newEmailSubject = 'Yield Record was Updated';
+        $content = [
+        'title'=> 'Yield Details for the below record has been updated.',
+        'details' => 'The transaction below was updated by',
+        'team' => $request->input('team'),
+        'date' => $request->input('date'),
+        'shift' => $request->input('shift'),
+        'updated_by' => '['.Auth::user()->user_id . " - " . Auth::user()->name.']',
+        'button' => 'Click Here'
+        ];
+
+
+        $job = (new UpdateNotification($content, $receiverAddress, $newEmailSubject))
+                ->delay(now()->addSeconds(5));
+        
+        dispatch($job);
+
         return redirect('/Yield/list')->with("success","Record Successfully Updated.");
     }
 

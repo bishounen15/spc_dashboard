@@ -35,7 +35,7 @@ return [
 
         'yield' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
+            'host' => '192.168.128.9',
             'port' => '3306',
             'database' => 'sp_yield',
             'username' => 'laravel_user',
@@ -50,7 +50,7 @@ return [
 
         'osi' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
+            'host' => '192.168.128.9',
             'port' => '3306',
             'database' => 'sp_osi',
             'username' => 'laravel_user',
