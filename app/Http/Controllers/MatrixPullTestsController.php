@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\MatrixPullTest;
-use DB;
+//use DB;
 
 
 class MatrixPullTestsController extends Controller
@@ -13,11 +14,11 @@ class MatrixPullTestsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index() 
     {
-        $post = MatrixPullTest::all();
-        $posts = DB::select('SELECT * FROM matrix_pull_tests');
-        return view('matrix.index')->with('posts', $post);
+       // $post = MatrixPullTest::all();
+        $posts = DB::select('SELECT * FROM rtobpull ORDER BY id DESC');
+        return view('matrix.matrixpulltest')->with('rtobpulltest', $posts);
     }
 
     /**
@@ -27,7 +28,7 @@ class MatrixPullTestsController extends Controller
      */ 
     public function create()
     {
-        return view('matrix.create');
+        return view('matrix.creatematrixpulltest');
     }
 
     /**
@@ -40,40 +41,66 @@ class MatrixPullTestsController extends Controller
     {
         //Validate
                 $this->validate($request, [         
-                'station' => 'required',
+                'employeeid' => 'required|numeric',
                 'location' => 'required',
                 'shift' => 'required',
                 'node'=> 'required',
                 'supplier' => 'required',
                 'site1' => 'required',
-                'pulltest1' => 'required',
                 'site2' => 'required',
-                'pulltest2' => 'required',
                 'site3' => 'required',
-                'pulltest3' => 'required',
-                'remarks' => 'required',
-                'average' => 'required'
+                'pulltest1' => 'required|numeric',
+                'pulltest2' => 'required|numeric',
+                'pulltest3' => 'required|numeric',
+                'average' => 'required',
+                'twosite1' => 'required',
+                'twosite2' => 'required',
+                'twosite3' => 'required',
+                'twopulltest1' => 'required|numeric',
+                'twopulltest2' => 'required|numeric',
+                'twopulltest3' => 'required|numeric',
+                'twoaverage' => 'required',
+                'botsite1' => 'required',
+                'botsite2' => 'required',
+                'botsite3' => 'required',
+                'botpulltest1' => 'required|numeric',
+                'botpulltest2' => 'required|numeric',
+                'botpulltest3' => 'required|numeric',
+                'botaverage' => 'required',
+                'remarks' => 'required'
+             
             ]);
 
         //Create Post
         //$post = $request->post;
         $post = new MatrixPullTest;
-        $post->Station = $request->input('station');
+        $post->EmployeeID = $request->input('employeeid');
         $post->Location = $request->input('location');
         $post->Shift = $request->input('shift');
         $post->Node = $request->input('node');
         $post->Supplier = $request->input('supplier');
         $post->Site1 = $request->input('site1');
-        $post->PullTest1 = $request->input('pulltest1');
         $post->Site2 = $request->input('site2');
-        $post->PullTest2 = $request->input('pulltest2');
         $post->Site3 = $request->input('site3');
+        $post->PullTest1 = $request->input('pulltest1');
+        $post->PullTest2 = $request->input('pulltest2');
         $post->PullTest3 = $request->input('pulltest3');
+        $post->Site1 = $request->input('twosite1');
+        $post->Site2 = $request->input('twosite2');
+        $post->Site3 = $request->input('twosite3');
+        $post->twoPullTest1 = $request->input('twopulltest1');
+        $post->twoPullTest2 = $request->input('twopulltest2');
+        $post->twoPullTest3 = $request->input('twopulltest3');
+        $post->botSite1 = $request->input('botsite1');
+        $post->botSite2 = $request->input('botsite2');
+        $post->botSite3 = $request->input('botsite3');
+        $post->botPullTest1 = $request->input('botpulltest1');
+        $post->botPullTest2 = $request->input('botpulltest2');
+        $post->botPullTest3 = $request->input('botpulltest3');
+        $post->botAverage = $request->input('average');
         $post->Remarks = $request->input('remarks');
-        $post->Average = $request->input('average');
-
         $post->save ();
-        return redirect('/matrixpulltest/create')->with('success', 'Data Created');
+        return redirect('/matrixpulltest')->with('success', 'Data Created');
     }
 
     /**
@@ -118,9 +145,13 @@ class MatrixPullTestsController extends Controller
         $post->string = $request->input('station');
         $post->string = $request->input('shift');
         $post->string = $request->input('node');
-        $post->string = $request->input('site');
-        $post->string = $request->input('temp');
-        $post->string = $request->input('pull test');
+        $post->string = $request->input('site1');
+        $post->string = $request->input('pulltest1');
+        $post->string = $request->input('site2');
+        $post->string = $request->input('pulltest2');
+        $post->string = $request->input('site3');
+        $post->string = $request->input('pulltest3');
+        $post->string = $request->input('average');
         $post->string = $request->input('remarks');
         $post->save();
         return redirect('/matrix/create')->with('success', 'Data Updated');

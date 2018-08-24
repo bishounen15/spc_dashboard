@@ -33,6 +33,51 @@ return [
 
     'connections' => [
 
+        'yield' => [
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'port' => '3306',
+            'database' => 'sp_yield',
+            'username' => 'laravel_user',
+            'password' => 'password@1',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'spc' => [
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'port' => '3306',
+            'database' => 'spc',
+            'username' => 'laravel_user',
+            'password' => 'password@1',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'web_portal' => [
+            'driver' => 'mysql',
+            'host' => '192.168.128.9',
+            'port' => '3306',
+            'database' => 'spmmc00',
+            'username' => 'spmmcadmin',
+            'password' => 'P@ssw0rd@SQL',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'database' => env('DB_DATABASE', database_path('database.sqlite')),

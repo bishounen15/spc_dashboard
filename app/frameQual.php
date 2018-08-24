@@ -8,6 +8,7 @@ class frameQual extends Model
 {
     //   //
       //Table Name
+      // protected $connection = 'spc';
       protected $table = 'frame_quals';
       //Primary Key
       protected $primaryKey = 'id';

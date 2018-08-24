@@ -15,12 +15,11 @@ class CreateStringersTable extends Migration
     {
         Schema::create('stringers', function (Blueprint $table) {
             $table->increments('id');
-            $table->String('Date');
-            $table->String('Laminator');
+            $table->Date('Date');
+            $table->String('Stringer');
             $table->String('Shift');
             $table->String('Cell');
             $table->String('Ribbon');
-            $table->String('Station');
             $table->String('Side');
             $table->String('CellNo');
             $table->String('Site');

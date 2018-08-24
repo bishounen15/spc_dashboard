@@ -15,7 +15,10 @@ class FlashController extends Controller
      */
     public function index()
     {
-        //
+        $posts = DB::select('SELECT * FROM flashes ORDER BY ID DESC'); 
+        //$posts = Post::orderBy('created_at','desc')->paginate(2);
+        return view('pages.ftd')  
+                    ->with('alldata',$posts);
     }
 
     /**
@@ -37,25 +40,31 @@ class FlashController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'Date' => 'required',
-            'Difference' => 'required',
-            'CalSerial' => 'required',
-            'Remarks' => 'required',
-            'Target' => 'required',
-            'Actual' => 'required',
+            'ModuleID' => 'required|alpha_num|max:15|min:13',
+            'InspTime' => 'required',
+            'ISC' => 'required',
+            'UOC' => 'required',
+            'IMPP' => 'required',
+            'UMPP' => 'required',
+            'PMPP' => 'required',
+            'ShuntResist' => 'required',
+            'FF' => 'required',
         ]);
 
         //Create
         $flash = new Flash();
-        $flash->Date = $request->input('Date');
-        $flash->Difference = $request->input('Difference');
-        $flash->CalSerial = $request->input('CalSerial');
-        $flash->Remarks = $request->input('Remarks');
-        $flash->Target = $request->input('Target');
-        $flash->Actual = $request->input('Actual');
+        $flash->ModuleID = $request->input('ModuleID');
+        $flash->InspTime = $request->input('InspTime');
+        $flash->ISC = $request->input('ISC');
+        $flash->UOC = $request->input('UOC');
+        $flash->IMPP = $request->input('IMPP');
+        $flash->UMPP = $request->input('UMPP');
+        $flash->PMPP = $request->input('PMPP');
+        $flash->ShuntResist = $request->input('ShuntResist');
+        $flash->FF = $request->input('FF');
         $flash->save();
 
-        return redirect('/flash/create')->with('success', 'Successfully Created');
+        return redirect('/ftd')->with('success', 'Successfully Created');
     }
 
     /**

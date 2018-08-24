@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
     <head>
         <meta charset="utf-8">
@@ -27,7 +27,7 @@
            </div>
             @yield('content')
        </div>
-
+    </div>
     @stack('jscript')
-    </body>
+</body>
 </html>
