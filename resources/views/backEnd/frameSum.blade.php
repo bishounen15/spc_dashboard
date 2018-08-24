@@ -23,7 +23,36 @@
 <div class="card-header">Table of computation for Frame Qual Monitoring </div> 
 {{-- <div class="card"> --}}
 <div class="card-body">
-
+        <div class="row"> 
+                <div class="col-md-5">
+        <input type="checkbox" id="checkDate" class="form-control"   onclick="toggle('.checkDate', this)" >
+                </div>
+                <div class="col-md-7">
+                        {{Form::label('dateRange','Date Range'),['class'=>'form-control']}} 
+                </div>
+        </div>
+     
+    <div id="dateRangeForm">
+            {!! Form::open(['action' => 'FrameController@store','method' => 'POST']) !!}
+  <div class="row"> 
+        <div class="col-md-5">
+                {{Form::label('','From'),['class'=>'form-control']}}
+                  </div> 
+        <div class="col-md-7">
+      {{ Form::date('fromDate', '00-00-00 00:00:00',['class'=>'form-control form-control-sm','id'=>'fromDate']) }}
+        </div>
+  </div>
+  <div class="row"> 
+        <div class="col-md-5">
+                {{Form::label('','To'),['class'=>'form-control']}}
+                  </div> 
+        <div class="col-md-7">
+      {{ Form::date('toDate', '00-00-00 00:00:00',['class'=>'form-control form-control-sm','id'=>'toDate']) }}
+        </div>
+  </div>
+  &emsp; {{Form::submit('Submit',['class'=> 'btn btn-primary'])}}&emsp; 
+                    {!! Form::close() !!}
+    </div>
 <table class="table table-hover table table-bordered">
 <thead>
 <tr>
@@ -153,14 +182,14 @@
 
 <tr>
 <th scope="row">20</th>
-<td><b>CpnL</b></td>
-<td>{{$CpnL}}</td>
+<td><b>CpnU</b></td>
+<td>{{$CpnU}}</td>
 </tr>
 
 <tr>
 <th scope="row">21</th>
 <td><b>CpnL</b></td>
-<td>{{$CpnU}}</td>
+<td>{{$CpnL}}</td>
 </tr>
 
 </tbody>
@@ -176,6 +205,24 @@
     </div>      
 
  @endsection
+ @push('jscript')
+ <script>
+      $(document).ready(function () {
+        $('#dateRangeForm').hide();
+        //$('#dateRangeForm').hide();
+      });
+     
+      function toggle(className, obj) {
+    if ( obj.checked ) $('#dateRangeForm').show();
+    else $('#dateRangeForm').hide();
+}
+   
+    
 
+      
+    
+
+     </script>
+@endpush
 
  

@@ -17,9 +17,13 @@ class MixRatioController extends Controller
      */
     public function index()
     {
-        $posts = DB::select('SELECT * FROM pottant_quals');                                        
+      //  $posts = DB::select('SELECT * FROM pottant_quals');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-          return view('backEnd.potMixingRatio')->with('MixLogs',$posts);
+
+
+$weightAve = DB::table(DB::select("SELECT AVG(weight) as aveWt FROM (SELECT weight FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview"));
+$wtAve = number_format($weightAve->from[0]->aveWt,6);
+          return view('backEnd.potMixRatioSum');
     }
 
     /**

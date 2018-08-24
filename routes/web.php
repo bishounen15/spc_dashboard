@@ -22,6 +22,24 @@
        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
         return view('backEnd.solderTemp')->with('tempLogs',$posts);
 });
+Route::get('/JBoxDispense', function () {
+      $posts = DB::select('SELECT * FROM jbox_dis_wt_quals');                                        
+         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+          return view('backEnd.jBoxDispense')->with('disLogs',$posts);
+  });
+
+  Route::get('/mixRatio', function () {
+        $posts = DB::select('SELECT * FROM  pottant_quals');                                        
+           //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+            return view('backEnd.potMixingRatio')->with('potLogs',$posts);
+    });
+
+    Route::get('/SqBw', function () {
+        $posts = DB::select('SELECT * FROM  frame_sq_bws');                                        
+           //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+            return view('backEnd.frameSqBw')->with('frameSBLogs',$posts);
+    });
+
 
 Route::get('/', 'PagesController@index');
 //Route::get('/solder', 'solderTempController@index');
