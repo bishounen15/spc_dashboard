@@ -73,11 +73,11 @@
                 <thead class="thead-dark" style="font-size: 0.7em;">
                     <td class="table-default data-edit"></td>
 
-                    <td class="table-default data-edit"><strong>Team</strong></td>
+                    <td class="table-default"><strong>Team</strong></td>
                     <td class="table-primary"><strong>Date Start</strong></td>
                     <td class="table-primary"><strong>Date End</strong></td>
-                    <td class="table-default data-edit"><strong>Trx Date</strong></td>
-                    <td class="table-default data-edit"><strong>Shift</strong></td>
+                    <td class="table-default"><strong>Trx Date</strong></td>
+                    <td class="table-default"><strong>Shift</strong></td>
         
                     <td class="table-danger"><strong>Input (CELL)</strong></td>
                     <td class="table-success"><strong>Input (MODULE)</strong></td>

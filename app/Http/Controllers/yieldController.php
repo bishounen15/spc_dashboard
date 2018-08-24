@@ -311,6 +311,7 @@ class yieldController extends Controller
         $yield_data->ey = $request->input('ey');
         $yield_data->srr = $request->input('srr');
         $yield_data->mrr = $request->input('mrr');
+        $yield_data->remarks = $request->input('remarks');
 
         $yield_data->update();
 
@@ -322,6 +323,17 @@ class yieldController extends Controller
             array_push($receiverAddress,$email->email);
         }
         
+        $t = YieldData::find($id);
+        $changes = $t->audits->where("event","updated")->last();
+        $last_edit = [];
+
+        foreach($changes->getModified() as $key => $value) {
+            $old = $value["old"];
+            $new = $value["new"];
+
+            array_push($last_edit,["field" => $key, "old" => $old, "new" => $new,]);
+        }
+
         $newEmailSubject = 'Yield Record was Updated';
         $content = [
         'title'=> 'Yield Details for the below record has been updated.',
@@ -330,6 +342,8 @@ class yieldController extends Controller
         'date' => $request->input('date'),
         'shift' => $request->input('shift'),
         'updated_by' => '['.Auth::user()->user_id . " - " . Auth::user()->name.']',
+        'remarks' => $request->input('remarks'),
+        'last_edit' => $last_edit,
         'button' => 'Click Here'
         ];
 

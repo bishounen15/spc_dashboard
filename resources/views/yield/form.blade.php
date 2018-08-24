@@ -324,9 +324,16 @@
                     <input type="text" class="form-control form-control-sm" readonly name="mrr" id="mrr" value="0">
                 </div>
               </div>
+              @if($id != null)
+              <div class="form-row">
+                <label for="remarks">Reason for Updating</label>
+                <textarea class="form-control form-control-sm" name="remarks" id="remarks"></textarea>
+                <small class="form-text text-danger" id="err_remarks"></small>
+              </div>
+              @endif
             </div>
             <div class="modal-footer">
-                <input type="submit" value="Save Record" class="btn btn-success">
+                <button class="btn btn-success" id="SaveButton">Save Record</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>
@@ -499,12 +506,21 @@
             });
         }
 
-        function SubmitForm() {
-            $("#YieldForm").submit();
-        }
-
         $(document).ready(function() {
             EL2Defect();
+
+            $("#SaveButton").click(function (e) {
+                e.preventDefault();
+                @if($id != null)
+                if ($("#remarks").val() == null || $("#remarks").val() == "") {
+                    $("#err_remarks").html("Reason for Updating is a required field!");
+                } else {
+                    $("#YieldForm").submit();
+                }
+                @else
+                $("#YieldForm").submit();
+                @endif
+            });
         });
     </script>
 @endpush
