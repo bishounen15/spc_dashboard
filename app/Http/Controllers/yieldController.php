@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 use DataTables;
 Use Response;
+use Carbon\Carbon;
 
 use App\Jobs\UpdateNotification;
 
@@ -20,6 +21,7 @@ class yieldController extends Controller
     //
     public function __construct( ProductionTeam $team )
     {
+        date_default_timezone_set('Asia/Manila');
         $this->team = $team->all();
     }    
 
@@ -28,7 +30,7 @@ class yieldController extends Controller
     }
 
     public function create($id = null) {
-        date_default_timezone_set('Asia/Manila');
+        
         $data = [];
 
         $data['id'] = $id;
@@ -81,21 +83,33 @@ class yieldController extends Controller
 
             $shift = $this->getShift($time);
             
+            if ($shift == "A") {
+                $fval = $this->getStart($date,$shift) . ":00";
+                $tval = date("Y-m-d",strtotime($date)) . " " . $time . ":00";
+                
+                $to = Carbon::createFromFormat('Y-m-d H:i:s', $tval);
+                $from = Carbon::createFromFormat('Y-m-d H:i:s', $fval);
+                
+                $diff_in_minutes = $to->diffInMinutes($from);
+                
+                if ($diff_in_minutes < 30) {
+                    $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
+                    // dd($date);
+                }
+            }
+
             $last_yield = YieldData::where("date",$date)->orderBy("id","desc")->first();
-            // dd($shift);
+            // dd($last_yield);
             if ($last_yield != null) {
                 if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
                     $date = $last_yield->date;
                     $shift = $last_yield->shift;
 
                     $dt = $this->getEnd($date,$last_yield->shift);
-                    // dd($dt);
                     $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
 
-                    // dd($cdt);
-
-                    $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $cdt);
-                    $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $dt);
+                    $to = Carbon::createFromFormat('Y-m-d H:i:s', $cdt);
+                    $from = Carbon::createFromFormat('Y-m-d H:i:s', $dt);
 
                     $diff_in_minutes = $to->diffInMinutes($from);
                     
