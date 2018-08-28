@@ -10,54 +10,120 @@
             <div class="card-header">Offline Matrix Soldering Temp Monitoring</div> 
             {{-- <div class="card"> --}}
         <div class="card-body">        
-        <a href="/Summary" class="btn btn-secondary">Go Back</a>
-        <a href="/offlinematsolder/create" class="btn btn-success">Add Record</a>
-        
-            <table class="table table-striped" style="font-size:12px;">
-            <tr>
-                <th></th>
-                <th>Station</th>
-                <th>Location</th>
-                <th>Shift</th>
-                <th>Supplier</th>
-                <th>Node</th>
-                <th>Temp 1</th>
-                <th>Temp 2</th>
-                <th>Temp 3</th>
-                <th>Remarks</th>
-                <th>Average</th>
-                <th>Date</th>
-            </tr>
-
-        
-                @if(count($offlinematsolderingtemp) > 0)
-        <?php $i=0 ?>
-                @foreach($offlinematsolderingtemp as $potLog)
-                <?php $i++ ?>
-                 <tr>
-                 <td>
-                    <td>{{$potLog->station}}</td>
-                    <td>{{$potLog->location}}</td>
-                    <td>{{$potLog->shift}}</td>
-                    <td>{{$potLog->node}}</td>
-                    <td>{{$potLog->supplier}}</td>
-                    <td>{{$potLog->temp1}}</td>
-                    <td>{{$potLog->temp2}}</td>
-                    <td>{{$potLog->temp3}}</td>
-                    <td>{{$potLog->remarks}}</td>
-                    <td style="font-size:12px;">{{$potLog->average}}</td>
-                    <td>{{$potLog->created_at}}</td>
-                 </tr>
-            @endforeach  
-        @else
-        <p>No Records Found</p>
-        @endif
-        </table>
-        </div>
-    {{-- </div> --}}
-    </div>
-    {{-- </div> --}}
-    </div>
-</div>
-</div>      
- @endsection
+       
+        <div class="card">
+                <div class="card-header">Offline Matrix Soldering Temp</div> 
+                {{-- <div class="card"> --}}
+                <div class="card-body">
+                <a href="/Summary" class="btn btn-secondary">Go Back</a>
+                <a href="/offlinematsolder/sumofflinematsolderingtemp" class="btn btn-primary">View Data</a>
+                <a href="/offlinematsolder/create" class="btn btn-primary">Input Data</a>
+                <br><br>
+                <table class="table table-hover table table-bordered">
+                <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">VALUE</th>
+                <th scope="col">Soldering Temp</th>
+                </thead>
+                <tbody>
+                <tr>
+                <th scope="row">1</th>
+                <td><b>Ave (Ind)</b></td> 
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">2</th>
+                <td><b>Stdev (Ind)</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">3</th>
+                <td><b>XBB (Ave of Ave)</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">4</th>
+                <td><b>Stdev (Ave)</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">5</th>
+                <td><b>Median</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">6</th>
+                <td><b>Percentile (0.00135)</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">7</th>
+                <td><b>Percentile (0.99865)</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">8</th>
+                <td><b>USL</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">9</th>
+                <td><b>LSL</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">10</th>
+                <td><b>Target</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">11</th>
+                <td><b>Z</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">12</th>
+                <td><b>CpU</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">13</th>
+                <td><b>CpL</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">14</th>
+                <td><b>Cpk</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">15</th>
+                <td><b>CpN U</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">16</th>
+                <td><b>CpN L</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">17</th>
+                <td><b>CpN</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">18</th>
+                <td><b>UCL</b></td>
+                <td></td>
+                </tr>
+                <tr>
+                <th scope="row">19</th>
+                <td><b>LCL</b></td>
+                <td></td>
+                </tr>
+                <tr>    
+                <th scope="row">20</th>
+                <td><b>N</b></td>
+                <td></td>
+            @endsection

@@ -40,6 +40,16 @@ Route::get('/JBoxDispense', function () {
             return view('backEnd.frameSqBw')->with('frameSBLogs',$posts);
     });
 
+    Route::get('/rtobpulltest', function () {
+        $posts = DB::select('SELECT * FROM rtobpulltest ORDER BY id DESC');
+        return view('matrix.summatrixpulltest')->with('rtobpulltest', $posts);
+    });
+
+    Route::get('/matsoldertemp', function () {
+        $posts = DB::select('SELECT * FROM mat_solderings ORDER BY id DESC');
+        return view('matrix.summatsoldering')->with('matsolderingtemp', $posts);
+    });
+
 
 Route::get('/', 'PagesController@index');
 //Route::get('/solder', 'solderTempController@index');

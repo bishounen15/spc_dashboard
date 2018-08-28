@@ -11,62 +11,114 @@
             {{-- <div class="card"> --}}
         <div class="card-body">        
         <a href="/Summary" class="btn btn-secondary">Go Back</a>
-        <a href="/matsolder/create" class="btn btn-success">Add Record</a>
-        
+        <a href="/matsolder/create" class="btn btn-primary">Add Data</a>
+        <a href="/matsoldertemp" class="btn btn-primary">View Data</a>
             <table class="table table-striped" style="font-size:12px;">
-            <tr>
-                <th></th>
-                <th>Station</th>
-                <th>Location</th>
-                <th>Shift</th>
-                <th>Supplier</th>
-                <th>Node</th>
-                <th>Temp 1</th>
-                <th>Temp 2</th>
-                <th>Temp 3</th>
-                <th>Remarks</th>
-                <th>Average</th>
-                <th>Bottom 1</th>
-                <th>Bottom 2</th>
-                <th>Bottom 3</th>
-                <th>Bottom Average</th>
-                <th>Date</th>
-
-
-            </tr>
-
-                @if(count($matsolderingtemp) > 0)
-        <?php $i=0 ?>
-                @foreach($matsolderingtemp as $potLog)
-                <?php $i++ ?>
-                 <tr>
-                 <td>
-                    <td>{{$potLog->EmployeeID}}</td>
-                    <td>{{$potLog->Location}}</td>
-                    <td>{{$potLog->Shift}}</td>
-                    <td>{{$potLog->Supplier}}</td>
-                    <td>{{$potLog->Node}}</td>
-                    <td>{{$potLog->Temp1}}</td>
-                    <td>{{$potLog->Temp2}}</td>
-                    <td>{{$potLog->Temp3}}</td>
-                    <td>{{$potLog->Remarks}}</td>
-                    <td style="font-size:12px;">{{$potLog->Average}}</td>
-                    <td>{{$potLog->botTemp1}}</td>
-                    <td>{{$potLog->botTemp2}}</td>
-                    <td>{{$potLog->botTemp3}}</td>
-                    <td style="font-size:12px;">{{$potLog->botAverage}}</td>
-                    <td>{{$potLog->created_at}}</td>
-                 </tr>
-            @endforeach  
-        @else
-        <p>No Records Found</p>
-        @endif
-        </table>
-        </div>
-    {{-- </div> --}}
-    </div>
-    {{-- </div> --}}
-    </div>
-</div>
-</div>      
- @endsection
+            <table class="table table-hover table table-bordered">
+                    <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Indicators</th>
+                    <th scope="col">Value</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <th scope="row">1</th>
+                    <td><b>Ave (Ind)</b></td> 
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">2</th>
+                    <td><b>Stdev (Ind)</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">3</th>
+                    <td><b>XBB (Ave of Ave)</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">4</th>
+                    <td><b>Stdev (Ave)</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">5</th>
+                    <td><b>Median</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">6</th>
+                    <td><b>Percentile (0.00135)</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">7</th>
+                    <td><b>Percentile (0.99865)</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">8</th>
+                    <td><b>USL</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">9</th>
+                    <td><b>LSL</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">10</th>
+                    <td><b>Target</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">11</th>
+                    <td><b>Z</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">12</th>
+                    <td><b>CpU</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">13</th>
+                    <td><b>CpL</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">14</th>
+                    <td><b>Cpk</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">15</th>
+                    <td><b>CpN U</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">16</th>
+                    <td><b>CpN L</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">17</th>
+                    <td><b>CpN</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">18</th>
+                    <td><b>UCL</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">19</th>
+                    <td><b>LCL</b></td>
+                    <td></td>
+                    </tr>
+                    <tr>    
+                    <th scope="row">20</th>
+                    <td><b>N</b></td>
+                    <td></td>
+                @endsection

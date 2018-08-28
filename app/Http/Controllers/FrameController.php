@@ -37,7 +37,6 @@ $wtStdOfStd = number_format($weightStdOfStd->from[0]->stdOfStd,6);
 
 $median = DB::table(DB::select("SELECT ROUND(AVG(weight),6) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date ORDER BY aveWt ASC"));
 $medianCount = DB::table(DB::select("SELECT COUNT(aveWt) as aveCount FROM (SELECT ROUND(AVG(weight),6) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date ORDER BY aveWt ASC) as tblcnt"));
-
 $medianCountVal = $medianCount->from[0]->aveCount;
 $medianMod = $medianCountVal%2;
 

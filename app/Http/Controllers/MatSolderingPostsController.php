@@ -42,7 +42,7 @@ class MatSolderingPostsController extends Controller
             $this->validate($request, [  
                 //'station' => 'required', //added
                 'employeeid' => 'required',       
-                'location' => 'required',
+                //'' => 'required',
                 'shift' => 'required',
                 'node'=> 'required',
                 'supplier' => 'required',
@@ -62,7 +62,7 @@ class MatSolderingPostsController extends Controller
         //$post = $request->post;
         $post = new MatSolderingPost;
         $post->EmployeeID = $request->input('employeeid');
-        $post->Location = $request->input('location');
+        $post->Location = $request->input('process');
         $post->Shift = $request->input('shift');
         $post->Node = $request->input('node');
         $post->Supplier = $request->input('supplier');
@@ -77,7 +77,7 @@ class MatSolderingPostsController extends Controller
         $post->Remarks = $request->input('remarks');
         $post->created_at = $request->input('date');
         $post->save ();
-        return redirect('/matsolder')->with('success', 'Data Created');
+        return redirect('/matsoldertemp')->with('success', 'Record successfully added.');
     }
 
     /**
@@ -116,7 +116,7 @@ class MatSolderingPostsController extends Controller
         
         //Create Post
         $post = MatSolderingPost::find($id);
-        $post->string = $request->input('location');
+        $post->string = $request->input('process');
         $post->string = $request->input('station');
         $post->string = $request->input('shift');
         $post->string = $request->input('node');
@@ -128,7 +128,7 @@ class MatSolderingPostsController extends Controller
         $post->float = $request->input('average');
         $post->string = $request->input('date');
         $post->save();
-        return redirect('/matsolderingposts')->with('success', 'Data Updated');
+        return redirect('/matsoldertemp')->with('success', 'Record successfully added.');
     }
 
     /**

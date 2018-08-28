@@ -15,11 +15,14 @@ class OfflineBtoBPullTestController extends Controller
      */
     public function index()
     {
+       // $posts = DB::select('SELECT * FROM btobpulltest ORDER BY id DESC');
+       // return view('matrix.btobpulltest')->with('btobpulltest', $posts);
+       
         //$post = Post::all();
         //$posts = DB::select('SELECT * FROM btobpulltest ORDER BY id DESC');
         //return view('matrix.btobpulltest')->with('btobpulltest', $posts);
 
-        $avefront = DB::table(DB::raw("(SELECT SUM(pulltest1 + pulltest2 +pulltest3) as pulltest FROM btobpulltest) as temp"))
+       /* $avefront = DB::table(DB::raw("(SELECT SUM(pulltest1 + pulltest2 +pulltest3) as pulltest FROM btobpulltest) as temp"))
         //date BETWEEN from AND to
         ->select(DB::raw('AVG(pulltest/3) as pulltest'))
         ->get();
@@ -38,9 +41,10 @@ class OfflineBtoBPullTestController extends Controller
 
         //  $stdave = number_format($stdave->avg('pulltest'),2);
         $stdave = number_format($pulltests3->avg('pulltest'),2);
-            return view('matrix.btobpulltest') 
-            ->with('avefront',$avefront)
-            ->with('stdave',$stdave);
+        */
+            return view('matrix.btobpulltest') ;
+            //->with('avefront',$avefront)
+            //->with('stdave',$stdave);
     }
     
     /**

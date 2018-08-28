@@ -7,29 +7,30 @@
     <div class="row">
     {{-- <div class="col-md-12"> --}}
     <div class="card">
-    <div class="card-header">BUSBAR TO BUSBAR MONITORING</div> 
+    <div class="card-header">Busbar to Busbar Monitoring</div> 
     {{-- <div class="card"> --}}
     <div class="card-body">
-    <a href="/offlinebtob/create" class="btn btn-primary">INPUT DATA</a>
+    <a href="/Summary" class="btn btn-secondary">Go Back</a>
+    <a href="/offlinebtob/create" class="btn btn-primary">Input Data</a>
+    <a href="/offlinebtob/sumbtobpulltest" class="btn btn-primary">View Data</a>
     <br><br>
     <table class="table table-hover table table-bordered">
     <thead>
     <tr>
     <th scope="col">#</th>
-    <th scope="col">VALUE</th>
-    <th scope="col">BtoB</th>
+    <th scope="col">Indicators</th>
+    <th scope="col">Value</th>
     </thead>
     <tbody>
     <tr>
     <th scope="row">1</th>
     <td><b>Ave (Ind)</b></td>
-    <td>{{$avefront}}</td>
     
     </tr>
     <tr>
     <th scope="row">2</th>
     <td><b>Stdev (Ind)</b></td>
-    <td>{{$stdave}}</td>
+   
     </tr>
     <tr>
     <th scope="row">3</th>

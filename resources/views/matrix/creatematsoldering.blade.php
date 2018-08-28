@@ -10,8 +10,8 @@
                             <div class="row">
                                 <div class="col-md-1"> {{Form::label('employeeid', 'Employee ID:')}} </div>  
                                 <div class="col-md-5"> {{ Form::text('employeeid', '',['class'=>'form-control'] )}} <small class="form-text text-danger">{{ $errors->first('employeeid') }}</small> </div>
-                                <div class="col-md-1"> {{Form::label('location', 'Location')}} </div>  
-                                <div class="col-md-5"> {{ Form::text('location', 'Rework',['class'=>'form-control'] )}} <small class="form-text text-danger">{{ $errors->first('location') }}</small> </div>
+                                <div class="col-md-1"> {{Form::label('process', 'Process')}} </div>  
+                                <div class="col-md-5"> {{ Form::text('process', 'Rework',['class'=>'form-control'] )}} <small class="form-text text-danger">{{ $errors->first('process') }}</small> </div>
                             </div><br>
                             <div class="row">
                                 <div class="col-md-1"> {{Form::label('shift', 'Shift')}} </div>  
@@ -20,14 +20,14 @@
                                 <div class="col-md-5"> {{ Form::text('node', 'Soldering Temp',['class'=>'form-control'] )}} <small class="form-text text-danger">{{ $errors->first('node') }}</small> </div>
                             </div></br>
                             <div class="row">
-                                <div class="col-md-1"> {{Form::label('supplier', 'Supplier')}} </div>
-                                <div class="col-md-5"> {{Form::text('supplier','', ['class' => 'form-control','placeholder' => 'Supplier'])}} <small class="form-text text-danger">{{ $errors->first('supplier') }}</small> </div>       
                                 <div class="col-md-1"> {{Form::label('remarks', 'Remarks')}} </div>
                                 <div class="col-md-5"> {{Form::text('remarks','', ['class' => 'form-control','placeholder' => 'Remarks'])}} <small class="form-text text-danger">{{ $errors->first('remarks') }}</small> </div>
+                                <div class="col-md-1"> {{Form::label('supplier', 'Supplier')}} </div>
+                                <div class="col-md-5"> {{Form::text('supplier','', ['class' => 'form-control','placeholder' => 'Supplier'])}} <small class="form-text text-danger">{{ $errors->first('supplier') }}</small> </div>       
                             </div></br>
-                            <div class="row">
-                            <div class="col-md-1"> {{Form::label('Date', 'Date:')}} </div>    
-                            <div class="col-md-3"> {{Form::date('Date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}} </div>
+                            <div class="row">                    
+                                <div class="col-md-1"> {{Form::label('Date', 'Date:')}} </div>    
+                                <div class="col-md-5"> {{Form::date('Date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}} </div>
                             </div></br>
                         </div> 
                         

@@ -17,7 +17,7 @@ class MatrixPullTestsController extends Controller
     public function index() 
     {
        // $post = MatrixPullTest::all();
-        $posts = DB::select('SELECT * FROM rtobpull ORDER BY id DESC');
+        $posts = DB::select('SELECT * FROM rtobpulltest ORDER BY id DESC');
         return view('matrix.matrixpulltest')->with('rtobpulltest', $posts);
     }
 
@@ -39,68 +39,154 @@ class MatrixPullTestsController extends Controller
      */
     public function store(Request $request)
     {
-        //Validate
-                $this->validate($request, [         
+              
+
+           if( $request->input('process')=='Rework'){
+            $this->validate($request,[   
+                'botpulltest1' => 'required',
+                'botpulltest2' => 'required',
+                'botpulltest3' => 'required',
+                'botaverage' => 'required',
+                'remarks' => 'required',
                 'employeeid' => 'required|numeric',
-                'location' => 'required',
+              
+                'shift' => 'required',
+                'node'=> 'required',
+                'supplier' => 'required'
+             
+            ]);
+
+           
+    
+            
+           
+$EmployeeID = $request->input('employeeid');
+$Location = $request->input('process');
+$Shift = $request->input('shift');
+$Node = $request->input('node');
+$Supplier = $request->input('supplier');
+$Site1 =0;
+$Site2 = 0;
+$Site3 = 0;
+$bAverage = 0;
+$twoSite1 = 0;
+$twoSite2 = 0;
+$twoSite3 = 0;
+$twoAverage = 0;
+$botSite1 = $request->input('botpulltest1');
+$botSite2 = $request->input('botpulltest2');
+$botSite3 = $request->input('botpulltest3');
+$botAverage =  $request->input('botaverage');
+$Remarks = $request->input('remarks');
+
+$post = new MatrixPullTest;
+$post->EmployeeID = $EmployeeID;
+$post->Location = $Location;
+$post->Shift = $Shift;
+$post->Node = $Node;
+$post->Supplier = $Supplier;
+$post->site1 = $Site1;
+$post->site2 = $Site2;
+$post->site3 = $Site3;
+$post->Average = $bAverage;
+$post->twosite1 = $twoSite1;
+$post->twosite2 = $twoSite2;
+$post->twosite3 = $twoSite3;
+$post->twoAverage = $twoAverage;
+$post->botsite1 = $botSite1;
+$post->botsite2 = $botSite2;
+$post->botsite3 = $botSite3;
+$post->botAverage = $botAverage;
+$post->Remarks = $Remarks;
+$post->save ();
+return redirect('/rtobpulltest')->with('success', 'Record successfully added.');
+
+           }else{
+
+            $this->validate($request,[       
+                'employeeid' => 'required|numeric',
+                //'location' => '',
                 'shift' => 'required',
                 'node'=> 'required',
                 'supplier' => 'required',
-                'site1' => 'required',
-                'site2' => 'required',
-                'site3' => 'required',
-                'pulltest1' => 'required|numeric',
-                'pulltest2' => 'required|numeric',
-                'pulltest3' => 'required|numeric',
+                'pulltest1' => 'required',
+                'pulltest2' => 'required',
+                'pulltest3' => 'required',
                 'average' => 'required',
-                'twosite1' => 'required',
-                'twosite2' => 'required',
-                'twosite3' => 'required',
-                'twopulltest1' => 'required|numeric',
-                'twopulltest2' => 'required|numeric',
-                'twopulltest3' => 'required|numeric',
-                'twoaverage' => 'required',
-                'botsite1' => 'required',
-                'botsite2' => 'required',
-                'botsite3' => 'required',
-                'botpulltest1' => 'required|numeric',
-                'botpulltest2' => 'required|numeric',
-                'botpulltest3' => 'required|numeric',
-                'botaverage' => 'required',
+                'twopulltest1' => 'required',
+                'twopulltest2' => 'required',
+                'twopulltest3' => 'required',
+                'twoAverage' => 'required',
                 'remarks' => 'required'
              
             ]);
 
+            $EmployeeID = $request->input('employeeid');
+            $Location = $request->input('process');
+            $Shift = $request->input('shift');
+            $Node = $request->input('node');
+            $Supplier = $request->input('supplier');
+            $Site1 = $request->input('pulltest1');
+            $Site2 = $request->input('pulltest2');
+            $Site3 = $request->input('pulltest3');
+            $bAverage = $request->input('average');
+            $twoSite1 = $request->input('twopulltest1');
+            $twoSite2 = $request->input('twopulltest2');
+            $twoSite3 = $request->input('twopulltest3');
+            $twoAverage = $request->input('twoAverage');
+            $botSite1 = 0;
+            $botSite2 = 0;
+            $botSite3 = 0;
+            $botAverage = 0;
+            $Remarks = $request->input('remarks');
+
+            $post = new MatrixPullTest;
+            $post->EmployeeID = $EmployeeID;
+            $post->Location = $Location;
+            $post->Shift = $Shift;
+            $post->Node = $Node;
+            $post->Supplier = $Supplier;
+            $post->site1 = $Site1;
+            $post->site2 = $Site2;
+            $post->site3 = $Site3;
+            $post->Average = $bAverage;
+            $post->twosite1 = $twoSite1;
+            $post->twosite2 = $twoSite2;
+            $post->twosite3 = $twoSite3;
+            $post->twoAverage = $twoAverage;
+            $post->botsite1 = $botSite1;
+            $post->botsite2 = $botSite2;
+            $post->botsite3 = $botSite3;
+            $post->botAverage = $botAverage;
+            $post->Remarks = $Remarks;
+            $post->save ();
+            return redirect('/rtobpulltest')->with('success', 'Record successfully added.');
+           }
+           
+/*
+          $EmployeeID = $request->input('employeeid');
+          $Location = $request->input('process');
+          $Shift = $request->input('shift');
+          $Node = $request->input('node');
+          $Supplier = $request->input('supplier');
+          $Site1 =0;
+          $Site2 = 0;
+          $Site3 = 0;
+          $bAverage = 0;
+          $twoSite1 = 0;
+          $twoSite2 = 0;
+          $twoSite3 = 0;
+          $twoAverage = 0;
+          $botSite1 = $request->input('botpulltest1');
+          $botSite2 = $request->input('botpulltest2');
+          $botSite3 = $request->input('botpulltest3');
+          $botAverage =  $request->input('botaverage');
+          $Remarks = $request->input('remarks');
+          */
+
         //Create Post
         //$post = $request->post;
-        $post = new MatrixPullTest;
-        $post->EmployeeID = $request->input('employeeid');
-        $post->Location = $request->input('location');
-        $post->Shift = $request->input('shift');
-        $post->Node = $request->input('node');
-        $post->Supplier = $request->input('supplier');
-        $post->Site1 = $request->input('site1');
-        $post->Site2 = $request->input('site2');
-        $post->Site3 = $request->input('site3');
-        $post->PullTest1 = $request->input('pulltest1');
-        $post->PullTest2 = $request->input('pulltest2');
-        $post->PullTest3 = $request->input('pulltest3');
-        $post->Site1 = $request->input('twosite1');
-        $post->Site2 = $request->input('twosite2');
-        $post->Site3 = $request->input('twosite3');
-        $post->twoPullTest1 = $request->input('twopulltest1');
-        $post->twoPullTest2 = $request->input('twopulltest2');
-        $post->twoPullTest3 = $request->input('twopulltest3');
-        $post->botSite1 = $request->input('botsite1');
-        $post->botSite2 = $request->input('botsite2');
-        $post->botSite3 = $request->input('botsite3');
-        $post->botPullTest1 = $request->input('botpulltest1');
-        $post->botPullTest2 = $request->input('botpulltest2');
-        $post->botPullTest3 = $request->input('botpulltest3');
-        $post->botAverage = $request->input('average');
-        $post->Remarks = $request->input('remarks');
-        $post->save ();
-        return redirect('/matrixpulltest')->with('success', 'Data Created');
+      
     }
 
     /**
