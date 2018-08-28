@@ -90,6 +90,20 @@ class yieldController extends Controller
 
                     $dt = $this->getEnd($date,$last_yield->shift);
                     // dd($dt);
+                    $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
+
+                    // dd($cdt);
+
+                    $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $cdt);
+                    $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $dt);
+
+                    $diff_in_minutes = $to->diffInMinutes($from);
+                    
+                    if ($diff_in_minutes >= 30) {
+                        $shift = $this->getShift($time);
+                        $last_trx = $this->getStart($date,$shift);
+                        $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+                    }
                 } else {
                     $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
                 }
