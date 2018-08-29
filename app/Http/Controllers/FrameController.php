@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
@@ -17,9 +16,100 @@ class FrameController extends Controller
      */
     public function index()
     {
-        $posts = frameQual::orderBy("id","desc")->get();//DB::select('SELECT * FROM frame_quals ORDER BY ID DESC');                                        
-        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-        return view('backEnd.frameQual')->with('frameLogs',$posts);
+
+     
+     
+$weightAve = DB::table(DB::connection('spc')->select("SELECT AVG(weight) as aveWt FROM (SELECT weight FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview"));
+
+$wtAve = number_format($weightAve->from[0]->aveWt,6);
+
+$weightStd = DB::table(DB::connection('spc')->select("SELECT STDDEV_SAMP(weight) as aveStd FROM (SELECT weight FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview"));
+$wtStd = number_format($weightStd->from[0]->aveStd,6);
+
+$weightAveOfAve = DB::table(DB::connection('spc')->select("SELECT AVG(aveWt) as aveOfAve FROM (SELECT AVG(weight) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date) as tbl_avgOfAvg"));
+$wtAveOfAve = number_format($weightAveOfAve->from[0]->aveOfAve,6);
+
+$weightStdOfStd = DB::table(DB::connection('spc')->select("SELECT STDDEV_SAMP(stdWt) as stdOfStd FROM (SELECT AVG(weight) as stdWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date) as tbl_stdOfStd"));
+$wtStdOfStd = number_format($weightStdOfStd->from[0]->stdOfStd,6);
+
+$median = DB::table(DB::connection('spc')->select("SELECT ROUND(AVG(weight),6) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date ORDER BY aveWt ASC"));
+$medianCount = DB::table(DB::connection('spc')->select("SELECT COUNT(aveWt) as aveCount FROM (SELECT ROUND(AVG(weight),6) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date ORDER BY aveWt ASC) as tblcnt"));
+
+$medianCountVal = $medianCount->from[0]->aveCount;
+$medianMod = $medianCountVal%2;
+
+
+if($medianMod == 0){
+    $midval1 = ($medianCountVal/2);
+   $midval2 = $midval1 - 1;
+  $medianVal1 = number_format($median->from[$midval1]->aveWt,6);  
+$medianVal2 = number_format($median->from[$midval2]->aveWt,6);
+$medianAve =number_format((($medianVal1 + $medianVal2)/2),6);
+}else{
+    $midval1 = number_format(($medianCountVal/2),2);
+ $midval2 = round($midval1,1);
+ $medianVal = number_format($median->from[$midval2]->aveWt,6);
+   $medianAve = number_format($medianVal,6);
+}
+
+$wtAveList = DB::table(DB::connection('spc')->select("SELECT AVG(weight) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date"));
+$arrAve = array();
+
+
+
+
+$arrVal= "";
+for($i=0;$i<$medianCountVal ;$i++){
+    array_push($arrAve,$wtAveList->from[$i]->aveWt);
+}
+
+
+$percentile = $this->mypercentile($arrAve,0.00135);
+$percentile2 = $this->mypercentile($arrAve,0.99865);
+
+     $UCL=195;
+$LCL=167;
+$CL = (($UCL-$LCL)/2)+$LCL;
+$target = 180;
+$USL = $target + 25;
+$LSL = $target - 20;
+$CpL = ($wtAveOfAve-$LCL)/(3*$wtStdOfStd);
+$CpU = ($UCL-$wtAveOfAve)/(3*$wtStdOfStd);
+$arrValForCpk = array($CpU,$CpL);
+$Cpk = min($arrValForCpk);
+$CpnU = ($USL - $medianAve)/($percentile2 - $medianAve);
+$CpnL = ($medianAve - $LSL)/($medianAve - $percentile);
+$arrValForCpn = array($CpnU,$CpnL);
+$Cpn = min($arrValForCpn);
+$zValue = ABS(number_format(($wtAveOfAve-$CL)/$wtStdOfStd,4));
+     $xbbfront = 0;
+     $stdavg = 0;
+     $median = 0;
+     return view('spc.backend.frame_quals.summary') 
+->with('avefront',$wtAve)
+->with('stdfront',$wtStd)
+->with('xbbfront',$wtAveOfAve)
+->with('stdavg',$wtStdOfStd)
+->with('median',$medianAve)
+->with('percentile',$percentile)
+->with('percentile2',$percentile2)
+->with('zValue',$zValue)
+->with('UCL',$UCL)
+->with('LCL',$LCL)
+->with('CL',$CL)
+->with('target',$target)
+->with('USL',$USL)
+->with('LSL',$LSL)
+->with('CpL',number_format($CpL,2))
+->with('CpU',number_format($CpU,2))
+->with('Cpk',number_format($Cpk,2))
+->with('Cpn',number_format($Cpn,2))
+->with('CpnU',number_format($CpnU,2))
+->with('CpnL',number_format($CpnL,2));
+
+
+
+
     }
 
     /**
@@ -29,10 +119,8 @@ class FrameController extends Controller
      */
     public function create()
     {
-        $posts = frameQual::get();//DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
-        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-       return view('backEnd.frameCreate')->with('frameLogs',$posts);
-        
+        $posts = FrameQual::orderBy("id","DESC")->limit(1)->get();
+        return view('spc.backend.frame_quals.form')->with('frameLogs',$posts);
     }
 
     /**
@@ -45,31 +133,130 @@ class FrameController extends Controller
     {
         
 
-       $this->validate($request, [ 
-       // 'shift' => 'required', 
-       // 'date' => 'required',
-        'qualTime' => 'required',
-        'serialNo'=> 'required',
-        'L1woSealant' => 'required|numeric|min:700',
-        'L1wSealant' => 'required|numeric|min:700',
-        'L2woSealant' => 'required|numeric|min:700',
-        'L2wSealant' => 'required|numeric|min:700',
-        'S1wSealant' => 'required|numeric|min:500',
-        'S1woSealant' => 'required|numeric|min:500',
-        'S2wSealant' => 'required|numeric|min:500',
-        'S2woSealant' => 'required|numeric|min:500',
-     //   'S2diff' => 'required',
-       // 'S1diff' => 'required',
-        //'L2diff' => 'required',
-        //'L1diff' => 'required',
-        //'S2diff' => 'required',
-        //'sum' =>  'required|numeric',
-        'remarks' => 'required',
-       //'remarks2' => 'required',
-        'beadScale' => 'required|integer|min:1',
-        'facilitySupply' => 'required|integer|min:1',
-        'mainPressure' => 'required|integer|min:1'  
-            ]); 
+       if($request->input('fromDate')!=''&&$request->input('toDate')!=''){
+           $from = $request->input('fromDate');
+           $to = $request->input('toDate');
+       
+$weightAve = DB::table(DB::connection('spc')->select("SELECT AVG(weight) as aveWt FROM (SELECT weight FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."') )as tblview"));
+
+$wtAve = number_format($weightAve->from[0]->aveWt,2);
+
+$weightStd = DB::table(DB::connection('spc')->select("SELECT STDDEV_SAMP(weight) as aveStd FROM (SELECT weight FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."') )as tblview"));
+$wtStd = number_format($weightStd->from[0]->aveStd,6);
+
+$weightAveOfAve = DB::table(DB::connection('spc')->select("SELECT AVG(aveWt) as aveOfAve FROM (SELECT AVG(weight) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."') )as tblview GROUP BY date) as tbl_avgOfAvg"));
+$wtAveOfAve = number_format($weightAveOfAve->from[0]->aveOfAve,6);
+
+$weightStdOfStd = DB::table(DB::connection('spc')->select("SELECT STDDEV_SAMP(stdWt) as stdOfStd FROM (SELECT AVG(weight) as stdWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."') )as tblview GROUP BY date) as tbl_stdOfStd"));
+$wtStdOfStd = number_format($weightStdOfStd->from[0]->stdOfStd,6);
+
+$median = DB::table(DB::connection('spc')->select("SELECT ROUND(AVG(weight),6) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."') )as tblview GROUP BY date ORDER BY aveWt ASC"));
+$medianVal1 = number_format($median->from[14]->aveWt,6);  
+$medianVal2 = number_format($median->from[15]->aveWt,6);
+$medianAve = number_format((($medianVal1 + $medianVal2)/2),6);
+$wtAveList = DB::table(DB::connection('spc')->select("SELECT AVG(weight) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."') )as tblview GROUP BY date"));
+$arrAve = array();
+
+
+
+$arrVal= "";
+for($i=0;$i<30;$i++){
+    array_push($arrAve,$wtAveList->from[$i]->aveWt);
+}
+
+
+$percentile = $this->mypercentile($arrAve,0.00135);
+$percentile2 = $this->mypercentile($arrAve,0.99865);
+$UCL=195;
+$LCL=167;
+
+$CL = (($UCL-$LCL)/2)+$LCL;
+$zValue = ABS(number_format(($wtAveOfAve-$CL)/$wtStdOfStd,4));
+
+$target = 180;
+$USL = $target + 25;
+$LSL = $target - 20;
+$CpL = ABS(number_format(($wtAveOfAve-$LCL)/(3*$wtStdOfStd),4));
+$CpU = ABS(number_format(($UCL-$wtAveOfAve)/(3*$wtStdOfStd),4));
+
+$arrValForCpk = array($CpU,$CpL);
+$Cpk = min($arrValForCpk);
+$CpnU = ($USL - $medianAve)/($percentile2 - $medianAve);
+$CpnL = ($medianAve - $LSL)/($medianAve - $percentile);
+$arrValForCpn = array($CpnU,$CpnL);
+$Cpn = min($arrValForCpn);
+     $xbbfront = 0;
+     $stdavg = 0;
+     $median = 0;
+     return view('spc.backend.frame_quals.summary') 
+->with('avefront', $wtAve)
+->with('stdfront',$wtStd)
+->with('xbbfront',$wtAveOfAve)
+->with('stdavg',$wtStdOfStd)
+->with('median',$medianAve)
+->with('percentile',$percentile)
+->with('percentile2',$percentile2)
+->with('zValue',$zValue)
+->with('UCL',$UCL)
+->with('LCL',$LCL)
+->with('CL',$CL)
+->with('target',$target)
+->with('USL',$USL)
+->with('LSL',$LSL)
+->with('CpL',number_format($CpL,2))
+->with('CpU',number_format($CpU,2))
+->with('Cpk',number_format($Cpk,2))
+->with('Cpn',number_format($Cpn,2))
+->with('CpnU',number_format($CpnU,2))
+->with('CpnL',number_format($CpnL,2));
+       }
+
+            if($request ->input('target')=='180'){
+                $this->validate($request,[ 
+                'L1diff' => 'required|numeric|between:50.00,70.00',
+                'L2diff' => 'required|numeric|between:50.00,70.00',
+                'S1diff' => 'required|numeric|between:20.00,40.00',
+                'S2diff' => 'required|numeric|between:20.00,40.00',
+                'qualTime' => 'required|date_format:H:i',
+                'serialNo'=> 'required',
+                'L1woSealant' => 'required|numeric|min:700',
+                'L1wSealant' => 'required|numeric|min:700',
+                'L2woSealant' => 'required|numeric|min:700',
+                'L2wSealant' => 'required|numeric|min:700',
+                'S1wSealant' => 'required|numeric|min:500',
+                'S1woSealant' => 'required|numeric|min:500',
+                'S2wSealant' => 'required|numeric|min:500',
+                'S2woSealant' => 'required|numeric|min:500',
+                'remarks' => 'required',
+                'beadScale' => 'required|numeric|between:50.00,120.00',
+                'facilitySupply' => 'required|numeric|between:30.00,70.00',
+                'mainPressure' => 'required|numeric|between:30.00,70.00'  
+              ]);
+           }else{
+
+
+            $this->validate($request,[ 
+                'L1diff' => 'required|numeric|between:37.00,57.00',
+                'L2diff' => 'required|numeric|between:37.00,57.00',
+                'S1diff' => 'required|numeric|between:18.00,38.00',
+                'S2diff' => 'required|numeric|between:18.00,38.00',
+                 'qualTime' => 'required',
+                 'serialNo'=> 'required',
+                 'L1woSealant' => 'required|numeric|min:700',
+                 'L1wSealant' => 'required|numeric|min:700',
+                 'L2woSealant' => 'required|numeric|min:700',
+                 'L2wSealant' => 'required|numeric|min:700',
+                 'S1wSealant' => 'required|numeric|min:500',
+                 'S1woSealant' => 'required|numeric|min:500',
+                 'S2wSealant' => 'required|numeric|min:500',
+                 'S2woSealant' => 'required|numeric|min:500',
+                 'remarks' => 'required',
+                'beadScale' => 'required|numeric|between:50.00,120.00',
+                'facilitySupply' => 'required|numeric|between:30.00,70.00',
+                'mainPressure' => 'required|numeric|between:30.00,70.00'  
+                     ]); 
+
+           }
             
         $post = new frameQual;
         $post->qualTransID = $request->input('transID');
@@ -97,32 +284,26 @@ class FrameController extends Controller
             $post->TargetParam= $request ->input('target');
             $post->qualResult= $request ->input('remarks');
             $post->remarks= $request ->input('remarks2');
-       // $post->crossSection = $request->input('crossSection');
         $post->save();
-        if($request->input('remarks')=="fail" && $request->input('serialNo')=="Frame Qual" ){
-            $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
-            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-         //return redirect('Frame/create')->with('frameLogs',$posts);
-          // return redirect()->route('create',['frameLogs'=>$posts]);
+        if($request->input('remarks')=="fail" && $request->input('serialNo')=="Qual Frame" ){
+            $posts = DB::connection('spc')->select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
+          
          return Redirect::route('Frame.create')
                            ->with('frameLogs',$posts)
                           ->with('error','Qual Failed! record was added. Add Another qual.');
-           //->with('success','Qual Failed.Record was added.Add another qual.');
-            //return redirect('/Frame')->with('success','Record was successfully added!');
-        }elseif($request->input('remarks')=="pass" && $request->input('serialNo')=="Frame Qual" ){
-            $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
-            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-            return Redirect::route('Frame.create')
+           //
+        }elseif($request->input('remarks')=="pass" && $request->input('serialNo')=="Qual Frame" ){
+            $posts = DB::connection('spc')->select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
+          
+        return Redirect::route('Frame.create')
             ->with('frameLogs',$posts)
            ->with('success','Qual Passed! record was added. Add Another qual with Serial No.');
-            //return redirect('/Frame')->with('success','Record was successfully added!');
-        }elseif($request->input('remarks')=="fail" && $request->input('serialNo')!="Frame Qual" ){
-            $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
-            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
+         
+        }elseif($request->input('remarks')=="fail" && $request->input('serialNo')!="Qual Frame" ){
+            $posts = DB::connection('spc')->select('SELECT * FROM frame_quals ORDER BY ID DESC LIMIT 1');                                        
             return Redirect::route('Frame.create')
             ->with('frameLogs',$posts)
            ->with('error','Qual Failed! record was added. Add Another qual.');
-            //return redirect('/Frame')->with('success','Record was successfully added!');
         }else{
             return redirect('/Frame')->with('success','Record was successfully added!');
         }
@@ -172,5 +353,32 @@ class FrameController extends Controller
     public function destroy($id)
     {
         //
+    }
+   public function mypercentile($data,$percentile){ 
+        if( 0 < $percentile && $percentile < 1 ) { 
+            $p = $percentile; 
+        }else if( 1 < $percentile && $percentile <= 100 ) { 
+            $p = $percentile * .01; 
+        }else { 
+            return ""; 
+        } 
+        $count = count($data); 
+        $allindex = ($count-1)*$p; 
+        $intvalindex = intval($allindex); 
+        $floatval = $allindex - $intvalindex; 
+        sort($data); 
+        if(!is_float($floatval)){ 
+            $result = $data[$intvalindex]; 
+        }else { 
+            if($count > $intvalindex+1) 
+                $result = number_format(($floatval*($data[$intvalindex+1] - $data[$intvalindex]) + $data[$intvalindex]),4); 
+            else 
+                $result = $data[$intvalindex]; 
+        } 
+        return $result; 
+    } 
+
+    public function getSumByRange(){
+        
     }
 }

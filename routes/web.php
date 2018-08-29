@@ -24,7 +24,9 @@ Route::group(['middleware'=>['auth','revalidate']], function() {
 
 Route::get('/Apps','PagesController@apps')->name('apps');
 
-Route::get('/Summary', 'PagesController@Summary')->name('spc_entry');
+//@@@@@@@@@@@@@@@@@@@@@@@@ SPC ROUTES @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::get('/SPC/entry', 'PagesController@Summary')->name('spc_entry');
 Route::get('/pulltest', 'PagesController@pulltest');
 Route::get('/lamdata', 'PagesController@lamdata');
 //Route::get('/create', 'FrameController@store');
@@ -47,10 +49,22 @@ Route::resource('Potting','PottingController');
 Route::resource('Curing','CuringController');
 Route::resource('SolderTemp','solderTempController');
 Route::resource('JBox','JBoxController');
-Route::resource('Frame','FrameController');
-Route::resource('Framming','SqBwController');
+
+Route::resource('SPC/Frame','FrameController');
+Route::get('/SPC/Frame_quals/records', function () {
+    $posts = \App\frameQual::orderBy("id","ASC")->get(); 
+    return view('spc.backend.frame_quals.list')->with('frameLogs',$posts);
+});
+
+Route::resource('SPC/Framming','SqBwController');
+Route::get('/SPC/SqBw/records', function () {
+    $posts = \App\frameSqBw::all(); //DB::select('SELECT * FROM  frame_sq_bws');                                        
+    return view('spc.backend.framming_sq_bw.list')->with('frameSBLogs',$posts);
+});
+
 Route::resource('MixRatio','MixRatioController');
 
+//@@@@@@@@@@@@@@@@@@@@@@@@ YIELD ROUTES @@@@@@@@@@@@@@@@@@@@@@@@@@
 // Route::resource('Yield','yieldController');
 Route::get('/yield/email/data','YieldEmailsController@load')->name('email_yield_data');
 Route::get('/yield/email','YieldEmailsController@list')->name('list_email_yield');
@@ -67,6 +81,7 @@ Route::get('/Yield/edit/{id}','yieldController@create')->name('edit_yield');
 Route::post('/Yield/edit/{id}','yieldController@modify')->name('modify_yield');
 Route::post('/Yield/store','yieldController@store')->name('store_yield');
 
+//@@@@@@@@@@@@@@@@@@@@@@@@ OFFICE SUPPLIES ROUTES @@@@@@@@@@@@@@@@@@@@@@@@@@
 Route::get('/os/category/list/data', 'OSCategoryController@load')->name('category_data');
 Route::get('/os/category/list','OSCategoryController@list')->name('list_categories');
 Route::get('/os/category/create','OSCategoryController@create')->name('create_category');

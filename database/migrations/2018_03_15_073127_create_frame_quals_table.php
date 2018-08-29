@@ -28,13 +28,13 @@ class CreateFrameQualsTable extends Migration
             $table->double('S1wSealantWt');
             $table->double('S2woSealantWt');
             $table->double('S2wSealantWt');
-            $table->string('L1diff');
-            $table->string('L2diff');
-            $table->string('S1diff');
-            $table->string('S2diff');
+            $table->double('L1diff');
+            $table->double('L2diff');
+            $table->double('S1diff');
+            $table->double('S2diff');
             $table->double('weight');
             $table->double('beadScale');
-            $table->string('facilitySupply');
+            $table->double('facilitySupply');
             $table->double('mainPressure');
             $table->string('paramID')->nullable();
             $table->double('TargetParam')->nullable();

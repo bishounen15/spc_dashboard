@@ -11,8 +11,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
+   <script src="{{ asset('js/app.js') }}" defer></script>
+    
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
@@ -21,20 +21,15 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/Datatables-1.10.16/css/jquery.dataTables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/buttons.dataTables.min.css') }}" rel="stylesheet">
-    {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> --}}
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> --}}
-  
-
-   {{-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"> --}}
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-  
+    
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet"> 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
-  
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>  
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    
     <style>
         div.dt-buttons {
             float: right;
@@ -90,6 +85,24 @@
                                 @endif
                                 <h6 class="dropdown-header">Transactions</h6>
                                 <a class="dropdown-item" href="{{route('list_yield')}}">Data Entry</a>
+                                </div>
+                            </li>
+                            @endif
+
+                            @if(Auth::user()->sysadmin == 1)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                SPC Dashboard
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {{-- Auth::user()->yield_role == "SUPV" ||  --}}
+                                @if(Auth::user()->sysadmin == 1) 
+                                <h6 class="dropdown-header">Setup</h6>
+                                <a class="dropdown-item" href="#">SPC Targets</a>
+                                <a class="dropdown-item" href="#">Email Distribution</a>
+                                @endif
+                                <h6 class="dropdown-header">Transactions</h6>
+                                <a class="dropdown-item" href="{{route('spc_entry')}}">Data Entry</a>
                                 </div>
                             </li>
                             @endif
@@ -156,7 +169,7 @@
     <script src="{{ asset('js/pdfmake.min.js') }}" defer></script>
     <script src="{{ asset('js/jszip.min.js') }}" defer></script>
     <script src="{{ asset('js/buttons.flash.min.js') }}" defer></script>
-
+    
     @stack('jscript')
 </body>
 </html>

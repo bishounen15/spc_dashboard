@@ -11,7 +11,7 @@ class PagesController extends Controller
     }
 
     public function Summary(){
-        return view ('pages.Summary');
+        return view ('spc.entry');
     }
     
     public function pulltest(){

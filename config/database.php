@@ -65,7 +65,7 @@ return [
 
         'spc' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
+            'host' => '192.168.128.9',
             'port' => '3306',
             'database' => 'sp_spc',
             'username' => 'laravel_user',
