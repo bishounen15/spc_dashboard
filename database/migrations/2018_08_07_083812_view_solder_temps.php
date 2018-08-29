@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ViewFrameQualsTbl extends Migration
+class ViewSolderTemps extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,7 @@ class ViewFrameQualsTbl extends Migration
      */
     public function up()
     {
-     
-        DB::connection('spc')->statement('CREATE VIEW view_framequals AS SELECT DISTINCT(date) FROM frame_quals ORDER BY date DESC Limit 30');
-
+        DB::connection('spc')->statement('CREATE VIEW view_soldertemps AS SELECT DISTINCT(date) FROM solder_temps ORDER BY date DESC Limit 30');
     }
 
     /**
@@ -25,6 +23,7 @@ class ViewFrameQualsTbl extends Migration
      */
     public function down()
     {
-        Schema::connection('spc')->dropIfExists('view_framequals');
+        //
+        Schema::connection('spc')->dropIfExists('view_soldertemps');
     }
 }

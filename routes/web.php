@@ -47,7 +47,13 @@ Route::resource('offlinematsolder', 'OfflineMatSolderingPostsController');
 
 Route::resource('Potting','PottingController');
 Route::resource('Curing','CuringController');
-Route::resource('SolderTemp','solderTempController');
+
+Route::resource('SPC/SolderTemp','solderTempController');
+Route::get('/SPC/Solder_Temp/records', function () {
+    $posts = \App\solderTemp::all(); 
+    return view('spc.backend.frame_quals.list')->with('frameLogs',$posts);
+});
+
 Route::resource('JBox','JBoxController');
 
 Route::resource('SPC/Frame','FrameController');
