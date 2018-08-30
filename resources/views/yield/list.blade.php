@@ -13,6 +13,11 @@
             <td class="table-primary"><strong>WWD</strong></td>
             <td class="table-primary"><strong>Date</strong></td>
 
+            <td class="table-default"><strong>PY</strong></td>
+            <td class="table-default"><strong>EY</strong></td>
+            <td class="table-default"><strong>SRR</strong></td>
+            <td class="table-default"><strong>MRR</strong></td>
+
             <td class="table-danger"><strong>Input (CELL)</strong></td>
             <td class="table-success"><strong>Input (MODULE)</strong></td>
             <td class="table-danger"><strong>In-Process (CELL)</strong></td>
@@ -48,9 +53,6 @@
 
             <td class="table-warning"><strong>Build</strong></td>
             <td class="table-success"><strong>Target</strong></td>
-
-            <td class="table-default"><strong>PY</strong></td>
-            <td class="table-default"><strong>EY</strong></td>
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
             
@@ -165,6 +167,10 @@
                 { data: 'wk' },
                 { data: 'wkd' },
                 { data: 'date' },
+                { data: 'py' },
+                { data: 'ey' },
+                { data: 'srr' },
+                { data: 'mrr' },
                 { data: 'input_cell' },
                 { data: 'input_mod' },
                 { data: 'inprocess_cell' },
@@ -195,8 +201,6 @@
                 { data: 'el2_low_power' },
                 { data: 'build' },
                 { data: 'target' },
-                { data: 'py' },
-                { data: 'ey' },
             ],
         });
 
