@@ -16,14 +16,9 @@ class FrameController extends Controller
      */
     public function index()
     {
-      //  $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID DESC');                                        
-        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-     //   return view('backEnd.frameQual')->with('frameLogs',$posts);
 
-     
-     
+         
 $weightAve = DB::table(DB::select("SELECT AVG(weight) as aveWt FROM (SELECT weight FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview"));
-
 $wtAve = number_format($weightAve->from[0]->aveWt,6);
 
 $weightStd = DB::table(DB::select("SELECT STDDEV_SAMP(weight) as aveStd FROM (SELECT weight FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview"));
@@ -42,22 +37,19 @@ $medianMod = $medianCountVal%2;
 
 
 if($medianMod == 0){
-    $midval1 = ($medianCountVal/2);
-   $midval2 = $midval1 - 1;
-  $medianVal1 = number_format($median->from[$midval1]->aveWt,6);  
+$midval1 = ($medianCountVal/2);
+$midval2 = $midval1 - 1;
+$medianVal1 = number_format($median->from[$midval1]->aveWt,6);  
 $medianVal2 = number_format($median->from[$midval2]->aveWt,6);
 $medianAve =number_format((($medianVal1 + $medianVal2)/2),6);
-//$medianAve = $medianMod;
 }else{
-    $midval1 = number_format(($medianCountVal/2),2);
- $midval2 = round($midval1,1);
- $medianVal = number_format($median->from[$midval2]->aveWt,6);
-   $medianAve = number_format($medianVal,6);
- // $medianAve = $medianMod;
+$midval1 = number_format(($medianCountVal/2),2);
+$midval2 = round($midval1,1);
+$medianVal = number_format($median->from[$midval2]->aveWt,6);
+$medianAve = number_format($medianVal,6);
 }
 
 $wtAveList = DB::table(DB::select("SELECT AVG(weight) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT * FROM view_framequals) )as tblview GROUP BY date"));
-//dd($median);
 $arrAve = array();
 
 
@@ -65,16 +57,13 @@ $arrAve = array();
 
 $arrVal= "";
 for($i=0;$i<$medianCountVal ;$i++){
-  //  $arrVal= $arrVal.$wtAveList->from[$i]->aveWt.',';
     array_push($arrAve,$wtAveList->from[$i]->aveWt);
 }
 
-
 $percentile = $this->mypercentile($arrAve,0.00135);
 $percentile2 = $this->mypercentile($arrAve,0.99865);
-
-     //$tempBefAveSTD = 0;
-     $UCL=195;
+     
+$UCL=195;
 $LCL=167;
 $CL = (($UCL-$LCL)/2)+$LCL;
 $target = 180;
@@ -161,11 +150,27 @@ $wtAveOfAve = number_format($weightAveOfAve->from[0]->aveOfAve,6);
 $weightStdOfStd = DB::table(DB::select("SELECT STDDEV_SAMP(stdWt) as stdOfStd FROM (SELECT AVG(weight) as stdWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."') )as tblview GROUP BY date) as tbl_stdOfStd"));
 $wtStdOfStd = number_format($weightStdOfStd->from[0]->stdOfStd,6);
 
-$median = DB::table(DB::select("SELECT ROUND(AVG(weight),6) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."') )as tblview GROUP BY date ORDER BY aveWt ASC"));
-$medianVal1 = number_format($median->from[14]->aveWt,6);  
-$medianVal2 = number_format($median->from[15]->aveWt,6);
-$medianAve = number_format((($medianVal1 + $medianVal2)/2),6);
-//$medianAve = $median::count();
+
+$median = DB::table(DB::select("SELECT ROUND(AVG(weight),6) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."' )) as tblview GROUP BY date ORDER BY aveWt ASC"));
+$medianCount = DB::table(DB::select("SELECT COUNT(aveWt) as aveCount FROM (SELECT ROUND(AVG(weight),6) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."' )) as tblview GROUP BY date ORDER BY aveWt ASC) as tblcnt"));
+$medianCountVal = $medianCount->from[0]->aveCount;
+$medianMod = $medianCountVal%2;
+
+
+if($medianMod == 0){
+    $midval1 = ($medianCountVal/2);
+   $midval2 = $midval1 - 1;
+  $medianVal1 = number_format($median->from[$midval1]->aveWt,6);  
+$medianVal2 = number_format($median->from[$midval2]->aveWt,6);
+$medianAve =number_format((($medianVal1 + $medianVal2)/2),6);
+//$medianAve = $medianMod;
+}else{
+    $midval1 = number_format(($medianCountVal/2),2);
+ $midval2 = round($midval1,1);
+ $medianVal = number_format($median->from[$midval2]->aveWt,6);
+   $medianAve = number_format($medianVal,6);
+ // $medianAve = $medianMod;
+}
 // $wtAve = 0;
 $wtAveList = DB::table(DB::select("SELECT AVG(weight) as aveWt FROM (SELECT * FROM frame_quals WHERE date IN (SELECT distinct(date) FROM `frame_quals` WHERE date BETWEEN '".$from."' AND '".$to."') )as tblview GROUP BY date"));
 //dd($medianAve);
@@ -174,7 +179,7 @@ $arrAve = array();
 
 
 $arrVal= "";
-for($i=0;$i<30;$i++){
+for($i=0;$i<$medianCountVal;$i++){
   //  $arrVal= $arrVal.$wtAveList->from[$i]->aveWt.',';
     array_push($arrAve,$wtAveList->from[$i]->aveWt);
 }

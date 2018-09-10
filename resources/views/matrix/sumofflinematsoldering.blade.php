@@ -22,7 +22,7 @@
                 <th>Shift</th>
                 <th>Supplier</th>
                 <th>Node</th>
-                <th>Temp </th
+               
                 <th>Remarks</th>
                 <th>Average</th>
                 <th>Date</th>
@@ -35,16 +35,16 @@
                 <?php $i++ ?>
                  <tr>
                  <td>
-                    <td>{{$potLog->employeeid}}</td>
+                    <td>{{$potLog->id}}</td>
                     <td>{{$potLog->location}}</td>
-                    <td>{{$potlog->process}}</td>
+                    <td>{{$potLog->station}}</td>
                     <td>{{$potLog->shift}}</td>
-                    <td>{{$potLog->node}}</td>
                     <td>{{$potLog->supplier}}</td>
-                    <td>{{$potLog->temp}}</td>
+                    <td>{{$potLog->node}}</td>
+                   
                     <td>{{$potLog->remarks}}</td>
                     <td style="font-size:12px;">{{$potLog->average}}</td>
-                    <td>{{$potLog->created_at}}</td>
+                    <td>{{$potLog->date}}</td>
                  </tr>
             @endforeach  
         @else

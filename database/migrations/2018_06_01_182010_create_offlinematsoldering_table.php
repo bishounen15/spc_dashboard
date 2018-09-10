@@ -19,6 +19,7 @@ class CreateOfflinematsolderingTable extends Migration
                 $table->increments('id');
                 $table->String('employeeid');
                 $table->String('location');
+                $table->String('station');
                 $table->String('shift');
                 $table->String('node');
                 $table->String('supplier');
@@ -27,6 +28,7 @@ class CreateOfflinematsolderingTable extends Migration
                 $table->String('temp3');
                 $table->String('remarks');
                 $table->String('average');
+                $table->date('date');
                 $table->timestamps();
             });
     }

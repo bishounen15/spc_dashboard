@@ -50,6 +50,20 @@ Route::get('/JBoxDispense', function () {
         return view('matrix.summatsoldering')->with('matsolderingtemp', $posts);
     });
 
+    Route::get('/btobpulltest', function () {
+        $posts = DB::select('SELECT * FROM`btobpulltest` ORDER BY id DESC');
+        return view('matrix.sumbtobpulltest')->with('btobpulltest', $posts);
+    });
+
+
+    
+    Route::get('/offmatsoldering', function () {
+        $posts = DB::select('SELECT * FROM offlinematsoldering ORDER BY id DESC');
+    return view('matrix.sumofflinematsoldering')->with('offlinematsolderingtemp', $posts);
+    });
+  
+
+
 
 Route::get('/', 'PagesController@index');
 //Route::get('/solder', 'solderTempController@index');

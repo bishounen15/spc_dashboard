@@ -66,7 +66,7 @@
                         </div>
                         <ul class="list-group list-group-flush">
                           <li class="list-group-item"><a href ="/offlinebtob">Busbar-to-Busbar Pull Test</a></li>
-                          <li class="list-group-item"><a href ="/offlinematsolder">Offline Matrix Soldering Temp</a></li>
+                          <li class="list-group-item"><a href ="/offlinematsolder">Busbar-to-Busbar Soldering Temp</a></li>
                         </ul>
                 </div>
               <br>

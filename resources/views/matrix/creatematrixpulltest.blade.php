@@ -12,7 +12,7 @@
                                 <div class="col-md-1"> {{Form::label('employeeid', 'Employee ID:')}} </div>  
                                 <div class="col-md-5"> {{ Form::text('employeeid', '',['class'=>'form-control'] )}} <small class="form-text text-danger">{{ $errors->first('employeeid') }}</small> </div>
                                 <div class="col-md-1"> {{Form::label('processlbl', 'Process:')}}</div>  
-                                <div class="col-md-5"> {{Form::select('process', array('Bussing1' => 'Bussing 1', 'Bussing2' => 'Bussing2','Rework' => 'Rework'),'',['class' => 'form-control process','placeholder' => 'Select Location'])}} <small class="form-text text-danger">{{ $errors->first('location') }}</small> </div>
+                                <div class="col-md-5"> {{Form::select('process', array('Bussing1' => 'Bussing 1', 'Bussing2' => 'Bussing2','Rework' => 'Rework'),'',['class' => 'form-control process','placeholder' => 'Select Location'])}} <small class="form-text text-danger">{{ $errors->first('process') }}</small> </div>
                             </div><br>
                             <div class="row">
                                 <div class="col-md-1"> {{Form::label('shift', 'Shift:')}} </div>  
@@ -24,12 +24,14 @@
                                 <div class="col-md-1"> {{Form::label('remarks', 'Remarks:')}} </div>
                                 <div class="col-md-5"> {{Form::text('remarks','', ['class' => 'form-control','placeholder' => 'Remarks'])}} <small class="form-text text-danger">{{ $errors->first('remarks') }}</small> </div>
                                 <div class="col-md-1"> {{Form::label('supplier', 'Supplier:')}} </div>
-                                <div class="col-md-5"> {{Form::text('supplier','', ['class' => 'form-control','placeholder' => 'Supplier'])}} <small class="form-text text-danger">{{ $errors->first('supplier') }}</small> </div>            
+                                <div class="col-md-5"> {{Form::select('supplier', array('Gigastorage' => 'Gigastorage', 'YourBest' => 'YourBest'),'',['class' => 'form-control process','placeholder' => 'Select Supplier'])}} <small class="form-text text-danger">{{ $errors->first('supplier') }}</small> </div>            
                             </div></br>
                             <div class="row"> 
                                     
                                 <div class="col-md-1"> {{Form::label('Date', 'Date:')}} </div>    
                                 <div class="col-md-5"> {{Form::date('fixture_date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}} </div>
+                                <div class="col-md-1"> {{Form::label('ProdBuilt', 'Product Built:')}}</div>  
+                                <div class="col-md-5"> {{Form::select('prodBuilt', array('Gintech' => 'Gintech', 'Own-BOM' => 'Own-BOM'),'',['class' => 'form-control process','placeholder' => 'Select Product Built'])}} <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small> </div>
                             </div></br>
                         </div> 
                     </div>
@@ -85,29 +87,78 @@
                     </div>
                 </div>
                      
-                        <div class="card bottom">
+                <div class="card top">
+                    <h5 class="card-header">Top</h5>
+                        <div class="card-body">
+                        <div class="jumbotron text-center">
+                        <div class="row">
+                            <div class="col-md-1"> {{Form::label('topsite1', 'Site 1:')}} </div>
+                            <div class="col-md-3"> {{Form::text('toppulltest1','', ['class' => 'form-control','placeholder' => 'PullTest1', 'id' => 'toppulltest1', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest1') }}</small> </div> 
+                            <div class="col-md-1"> {{Form::label('botaverage', 'Average:')}} </div>
+                            <div class="col-md-3"> {{Form::text('topaverage','', ['class' => ' average form-control','placeholder' => 'Average', 'id' => 'topaverage', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botaverage') }}</small> </div>     
+                        </div></br> 
+                        
+                        <div class="row">
+                            <div class="col-md-1"> {{Form::label('botsite2', 'Site 2:')}} </div>
+                            <div class="col-md-3"> {{Form::text('toppulltest2','', ['class' => 'form-control','placeholder' => 'PullTest2', 'id' => 'toppulltest2', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest2') }}</small> </div>     
+                        </div></br> 
+
+                        <div class="row">
+                            <div class="col-md-1"> {{Form::label('botsite3', 'Site 3:')}} </div>
+                            <div class="col-md-3"> {{Form::text('toppulltest3','', ['class' => 'form-control','placeholder' => 'PullTest3', 'id' => 'toppulltest3', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest3') }}</small> </div>     
+                        </div></br>
+                    </div>  
+                </div>
+            </div>
+                        <div class="card bottomBus">
                             <h5 class="card-header">Bottom</h5>
                                 <div class="card-body">
                                 <div class="jumbotron text-center">
                                 <div class="row">
-                                    <div class="col-md-1"> {{Form::label('botsite1', 'Site 1:')}} </div>
-                                    <div class="col-md-3"> {{Form::text('botpulltest1','', ['class' => 'form-control','placeholder' => 'PullTest1', 'id' => 'botpulltest1', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest1') }}</small> </div> 
+                                    <div class="col-md-1"> {{Form::label('bussite1', 'Site 1:')}} </div>
+                                    <div class="col-md-3"> {{Form::text('buspulltest1','', ['class' => 'form-control','placeholder' => 'PullTest1', 'id' => 'buspulltest1', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest1') }}</small> </div> 
                                     <div class="col-md-1"> {{Form::label('botaverage', 'Average:')}} </div>
-                                    <div class="col-md-3"> {{Form::text('botaverage','', ['class' => ' average form-control','placeholder' => 'Average', 'id' => 'botaverage', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botaverage') }}</small> </div>     
+                                    <div class="col-md-3"> {{Form::text('busaverage','', ['class' => ' average form-control','placeholder' => 'Average', 'id' => 'busaverage', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botaverage') }}</small> </div>     
                                 </div></br> 
                                 
                                 <div class="row">
                                     <div class="col-md-1"> {{Form::label('botsite2', 'Site 2:')}} </div>
-                                    <div class="col-md-3"> {{Form::text('botpulltest2','', ['class' => 'form-control','placeholder' => 'PullTest2', 'id' => 'botpulltest2', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest2') }}</small> </div>     
+                                    <div class="col-md-3"> {{Form::text('buspulltest2','', ['class' => 'form-control','placeholder' => 'PullTest2', 'id' => 'buspulltest2', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest2') }}</small> </div>     
                                 </div></br> 
     
                                 <div class="row">
                                     <div class="col-md-1"> {{Form::label('botsite3', 'Site 3:')}} </div>
-                                    <div class="col-md-3"> {{Form::text('botpulltest3','', ['class' => 'form-control','placeholder' => 'PullTest3', 'id' => 'botpulltest3', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest3') }}</small> </div>     
+                                    <div class="col-md-3"> {{Form::text('buspulltest3','', ['class' => 'form-control','placeholder' => 'PullTest3', 'id' => 'buspulltest3', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest3') }}</small> </div>     
                                 </div></br>
                             </div>  
                         </div>
                     </div>
+
+                    <div class="card bottom">
+                        <h5 class="card-header">Bottom</h5>
+                            <div class="card-body">
+                            <div class="jumbotron text-center">
+                            <div class="row">
+                                <div class="col-md-1"> {{Form::label('botsite1', 'Site 1:')}} </div>
+                                <div class="col-md-3"> {{Form::text('botpulltest1','', ['class' => 'form-control','placeholder' => 'PullTest1', 'id' => 'botpulltest1', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest1') }}</small> </div> 
+                                <div class="col-md-1"> {{Form::label('botaverage', 'Average:')}} </div>
+                                <div class="col-md-3"> {{Form::text('botaverage','', ['class' => ' average form-control','placeholder' => 'Average', 'id' => 'botaverage', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botaverage') }}</small> </div>     
+                            </div></br> 
+                            
+                            <div class="row">
+                                <div class="col-md-1"> {{Form::label('botsite2', 'Site 2:')}} </div>
+                                <div class="col-md-3"> {{Form::text('botpulltest2','', ['class' => 'form-control','placeholder' => 'PullTest2', 'id' => 'botpulltest2', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest2') }}</small> </div>     
+                            </div></br> 
+
+                            <div class="row">
+                                <div class="col-md-1"> {{Form::label('botsite3', 'Site 3:')}} </div>
+                                <div class="col-md-3"> {{Form::text('botpulltest3','', ['class' => 'form-control','placeholder' => 'PullTest3', 'id' => 'botpulltest3', 'onkeyup' => 'calc()'])}} <small class="form-text text-danger">{{ $errors->first('botpulltest3') }}</small> </div>     
+                            </div></br>
+                        </div>  
+                    </div>
+                </div>
+
+                    
                     {{Form::submit('Submit',['class'=>'btn btn-primary'])}}
                                 {!! Form::close() !!}
  </div>
@@ -132,22 +183,42 @@
                                     parseFloat(document.getElementById('botpulltest1').value) + 
                                     parseFloat(document.getElementById('botpulltest2').value) + 
                                     parseFloat(document.getElementById('botpulltest3').value)) / 3);
+                                    
+
+                                    document.getElementById('topaverage').value = ((
+                                    parseFloat(document.getElementById('toppulltest1').value) + 
+                                    parseFloat(document.getElementById('toppulltest2').value) + 
+                                    parseFloat(document.getElementById('toppulltest3').value)) / 3);
+                                    
+                                    
+                                    document.getElementById('busaverage').value = ((
+                                    parseFloat(document.getElementById('buspulltest1').value) + 
+                                    parseFloat(document.getElementById('buspulltest2').value) + 
+                                    parseFloat(document.getElementById('buspulltest3').value)) / 3);
+                                    
                                     }
+
 
                                       $(document).ready(function () {
                                      if( $('.process').val() == 'Bussing1' || $('.process').val() == 'Bussing2')
                                      {$('.bottom').hide();
                                       $('.top1').show();
-                                      $('.top2').show();} 
+                                      $('.top2').show();
+                                      $('.bottomBus').show();
+                                      $('.top').hide();} 
                                       else  if( $('.process').val() == 'Rework' )
                                       { $('.bottom').show();
                                       $('.top1').hide();
-                                      $('.top2').hide();}
+                                      $('.top2').hide();
+                                      $('.bottomBus').hide();
+                                      $('.top').show();}
                                      
                                       else{
-                                        $('.bottom').show();
-                                      $('.top1').show();
-                                      $('.top2').show();
+                                        $('.bottom').hide();
+                                      $('.top1').hide();
+                                      $('.top2').hide();
+                                      $('.bottomBus').hide();
+                                      $('.top').hide();
                                      
                                       }
                                     
@@ -165,10 +236,14 @@
                                       $('.bottom').hide();
                                       $('.top1').show();
                                       $('.top2').show();
+                                      $('.top').hide();
+                                      $('.bottomBus').show();
                               }else if(valueSelected == 'Rework' ){
                                       $('.bottom').show();
                                       $('.top1').hide();
                                       $('.top2').hide();
+                                      $('.top').show();
+                                      $('.bottomBus').hide();
                               }
                                 });
 

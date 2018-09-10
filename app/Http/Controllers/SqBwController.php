@@ -343,6 +343,23 @@ class SqBwController extends Controller
         } 
         return $result; 
     } 
+    public function getList4percentile($qry,$percentdec,$medianCountVal){
+        $medianCount = DB::table(DB::select($medianCountVal));
+        $wtAveList = DB::table(DB::select($qry));
+        $medianCountValue = $medianCount->from[0]->aveCount;
+        //dd($median);
+        $arrAve = array();
+        
+        $arrVal= "";
+        for($i=0;$i<$medianCountValue ;$i++){
+          //  $arrVal= $arrVal.$wtAveList->from[$i]->aveWt.',';
+            array_push($arrAve,$wtAveList->from[$i]->aveWt);
+        }
+
+        $percentile = $this->mypercentile($arrAve,$percentdec);
+        return $percentile;
+      
+     }
     public function getMedian($medianSql, $medianCount)
     {
         $median = DB::table(DB::select($medianSql));
@@ -366,23 +383,7 @@ class SqBwController extends Controller
 
 }
      }
-     public function getList4percentile($qry,$percentdec,$medianCountVal){
-        $medianCount = DB::table(DB::select($medianCountVal));
-        $wtAveList = DB::table(DB::select($qry));
-        $medianCountValue = $medianCount->from[0]->aveCount;
-        //dd($median);
-        $arrAve = array();
-        
-        $arrVal= "";
-        for($i=0;$i<$medianCountValue ;$i++){
-          //  $arrVal= $arrVal.$wtAveList->from[$i]->aveWt.',';
-            array_push($arrAve,$wtAveList->from[$i]->aveWt);
-        }
-
-        $percentile = $this->mypercentile($arrAve,$percentdec);
-        return $percentile;
-      
-     }
+ 
      public function getCL($UCL,$LCL){
         $CL = ($UCL-$LCL)/2+$LCL;
         return $CL;

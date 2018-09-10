@@ -15,21 +15,20 @@ class CreateMatsolderingposts extends Migration
     {
         //
         Schema::create('mat_solderings', function (Blueprint $table) {
-            $table->increments('id'); 
-            $table->string('EmployeeID');
-            $table->string('Location'); 
-            $table->string('Shift');
-            $table->string('Supplier');
-            $table->string('Node');
-            $table->string('Remarks');
-            $table->float('Temp1');
-            $table->float('Temp2');
-            $table->float('Temp3');
-            $table->float('Average');
-            $table->float('botTemp1');
-            $table->float('botTemp2');
-            $table->float('botTemp3');
-            $table->float('botAverage');
+            $table->increments('id');
+            $table->String('employeeid');
+            $table->String('Location');
+            $table->String('process');
+            $table->String('shift');
+            $table->String('node');
+            $table->String('supplier');
+            $table->String('productBuilt');
+            $table->String('remarks');
+            $table->double('temp1');
+            $table->double('temp2');
+            $table->double('temp3');
+            $table->double('average');
+            $table->date('date');
             $table->timestamps();
         });
     }

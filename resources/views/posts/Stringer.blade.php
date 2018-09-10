@@ -2,10 +2,12 @@
 
 @section('content')
     <div class="container" style="width:120%">
+                {!! Form::open(['action' => 'StringerController@store', 'method' => 'POST']) !!}
+      
         <div class="card">
                 <h5 class="card-header">Stringer Data Inputs</h5>
             <div class="card-body">
-                {!! Form::open(['action' => 'StringerController@store', 'method' => 'POST']) !!}
+              
                     <div class="row">
                         <div class="col-md-1">
                             {{Form::label('Date', 'Date:')}}
@@ -60,10 +62,18 @@
                             {{Form::text('CellNo', '', ['class' => 'form-control', 'placeholder'=>'Cell No.'])}}
                             <small class="form-text text-danger">{{ $errors->first('CellNo') }}</small>
                         </div>
+                        <div class="col-md-1">
+                                {{Form::label('Busbar', 'Busbar:')}}
+                            </div>    
+                            <div class="col-md-3">
+                                {{Form::select('bb', array('5bb' => '5bb', '4bb' => '4bb'), '4bb',['class'=>'form-control bb','placeholder'=>'Select bb'])}}
+                                <small class="form-text text-danger">{{ $errors->first('bb') }}</small>
+                            </div>
                        
                     </div><br>
             </div>
         </div>
+        <div class="4bb">
         <div class="card">
                 <h5 class="card-header">Stringer Sites Details</h5>
                     <div class="card-body">
@@ -419,14 +429,144 @@
             
                                         </div>
                                     </div>
-                        <br> 
-                        {{Form::submit('&nbsp;&nbsp;Submit&nbsp;&nbsp;', ['class' => 'btn btn-primary' ])}}  &emsp; <a href="/stringerdata" class="btn btn-danger">Cancel</a>
-                        {!! Form::close() !!}
+
+                </div>
+                <div class="5bb">
+
+                                <div class="card">
+                                            <div class="card-header"> Site 5</div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        {{Form::label('Location', 'Location:')}}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::label('Peel Test', 'Peel Test:')}}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                            {{Form::label('Criteria', 'Criteria:')}}
+                                                    </div>  
+                                                    <div class="col-md-3">
+                                                            {{Form::label('Remarks', 'Remarks:')}}
+                                                    </div>                                 
+                                                </div>
+                                                <div class="row">
+                                                        <div class="col-md-3">
+                                                                {{Form::text('LocA[]', 'A', ['class' => 'form-control', 'readonly'])}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                                {{Form::text('PeeltestA[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4A', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('peeltest4A') }}</small>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                                    {{Form::select('CriteriaA[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4A', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('criteria4A') }}</small>
+                                                        </div>  
+                                                        <div class="col-md-3">
+                                                                {{Form::text('RemarksA[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4A', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('remarks4A') }}</small>
+                                                        </div>                            
+                                                </div><br>
+                                                <div class="row">
+                                                        <div class="col-md-3">
+                                                                {{Form::text('LocB[]', 'B', ['class' => 'form-control', 'readonly'])}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                                {{Form::text('PeeltestB[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4B', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('peeltest4B') }}</small>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                                    {{Form::select('CriteriaB[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4B', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('criteria4B') }}</small>
+                                                        </div>  
+                                                        <div class="col-md-3">
+                                                                {{Form::text('RemarksB[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4B', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('remarks4B') }}</small>
+                                                        </div>                           
+                                                </div><br>
+                                                <div class="row">
+                                                        <div class="col-md-3">
+                                                                {{Form::text('LocC[]', 'C', ['class' => 'form-control', 'readonly'])}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                                {{Form::text('PeeltestC[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4C', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('peeltest4C') }}</small>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                                    {{Form::select('CriteriaC[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4C', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('criteria4C') }}</small>
+                                                        </div>  
+                                                        <div class="col-md-3">
+                                                                {{Form::text('RemarksC[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4C', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('remarks4C') }}</small>
+                                                        </div>                         
+                                                </div><br>
+                                                <div class="row">
+                                                        <div class="col-md-3">
+                                                                {{Form::text('LocD[]', 'D', ['class' => 'form-control', 'readonly'])}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                                {{Form::text('PeeltestD[]', '', ['class' => 'form-control', 'placeholder'=>'Peel Test','id'=> 'peeltest4D', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('peeltest4D') }}</small>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                                    {{Form::select('CriteriaD[]', array('A' => 'A', 'B' => 'B'), '',['class'=>'form-control','placeholder'=>'Select Criteria', 'id'=>'criteria4D', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('criteria4D') }}</small>
+                                                        </div>  
+                                                        <div class="col-md-3">
+                                                                {{Form::text('RemarksD[]', '', ['class' => 'form-control', 'placeholder'=>'Remarks ','id'=> 'remarks4D', 'required' => 'true'])}}
+                                                                <small class="form-text text-danger">{{ $errors->first('remarks4D') }}</small>
+                                                        </div>                              
+                                                </div>
+                
+                                            </div>
+                                        </div>
+                    <br> 
+            </div>
+
+
+               <div> 
+       {{Form::submit('&nbsp;&nbsp;Submit&nbsp;&nbsp;', ['class' => 'btn btn-primary' ])}}  &emsp; <a href="/stringerdata" class="btn btn-danger">Cancel</a>
+        {!! Form::close() !!}            
+               </div> 
                     </div>
-            </div><br>     
+              
+                    </div>
+                    
+            </div>
+            
+            <br>     
                     </div>
             </div>
     </div>
 
 @endsection
+@push('jscript')
+<script>
+$(document).ready(function () {
+         $('.5bb').hide();
+      
+        
+        });
+
+      $('.bb').on('change', function (e) {
+      //  $('select option').prop('disabled', true);
+   var optionSelected = $("option:selected", this);
+   var valueSelected = this.value;    
+  // alert(valueSelected);
+ //   $("select option:contains('" + valueSelected + "')").attr("disabled","disabled");
+
+ if(valueSelected == '4bb' )
+ {
+         $('.5bb').hide();
+         $('.4bb').show();
+        
+ }else if(valueSelected == '5bb' ){
+         $('.5bb').show();
+         $('.4bb').show();
+      
+ }
+   });
+   </script>
+   @endpush
 

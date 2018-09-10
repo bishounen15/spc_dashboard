@@ -25,10 +25,7 @@
                 <th>Site 2</th>
                 <th>Site 3</th>
                 <th>Average</th>
-                <th>Site 1</th>
-                <th>Site 2</th>
-                <th>Site 3</th>
-                <th>Average</th>
+                
                 <th>Remarks</th>
                 <th>Date</th>
             </tr>
@@ -49,12 +46,8 @@
                     <td>{{$potLog->site2}}</td>
                     <td>{{$potLog->site3}}</td>
                     <td style="font-size:12px;">{{$potLog->average}}</td>
-                    <td>{{$potLog->site1}}</td>
-                    <td>{{$potLog->site2}}</td>
-                    <td>{{$potLog->site3}}</td>
-                    <td style="font-size:12px;">{{$potLog->average}}</td>
                     <td>{{$potLog->remarks}}</td>
-                    <td>{{$potLog->created_at}}</td>
+                    <td>{{$potLog->date}}</td>
                  </tr>
             @endforeach  
         @else

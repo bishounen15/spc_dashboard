@@ -15,23 +15,18 @@
      
             <table class="table table-striped" style="font-size:10px;">
             <tr>
-                <th></th>
-                <th>EmployeeID</th>
-                <th>Location</th>
                 
+                <th>Employee ID</th>
+                <th>Process</th>
+                <th>Location</th>
                 <th>Shift</th>
-                <th>Supplier</th>
                 <th>Node</th>
-                <th>Temp1</th>
-                <th>Temp2</th>
-                <th>Temp3</th>
-                <th>Remarks</th>
+                <th>Supplier</th>
+                <th>Product </br> Built</th>
+                <th>Temp 1</th>
+                <th>Temp 2</th>
+                <th>Temp 3</th>
                 <th>Average</th>
-                <th>Bottom <br/> Temp1</th>
-                <th>Bottom <br/>Temp2</th>
-                <th>Bottom <br/>Temp3</th>
-               
-                <th>Bottom <br/>Average</th>
                 <th>Remarks</th>
                 <th>Date</th>
 
@@ -43,25 +38,20 @@
                 @foreach($matsolderingtemp as $potLog)
                 <?php $i++ ?>
                  <tr>
-                 <td>
-                    <td>{{$potLog->EmployeeID}}</td>
+                    <td>{{$potLog->employeeid}}</td>
+                    <td>{{$potLog->process}}</td>
                     <td>{{$potLog->Location}}</td>
-                    
-                    <td>{{$potLog->Shift}}</td>
-                    <td>{{$potLog->Supplier}}</td>
-                    <td>{{$potLog->Node}}</td>
-                    <td>{{$potLog->Temp1}}</td>
-                    <td>{{$potLog->Temp2}}</td>
-                    <td>{{$potLog->Temp3}}</td>
-                    <td>{{$potLog->Average}}</td>
-                    <td>{{$potLog->botTemp1}}</td>
-                    <td>{{$potLog->botTemp2}}</td>
-                    <td>{{$potLog->botTemp3}}</td>
-                    <td>{{$potLog->botAverage}}</td>
-
-                    <td>{{$potLog->Remarks}}</td>
-                    <td style="font-size:12px;">{{$potLog->Average}}</td>
-                    <td>{{$potLog->created_at}}</td>
+                    <td>{{$potLog->shift}}</td>
+                    <td>{{$potLog->node}}</td>
+                    <td>{{$potLog->supplier}}</td>
+                    <td>{{$potLog->productBuilt}}</td>
+                    <td>{{$potLog->temp1}}</td>
+                    <td>{{$potLog->temp2}}</td>
+                    <td>{{$potLog->temp3}}</td>
+                    <td style="font-size:12px;">{{$potLog->average}}</td>
+                 
+                    <td>{{$potLog->remarks}}</td>
+                    <td>{{$potLog->date}}</td>
                  </tr>
             @endforeach  
         @else

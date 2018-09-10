@@ -24,9 +24,6 @@ class CreateBtobpulltestTable extends Migration
             $table->String('site1');
             $table->String('site2');
             $table->String('site3');
-            $table->String('pulltest1');
-            $table->String('pulltest2');
-            $table->String('pulltest3');
             $table->String('average');
             $table->timestamps();
         });
