@@ -128,6 +128,10 @@ Route::get('/user/{id}','UserController@show')->name('show_user');
 Route::post('/user/{id}','UserController@modify')->name('modify_user');
 Route::post('/user/remove/{id}','UserController@destroy')->name('remove_user');
 
+Route::get('/assets/general/data', 'AssetsController@load')->name('asset_data');
+Route::resource('/assets/general','AssetsController');
+Route::resource('/assets/dashboard/general','AssetDashboardController');
+
 });
 
 Auth::routes();

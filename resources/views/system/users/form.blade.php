@@ -58,7 +58,7 @@
                         </td>
                         <td width="20%">User Role</td>
                         <td width="40%">
-                                <select class="form-control form-control-sm" name="osi_role" id="osi_role" {{old('yield_access', $yield_access) == 1 ? "" : "disabled"}}>
+                                <select class="form-control form-control-sm" name="osi_role" id="osi_role" {{old('osi_access', $osi_access) == 1 ? "" : "disabled"}}>
                                     <option readonly selected value> -- select an option -- </option>
                                     @foreach($o_roles as $orole)
                                     <option value="{{$orole['code']}}" 
@@ -89,6 +89,29 @@
                                             selected="selected"
                                         @endif    
                                         >{{$yrole['description']}}</option>
+                                        @endforeach
+                                </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th colspan="4" class="table-light">IT Management</th>
+                    </tr>
+                    <tr>
+                        <td width="20%">With Access</td>
+                        <td width="20%" class="text-center">
+                            <input type="checkbox" name="assets_access" id="assets_access" {{old('assets_access', $assets_access) == 1 ? "checked" : ""}}>    
+                        </td>
+                        <td width="20%">User Role</td>
+                        <td width="40%">
+                                <select class="form-control form-control-sm" name="assets_role" id="assets_role" {{old('assets_access', $assets_access) == 1 ? "" : "disabled"}}>
+                                        <option readonly selected value> -- select an option -- </option>
+                                        @foreach($it_roles as $itrole)
+                                        <option value="{{$itrole['code']}}" 
+                                        @if ($itrole['code'] == old('assets_role', $assets_role))
+                                            selected="selected"
+                                        @endif    
+                                        >{{$itrole['description']}}</option>
                                         @endforeach
                                 </select>
                         </td>
@@ -124,6 +147,15 @@
 
             $("#yield_access").click(function () {
                 var el = $("#yield_role");
+                el.removeAttr("disabled");
+
+                if(!$(this).is(":checked")) {
+                    el.attr("disabled", "disabled");
+                }
+            });
+
+            $("#assets_access").click(function () {
+                var el = $("#assets_role");
                 el.removeAttr("disabled");
 
                 if(!$(this).is(":checked")) {

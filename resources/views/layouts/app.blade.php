@@ -94,6 +94,22 @@
                             </li>
                             @endif
 
+                            @if(Auth::user()->assets_access == 1 || Auth::user()->sysadmin == 1)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                IT Management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <h6 class="dropdown-header">Assets</h6>
+                                <h6 class="dropdown-header">&nbsp;&nbsp;&nbsp;&nbsp;Computing Devices</h6>
+                                <a class="dropdown-item" href="/assets/general">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Masterlist</a>
+                                <a class="dropdown-item" href="/assets/dashboard/general">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+                                {{-- <h6 class="dropdown-header">&nbsp;&nbsp;&nbsp;&nbsp;Software</h6> --}}
+                                {{-- <a class="dropdown-item" href="#">Departments</a> --}}
+                                </div>
+                            </li>
+                            @endif
+
                             @if(Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

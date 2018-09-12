@@ -78,6 +78,21 @@ return [
             'engine' => null,
         ],
 
+        'assets' => [
+            'driver' => 'mysql',
+            'host' => '192.168.128.9',
+            'port' => '3306',
+            'database' => 'asset_inv',
+            'username' => 'laravel_user',
+            'password' => 'password@1',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'web_portal' => [
             'driver' => 'mysql',
             'host' => '192.168.128.7',
