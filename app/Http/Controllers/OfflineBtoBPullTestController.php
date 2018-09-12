@@ -29,10 +29,10 @@ class OfflineBtoBPullTestController extends Controller
         $perc2Bus1Top1 = $this->getList4percentile($location,$node,$prod,0.99865);
        
         $USL = 0;
-        $LSL = 0;
+        $LSL = 6.25;
         $target = 0;
-        $UCL=0;
-        $LCL=0;
+        $UCL=37.4;
+        $LCL=7.09;
         $CL = (($UCL-$LCL)/2)+$LCL;
         $zBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$CL),$stdOfStdBus1Top1));
         $CpLBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$LCL),(3*$stdOfStdBus1Top1) ));

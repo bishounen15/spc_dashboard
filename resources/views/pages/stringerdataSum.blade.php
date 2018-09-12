@@ -7,27 +7,27 @@
         <div class="row">
             {{-- <div class="col-md-12"> --}}
                 <div class="card">
-            <div class="card-header">LAMINATOR MONITORING</div> 
+            <div class="card-header">STRINGER DATA MONITORING</div> 
             {{-- <div class="card"> --}}
         <div class="card-body">        
        
         <div class="card">
-                <div class="card-header">Laminator </div> 
+                <div class="card-header">STRINGER </div> 
                 {{-- <div class="card"> --}}
                 <div class="card-body">
                 <a href="/Summary" class="btn btn-secondary">Go Back</a>
               
-                <a href="/lamdata/create" class="btn btn-primary">Input Data</a>
-                <a href="/lamdata_view" class="btn btn-primary">View Data</a>
+                <a href="/stringer/create" class="btn btn-primary">Input Data</a>
+                <a href="/stringer_view" class="btn btn-primary">View Data</a>
             
-    <div class="card-header">Table of computation for Laminator LXM and RelGel </div> 
+    <div class="card-header">Table of computation for Stringer Front and Back </div> 
     <br/>
     <div class="row"> 
         <div class="col-md-5">
             <p align="left">30 days Date from </p>
         </div>
         <div class="col-md-7">
-         {{ $dateRange }}
+        
         </div>
     </div>
     <div class="row"> 
@@ -35,7 +35,7 @@
             <p align="left">Product Built</p>
         </div>
         <div class="col-md-7">
-           
+            {{ $dateRange }}
         </div>
     </div>
     <div class="row"> 
@@ -95,45 +95,50 @@
 <table class="table table-hover table table-bordered">
     <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">Indicators</th>
-            <th scope="col" colspan="2">LAMINATOR 1</th>
-            <th scope="col" colspan="2">LAMINATOR 2</th>
-            <th scope="col" colspan="2">LAMINATOR 3</th>
-            
+            <th scope="col" colspan="2"></th>
+            <th colspan="2" bgcolor="#ccffcc">STRINGER 1A</th>
+            <th colspan="2" bgcolor="#ccffcc">STRINGER 1B</th>
+            <th colspan="2" bgcolor="#ffffcc">STRINGER 2A</th>
+            <th colspan="2" bgcolor="#ffffcc">STRINGER 2B</th>
+            <th colspan="2" bgcolor="#ffe6e6">STRINGER 3A</th>
+            <th colspan="2"bgcolor="#ffe6e6">STRINGER 3B</th>
     </tr>
     <tr>
+ 
     <th scope="col">#</th>
     <th scope="col">Indicators</th>
-    <th scope="col">LXM Values</th>
-    <th scope="col">RelGel Values</th>
-    <th scope="col">LXM Values</th>
-    <th scope="col">RelGel Values</th>
-    <th scope="col">LXM Values</th>
-    <th scope="col">RelGel Values</th>
-
+    <th scope="col" bgcolor="#ccffcc">FRONT</th>
+    <th scope="col" bgcolor="#ccffcc">BACK</th>
+    <th scope="col" bgcolor="#ccffcc">FRONT</th>
+    <th scope="col" bgcolor="#ccffcc">BACK</th>
+    <th scope="col" bgcolor="#ffffcc">FRONT</th>
+    <th scope="col" bgcolor="#ffffcc">BACK</th>
+    <th scope="col" bgcolor="#ffffcc">FRONT</th>
+    <th scope="col" bgcolor="#ffffcc">BACK</th>
+    <th scope="col" bgcolor="#ffe6e6">FRONT</th>
+    <th scope="col" bgcolor="#ffe6e6">BACK</th>
+    <th scope="col" bgcolor="#ffe6e6">FRONT</th>
+    <th scope="col" bgcolor="#ffe6e6">BACK</th>
     </tr>
     </thead>
     <tbody>
     <tr>
     <th scope="row">1</th>
     <td><b>Ave (Ind)</b></td>
-    <td>{{$aveIndLXM}}</td>
-    <td>{{$aveIndRG}}</td>
-    <td>{{$L2aveIndLXM}}</td>
-    <td>{{$L2aveIndRG}}</td>
-    <td>{{$L3aveIndLXM}}</td>
-    <td>{{$L3aveIndRG}}</td>
+    <td>{{$aveIndS1AF}}</td>
+    <td>{{$aveIndS1AB}}</td>
+
+    <td>{{$aveIndS2AF}}</td>
+    <td>{{$aveIndS2AB}}</td>
     </tr>
     <tr>
     <th scope="row">2</th>
     <td><b>Stdev (Ind)</b></td>
-    <td>{{$stdIndLXM}}</td>
-    <td>{{$stdIndRG}}</td>
-    <td>{{$L2stdIndLXM}}</td>
-    <td>{{$L2stdIndRG}}</td>
-    <td>{{$L3stdIndLXM}}</td>
-    <td>{{$L3stdIndRG}}</td>
+    <td>{{$stdIndS1AF}}</td>
+    <td>{{$stdIndS1AB}}</td>
+
+    <td>{{$stdIndS2AF}}</td>
+    <td>{{$stdIndS2AB}}</td>
     <tr>
         <th scope="row">3</th>
         <td><b>N</b></td>
@@ -145,63 +150,55 @@
     <tr>
     <th scope="row">4</th>
     <td><b>Ave (Ave)</b></td>
-    <td>{{$aveOfAveLXM}}</td>
-    <td>{{$aveOfAveRG}}</td>
-    <td>{{$L2aveOfAveLXM}}</td>
-    <td>{{$L2aveOfAveRG}}</td>
-    <td>{{$L3aveOfAveLXM}}</td>
-    <td>{{$L3aveOfAveRG}}</td>
+    <td>{{$aveOfAveS1AF}}</td>
+    <td>{{$aveOfAveS1AB}}</td>
+
+    <td>{{$aveOfAveS2AF}}</td>
+    <td>{{$aveOfAveS2AB}}</td>
     </tr>
     <tr>
     <th scope="row">5</th>
     <td><b>Stdev (Ave)</b></td>
-   <td>{{$stdOfStdLXM}}</td>
-   <td>{{$stdOfStdRG}}</td>
-   <td>{{$L2stdOfStdLXM}}</td>
-   <td>{{$L2stdOfStdRG}}</td>
-   <td>{{$L3stdOfStdLXM}}</td>
-   <td>{{$L3stdOfStdRG}}</td>
-    
+    <td>{{$stdOfStdS1AF}}</td>
+    <td>{{$stdOfStdS1AB}}</td>
+
+    <td>{{$stdOfStdS2AF}}</td>
+    <td>{{$stdOfStdS2AB}}</td>
     
     </tr>
     <tr>
     <th scope="row">6</th>
     <td><b>Median</b></td>
-    <td>{{$medianLXM}}</td>
-    <td>{{$medianRG}}</td>
-    <td>{{$L2medianLXM}}</td>
-    <td>{{$L2medianRG}}</td>
-    <td>{{$L3medianLXM}}</td>
-    <td>{{$L3medianRG}}</td>
+    <td>{{$medianS1AF}}</td>
+    <td>{{$medianS1AB}}</td>
+
+    <td>{{$medianS2AF}}</td>
+    <td>{{$medianS2AB}}</td>
     </tr>
     <tr>
     <th scope="row">7</th>
     <td><b>Percentile (0.00135)</b></td>
-    <td>{{$perc1LXM}}</td>
-    <td>{{$perc1RG}}</td>
-    <td>{{$L2perc1LXM}}</td>
-    <td>{{$L2perc1RG}}</td>
-    <td>{{$L3perc1LXM}}</td>
-    <td>{{$L3perc1RG}}</td>
-    
+    <td>{{$perc1S1AF}}</td>
+    <td>{{$perc1S1AB}}</td>
+
+    <td>{{$perc1S2AF}}</td>
+    <td>{{$perc1S2AB}}</td>
     
     </tr>
     <tr>
     <th scope="row">8</th>
     <td><b>Percentile (0.99865)</b></td>
-    <td>{{$perc2LXM}}</td>
-    <td>{{$perc2RG}}</td>
-    <td>{{$L2perc2LXM}}</td>
-    <td>{{$L2perc2RG}}</td>
-    <td>{{$L3perc2LXM}}</td>
-    <td>{{$L3perc2RG}}</td>
-    
+    <td>{{$perc2S1AF}}</td>
+    <td>{{$perc2S1AB}}</td>
+
+    <td>{{$perc2S2AF}}</td>
+    <td>{{$perc2S2AB}}</td>
     </tr>
     <tr>
     <th scope="row">9</th>
     <td><b>USL</b></td>
     <td>{{$USL}}</td>
-    
+  
     </tr>
     <tr>
     <th scope="row">10</th>
@@ -218,42 +215,33 @@
     <tr>
     <th scope="row">12</th>
     <td><b>Z</b></td>
-    <td>{{ $zLXM }}</td>
-    <td>{{ $zRelGel }}</td>
-    <td>{{ $L2zLXM }}</td>
-    <td>{{ $L2zRelGel }}</td>
-    <td>{{ $L3zLXM }}</td>
-    <td>{{ $L3zRelGel }}</td>
+    <td>{{ $zS1AF }}</td>
+    <td>{{ $zS1AB }}</td>
+
+    <td>{{ $zS2AF }}</td>
+    <td>{{ $zS2AB }}</td>
 </tr>
     <tr>
     <th scope="row">13</th>
-    <td><b>CpU</b></td>
-    <td>{{ $CpULXM }}</td>
-    <td>{{ $CpURG }}</td>
-    <td>{{ $L2CpULXM }}</td>
-    <td>{{ $L2CpURG }}</td>
-    <td>{{ $L3CpULXM }}</td>
-    <td>{{ $L3CpURG }}</td>
+
     </tr>
     <tr>
     <th scope="row">14</th>
     <td><b>CpL</b></td>
-    <td>{{ $CpLLXM }}</td>
-    <td>{{ $CpLRG }}</td>
-    <td>{{ $L2CpLLXM }}</td>
-    <td>{{ $L2CpLRG }}</td>
-    <td>{{ $L3CpLLXM }}</td>
-    <td>{{ $L3CpLRG }}</td>
+    <td>{{ $CpLS1AF }}</td>
+    <td>{{ $CpLS1AB }}</td>
+
+    <td>{{ $CpLS2AF }}</td>
+    <td>{{ $CpLS2AB }}</td>
     </tr>
     <tr>
     <th scope="row">15</th>
     <td><b>Cpk</b></td>
-    <td>{{ $CpkLXM }}</td>
-    <td>{{ $CpkRG }}</td>
-    <td>{{ $L2CpkLXM }}</td>
-    <td>{{ $L2CpkRG }}</td>
-    <td>{{ $L3CpkLXM }}</td>
-    <td>{{ $L3CpkRG }}</td>
+    <td>{{ $CpkS1AF }}</td>
+    <td>{{ $CpkS1AB }}</td>
+
+    <td>{{ $CpkS2AF }}</td>
+    <td>{{ $CpkS2AB }}</td>
     </tr>
     <tr>
     <th scope="row">16</th>
@@ -265,7 +253,7 @@
     <th scope="row">17</th>
     <td><b>LCL</b></td>
     <td>{{ $LCL }}</td>
-    
+   
     </tr>
     <tr>
     <th scope="row">18</th>
@@ -277,34 +265,28 @@
     <tr>
     <th scope="row">19</th>
     <td><b>Cpn</b></td>
-    <td>{{ $CpnLXM }}</td>
-    <td>{{ $CpnRG }}</td>
-    <td>{{ $L2CpnLXM }}</td>
-    <td>{{ $L2CpnRG }}</td>
-    <td>{{ $L3CpnLXM }}</td>
-    <td>{{ $L3CpnRG }}</td>
+    <td>{{ $CpnS1AF }}</td>
+    <td>{{ $CpnS1AB }}</td>
+    <td>{{ $CpnS2AF }}</td>
+    <td>{{ $CpnS2AB }}</td>
     </tr>
     
     <tr>
     <th scope="row">20</th>
     <td><b>CpnU</b></td>
-    <td>{{ $CpnULXM }}</td>
-    <td>{{ $CpnURG }}</td>
-    <td>{{ $L2CpnULXM }}</td>
-    <td>{{ $L2CpnURG }}</td>
-    <td>{{ $L3CpnULXM }}</td>
-    <td>{{ $L3CpnURG }}</td>
+    <td>{{ $CpnUS1AF }}</td>
+    <td>{{ $CpnUS1AB }}</td>
+    <td>{{ $CpnUS2AF }}</td>
+    <td>{{ $CpnUS2AB }}</td>
     </tr>
     
     <tr>
     <th scope="row">21</th>
     <td><b>CpnL</b></td>
-    <td>{{ $CpnLLXM }}</td>
-    <td>{{ $CpnLRG }}</td>
-    <td>{{ $L2CpnLLXM }}</td>
-    <td>{{ $L2CpnLRG }}</td>
-    <td>{{ $L3CpnLLXM }}</td>
-    <td>{{ $L3CpnLRG }}</td>
+ <td>{{ $CpnLS1AF }}</td>
+ <td>{{ $CpnLS1AB }}</td>
+ <td>{{ $CpnLS2AF }}</td>
+ <td>{{ $CpnLS2AB }}</td>
     </tr>
     
     </tbody>

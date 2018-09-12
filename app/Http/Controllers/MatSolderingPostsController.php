@@ -83,9 +83,9 @@ class MatSolderingPostsController extends Controller
         $perc2ReWTop = $this->getList4percentile('Top','Rework',$prod,0.99865);
         $perc2ReWBot = $this->getList4percentile('Bottom','Rework',$prod,0.99865);
         
-        $USL = 0;
-        $LSL = 0;
-        $target = 0;
+        $USL = 360;
+        $LSL = 340;
+        $target = 350;
         $UCL=0;
         $LCL=0;
         $CL = (($UCL-$LCL)/2)+$LCL;

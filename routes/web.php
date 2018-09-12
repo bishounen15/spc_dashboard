@@ -61,8 +61,24 @@ Route::get('/JBoxDispense', function () {
         $posts = DB::select('SELECT * FROM offlinematsoldering ORDER BY id DESC');
     return view('matrix.sumofflinematsoldering')->with('offlinematsolderingtemp', $posts);
     });
-  
 
+    Route::get('/lamdata_view', function () {
+   $posts = DB::select('SELECT * FROM Lams ORDER BY ID DESC');   
+      return view('pages.lamdata')  
+                    ->with('alldata',$posts);
+    });
+
+    Route::get('/pulltest_view', function () {
+        $posts = DB::select('SELECT * FROM pull_tests ORDER BY ID DESC');   
+           return view('pages.pulltestdata')  
+                         ->with('alldata',$posts);
+         });
+         Route::get('/stringer_view', function () {
+            $posts = DB::select('SELECT * FROM stringers ORDER BY ID DESC');   
+               return view('pages.stringerdata')  
+                             ->with('alldata',$posts);
+             });
+     
 
 
 Route::get('/', 'PagesController@index');
@@ -79,7 +95,7 @@ Route::get('/pulltest', 'PagesController@pulltest');
 
 Route::resource('lam', 'LamController');
 Route::resource('laytec', 'LaytecController');
-Route::resource('pulltest', 'PulltestController');
+//Route::resource('pulltest', 'PulltestController');
 Route::resource('pulltestEG', 'PulltestEGController');
 Route::resource('stringer', 'StringerController');
 Route::resource('flash', 'FlashController');

@@ -7,20 +7,20 @@
         <div class="row">
             {{-- <div class="col-md-12"> --}}
                 <div class="card">
-            <div class="card-header">LAMINATOR MONITORING</div> 
+            <div class="card-header">PULLTEST MONITORING</div> 
             {{-- <div class="card"> --}}
         <div class="card-body">        
        
         <div class="card">
-                <div class="card-header">Laminator </div> 
+                <div class="card-header">PULLTEST </div> 
                 {{-- <div class="card"> --}}
                 <div class="card-body">
                 <a href="/Summary" class="btn btn-secondary">Go Back</a>
               
-                <a href="/lamdata/create" class="btn btn-primary">Input Data</a>
-                <a href="/lamdata_view" class="btn btn-primary">View Data</a>
+                <a href="/pulltestdata/create" class="btn btn-primary">Input Data</a>
+                <a href="/pulltest_view" class="btn btn-primary">View Data</a>
             
-    <div class="card-header">Table of computation for Laminator LXM and RelGel </div> 
+    <div class="card-header">Table of computation for Pulltest EVA-Glass and EVA-Backsheet </div> 
     <br/>
     <div class="row"> 
         <div class="col-md-5">
@@ -95,22 +95,20 @@
 <table class="table table-hover table table-bordered">
     <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">Indicators</th>
+            <th scope="col" colspan="2"></th>
             <th scope="col" colspan="2">LAMINATOR 1</th>
             <th scope="col" colspan="2">LAMINATOR 2</th>
             <th scope="col" colspan="2">LAMINATOR 3</th>
-            
     </tr>
     <tr>
     <th scope="col">#</th>
     <th scope="col">Indicators</th>
-    <th scope="col">LXM Values</th>
-    <th scope="col">RelGel Values</th>
-    <th scope="col">LXM Values</th>
-    <th scope="col">RelGel Values</th>
-    <th scope="col">LXM Values</th>
-    <th scope="col">RelGel Values</th>
+    <th scope="col">EVA-Glass Values</th>
+    <th scope="col">EVA-Backsheet Values</th>
+    <th scope="col">EVA-Glass Values</th>
+    <th scope="col">EVA-Backsheet Values</th>
+    <th scope="col">EVA-Glass Values</th>
+    <th scope="col">EVA-Backsheet Values</th>
 
     </tr>
     </thead>
