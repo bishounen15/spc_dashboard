@@ -1,7 +1,6 @@
 <?php
-
 return [
-
+    
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -38,6 +37,6 @@ return [
     'google' => [
         'client_id' => '553917271501-u4tjlom63hotel7o6ro3g0vdvo37c087.apps.googleusercontent.com',         // Your GitHub Client ID
         'client_secret' => 'OZzguN87aeWUkDRb_AQeQNbx', // Your GitHub Client Secret
-        'redirect' => 'http://localhost:9000/login/google/callback',
+        'redirect' => 'http://' . (getenv('SERVER_ADDR') ? getenv('SERVER_ADDR') : 'localhost' ) . ':9000/login/google/callback',
     ],
 ];
