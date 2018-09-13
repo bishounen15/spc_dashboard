@@ -20,8 +20,8 @@ Route::get('/link','LinkAccountController@index')->name('portal_link');
 Route::post('/check','LinkAccountController@check')->name('check_account');
 Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
-Route::group(['middleware' => 'web'], function() {
-    Route::group(['middleware'=>['auth','revalidate']], function() {
+// Route::group(['middleware' => 'web'], function() {
+    Route::group(['middleware'=>['web','auth','revalidate']], function() {
 
         Route::get('/Apps','PagesController@apps')->name('apps');
 
@@ -134,8 +134,7 @@ Route::group(['middleware' => 'web'], function() {
         Route::resource('/assets/dashboard/general','AssetDashboardController');
 
     });
-});
-    
+// }); 
 
 Auth::routes();
 
