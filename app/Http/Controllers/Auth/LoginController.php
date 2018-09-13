@@ -83,6 +83,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             // Authentication passed...
+            sleep(2);
             session()->save();
             return redirect()->intended('/home');
         }
