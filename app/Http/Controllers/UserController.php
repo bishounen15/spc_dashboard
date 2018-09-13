@@ -14,6 +14,8 @@ use DataTables;
 class UserController extends Controller
 {
     //
+    protected $name = 'user_id';
+
     public function __construct( OSIRoles $osi_roles, UserRoles $user_roles, ITRoles $it_roles )
     {
         $this->oroles = $osi_roles->all();
