@@ -259,7 +259,7 @@
                         $("#detail-list").append(myRows);
 
                         $('table .data-edit').hide();
-                        if ("SUPV" == "{!! Auth::user()->yield_role !!}" || 1 == {!! Auth::user()->sysadmin !!}) {
+                        if ("SUPV" == "{!! Auth::user()->yield_role !!}" || "ADMIN" == "{!! Auth::user()->yield_role !!}" || 1 == {!! Auth::user()->sysadmin !!}) {
                             $('table .data-edit').show();
                         }
                         $("#yield-details").modal("toggle");
