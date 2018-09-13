@@ -136,4 +136,7 @@ Route::resource('/assets/dashboard/general','AssetDashboardController');
 
 Auth::routes();
 
+Route::get('login/google', 'Auth\LoginController@redirectToProvider')->name('google_login');
+Route::get('login/google/callback', 'Auth\LoginController@handleProviderCallback');
+
 Route::get('/home', 'HomeController@index')->name('home');

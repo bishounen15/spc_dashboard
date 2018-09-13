@@ -83,7 +83,7 @@ class UserController extends Controller
             $user = User::find($id);
             
             $this->validate($request, [
-                'user_id' => 'required|max:15|unique:users,user_id,'.$user->id,
+                'user_id' => 'required|unique:users,user_id,'.$user->id,
                 'name' => 'required|max:50|unique:users,name,'.$user->id,
                 'dept_id' => 'required',
                 'email' => 'email|nullable|max:50|unique:departments,head_email,'.$user->id,'email' => 'email|nullable|max:50',

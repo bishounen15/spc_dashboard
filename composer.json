@@ -10,6 +10,7 @@
         "doctrine/dbal": "v2.4.2",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.6.*",
+        "laravel/socialite": "^3.1",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.4.0",
         "laravelista/lumen-vendor-publish": "^2.1",
