@@ -14,7 +14,7 @@ use DataTables;
 class UserController extends Controller
 {
     //
-    protected $name = 'user_id';
+    protected $username = 'user_id';
 
     public function __construct( OSIRoles $osi_roles, UserRoles $user_roles, ITRoles $it_roles )
     {
