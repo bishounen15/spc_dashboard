@@ -35,7 +35,7 @@
                                 <div class="form-row">
                                     <div class="col-sm-3 text-right">Transaction Date</div>
                                     <div class="col-sm-4">
-                                    @if(Auth::user()->sysadmin == 1)
+                                    @if(Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
                                         <input type="date" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" onchange="changeShift()">
                                     @else
                                         <input type="text" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" readonly>
@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="col-sm-3 text-right">Current Shift</div>
                                     <div class="col-sm-2">
-                                    @if(Auth::user()->sysadmin == 1)
+                                    @if(Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
                                         <select class="form-control form-control-sm" name="shift" id="shift" onchange="changeShift()">
                                             <option readonly selected value> -- select an option -- </option>
                                             <option value="A" {{$shift == "A" ? "selected" : ""}}>A</option>
