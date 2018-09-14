@@ -10,6 +10,7 @@ use App\User as User;
 use App\YieldEmail;
 use Illuminate\Support\Facades\Auth;
 
+use DB;
 use DataTables;
 Use Response;
 use Carbon\Carbon;
@@ -213,21 +214,33 @@ class yieldController extends Controller
             ["lbl02.MODCLASS","=","A"],
         ])->count("mes01.SERIALNO");
 
-        $el2_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
-            ["lbl02.LBLTYPE","=",1],
-            ["mes01.TRXDATE",">=",$last_trx],
-            ["mes01.TRXDATE","<",$dt],
-            ["mes01.LOCNCODE","=","TEST-EL"],
-            ["lbl02.MODCLASS","=","B"],
-        ])->count("mes01.SERIALNO");
+        $el2_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+            ->join("mes01 as vi1",[
+                ["lbl02.SERIALNO","=","vi1.SERIALNO"],
+                ["vi1.LOCNCODE","=",DB::raw("'VI1'")],
+            ])
+            ->where([
+                ["lbl02.LBLTYPE","=",1],
+                ["mes01.TRXDATE",">=",$last_trx],
+                ["mes01.TRXDATE","<",$dt],
+                ["mes01.LOCNCODE","=","TEST-EL"],
+                ["lbl02.MODCLASS","=","B"],
+                [DB::raw("CASE WHEN vi1.SNOSTAT = 1 AND vi1.MODCLASS = '' THEN (SELECT MCLCODE FROM cls01 WHERE CUSTOMER = lbl02.CUSTOMER AND MODSTATUS = 0 ORDER BY MCLCODE DESC LIMIT 1) ELSE vi1.MODCLASS END"),"<>","B"],
+            ])->count("mes01.SERIALNO");
 
-        $el2_class_c = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
-            ["lbl02.LBLTYPE","=",1],
-            ["mes01.TRXDATE",">=",$last_trx],
-            ["mes01.TRXDATE","<",$dt],
-            ["mes01.LOCNCODE","=","TEST-EL"],
-            ["lbl02.MODCLASS","=","C"],
-        ])->count("mes01.SERIALNO");
+        $el2_class_c = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+            ->join("mes01 as vi1",[
+                ["lbl02.SERIALNO","=","vi1.SERIALNO"],
+                ["vi1.LOCNCODE","=",DB::raw("'VI1'")],
+            ])
+            ->where([
+                ["lbl02.LBLTYPE","=",1],
+                ["mes01.TRXDATE",">=",$last_trx],
+                ["mes01.TRXDATE","<",$dt],
+                ["mes01.LOCNCODE","=","TEST-EL"],
+                ["lbl02.MODCLASS","=","C"],
+                ["vi1.MODCLASS","<>","C"],
+            ])->count("mes01.SERIALNO");
 
         $data['trxdate'] = $date;
         $data['shift'] = $shift;
@@ -533,21 +546,33 @@ class yieldController extends Controller
             ["lbl02.MODCLASS","=","A"],
         ])->count("mes01.SERIALNO");
 
-        $el2_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
-            ["lbl02.LBLTYPE","=",1],
-            ["mes01.TRXDATE",">=",$last_trx],
-            ["mes01.TRXDATE","<",$dt],
-            ["mes01.LOCNCODE","=","TEST-EL"],
-            ["lbl02.MODCLASS","=","B"],
-        ])->count("mes01.SERIALNO");
+        $el2_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+            ->join("mes01 as vi1",[
+                ["lbl02.SERIALNO","=","vi1.SERIALNO"],
+                ["vi1.LOCNCODE","=",DB::raw("'VI1'")],
+            ])
+            ->where([
+                ["lbl02.LBLTYPE","=",1],
+                ["mes01.TRXDATE",">=",$last_trx],
+                ["mes01.TRXDATE","<",$dt],
+                ["mes01.LOCNCODE","=","TEST-EL"],
+                ["lbl02.MODCLASS","=","B"],
+                [DB::raw("CASE WHEN vi1.SNOSTAT = 1 AND vi1.MODCLASS = '' THEN (SELECT MCLCODE FROM cls01 WHERE CUSTOMER = lbl02.CUSTOMER AND MODSTATUS = 0 ORDER BY MCLCODE DESC LIMIT 1) ELSE vi1.MODCLASS END"),"<>","B"],
+            ])->count("mes01.SERIALNO");
 
-        $el2_class_c = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
-            ["lbl02.LBLTYPE","=",1],
-            ["mes01.TRXDATE",">=",$last_trx],
-            ["mes01.TRXDATE","<",$dt],
-            ["mes01.LOCNCODE","=","TEST-EL"],
-            ["lbl02.MODCLASS","=","C"],
-        ])->count("mes01.SERIALNO");
+        $el2_class_c = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+            ->join("mes01 as vi1",[
+                ["lbl02.SERIALNO","=","vi1.SERIALNO"],
+                ["vi1.LOCNCODE","=",DB::raw("'VI1'")],
+            ])
+            ->where([
+                ["lbl02.LBLTYPE","=",1],
+                ["mes01.TRXDATE",">=",$last_trx],
+                ["mes01.TRXDATE","<",$dt],
+                ["mes01.LOCNCODE","=","TEST-EL"],
+                ["lbl02.MODCLASS","=","C"],
+                ["vi1.MODCLASS","<>","C"],
+            ])->count("mes01.SERIALNO");
 
         $data['input_mod'] = $input_mod;
         $data['be_inspected'] = $input_mod;

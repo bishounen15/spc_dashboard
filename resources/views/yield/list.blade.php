@@ -140,6 +140,7 @@
     $(document).ready(function() {
         $('#yield-list').DataTable({
             "scrollX": true,
+            "stateSave": true,
             "order": [],
             ajax: '{!! route('yield_data') !!}',
             dom: 'Blfrtip',
