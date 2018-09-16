@@ -12,6 +12,7 @@
                 <ul class="navbar-nav mr-auto">
                         <li><a class="nav-link" href="/">Home</a></li>
                         <li><a class="nav-link" href="/Summary">Data Entry</a></li>
+                        <li><a class="nav-link" href="/Setup">Set-up</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->

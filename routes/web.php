@@ -90,6 +90,7 @@ Route::get('/link','PagesController@link')->name('portal_link');
 Route::get('/Apps','PagesController@apps')->name('apps');
 
 Route::get('/Summary', 'PagesController@Summary');
+Route::get('/Setup', 'PagesController@Setup');
 Route::get('/pulltest', 'PagesController@pulltest');
 //Route::get('/create', 'FrameController@store');
 
@@ -116,6 +117,8 @@ Route::resource('JBox','JBoxController');
 Route::resource('Frame','FrameController');
 Route::resource('Framming','SqBwController');
 Route::resource('MixRatio','MixRatioController');
+
+Route::resource('process','processController');
 
 Route::get('datatable', 'StringerController@datatable');
 Route::get('datatable/getdata', 'StringerController@getPosts')->Name('datatable/getdata');

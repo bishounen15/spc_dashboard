@@ -14,7 +14,7 @@
         {{-- style="width: 16rem;" --}}
             <div class="card">
               <div class="card-header">
-                LAMINATOR
+                LAMINATOR Set-up
               </div>
               <ul class="list-group list-group-flush">
                 <li class="list-group-item"><a href ="/lamdata">LXM Data Input</a></li>
@@ -27,7 +27,7 @@
               {{-- style="width: 16rem;" --}}
                 <div class="card"> 
                         <div class="card-header">
-                        STRINGER
+                        STRINGER Set-up
                         </div>
                         <ul class="list-group list-group-flush">
                           <li class="list-group-item"><a href ="/stringer">Stringer Data Input</a></li>
@@ -37,7 +37,7 @@
               {{-- style="width: 16rem;" --}}
                 <div class="card">
                     <div class="card-header">
-                      FLASH TEST DATA
+                      FLASH TEST DATA Set-up
                     </div>
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item"><a href ="/ftd">Flash Test Data Input</a></li>
@@ -49,7 +49,7 @@
           {{-- style="width: 16rem;" --}}
           <div class="card">
                   <div class="card-header">
-                    MATRIX ASSY
+                    MATRIX ASSY Set-up
                   </div>
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item"><a href ="/matrixpulltest">Ribbon-to-Busbar Pull Test</a></li>
@@ -62,7 +62,7 @@
               {{-- style="width: 16rem;" --}}
                 <div class="card"> 
                         <div class="card-header">
-                        OFFLINE/MATERIAL PREP
+                        OFFLINE/MATERIAL PREP Set-up
                         </div>
                         <ul class="list-group list-group-flush">
                           <li class="list-group-item"><a href ="/offlinebtob">Busbar-to-Busbar Pull Test</a></li>
@@ -79,19 +79,27 @@
      <div class="col-4">
     {{-- style="width:26rem;" --}}
     <div class="card">
-        <div class="card-header">Back End</div>
+        <div class="card-header">Back End Set-up</div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><a  href="/Frame">Framming Qual</a></li>
           <li class="list-group-item"><a  href="/Framming">Framming Squareness and Bowing</a></li>
-          <li class="list-group-item"><a href="/ELTest">EL Test Monitoring</a></li>
+       
           <li class="list-group-item"><a href="/SolderTemp">J-Box Solder Temp</a></li>
           <li class="list-group-item"><a href="/JBox">J-Box Dispense Weight</a></li>
           <li class="list-group-item"><a href="/MixRatio">Pottant Mixing Ratio</a></li>
           <li class="list-group-item"><a href="/Potting">Potting</a></li>
-          <li class="list-group-item"><a href="/Curing">Curing</a></li>
+   
         </ul>
     </div>
-       
+      
+
+    <div class="card">
+        <div class="card-header">General Set-up</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><a  href="/process/create">Process</a></li>
+          
+        </ul>
+    </div>
 
 </div>
 {{-- @endguest --}}

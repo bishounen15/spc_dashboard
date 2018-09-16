@@ -13,6 +13,10 @@ class PagesController extends Controller
     public function Summary(){
         return view ('pages.Summary');
     }
+
+    public function Setup(){
+        return view ('pages.paramSetup');
+    }
     
     public function pulltest(){
         return view ('pages.pulltest');

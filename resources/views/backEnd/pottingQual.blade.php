@@ -10,7 +10,7 @@
             <div class="card-body">
                 
 <a href="/Summary" class="btn btn-secondary">Go Back</a>
-<a href="/MixRatio/create" class="btn btn-success">Add Record</a>
+<a href="/Potting/create" class="btn btn-success">Add Record</a>
             <table class="table table-striped">
             <tr>
             <th>Row</th>

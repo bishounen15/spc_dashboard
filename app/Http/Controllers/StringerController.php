@@ -241,6 +241,7 @@ class StringerController extends Controller
         $CpnS2AB = min($arrValForCpnS2AB);
 
 
+
         $ave = "PeelTest";  
         $loc1  = "Stringer 2B";
         $side = "Front";
@@ -263,8 +264,7 @@ class StringerController extends Controller
         $arrValForCpnS2BF = array( $CpnUS2BF,  $CpnLS2BF);         
         $CpnS2BF = min($arrValForCpnS2BF);
 
-
-
+           
         $ave = "PeelTest";  
         $loc1  = "Stringer 2B";
         $side = "Back";
@@ -287,6 +287,106 @@ class StringerController extends Controller
         $arrValForCpnS2BB = array( $CpnUS2BB,  $CpnLS2BB);         
         $CpnS2BB = min($arrValForCpnS2BB);
 
+
+
+///For Stringer 3 AandB
+
+
+
+$ave = "PeelTest";  
+$loc1  = "Stringer 3A";
+$side = "Front";
+$aveIndS3AF = $this->getAveInd($ave,$loc1,$side);
+$stdIndS3AF = $this->getStdInd($ave,$loc1,$side);      
+$aveOfAveS3AF = $this->getAveOfAve($ave,$loc1,$side);      
+$stdOfStdS3AF = $this->getStdOfStd($ave,$loc1,$side);
+$medianS3AF = $this->getMedian($ave,$loc1,$side);          
+$perc1S3AF = $this->getList4percentile($ave,$loc1,$side,0.00135);     
+$perc2S3AF = $this->getList4percentile($ave,$loc1,$side,0.99865);
+
+
+$zS3AF = ABS($this->divideByZeroExempt(($aveOfAveS3AF-$CL),$stdOfStdS3AF));
+$CpLS3AF = ABS($this->divideByZeroExempt(($aveOfAveS3AF-$LCL),(3*$stdOfStdS3AF) ));
+$CpUS3AF = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveS3AF),(3*$stdOfStdS3AF) ));      
+$arrValForCpkS3AF = array( $CpUS3AF,$CpLS3AF);  
+$CpkS3AF = min($arrValForCpkS3AF);
+$CpnUS3AF =$this->divideByZeroExempt(($USL - $medianS3AF ),( $perc2S3AF - $medianS3AF));
+$CpnLS3AF = $this->divideByZeroExempt(($medianS3AF  - $LSL),( $medianS3AF -  $perc1S3AF));
+$arrValForCpnS3AF = array( $CpnUS3AF,  $CpnLS3AF);         
+$CpnS3AF = min($arrValForCpnS3AF);
+
+   
+$ave = "PeelTest";  
+$loc1  = "Stringer 3A";
+$side = "Back";
+$aveIndS3AB = $this->getAveInd($ave,$loc1,$side);
+$stdIndS3AB = $this->getStdInd($ave,$loc1,$side);      
+$aveOfAveS3AB = $this->getAveOfAve($ave,$loc1,$side);      
+$stdOfStdS3AB = $this->getStdOfStd($ave,$loc1,$side);
+$medianS3AB = $this->getMedian($ave,$loc1,$side);          
+$perc1S3AB = $this->getList4percentile($ave,$loc1,$side,0.00135);     
+$perc2S3AB = $this->getList4percentile($ave,$loc1,$side,0.99865);
+
+
+$zS3AB = ABS($this->divideByZeroExempt(($aveOfAveS3AB-$CL),$stdOfStdS3AB));
+$CpLS3AB = ABS($this->divideByZeroExempt(($aveOfAveS3AB-$LCL),(3*$stdOfStdS3AB) ));
+$CpUS3AB = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveS3AB),(3*$stdOfStdS3AB) ));      
+$arrValForCpkS3AB = array( $CpUS3AB,$CpLS3AB);  
+$CpkS3AB = min($arrValForCpkS3AB);
+$CpnUS3AB =$this->divideByZeroExempt(($USL - $medianS3AB ),( $perc2S3AB - $medianS3AB));
+$CpnLS3AB = $this->divideByZeroExempt(($medianS3AB  - $LSL),( $medianS3AB -  $perc1S3AB));
+$arrValForCpnS3AB = array( $CpnUS3AB,  $CpnLS3AB);         
+$CpnS3AB = min($arrValForCpnS3AB);
+
+
+
+
+        $ave = "PeelTest";  
+        $loc1  = "Stringer 3B";
+        $side = "Front";
+        $aveIndS3BF = $this->getAveInd($ave,$loc1,$side);
+        $stdIndS3BF = $this->getStdInd($ave,$loc1,$side);      
+        $aveOfAveS3BF = $this->getAveOfAve($ave,$loc1,$side);      
+        $stdOfStdS3BF = $this->getStdOfStd($ave,$loc1,$side);
+        $medianS3BF = $this->getMedian($ave,$loc1,$side);          
+        $perc1S3BF = $this->getList4percentile($ave,$loc1,$side,0.00135);     
+        $perc2S3BF = $this->getList4percentile($ave,$loc1,$side,0.99865);
+
+        
+        $zS3BF = ABS($this->divideByZeroExempt(($aveOfAveS3BF-$CL),$stdOfStdS3BF));
+        $CpLS3BF = ABS($this->divideByZeroExempt(($aveOfAveS3BF-$LCL),(3*$stdOfStdS3BF) ));
+        $CpUS3BF = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveS3BF),(3*$stdOfStdS3BF) ));      
+        $arrValForCpkS3BF = array( $CpUS3BF,$CpLS3BF);  
+        $CpkS3BF = min($arrValForCpkS3BF);
+        $CpnUS3BF =$this->divideByZeroExempt(($USL - $medianS3BF ),( $perc2S3BF - $medianS3BF));
+        $CpnLS3BF = $this->divideByZeroExempt(($medianS3BF  - $LSL),( $medianS3BF -  $perc1S3BF));
+        $arrValForCpnS3BF = array( $CpnUS3BF,  $CpnLS3BF);         
+        $CpnS3BF = min($arrValForCpnS3BF);
+
+
+
+        $ave = "PeelTest";  
+        $loc1  = "Stringer 3B";
+        $side = "Back";
+        $aveIndS3BB = $this->getAveInd($ave,$loc1,$side);
+        $stdIndS3BB = $this->getStdInd($ave,$loc1,$side);      
+        $aveOfAveS3BB = $this->getAveOfAve($ave,$loc1,$side);      
+        $stdOfStdS3BB = $this->getStdOfStd($ave,$loc1,$side);
+        $medianS3BB = $this->getMedian($ave,$loc1,$side);          
+        $perc1S3BB = $this->getList4percentile($ave,$loc1,$side,0.00135);     
+        $perc2S3BB = $this->getList4percentile($ave,$loc1,$side,0.99865);
+
+        
+        $zS3BB = ABS($this->divideByZeroExempt(($aveOfAveS3BB-$CL),$stdOfStdS3BB));
+        $CpLS3BB = ABS($this->divideByZeroExempt(($aveOfAveS3BB-$LCL),(3*$stdOfStdS3BB) ));
+        $CpUS3BB = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveS3BB),(3*$stdOfStdS3BB) ));      
+        $arrValForCpkS3BB = array( $CpUS3BB,$CpLS3BB);  
+        $CpkS3BB = min($arrValForCpkS3BB);
+        $CpnUS3BB =$this->divideByZeroExempt(($USL - $medianS3BB ),( $perc2S3BB - $medianS3BB));
+        $CpnLS3BB = $this->divideByZeroExempt(($medianS3BB  - $LSL),( $medianS3BB -  $perc1S3BB));
+        $arrValForCpnS3BB = array( $CpnUS3BB,  $CpnLS3BB);         
+        $CpnS3BB = min($arrValForCpnS3BB);
+
        
     
 
@@ -298,7 +398,7 @@ class StringerController extends Controller
         ->with('LCL',$LCL)
         ->with('CL',$CL)
         ->with('target',$target)
-
+///S1AF
     ->with('aveIndS1AF', $aveIndS1AF)
     ->with('stdIndS1AF', $stdIndS1AF)         
     ->with('aveOfAveS1AF', $aveOfAveS1AF)   
@@ -307,7 +407,6 @@ class StringerController extends Controller
     ->with('perc1S1AF', $perc1S1AF)
     ->with('perc2S1AF', $perc2S1AF)    
 
-  
     ->with('zS1AF',$zS1AF)
     ->with('CpUS1AF',$CpUS1AF)
     ->with('CpLS1AF',$CpLS1AF)
@@ -315,7 +414,26 @@ class StringerController extends Controller
     ->with('CpnS1AF',$CpnS1AF)
     ->with('CpnUS1AF',$CpnUS1AF)     
     ->with('CpnLS1AF',$CpnLS1AF)
+//S1BF
 
+
+->with('aveIndS1BF', $aveIndS1BF)
+->with('stdIndS1BF', $stdIndS1BF)         
+->with('aveOfAveS1BF', $aveOfAveS1BF)   
+->with('stdOfStdS1BF', $stdOfStdS1BF)
+->with('medianS1BF', $medianS1BF)
+->with('perc1S1BF', $perc1S1BF)
+->with('perc2S1BF', $perc2S1BF)    
+
+->with('zS1BF',$zS1BF)
+->with('CpUS1BF',$CpUS1BF)
+->with('CpLS1BF',$CpLS1BF)
+->with('CpkS1BF',$CpkS1BF)
+->with('CpnS1BF',$CpnS1BF)
+->with('CpnUS1BF',$CpnUS1BF)     
+->with('CpnLS1BF',$CpnLS1BF)
+
+//S1AB
     ->with('aveIndS1AB', $aveIndS1AB)
     ->with('stdIndS1AB', $stdIndS1AB)         
     ->with('aveOfAveS1AB', $aveOfAveS1AB)   
@@ -333,10 +451,25 @@ class StringerController extends Controller
     ->with('CpnUS1AB',$CpnUS1AB)     
     ->with('CpnLS1AB',$CpnLS1AB)
 
-    ///S2 
+    //S1BB
+->with('aveIndS1BB', $aveIndS1BB)
+->with('stdIndS1BB', $stdIndS1BB)         
+->with('aveOfAveS1BB', $aveOfAveS1BB)   
+->with('stdOfStdS1BB', $stdOfStdS1BB)
+->with('medianS1BB', $medianS1BB)
+->with('perc1S1BB', $perc1S1BB)
+->with('perc2S1BB', $perc2S1BB)    
 
 
-    
+->with('zS1BB',$zS1BB)
+->with('CpUS1BB',$CpUS1BB)
+->with('CpLS1BB',$CpLS1BB)
+->with('CpkS1BB',$CpkS1BB)
+->with('CpnS1BB',$CpnS1BB)
+->with('CpnUS1BB',$CpnUS1BB)     
+->with('CpnLS1BB',$CpnLS1BB)
+
+    ///S2AF
     ->with('aveIndS2AF', $aveIndS2AF)
     ->with('stdIndS2AF', $stdIndS2AF)         
     ->with('aveOfAveS2AF', $aveOfAveS2AF)   
@@ -354,6 +487,8 @@ class StringerController extends Controller
     ->with('CpnUS2AF',$CpnUS2AF)     
     ->with('CpnLS2AF',$CpnLS2AF)
 
+
+    //S2AB
     ->with('aveIndS2AB', $aveIndS2AB)
     ->with('stdIndS2AB', $stdIndS2AB)         
     ->with('aveOfAveS2AB', $aveOfAveS2AB)   
@@ -369,7 +504,121 @@ class StringerController extends Controller
     ->with('CpkS2AB',$CpkS2AB)
     ->with('CpnS2AB',$CpnS2AB)
     ->with('CpnUS2AB',$CpnUS2AB)     
-    ->with('CpnLS2AB',$CpnLS2AB);
+    ->with('CpnLS2AB',$CpnLS2AB)
+
+
+    ///S2BF
+    ->with('aveIndS2BF', $aveIndS2BF)
+    ->with('stdIndS2BF', $stdIndS2BF)         
+    ->with('aveOfAveS2BF', $aveOfAveS2BF)   
+    ->with('stdOfStdS2BF', $stdOfStdS2BF)
+    ->with('medianS2BF', $medianS2BF)
+    ->with('perc1S2BF', $perc1S2BF)
+    ->with('perc2S2BF', $perc2S2BF)    
+
+  
+    ->with('zS2BF',$zS2BF)
+    ->with('CpUS2BF',$CpUS2BF)
+    ->with('CpLS2BF',$CpLS2BF)
+    ->with('CpkS2BF',$CpkS2BF)
+    ->with('CpnS2BF',$CpnS2BF)
+    ->with('CpnUS2BF',$CpnUS2BF)     
+    ->with('CpnLS2BF',$CpnLS2BF)
+
+
+    //S2BB
+    ->with('aveIndS2BB', $aveIndS2BB)
+    ->with('stdIndS2BB', $stdIndS2BB)         
+    ->with('aveOfAveS2BB', $aveOfAveS2BB)   
+    ->with('stdOfStdS2BB', $stdOfStdS2BB)
+    ->with('medianS2BB', $medianS2BB)
+    ->with('perc1S2BB', $perc1S2BB)
+    ->with('perc2S2BB', $perc2S2BB)    
+
+  
+    ->with('zS2BB',$zS2BB)
+    ->with('CpUS2BB',$CpUS2BB)
+    ->with('CpLS2BB',$CpLS2BB)
+    ->with('CpkS2BB',$CpkS2BB)
+    ->with('CpnS2BB',$CpnS2BB)
+    ->with('CpnUS2BB',$CpnUS2BB)     
+    ->with('CpnLS2BB',$CpnLS2BB)
+
+
+    ///S3AF
+    ->with('aveIndS3AF', $aveIndS3AF)
+    ->with('stdIndS3AF', $stdIndS3AF)         
+    ->with('aveOfAveS3AF', $aveOfAveS3AF)   
+    ->with('stdOfStdS3AF', $stdOfStdS3AF)
+    ->with('medianS3AF', $medianS3AF)
+    ->with('perc1S3AF', $perc1S3AF)
+    ->with('perc2S3AF', $perc2S3AF)    
+
+  
+    ->with('zS3AF',$zS3AF)
+    ->with('CpUS3AF',$CpUS3AF)
+    ->with('CpLS3AF',$CpLS3AF)
+    ->with('CpkS3AF',$CpkS3AF)
+    ->with('CpnS3AF',$CpnS3AF)
+    ->with('CpnUS3AF',$CpnUS3AF)     
+    ->with('CpnLS3AF',$CpnLS3AF)
+
+     ///S3AB
+    ->with('aveIndS3AB', $aveIndS3AB)
+    ->with('stdIndS3AB', $stdIndS3AB)         
+    ->with('aveOfAveS3AB', $aveOfAveS3AB)   
+    ->with('stdOfStdS3AB', $stdOfStdS3AB)
+    ->with('medianS3AB', $medianS3AB)
+    ->with('perc1S3AB', $perc1S3AB)
+    ->with('perc2S3AB', $perc2S3AB)    
+
+  
+    ->with('zS3AB',$zS3AB)
+    ->with('CpUS3AB',$CpUS3AB)
+    ->with('CpLS3AB',$CpLS3AB)
+    ->with('CpkS3AB',$CpkS3AB)
+    ->with('CpnS3AB',$CpnS3AB)
+    ->with('CpnUS3AB',$CpnUS3AB)     
+    ->with('CpnLS3AB',$CpnLS3AB)
+        
+
+    
+
+    ///S3BF
+    ->with('aveIndS3BF', $aveIndS3BF)
+    ->with('stdIndS3BF', $stdIndS3BF)         
+    ->with('aveOfAveS3BF', $aveOfAveS3BF)   
+    ->with('stdOfStdS3BF', $stdOfStdS3BF)
+    ->with('medianS3BF', $medianS3BF)
+    ->with('perc1S3BF', $perc1S3BF)
+    ->with('perc2S3BF', $perc2S3BF)    
+
+  
+    ->with('zS3BF',$zS3BF)
+    ->with('CpUS3BF',$CpUS3BF)
+    ->with('CpLS3BF',$CpLS3BF)
+    ->with('CpkS3BF',$CpkS3BF)
+    ->with('CpnS3BF',$CpnS3BF)
+    ->with('CpnUS3BF',$CpnUS3BF)     
+    ->with('CpnLS3BF',$CpnLS3BF)
+
+     ///S3BB
+    ->with('aveIndS3BB', $aveIndS3BB)
+    ->with('stdIndS3BB', $stdIndS3BB)         
+    ->with('aveOfAveS3BB', $aveOfAveS3BB)   
+    ->with('stdOfStdS3BB', $stdOfStdS3BB)
+    ->with('medianS3BB', $medianS3BB)
+    ->with('perc1S3BB', $perc1S3BB)
+    ->with('perc2S3BB', $perc2S3BB)    
+
+  
+    ->with('zS3BB',$zS3BB)
+    ->with('CpUS3BB',$CpUS3BB)
+    ->with('CpLS3BB',$CpLS3BB)
+    ->with('CpkS3BB',$CpkS3BB)
+    ->with('CpnS3BB',$CpnS3BB)
+    ->with('CpnUS3BB',$CpnUS3BB)     
+    ->with('CpnLS3BB',$CpnLS3BB);
         
         
                  
