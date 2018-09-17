@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-Use App\Station;
+Use App\DTCategory;
 
 Use DataTables;
 
-class StationsController extends Controller
+class DTCategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,15 +17,15 @@ class StationsController extends Controller
     public function index()
     {
         //
-        return view('proddt.setup.station.list');
+        return view('proddt.setup.category.list');
     }
 
     public function load()
     {
-        $stations = Station::selectRaw("id, code, descr, capacity")
+        $categories = DTCategory::selectRaw("id, code, descr, color_scheme")
         ->orderByRaw("code ASC");
 
-        return Datatables::of($stations)->make(true);
+        return Datatables::of($categories)->make(true);
     }
 
     /**
@@ -40,10 +40,10 @@ class StationsController extends Controller
 
         $data['code'] = $request->input('code');
         $data['descr'] = $request->input('descr');
-        $data['capacity'] = $request->input('capacity');
+        $data['color_scheme'] = $request->input('color_scheme');
 
         $data['modify'] = 0;
-        return view('proddt.setup.station.form', $data);
+        return view('proddt.setup.category.form', $data);
     }
 
     /**
@@ -59,17 +59,17 @@ class StationsController extends Controller
 
         $data['code'] = $request->input('code');
         $data['descr'] = $request->input('descr');
-        $data['capacity'] = $request->input('capacity');
+        $data['color_scheme'] = $request->input('color_scheme');
         
         if ($request->isMethod('post')) {
             $this->validate($request, [
-                'code' => 'required|max:15|unique:proddt.stations',
-                'descr' => 'required|max:50|unique:proddt.stations',
-                'capacity' => 'required|integer',
+                'code' => 'required|max:15|unique:proddt.categories',
+                'descr' => 'required|max:50|unique:proddt.categories',
+                'color_scheme' => 'required|max:15|unique:proddt.categories',
             ]);
 
-            Station::create($data);
-            return redirect('proddt/setup/station')->with("success","Station [".$data["descr"]."] successfully added.");
+            DTCategory::create($data);
+            return redirect('proddt/setup/category')->with("success","Category [".$data["descr"]."] successfully added.");
         }
 
         $data['modify'] = 0;
@@ -85,7 +85,6 @@ class StationsController extends Controller
     public function show($id)
     {
         //
-        
     }
 
     /**
@@ -102,13 +101,13 @@ class StationsController extends Controller
         $data['id'] = $id;
         $data['modify'] = 1;
                 
-        $station = Station::find($id);
+        $category = DTCategory::find($id);
 
-        $data['code'] = $station->code;
-        $data['descr'] = $station->descr;
-        $data['capacity'] = $station->capacity;
+        $data['code'] = $category->code;
+        $data['descr'] = $category->descr;
+        $data['color_scheme'] = $category->color_scheme;
                 
-        return view('proddt.setup.station.form', $data);
+        return view('proddt.setup.category.form', $data);
     }
 
     /**
@@ -125,24 +124,24 @@ class StationsController extends Controller
 
         $data['code'] = $request->input('code');
         $data['descr'] = $request->input('descr');
-        $data['capacity'] = $request->input('capacity');
+        $data['color_scheme'] = $request->input('color_scheme');
 
         // dd($request);
         if ($request->isMethod('PUT')) {
-            $station = Station::find($id);
+            $category = DTCategory::find($id);
             
             $this->validate($request, [
-                'code' => 'required|max:15|unique:proddt.stations,code,'.$station->id,
-                'descr' => 'required|max:50|unique:proddt.stations,descr,'.$station->id,
-                'capacity' => 'required|integer',
+                'code' => 'required|max:15|unique:proddt.categories,code,'.$category->id,
+                'descr' => 'required|max:50|unique:proddt.categories,descr,'.$category->id,
+                'color_scheme' => 'required|max:15|unique:proddt.categories,color_scheme,'.$category->id,
             ]);
 
-            $station->code = $data['code'];
-            $station->descr = $data['descr'];
-            $station->capacity = $data['capacity'];
+            $category->code = $data['code'];
+            $category->descr = $data['descr'];
+            $category->color_scheme = $data['color_scheme'];
             
-            $station->save();
-            return redirect('proddt/setup/station')->with("success","Station [".$data["descr"]."] successfully updated.");
+            $category->save();
+            return redirect('proddt/setup/category')->with("success","Category [".$data["descr"]."] successfully updated.");
         }
 
         $data['modify'] = 0;
