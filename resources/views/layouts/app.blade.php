@@ -103,7 +103,7 @@
                                 @if(Auth::user()->proddt_role == "SUPV" || Auth::user()->proddt_role == "ADMIN" || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Setup</h6>
                                 {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
-                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Machines</a>
+                                <a class="dropdown-item" href="/proddt/setup/station">&nbsp;&nbsp;&nbsp;&nbsp;Stations</a>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Downtime Categories</a>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Downtime Types</a>
                                 @endif

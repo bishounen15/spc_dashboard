@@ -133,6 +133,8 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::resource('/assets/general','AssetsController');
         Route::resource('/assets/dashboard/general','AssetDashboardController');
 
+        Route::get('/proddt/setup/station/data', 'StationsController@load')->name('station_data');
+        Route::resource('/proddt/setup/station','StationsController');
     });
 // }); 
 

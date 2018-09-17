@@ -93,6 +93,21 @@ return [
             'engine' => null,
         ],
 
+        'proddt' => [
+            'driver' => 'mysql',
+            'host' => '192.168.128.9',
+            'port' => '3306',
+            'database' => 'sp_proddt',
+            'username' => 'laravel_user',
+            'password' => 'password@1',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'web_portal' => [
             'driver' => 'mysql',
             'host' => '192.168.128.7',
