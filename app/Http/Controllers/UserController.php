@@ -8,6 +8,7 @@ use App\Department;
 Use App\OSIRoles;
 use App\UserRoles;
 use App\ITRoles;
+use App\DTRoles;
 
 use DataTables;
 
@@ -16,11 +17,12 @@ class UserController extends Controller
     //
     protected $username = 'user_id';
 
-    public function __construct( OSIRoles $osi_roles, UserRoles $user_roles, ITRoles $it_roles )
+    public function __construct( OSIRoles $osi_roles, UserRoles $user_roles, ITRoles $it_roles, DTRoles $dt_roles )
     {
         $this->oroles = $osi_roles->all();
         $this->uroles = $user_roles->all();
         $this->itroles = $it_roles->all();
+        $this->dtroles = $dt_roles->all();
     }
 
     public function list() {
@@ -29,7 +31,7 @@ class UserController extends Controller
 
     public function load()
     {
-        $users = User::selectRaw("users.id, CONCAT(users.user_id,CASE sysadmin WHEN 1 THEN '***' ELSE '' END) AS user_id, users.name, departments.description, users.email, CASE users.osi_access WHEN 1 THEN users.osi_role ELSE 'no access' END AS osi_access, CASE users.yield_access WHEN 1 THEN users.yield_role ELSE 'no access' END AS yield_access, CASE users.assets_access WHEN 1 THEN users.assets_role ELSE 'no access' END AS assets_access")
+        $users = User::selectRaw("users.id, CONCAT(CASE WHEN users.user_id LIKE '%@%' THEN SUBSTRING(users.user_id,1,INSTR(users.user_id, '@')-1) ELSE users.user_id END,CASE sysadmin WHEN 1 THEN '***' ELSE '' END) AS user_id, users.name, departments.description, users.email, CASE users.osi_access WHEN 1 THEN users.osi_role ELSE 'no access' END AS osi_access, CASE users.yield_access WHEN 1 THEN users.yield_role ELSE 'no access' END AS yield_access, CASE users.assets_access WHEN 1 THEN users.assets_role ELSE 'no access' END AS assets_access, CASE users.proddt_access WHEN 1 THEN users.proddt_role ELSE 'no access' END AS proddt_access")
                         ->leftJoin("departments","users.dept_id","=","departments.id")
                         ->orderByRaw("users.user_id ASC");
 
@@ -55,12 +57,15 @@ class UserController extends Controller
         $data['yield_role'] = $user->yield_role;
         $data['assets_access'] = $user->assets_access;
         $data['assets_role'] = $user->assets_role;
+        $data['proddt_access'] = $user->proddt_access;
+        $data['proddt_role'] = $user->proddt_role;
         // $data['head_email'] = $user->head_email;
 
         $data['depts'] = Department::orderBy("description","ASC")->get();
         $data['o_roles'] = $this->oroles;
         $data['y_roles'] = $this->uroles;
         $data['it_roles'] = $this->itroles;
+        $data['dt_roles'] = $this->dtroles;
         return view('system.users.form', $data);
     }
 
@@ -80,6 +85,8 @@ class UserController extends Controller
         $data['yield_role'] = $request->input('yield_role');
         $data['assets_access'] = $request->has('assets_access');
         $data['assets_role'] = $request->input('assets_role');
+        $data['proddt_access'] = $request->has('proddt_access');
+        $data['proddt_role'] = $request->input('proddt_role');
         
         if ($request->isMethod('post')) {
             $user = User::find($id);
@@ -102,6 +109,8 @@ class UserController extends Controller
             $user->yield_role = $data['yield_role'];
             $user->assets_access = $data['assets_access'];
             $user->assets_role = $data['assets_role'];
+            $user->proddt_access = $data['proddt_access'];
+            $user->proddt_role = $data['proddt_role'];
             
             $user->save();
             return redirect('user/list')->with("success","User [".$data["user_id"]." - ".$data["name"]."] successfully updated.");
