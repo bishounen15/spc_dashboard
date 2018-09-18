@@ -110,7 +110,7 @@
                                 <h6 class="dropdown-header">Transactions</h6>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
                                 @if(Auth::user()->proddt_role != "VIEW" || Auth::user()->sysadmin == 1)
-                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Data Entry</a>
+                                <a class="dropdown-item" href="/proddt/logsheet">&nbsp;&nbsp;&nbsp;&nbsp;Log Sheet</a>
                                 @endif
                                 </div>
                             </li>

@@ -21,4 +21,8 @@ class Station extends Model implements Auditable
         'descr',
         'machine_id',
     ];
+
+    public function machine() {
+        return $this->hasOne('App\Machine', 'id', 'machine_id');
+    }
 }

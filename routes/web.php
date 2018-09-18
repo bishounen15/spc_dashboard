@@ -144,6 +144,11 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
         Route::get('/proddt/setup/downtime/data/{machine_id}/{category_id}', 'DTTypesController@load')->name('dtdowntime_data');
         Route::resource('/proddt/setup/machine/{machine_id}/downtime','DTTypesController');
+
+        Route::post('/proddt/category_list','DTLogSheetsController@listCategories')->name('get_dtcategory_list');
+        Route::post('/proddt/issue_list','DTLogSheetsController@listIssues')->name('get_dtissue_list');
+        Route::get('/proddt/logsheet/data', 'DTLogSheetsController@load')->name('logsheet_data');
+        Route::resource('/proddt/logsheet','DTLogSheetsController');
     });
 // }); 
 
