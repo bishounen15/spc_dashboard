@@ -119,6 +119,11 @@ Route::resource('Framming','SqBwController');
 Route::resource('MixRatio','MixRatioController');
 
 Route::resource('process','processController');
+Route::resource('bom','BOMtypeController');
+Route::resource('product','productTypeController');
+Route::resource('subprocess','subProcessController');
+Route::resource('parameter','parameterController');
+
 
 Route::get('datatable', 'StringerController@datatable');
 Route::get('datatable/getdata', 'StringerController@getPosts')->Name('datatable/getdata');

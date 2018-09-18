@@ -1,18 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use App\process;
+use App\BOMtype;
 use DB;
 
-
-class processController extends Controller
+class BOMtypeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   
+   
     public function index()
     {
         //
@@ -26,8 +23,8 @@ class processController extends Controller
     public function create()
     {
      
-        $getall = DB::select("SELECT * FROM process ORDER BY ProcessName ASC"); 
-        $posts = \DB::connection()->getSchemaBuilder()->getColumnListing("process");
+        $getall = DB::select("SELECT * FROM bomtype ORDER BY bomType ASC"); 
+        $posts = \DB::connection()->getSchemaBuilder()->getColumnListing("bomtype");
         
     // $settings = SomeModel::where($items_match)->get(); //Making use of Eloquent
     $arrAve = array();
@@ -36,7 +33,7 @@ class processController extends Controller
    
     $columns = DB::connection()
                 ->getDoctrineSchemaManager()
-                ->listTableDetails("process");
+                ->listTableDetails("bomtype");
 foreach ( $posts as $key => $value) {
     array_push($arrAve,$columns->getColumn($value)->getComment());
 }
@@ -52,8 +49,8 @@ foreach ( $posts as $key => $value) {
      ->with('alldata',$arrAve)
      ->with('getdata',$getall)
      ->with('fields',$posts)
-     ->with('tbl','Process')
-     ->with('controller','processController@store');
+     ->with('tbl','Bom Type')
+     ->with('controller','BOMtypeController@store');
         // dd($posts);          
 
     }
@@ -70,15 +67,15 @@ foreach ( $posts as $key => $value) {
         //$posts = \DB::connection()->getSchemaBuilder()->getColumnListing("process");
         $txt = $request->input('txt');
     
-            $process = New process();
-            $process->ProcessName = $txt[0];
-            $process->ProcessDesc = $txt[1];
+            $process = New BOMtype();
+            $process->bomType = $txt[0];
+            $process->bomDesc = $txt[1];
             $process->save();
        
       
 
       
-        return redirect('/process/create')
+        return redirect('/bom/create')
         ->with('success', 'Successfully Created');
         
     }

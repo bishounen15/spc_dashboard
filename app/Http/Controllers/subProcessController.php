@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\subProcess;
+use DB;
 use Illuminate\Http\Request;
 
 class subProcessController extends Controller
@@ -11,6 +12,7 @@ class subProcessController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index()
     {
         //
@@ -23,7 +25,41 @@ class subProcessController extends Controller
      */
     public function create()
     {
-        //
+     
+        $getall = DB::select("SELECT * FROM subprocess ORDER BY subProcessName ASC"); 
+        $getBom = DB::select("SELECT ProcessName FROM process ORDER BY ProcessName ASC"); 
+        $posts = \DB::connection()->getSchemaBuilder()->getColumnListing("subprocess");
+        
+    // $settings = SomeModel::where($items_match)->get(); //Making use of Eloquent
+    $arrAve = array();
+    $arrField = array();
+//  $settings = process::where($items_match)->get(); //Making use of Eloquent
+   
+    $columns = DB::connection()
+                ->getDoctrineSchemaManager()
+                ->listTableDetails("subprocess");
+foreach ( $posts as $key => $value) {
+    array_push($arrAve,$columns->getColumn($value)->getComment());
+}
+              
+
+                    
+                
+   
+            
+           
+         //   dd($arrAve);
+     return view('inc.targetCreateSelect')
+     ->with('alldata',$arrAve)
+     ->with('getdata',$getall)
+     ->with('getbom',$getBom)
+     ->with('selectVal','Process Name')
+     ->with('selectVal2','ProcessName')
+     ->with('fields',$posts)
+     ->with('tbl','Critical Nodes')
+     ->with('controller','subProcessController@store');
+        // dd($posts);          
+
     }
 
     /**
@@ -34,7 +70,22 @@ class subProcessController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        //$posts = \DB::connection()->getSchemaBuilder()->getColumnListing("process");
+        $txt = $request->input('txt');
+    
+            $process = New subProcess();
+            $process->subProcessName = $txt[0];
+            $process->subProcessDesc = $txt[1];
+            $process->ProcessName = $request->input('bom');
+            $process->save();
+       
+      
+
+      
+        return redirect('/subprocess/create')
+        ->with('success', 'Successfully Created');
+        
     }
 
     /**

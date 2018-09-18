@@ -1,18 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use App\process;
+use App\productType;
 use DB;
 
+use Illuminate\Http\Request;
 
-class processController extends Controller
+class productTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+   
     public function index()
     {
         //
@@ -26,8 +27,9 @@ class processController extends Controller
     public function create()
     {
      
-        $getall = DB::select("SELECT * FROM process ORDER BY ProcessName ASC"); 
-        $posts = \DB::connection()->getSchemaBuilder()->getColumnListing("process");
+        $getall = DB::select("SELECT * FROM producttype ORDER BY prodName ASC"); 
+        $getBom = DB::select("SELECT bomType FROM bomtype ORDER BY bomType ASC"); 
+        $posts = \DB::connection()->getSchemaBuilder()->getColumnListing("producttype");
         
     // $settings = SomeModel::where($items_match)->get(); //Making use of Eloquent
     $arrAve = array();
@@ -36,7 +38,7 @@ class processController extends Controller
    
     $columns = DB::connection()
                 ->getDoctrineSchemaManager()
-                ->listTableDetails("process");
+                ->listTableDetails("producttype");
 foreach ( $posts as $key => $value) {
     array_push($arrAve,$columns->getColumn($value)->getComment());
 }
@@ -48,12 +50,15 @@ foreach ( $posts as $key => $value) {
             
            
          //   dd($arrAve);
-     return view('inc.targetCreate')
+     return view('inc.targetCreateSelect')
      ->with('alldata',$arrAve)
      ->with('getdata',$getall)
+     ->with('getbom',$getBom)
+     ->with('selectVal','BOM Type')
+     ->with('selectVal2','bomType')
      ->with('fields',$posts)
-     ->with('tbl','Process')
-     ->with('controller','processController@store');
+     ->with('tbl','Product Type')
+     ->with('controller','productTypeController@store');
         // dd($posts);          
 
     }
@@ -70,15 +75,16 @@ foreach ( $posts as $key => $value) {
         //$posts = \DB::connection()->getSchemaBuilder()->getColumnListing("process");
         $txt = $request->input('txt');
     
-            $process = New process();
-            $process->ProcessName = $txt[0];
-            $process->ProcessDesc = $txt[1];
+            $process = New productType();
+            $process->prodName = $txt[0];
+            $process->docBomNo = $txt[1];
+            $process->bomType = $request->input('bom');
             $process->save();
        
       
 
       
-        return redirect('/process/create')
+        return redirect('/product/create')
         ->with('success', 'Successfully Created');
         
     }

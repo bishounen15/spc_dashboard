@@ -1,18 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use App\process;
+use App\parameter;
 use DB;
+use Illuminate\Http\Request;
 
-
-class processController extends Controller
+class parameterController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index()
     {
         //
@@ -25,9 +25,10 @@ class processController extends Controller
      */
     public function create()
     {
-     
-        $getall = DB::select("SELECT * FROM process ORDER BY ProcessName ASC"); 
-        $posts = \DB::connection()->getSchemaBuilder()->getColumnListing("process");
+       $getall = DB::select("SELECT * FROM parameters ORDER BY subProcessName ASC"); 
+       $getSubPro = DB::select("SELECT subProcessName FROM subprocess  ORDER BY subProcessName ASC");
+       $getBom = DB::select("SELECT bomType FROM bomtype ORDER BY bomType ASC"); 
+        $posts = \DB::connection()->getSchemaBuilder()->getColumnListing("parameters");
         
     // $settings = SomeModel::where($items_match)->get(); //Making use of Eloquent
     $arrAve = array();
@@ -36,7 +37,7 @@ class processController extends Controller
    
     $columns = DB::connection()
                 ->getDoctrineSchemaManager()
-                ->listTableDetails("process");
+                ->listTableDetails("parameters");
 foreach ( $posts as $key => $value) {
     array_push($arrAve,$columns->getColumn($value)->getComment());
 }
@@ -45,15 +46,14 @@ foreach ( $posts as $key => $value) {
                     
                 
    
-            
-           
-         //   dd($arrAve);
-     return view('inc.targetCreate')
+     return view('inc.targetCreateParam')
      ->with('alldata',$arrAve)
      ->with('getdata',$getall)
+     ->with('getSubPro',$getSubPro)
      ->with('fields',$posts)
-     ->with('tbl','Process')
-     ->with('controller','processController@store');
+     ->with('bom',$getBom)
+     ->with('tbl','SPC Chart Indicators')
+     ->with('controller','parameterController@store');
         // dd($posts);          
 
     }
@@ -70,7 +70,7 @@ foreach ( $posts as $key => $value) {
         //$posts = \DB::connection()->getSchemaBuilder()->getColumnListing("process");
         $txt = $request->input('txt');
     
-            $process = New process();
+            $process = New parameter();
             $process->ProcessName = $txt[0];
             $process->ProcessDesc = $txt[1];
             $process->save();
@@ -127,4 +127,5 @@ foreach ( $posts as $key => $value) {
     {
         //
     }
+
 }

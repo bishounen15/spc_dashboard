@@ -2,7 +2,7 @@
 
 @section('content')
     {!! Form::open(['action' => $controller, 'method' => 'POST']) !!}
-    <div class="container" style="width:100%">
+    <div class="container" style="width:120%">
             <div class="card">
             <h5 class="card-header">{{$tbl}}</h5>
                 <div class="card-body">
@@ -13,12 +13,33 @@
                            
                             @if($cols != null )
                    
+                            @if($cols == $selectVal )
+                   
                             <div class="row">
                                     <div class="col-md-2"></div>
                                     <div class="col-md-4"> {{Form::label($cols, $cols)}} </div>  
-                                    <div class="col-md-4"> {{ Form::text('txt[]','',['class'=>'form-control'] )}} </div>
+                                    <div class="col-md-4">
+                                            <select id="bom"  name="bom" class="form-control">
+                                                    @foreach ($getbom as $s)
+                                                            <option selected value="{{ $s->$selectVal2 }}">{{ $s->$selectVal2 }}</option> 
+                                                    @endforeach
+                                                </select>   
+                                               
+                                    </div>
                                     <div class="col-md-2"></div>
                                 </div>
+
+                                @else
+
+                                <div class="row">
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-4"> {{Form::label($cols, $cols)}} </div>  
+                                        <div class="col-md-4"> {{ Form::text('txt[]','',['class'=>'form-control'] )}} </div>
+                                        <div class="col-md-2"></div>
+                                    </div>
+                            
+
+                             @endif
 
                              @endif
                               
