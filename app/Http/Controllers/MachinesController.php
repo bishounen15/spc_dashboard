@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-Use App\Station;
 Use App\Machine;
 
 Use DataTables;
 
-class StationsController extends Controller
+class MachinesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,16 +17,15 @@ class StationsController extends Controller
     public function index()
     {
         //
-        return view('proddt.setup.station.list');
+        return view('proddt.setup.machine.list');
     }
 
     public function load()
     {
-        $stations = Station::selectRaw("stations.id, stations.code, stations.descr, machines.descr as machine, machines.capacity")
-                        ->leftJoin("machines","stations.machine_id","=","machines.id")
-                        ->orderByRaw("code ASC");
+        $machines = Machine::selectRaw("id, code, descr, capacity")
+        ->orderByRaw("code ASC");
 
-        return Datatables::of($stations)->make(true);
+        return Datatables::of($machines)->make(true);
     }
 
     /**
@@ -42,11 +40,10 @@ class StationsController extends Controller
 
         $data['code'] = $request->input('code');
         $data['descr'] = $request->input('descr');
-        $data['machine_id'] = $request->input('machine_id');
+        $data['capacity'] = $request->input('capacity');
 
         $data['modify'] = 0;
-        $data['machines'] = Machine::all();
-        return view('proddt.setup.station.form', $data);
+        return view('proddt.setup.machine.form', $data);
     }
 
     /**
@@ -62,22 +59,21 @@ class StationsController extends Controller
 
         $data['code'] = $request->input('code');
         $data['descr'] = $request->input('descr');
-        $data['machine_id'] = $request->input('machine_id');
+        $data['capacity'] = $request->input('capacity');
         
         if ($request->isMethod('post')) {
             $this->validate($request, [
                 'code' => 'required|max:15|unique:proddt.stations',
                 'descr' => 'required|max:50|unique:proddt.stations',
-                'machine_id' => 'required',
+                'capacity' => 'required|integer',
             ]);
 
-            Station::create($data);
-            return redirect('proddt/setup/station')->with("success","Station [".$data["descr"]."] successfully added.");
+            Machine::create($data);
+            return redirect('proddt/setup/machine')->with("success","Machine [".$data["descr"]."] successfully added.");
         }
 
         $data['modify'] = 0;
-        $data['machines'] = Machine::all();
-        return view('proddt.setup.station.form', $data);
+        return view('proddt.setup.machine.form', $data);
     }
 
     /**
@@ -105,15 +101,14 @@ class StationsController extends Controller
 
         $data['id'] = $id;
         $data['modify'] = 1;
-        $data['machines'] = Machine::all();
                 
-        $station = Station::find($id);
+        $machine = Machine::find($id);
 
-        $data['code'] = $station->code;
-        $data['descr'] = $station->descr;
-        $data['machine_id'] = $station->machine_id;
+        $data['code'] = $machine->code;
+        $data['descr'] = $machine->descr;
+        $data['capacity'] = $machine->capacity;
                 
-        return view('proddt.setup.station.form', $data);
+        return view('proddt.setup.machine.form', $data);
     }
 
     /**
@@ -130,29 +125,28 @@ class StationsController extends Controller
 
         $data['code'] = $request->input('code');
         $data['descr'] = $request->input('descr');
-        $data['machine_id'] = $request->input('machine_id');
+        $data['capacity'] = $request->input('capacity');
 
         // dd($request);
         if ($request->isMethod('PUT')) {
-            $station = Station::find($id);
+            $machine = Machine::find($id);
             
             $this->validate($request, [
-                'code' => 'required|max:15|unique:proddt.stations,code,'.$station->id,
-                'descr' => 'required|max:50|unique:proddt.stations,descr,'.$station->id,
-                'machine_id' => 'required',
+                'code' => 'required|max:15|unique:proddt.stations,code,'.$machine->id,
+                'descr' => 'required|max:50|unique:proddt.stations,descr,'.$machine->id,
+                'capacity' => 'required|integer',
             ]);
 
-            $station->code = $data['code'];
-            $station->descr = $data['descr'];
-            $station->machine_id = $data['machine_id'];
+            $machine->code = $data['code'];
+            $machine->descr = $data['descr'];
+            $machine->capacity = $data['capacity'];
             
-            $station->save();
-            return redirect('proddt/setup/station')->with("success","Station [".$data["descr"]."] successfully updated.");
+            $machine->save();
+            return redirect('proddt/setup/machine')->with("success","Machine [".$data["descr"]."] successfully updated.");
         }
 
-        $data['modify'] = 1;
-        $data['machines'] = Machine::all();
-        return view('proddt.setup.station.form', $data);
+        $data['modify'] = 0;
+        return view('proddt.setup.machine.form', $data);
     }
 
     /**

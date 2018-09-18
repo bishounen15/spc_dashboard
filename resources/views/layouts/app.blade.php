@@ -104,8 +104,8 @@
                                 <h6 class="dropdown-header">Setup</h6>
                                 {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
                                 <a class="dropdown-item" href="/proddt/setup/category">&nbsp;&nbsp;&nbsp;&nbsp;Downtime Categories</a>
+                                <a class="dropdown-item" href="/proddt/setup/machine">&nbsp;&nbsp;&nbsp;&nbsp;Machine</a>
                                 <a class="dropdown-item" href="/proddt/setup/station">&nbsp;&nbsp;&nbsp;&nbsp;Stations</a>
-                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Downtime Types</a>
                                 @endif
                                 <h6 class="dropdown-header">Transactions</h6>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>

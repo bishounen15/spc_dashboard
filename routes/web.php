@@ -133,11 +133,17 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::resource('/assets/general','AssetsController');
         Route::resource('/assets/dashboard/general','AssetDashboardController');
 
+        Route::get('/proddt/setup/machine/data', 'MachinesController@load')->name('machine_data');
+        Route::resource('/proddt/setup/machine','MachinesController');
+
         Route::get('/proddt/setup/station/data', 'StationsController@load')->name('station_data');
         Route::resource('/proddt/setup/station','StationsController');
 
         Route::get('/proddt/setup/category/data', 'DTCategoriesController@load')->name('dtcategory_data');
         Route::resource('/proddt/setup/category','DTCategoriesController');
+
+        Route::get('/proddt/setup/downtime/data/{machine_id}/{category_id}', 'DTTypesController@load')->name('dtdowntime_data');
+        Route::resource('/proddt/setup/machine/{machine_id}/downtime','DTTypesController');
     });
 // }); 
 

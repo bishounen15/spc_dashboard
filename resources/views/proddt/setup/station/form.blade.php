@@ -12,18 +12,27 @@
             <div class="card-body">
                 <div class="form-group">
                     <label for="code">Station Code</label>
-                    <input type="text" class="form-control form-control-sm" name="code" id="code" placeholder="Machine Code" value="{{ old('code') ? old('code') : $code }}">
+                    <input type="text" class="form-control form-control-sm" name="code" id="code" placeholder="Station Code" value="{{ old('code') ? old('code') : $code }}">
                     <small class="form-text text-danger">{{ $errors->first('code') }}</small>
                 </div>
                 <div class="form-group">
                     <label for="descr">Description</label>
-                    <input type="text" class="form-control form-control-sm" name="descr" id="descr" placeholder="Machine Description" value="{{ old('descr') ? old('descr') : $descr }}">
+                    <input type="text" class="form-control form-control-sm" name="descr" id="descr" placeholder="Station Description" value="{{ old('descr') ? old('descr') : $descr }}">
                     <small class="form-text text-danger">{{ $errors->first('descr') }}</small>
                 </div>
                 <div class="form-group">
-                    <label for="capacity">Capacity per Hour</label>
-                    <input type="number" step="1" class="form-control form-control-sm" name="capacity" id="capacity" placeholder="Capacity / Hour" value="{{ old('capacity') ? old('capacity') : $capacity }}">
-                    <small class="form-text text-danger">{{ $errors->first('capacity') }}</small>
+                    <label for="capacity">Machine</label>
+                    <select class="form-control form-control-sm" name="machine_id" id="machine_id">
+                        <option readonly selected value> -- select an option -- </option>
+                        @foreach($machines as $mac)
+                        <option value="{{$mac->id}}" 
+                        @if ($mac->id == old('machine_id', $machine_id))
+                            selected="selected"
+                        @endif    
+                        >{{$mac->descr}}</option>
+                        @endforeach
+                    </select>
+                    <small class="form-text text-danger">{{ $errors->first('machine_id') }}</small>
                 </div>
             </div>
             <div class="card-footer">

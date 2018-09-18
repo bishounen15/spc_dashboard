@@ -5,20 +5,21 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Station extends Model implements Auditable
+class DTType extends Model implements Auditable
 {
     //
     protected $connection = 'proddt';
+    protected $table = 'dt_types';
     protected $fillable = [
-        'code',
-        'descr',
         'machine_id',
+        'category_id',
+        'downtime',
     ];
 
     use \OwenIt\Auditing\Auditable;
     protected $auditInclude = [
-        'code',
-        'descr',
         'machine_id',
+        'category_id',
+        'downtime',
     ];
 }

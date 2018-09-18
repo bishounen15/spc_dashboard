@@ -1,17 +1,16 @@
 @extends('layouts.app')
 @section('content')
 {{-- <div class="container"> --}}
-    <h3>Station Master</h3>
-    <a href="/proddt/setup/station/create" role="button" class="btn btn-primary">Create Station</a>
+    <h3>Machine Master</h3>
+    <a href="/proddt/setup/machine/create" role="button" class="btn btn-primary">Create Machine</a>
     <br><br>
-    <table class="table table-condensed table-striped table-sm" id="station-list" style="width: 100%;">
+    <table class="table table-condensed table-striped table-sm" id="machine-list" style="width: 100%;">
         <thead class="thead-dark" style="font-size: 0.7em;">
             {{-- <th>#</th> --}}
-            <th width="15%">Code</th>
-            <th width="25%">Description</th>
-            <th width="20%">Machine</th>
+            <th width="20%">Code</th>
+            <th width="30%">Description</th>
             <th width="20%">Capacity / Hour</th>
-            <th width="20%">Actions</th>
+            <th width="30%">Actions</th>
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
             
@@ -24,10 +23,10 @@
 @push('jscript')
 <script>
     $(document).ready(function() {
-        $('#station-list').DataTable({
+        $('#machine-list').DataTable({
             // "scrollX": true,
             "order": [],
-            ajax: '{!! route('station_data') !!}',
+            ajax: '{!! route('machine_data') !!}',
             dom: 'Blfrtip',
             buttons: [
                 "print",
@@ -57,11 +56,11 @@
                 // { data: 'id' },
                 { data: 'code' },
                 { data: 'descr' },
-                { data: 'machine' },
                 { data: 'capacity' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
-                    return '<div class="row"><div class="col-sm-6"><a href="/proddt/setup/station/'+full.id+'/edit" role="button" class="btn btn-sm btn-success" style="width: 100%;">Edit</a></div>' +
-                           '<div class="col-sm-6"><a href="#" data-href="/proddt/setup/station/destroy/'+full.id+'" role="button" class="btn btn-sm btn-danger disabled" data-toggle="modal" data-target="#confirm-delete" id="'+full.description+'" style="width: 100%;">Remove</a></div></div>';
+                    return '<div class="row"><div class="col-sm-4"><a href="/proddt/setup/machine/'+full.id+'/edit" role="button" class="btn btn-sm btn-success" style="width: 100%;">Edit</a></div>' +
+                           '<div class="col-sm-4"><a href="/proddt/setup/machine/'+full.id+'/downtime" role="button" class="btn btn-sm btn-primary" style="width: 100%;">Add DT Types</a></div>' +
+                           '<div class="col-sm-4"><a href="#" data-href="/proddt/setup/machine/destroy/'+full.id+'" role="button" class="btn btn-sm btn-danger disabled" data-toggle="modal" data-target="#confirm-delete" id="'+full.description+'" style="width: 100%;">Remove</a></div></div>';
                 }},
             ],
         });
