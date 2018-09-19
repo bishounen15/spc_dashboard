@@ -148,6 +148,8 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/proddt/category_list','DTLogSheetsController@listCategories')->name('get_dtcategory_list');
         Route::post('/proddt/issue_list','DTLogSheetsController@listIssues')->name('get_dtissue_list');
         Route::get('/proddt/logsheet/data', 'DTLogSheetsController@load')->name('logsheet_data');
+        Route::get('/proddt/dashboard/data/{date}/{shift}/{station_id}','DTLogSheetsController@dashdata')->name('dt_dashboard_data');
+        Route::get('proddt/dashboard','DTLogSheetsController@dashboard')->name('dt_dashboard');
         Route::resource('/proddt/logsheet','DTLogSheetsController');
     });
 // }); 

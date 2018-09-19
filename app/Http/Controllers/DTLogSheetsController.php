@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\DTLogSheet;
 use App\Station;
+use App\DTCategory;
 use App\DTType;
 
 use Validator;
@@ -24,13 +25,44 @@ class DTLogSheetsController extends Controller
         return view('proddt.logsheet.list');
     }
 
+    public function dashboard()
+    {
+        //
+        $data = [];
+
+        $data['stations'] = Station::orderBy("descr","ASC")->get();
+        $data['categories'] = DTCategory::all();
+
+        return view('proddt.logsheet.dashboard', $data);
+    }
+
     public function load()
     {
         $logs = DTLogSheet::selectRaw("log_sheets.id, log_sheets.date, log_sheets.shift, stations.descr as station, log_sheets.start, log_sheets.end, log_sheets.duration, dt_types.downtime as issue, categories.descr as category, log_sheets.remarks")
                         ->join("stations","log_sheets.station_id","=","stations.id")
                         ->join("dt_types","log_sheets.downtime_id","=","dt_types.id")
                         ->join("categories","dt_types.category_id","=","categories.id")
-                        ->orderByRaw("log_sheets.date ASC, log_sheets.shift ASC, DATE_ADD(log_sheets.date, INTERVAL CASE WHEN log_sheets.start < '06:00' THEN 1 ELSE 0 END DAY) DESC, log_sheets.start DESC");
+                        ->orderByRaw("log_sheets.date DESC, log_sheets.shift DESC, DATE_ADD(log_sheets.date, INTERVAL CASE WHEN log_sheets.start < '06:00' THEN 1 ELSE 0 END DAY) DESC, log_sheets.start DESC");
+
+        return Datatables::of($logs)->make(true);
+    }
+
+    public function dashdata($date, $shift = '-', $station_id = 0)
+    {
+        $cond = [];
+
+        array_push($cond,["log_sheets.date",$date]);
+
+        if ($shift != "-") { array_push($cond,["log_sheets.shift",$shift]); }
+        if ($station_id != 0) { array_push($cond,["log_sheets.station_id",$station_id]); }
+
+        $logs = DTLogSheet::selectRaw("log_sheets.id, log_sheets.date, log_sheets.shift, stations.descr as station, log_sheets.start, log_sheets.end, ROUND(log_sheets.duration,2) AS duration, dt_types.downtime as issue, categories.code as code, categories.descr as category, log_sheets.remarks, machines.descr as machine, machines.capacity")
+                        ->join("stations","log_sheets.station_id","=","stations.id")
+                        ->join("machines","stations.machine_id","=","machines.id")
+                        ->join("dt_types","log_sheets.downtime_id","=","dt_types.id")
+                        ->join("categories","dt_types.category_id","=","categories.id")
+                        ->where($cond)
+                        ->orderByRaw("log_sheets.date ASC, log_sheets.shift ASC, DATE_ADD(log_sheets.date, INTERVAL CASE WHEN log_sheets.start < '06:00' THEN 1 ELSE 0 END DAY) ASC, log_sheets.start ASC");
 
         return Datatables::of($logs)->make(true);
     }
