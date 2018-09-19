@@ -83,7 +83,7 @@
                                 @if ($issue->id == old('downtime_id', $downtime_id))
                                     selected="selected"
                                 @endif
-                                >{{$issue->descr}}</option>
+                                >{{$issue->downtime}}</option>
                                 @endforeach
                             </select>
                             <small class="form-text text-danger">{{ $errors->first('downtime_id') }}</small>
@@ -149,7 +149,7 @@
                 tstart = moment(tstart).add(1, 'days');
             }
 
-            if (timeEnd < "06:00") {
+            if (timeEnd <= "06:00") {
                 tend = moment(tend).add(1, 'days');
             }
 

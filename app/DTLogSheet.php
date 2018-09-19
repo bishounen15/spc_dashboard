@@ -32,4 +32,8 @@ class DTLogSheet extends Model implements Auditable
         'downtime_id',
         'remarks',
     ];
+
+    public function issue() {
+        return $this->hasOne('App\DTType', 'id', 'downtime_id');
+    }
 }

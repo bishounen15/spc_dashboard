@@ -7,8 +7,9 @@ use App\DTLogSheet;
 use App\Station;
 use App\DTType;
 
+use Validator;
 use DataTables;
-Use Response;
+use Response;
 
 class DTLogSheetsController extends Controller
 {
@@ -29,7 +30,7 @@ class DTLogSheetsController extends Controller
                         ->join("stations","log_sheets.station_id","=","stations.id")
                         ->join("dt_types","log_sheets.downtime_id","=","dt_types.id")
                         ->join("categories","dt_types.category_id","=","categories.id")
-                        ->orderByRaw("log_sheets.date ASC, log_sheets.shift ASC, log_sheets.start ASC");
+                        ->orderByRaw("log_sheets.date ASC, log_sheets.shift ASC, DATE_ADD(log_sheets.date, INTERVAL CASE WHEN log_sheets.start < '06:00' THEN 1 ELSE 0 END DAY) DESC, log_sheets.start DESC");
 
         return Datatables::of($logs)->make(true);
     }
@@ -95,7 +96,7 @@ class DTLogSheetsController extends Controller
         $data['remarks'] = $request->input('remarks');
 
         if ($request->isMethod('post')) {
-            $this->validate($request, [
+            $validator = Validator::make($request->all(), [
                 'date' => 'required',
                 'shift' => 'required',
                 'start' => 'required|date_format:H:i',
@@ -105,14 +106,22 @@ class DTLogSheetsController extends Controller
                 'downtime_id' => 'required',
                 'remarks' => 'required',
             ]);
+            
+            if ($validator->fails()) {
+                $data['modify'] = 0;
+                $data['stations'] = Station::orderBy("descr","ASC")->get();
+                $categories = $request->input('station_id') != null ? Station::find($request->input('station_id'))->machine->categories() : [];
+                $data['categories'] = $categories;
+                $issues = $request->input('station_id') != null || $request->input('station_id') != null ? Station::find($request->input('station_id'))->machine->issues->where("category_id",$request->input('category_id')) : [];
+                $data['issues'] = $issues;
+                $data['errors'] = $validator->errors();
 
-            DTLogSheet::create($data);
-            return redirect('proddt/logsheet')->with("success","Log Entry successfully added.");
+                return view('proddt.logsheet.form', $data);
+            } else {
+                DTLogSheet::create($data);
+                return redirect('proddt/logsheet')->with("success","Log Entry successfully added.");
+            }
         }
-
-        $data['modify'] = 0;
-        $data['stations'] = Station::orderBy("descr","ASC")->get();
-        return view('proddt.setup.station.form', $data);
     }
 
     /**
@@ -135,6 +144,29 @@ class DTLogSheetsController extends Controller
     public function edit($id)
     {
         //
+        $data = [];
+
+        $log = DTLogSheet::find($id);
+
+        $data['id'] = $log->id;
+        $data['date'] = $log->date;
+        $data['shift'] = $log->shift;
+        $data['start'] = date('H:i',strtotime($log->start));
+        $data['end'] = date('H:i',strtotime($log->end));
+        $data['duration'] = $log->duration;
+        $data['station_id'] = $log->station_id;
+        $data['category_id'] = $log->issue->category_id;
+        $data['downtime_id'] = $log->downtime_id;
+        $data['remarks'] = $log->remarks;
+
+        $data['modify'] = 1;
+        $data['stations'] = Station::orderBy("descr","ASC")->get();
+        $categories = Station::find($data['station_id'])->machine->categories();
+        $data['categories'] = $categories;
+        $issues = Station::find($data['station_id'])->machine->issues->where("category_id",$data['category_id']);
+        $data['issues'] = $issues;
+
+        return view('proddt.logsheet.form', $data);
     }
 
     /**
@@ -147,6 +179,57 @@ class DTLogSheetsController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $data = [];
+
+        $data['date'] = $request->input('date');
+        $data['shift'] = $request->input('shift');
+        $data['start'] = $request->input('start');
+        $data['end'] = $request->input('end');
+        $data['duration'] = $request->input('duration');
+        $data['station_id'] = $request->input('station_id');
+        $data['category_id'] = $request->input('category_id');
+        $data['downtime_id'] = $request->input('downtime_id');
+        $data['remarks'] = $request->input('remarks');
+
+        if ($request->isMethod('put')) {
+            $validator = Validator::make($request->all(), [
+                'date' => 'required',
+                'shift' => 'required',
+                'start' => 'required|date_format:H:i',
+                'end' => 'required|date_format:H:i|after:start',
+                'duration' => 'required|numeric|min:0.01',
+                'station_id' => 'required',
+                'downtime_id' => 'required',
+                'remarks' => 'required',
+            ]);
+            
+            if ($validator->fails()) {
+                $data['id'] = $id;
+                $data['modify'] = 1;
+                $data['stations'] = Station::orderBy("descr","ASC")->get();
+                $categories = $request->input('station_id') != null ? Station::find($request->input('station_id'))->machine->categories() : [];
+                $data['categories'] = $categories;
+                $issues = $request->input('station_id') != null || $request->input('station_id') != null ? Station::find($request->input('station_id'))->machine->issues->where("category_id",$request->input('category_id')) : [];
+                $data['issues'] = $issues;
+                $data['errors'] = $validator->errors();
+
+                return view('proddt.logsheet.form', $data);
+            } else {
+                $log = DTLogSheet::find($id);
+
+                $log->date = $data['date'];
+                $log->shift = $data['shift'];
+                $log->start = $data['start'];
+                $log->end = $data['end'];
+                $log->duration = $data['duration'];
+                $log->station_id = $data['station_id'];
+                $log->downtime_id = $data['downtime_id'];
+                $log->remarks = $data['remarks'];
+
+                $log->save();
+                return redirect('proddt/logsheet')->with("success","Log Entry successfully updated.");
+            }
+        }
     }
 
     /**
