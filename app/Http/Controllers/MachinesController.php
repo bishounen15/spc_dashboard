@@ -63,8 +63,8 @@ class MachinesController extends Controller
         
         if ($request->isMethod('post')) {
             $this->validate($request, [
-                'code' => 'required|max:15|unique:proddt.stations',
-                'descr' => 'required|max:50|unique:proddt.stations',
+                'code' => 'required|max:15|unique:proddt.machines',
+                'descr' => 'required|max:50|unique:proddt.machines',
                 'capacity' => 'required|integer',
             ]);
 
@@ -132,8 +132,8 @@ class MachinesController extends Controller
             $machine = Machine::find($id);
             
             $this->validate($request, [
-                'code' => 'required|max:15|unique:proddt.stations,code,'.$machine->id,
-                'descr' => 'required|max:50|unique:proddt.stations,descr,'.$machine->id,
+                'code' => 'required|max:15|unique:proddt.machines,code,'.$machine->id,
+                'descr' => 'required|max:50|unique:proddt.machines,descr,'.$machine->id,
                 'capacity' => 'required|integer',
             ]);
 
