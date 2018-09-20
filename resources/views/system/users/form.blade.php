@@ -95,6 +95,29 @@
                     </tr>
 
                     <tr>
+                        <th colspan="4" class="table-light">Downtime Monitoring</th>
+                    </tr>
+                    <tr>
+                        <td width="20%">With Access</td>
+                        <td width="20%" class="text-center">
+                            <input type="checkbox" name="proddt_access" id="proddt_access" {{old('proddt_access', $proddt_access) == 1 ? "checked" : ""}}>    
+                        </td>
+                        <td width="20%">User Role</td>
+                        <td width="40%">
+                                <select class="form-control form-control-sm" name="proddt_role" id="proddt_role" {{old('proddt_access', $proddt_access) == 1 ? "" : "disabled"}}>
+                                        <option readonly selected value> -- select an option -- </option>
+                                        @foreach($dt_roles as $dtrole)
+                                        <option value="{{$dtrole['code']}}" 
+                                        @if ($dtrole['code'] == old('proddt_role', $proddt_role))
+                                            selected="selected"
+                                        @endif    
+                                        >{{$dtrole['description']}}</option>
+                                        @endforeach
+                                </select>
+                        </td>
+                    </tr>
+
+                    <tr>
                         <th colspan="4" class="table-light">IT Management</th>
                     </tr>
                     <tr>
@@ -156,6 +179,15 @@
 
             $("#assets_access").click(function () {
                 var el = $("#assets_role");
+                el.removeAttr("disabled");
+
+                if(!$(this).is(":checked")) {
+                    el.attr("disabled", "disabled");
+                }
+            });
+
+            $("#proddt_access").click(function () {
+                var el = $("#proddt_role");
                 el.removeAttr("disabled");
 
                 if(!$(this).is(":checked")) {

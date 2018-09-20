@@ -67,12 +67,12 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @if(Auth::user()->osi_role == "CUST" || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Setup</h6>
-                                <a class="dropdown-item" href="{{route('list_categories')}}">Category Master</a>
-                                <a class="dropdown-item" href="{{route('list_uofm')}}">U of M Master</a>
-                                <a class="dropdown-item" href="{{route('list_items')}}">Item Master</a>
+                                <a class="dropdown-item" href="{{route('list_categories')}}">&nbsp;&nbsp;&nbsp;&nbsp;Category Master</a>
+                                <a class="dropdown-item" href="{{route('list_uofm')}}">&nbsp;&nbsp;&nbsp;&nbsp;U of M Master</a>
+                                <a class="dropdown-item" href="{{route('list_items')}}">&nbsp;&nbsp;&nbsp;&nbsp;Item Master</a>
                                 @endif
                                 <h6 class="dropdown-header">Transactions</h6>
-                                <a class="dropdown-item" href="{{route('list_trx')}}">Requisition and Inventory</a>
+                                <a class="dropdown-item" href="{{route('list_trx')}}">&nbsp;&nbsp;&nbsp;&nbsp;Requisition and Inventory</a>
                                 </div>
                             </li>
                             @endif
@@ -86,10 +86,32 @@
                                 @if(Auth::user()->yield_role == "SUPV" || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Setup</h6>
                                 {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
-                                <a class="dropdown-item" href="{{route('list_email_yield')}}">Email Distribution</a>
+                                <a class="dropdown-item" href="{{route('list_email_yield')}}">&nbsp;&nbsp;&nbsp;&nbsp;Email Distribution</a>
                                 @endif
                                 <h6 class="dropdown-header">Transactions</h6>
-                                <a class="dropdown-item" href="{{route('list_yield')}}">Data Entry</a>
+                                <a class="dropdown-item" href="{{route('list_yield')}}">&nbsp;&nbsp;&nbsp;&nbsp;Data Entry</a>
+                                </div>
+                            </li>
+                            @endif
+
+                            @if(Auth::user()->proddt_access == 1 || Auth::user()->sysadmin == 1)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Downtime Monitoring
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                @if(Auth::user()->proddt_role == "SUPV" || Auth::user()->proddt_role == "ADMIN" || Auth::user()->sysadmin == 1)
+                                <h6 class="dropdown-header">Setup</h6>
+                                {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
+                                <a class="dropdown-item" href="/proddt/setup/category">&nbsp;&nbsp;&nbsp;&nbsp;Downtime Categories</a>
+                                <a class="dropdown-item" href="/proddt/setup/machine">&nbsp;&nbsp;&nbsp;&nbsp;Machine</a>
+                                <a class="dropdown-item" href="/proddt/setup/station">&nbsp;&nbsp;&nbsp;&nbsp;Stations</a>
+                                @endif
+                                <h6 class="dropdown-header">Transactions</h6>
+                                <a class="dropdown-item" href="/proddt/dashboard">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+                                @if(Auth::user()->proddt_role != "VIEW" || Auth::user()->sysadmin == 1)
+                                <a class="dropdown-item" href="/proddt/logsheet">&nbsp;&nbsp;&nbsp;&nbsp;Log Sheet</a>
+                                @endif
                                 </div>
                             </li>
                             @endif
@@ -117,9 +139,9 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <h6 class="dropdown-header">General Setup</h6>
-                                <a class="dropdown-item" href="{{route('list_users')}}">Users</a>
-                                <a class="dropdown-item" href="{{route('list_cost_centers')}}">Cost Centers</a>
-                                <a class="dropdown-item" href="{{route('list_depts')}}">Departments</a>
+                                <a class="dropdown-item" href="{{route('list_users')}}">&nbsp;&nbsp;&nbsp;&nbsp;Users</a>
+                                <a class="dropdown-item" href="{{route('list_cost_centers')}}">&nbsp;&nbsp;&nbsp;&nbsp;Cost Centers</a>
+                                <a class="dropdown-item" href="{{route('list_depts')}}">&nbsp;&nbsp;&nbsp;&nbsp;Departments</a>
                                 </div>
                             </li>
                             @endif
