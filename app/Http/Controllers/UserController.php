@@ -10,7 +10,9 @@ use App\UserRoles;
 use App\ITRoles;
 use App\DTRoles;
 
+use Validator;
 use DataTables;
+use Response;
 
 class UserController extends Controller
 {
@@ -36,6 +38,34 @@ class UserController extends Controller
                         ->orderByRaw("users.user_id ASC");
 
         return Datatables::of($users)->make(true);
+    }
+
+    public function store(Request $request) {
+        $data = [];
+
+        $data['user_id'] = $request->input('user_id');
+        $data['name'] = $request->input('name');
+        $data['email'] = $request->input('email');
+        $data['password'] = $request->input('password');
+        
+        if ($request->isMethod('post')) {
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required',
+                'name' => 'required',
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                // return Response::json($validator);
+            } else {
+                $data['password'] = bcrypt($data['password']);
+                User::create($data);
+            }
+
+            return Response::json($validator->errors());
+            // return redirect('proddt/setup/station')->with("success","Station [".$data["descr"]."] successfully added.");
+        }
     }
 
     public function show($id){

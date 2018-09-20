@@ -124,7 +124,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/user/list/data', 'UserController@load')->name('user_data');
         Route::get('/user/list','UserController@list')->name('list_users');
         Route::get('/user/create','UserController@create')->name('create_user');
-        Route::post('/user/create','UserController@create')->name('store_user');
+        Route::post('/user/create','UserController@store')->name('store_user');
         Route::get('/user/{id}','UserController@show')->name('show_user');
         Route::post('/user/{id}','UserController@modify')->name('modify_user');
         Route::post('/user/remove/{id}','UserController@destroy')->name('remove_user');
