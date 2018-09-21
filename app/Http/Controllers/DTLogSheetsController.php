@@ -56,7 +56,7 @@ class DTLogSheetsController extends Controller
         if ($shift != "-") { array_push($cond,["log_sheets.shift",$shift]); }
         if ($station_id != 0) { array_push($cond,["log_sheets.station_id",$station_id]); }
 
-        $logs = DTLogSheet::selectRaw("log_sheets.id, log_sheets.date, log_sheets.shift, stations.descr as station, log_sheets.start, log_sheets.end, ROUND(log_sheets.duration,2) AS duration, dt_types.downtime as issue, categories.code as code, categories.descr as category, log_sheets.remarks, machines.descr as machine, machines.capacity")
+        $logs = DTLogSheet::selectRaw("log_sheets.id, log_sheets.date, log_sheets.shift, stations.descr as station, log_sheets.start, log_sheets.end, ROUND(log_sheets.duration,2) AS duration, dt_types.downtime as issue, categories.code as code, categories.descr as category, log_sheets.remarks, machines.descr as machine, log_sheets.capacity")
                         ->join("stations","log_sheets.station_id","=","stations.id")
                         ->join("machines","stations.machine_id","=","machines.id")
                         ->join("dt_types","log_sheets.downtime_id","=","dt_types.id")
@@ -83,6 +83,7 @@ class DTLogSheetsController extends Controller
         $data['end'] = $request->input('end');
         $data['duration'] = $request->input('duration');
         $data['station_id'] = $request->input('station_id');
+        $data['capacity'] = $request->input('capacity');
         $data['category_id'] = $request->input('category_id');
         $data['downtime_id'] = $request->input('downtime_id');
         $data['remarks'] = $request->input('remarks');
@@ -123,6 +124,7 @@ class DTLogSheetsController extends Controller
         $data['end'] = $request->input('end');
         $data['duration'] = $request->input('duration');
         $data['station_id'] = $request->input('station_id');
+        $data['capacity'] = $request->input('capacity');
         $data['category_id'] = $request->input('category_id');
         $data['downtime_id'] = $request->input('downtime_id');
         $data['remarks'] = $request->input('remarks');
@@ -187,6 +189,7 @@ class DTLogSheetsController extends Controller
         $data['end'] = date('H:i',strtotime($log->end));
         $data['duration'] = $log->duration;
         $data['station_id'] = $log->station_id;
+        $data['capacity'] = $log->capacity;
         $data['category_id'] = $log->issue->category_id;
         $data['downtime_id'] = $log->downtime_id;
         $data['remarks'] = $log->remarks;
@@ -219,6 +222,7 @@ class DTLogSheetsController extends Controller
         $data['end'] = $request->input('end');
         $data['duration'] = $request->input('duration');
         $data['station_id'] = $request->input('station_id');
+        $data['capacity'] = $request->input('capacity');
         $data['category_id'] = $request->input('category_id');
         $data['downtime_id'] = $request->input('downtime_id');
         $data['remarks'] = $request->input('remarks');
@@ -255,6 +259,7 @@ class DTLogSheetsController extends Controller
                 $log->end = $data['end'];
                 $log->duration = $data['duration'];
                 $log->station_id = $data['station_id'];
+                $log->capacity = $data['capacity'];
                 $log->downtime_id = $data['downtime_id'];
                 $log->remarks = $data['remarks'];
 

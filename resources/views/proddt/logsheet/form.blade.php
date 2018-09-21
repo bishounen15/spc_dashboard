@@ -45,18 +45,32 @@
 
                     <div class="col-sm-7">
                         <div class="form-group">
-                            <label for="station_id">Station</label>
-                            <select class="form-control form-control-sm" name="station_id" id="station_id">
-                                <option readonly selected value> -- select an option -- </option>
-                                @foreach($stations as $station)
-                                <option value="{{$station->id}}"
-                                @if ($station->id == old('station_id', $station_id))
-                                    selected="selected"
-                                @endif
-                                >{{$station->descr}}</option>
-                                @endforeach
-                            </select>
-                            <small class="form-text text-danger">{{ $errors->first('station_id') }}</small>
+                            <div class="form-row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label for="station_id">Station</label>
+                                        <select class="form-control form-control-sm" name="station_id" id="station_id">
+                                            <option readonly selected value> -- select an option -- </option>
+                                            @foreach($stations as $station)
+                                            <option value="{{$station->id}}"
+                                            @if ($station->id == old('station_id', $station_id))
+                                                selected="selected"
+                                            @endif
+                                            >{{$station->descr}}</option>
+                                            @endforeach
+                                        </select>
+                                        <small class="form-text text-danger">{{ $errors->first('station_id') }}</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="capacity">Capacity</label>
+                                        <input type="text" class="form-control form-control-sm" name="capacity" id="capacity" placeholder="Based on selected station" value="{{old('capacity', $capacity)}}" readonly>
+                                        <small class="form-text text-danger">{{ $errors->first('capacity') }}</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -179,6 +193,7 @@
                 selitems = "<option disabled selected value> -- select an option -- </option>";
                 $('select[name="downtime_id"]').html(selitems);
                 $.each(items, function(i, v) {
+                    if (i == 0) { $("#capacity").val(v.capacity); }
                     selitems += '<option value="' + v.id + '">' + v.descr + '</option>';
                 });
                 $('select[name="category_id"]').html(selitems);

@@ -30,6 +30,7 @@ class Machine extends Model implements Auditable
 
     public function categories() {
         return DTType::join("categories","dt_types.category_id","=","categories.id")
-                    ->where("dt_types.machine_id",$this->id)->distinct()->get(['categories.id','categories.descr']);
+                    ->join("machines","dt_types.machine_id","=","machines.id")
+                    ->where("dt_types.machine_id",$this->id)->distinct()->get(['categories.id','categories.descr','machines.capacity']);
     }
 }
