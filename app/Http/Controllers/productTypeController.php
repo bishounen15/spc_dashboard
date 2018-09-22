@@ -58,6 +58,8 @@ foreach ( $posts as $key => $value) {
      ->with('selectVal2','bomType')
      ->with('fields',$posts)
      ->with('tbl','Product Type')
+     ->with('controllerUp','productTypeController@update')
+     ->with('controllerDel','productTypeController@destroy')
      ->with('controller','productTypeController@store');
         // dd($posts);          
 
@@ -120,7 +122,19 @@ foreach ( $posts as $key => $value) {
      */
     public function update(Request $request, $id)
     {
-        //
+        $txt = $request->input('txt');
+    
+        $process = productType::find($id);
+       // $process->prodName = $txt[0];
+        $process->docBomNo = $txt[1];
+        $process->bomType = $request->input('bom');
+        $process->save();
+   
+  
+
+  
+    return redirect('/product/create')
+    ->with('success', 'Successfully Created');
     }
 
     /**
@@ -131,6 +145,9 @@ foreach ( $posts as $key => $value) {
      */
     public function destroy($id)
     {
-        //
+        $post = productType::find($id);
+        $post->delete();
+        return redirect('/product/create')
+        ->with('success', 'Successfully Deleted');
     }
 }

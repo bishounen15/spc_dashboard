@@ -78,6 +78,12 @@ Route::get('/JBoxDispense', function () {
                return view('pages.stringerdata')  
                              ->with('alldata',$posts);
              });
+
+             Route::get('/ftd_view', function () {
+                $posts = DB::select('SELECT * FROM flashes ORDER BY ID DESC');   
+                   return view('pages.ftd')  
+                                 ->with('alldata',$posts);
+                 });
      
 
 
@@ -123,6 +129,7 @@ Route::resource('bom','BOMtypeController');
 Route::resource('product','productTypeController');
 Route::resource('subprocess','subProcessController');
 Route::resource('parameter','parameterController');
+Route::resource('prodSelect','prodSelectionController');
 
 
 Route::get('datatable', 'StringerController@datatable');

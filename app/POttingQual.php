@@ -8,7 +8,7 @@ class POttingQual extends Model
 {
     //
       //Table Name
-      protected $connection = 'spc';
+     // protected $connection = 'spc';
       protected $table = 'potting_quals';
       //Primary Key
       protected $primaryKey = 'id';

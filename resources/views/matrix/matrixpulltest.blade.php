@@ -31,7 +31,17 @@
             <p align="left">Product Built</p>
         </div>
         <div class="col-md-7">
-            {{ $productBuilt }}
+                <?php  $getLastProd = DB::select("SELECT * FROM prodselect JOIN producttype ON prodselect.productName = producttype.prodName WHERE ProcessName ='Matrix Assembly' ORDER BY prodselect.created_at DESC LIMIT 1"); 
+                      
+                ?>
+                  @if(count($getLastProd) > 0)
+                  @foreach($getLastProd as $field)   
+               
+                           {{Form::text('prodBuilt', $field->productName."   (".$field->bomType.")" , ['class' => 'form-control','readonly' => 'true'])}}
+                           @endforeach
+                           @else
+                           Not Set.
+                           @endif
         </div>
     </div>
     <div class="row"> 
@@ -49,45 +59,32 @@
          
         </div>
         <div class="col-md-7">
-            {{Form::select('prodBuilt', array('Gintech' => 'Gintech', 'Own-BOM' => 'Own-BOM'),'Gintech',['class' => 'form-control process'])}} <small class="form-text text-danger">{{ $errors->first('location') }}</small>   
-            &emsp; {{Form::submit('Submit',['class'=> 'btn btn-primary'])}}&emsp; 
+            <div class="row"> 
+                <div class="col-md-7">
+            <?php  $getLastProd = DB::select("SELECT * FROM producttype ");   ?>
+              @if(count($getLastProd) > 0)
+
+              <select id="prodSel"  name="prodSel" class="form-control">
+                @foreach($getLastProd as $s)  
+                        <option selected value="{{ $s->prodName }}">{{ $s->prodName }}</option> 
+                @endforeach
+            </select>   
+             
+                       @else
+                       No Record.
+                       @endif
+        </div>
+        <div class="col-md-5">
+            &emsp; {{Form::submit('Submit',['class'=> 'btn btn-primary'])}}&emsp;
+        </div> 
+            </div>
     {!! Form::close() !!}
         </div>
             </div>
 
 
 </div>
-    <div class="row"> 
-            <div class="col-md-5">
-    <input type="checkbox" id="checkDate" class="form-control"   onclick="toggle('.checkDate', this)" >
-            </div>
-            <div class="col-md-7">
-                    {{Form::label('dateRange','Date Range'),['class'=>'form-control']}} 
-            </div>
-
-        </div>
-
-<div id="dateRangeForm">
-        {!! Form::open(['action' => 'FrameController@store','method' => 'POST']) !!}
-<div class="row"> 
-    <div class="col-md-5">
-            {{Form::label('','From'),['class'=>'form-control']}}
-              </div> 
-    <div class="col-md-7">
-  {{ Form::date('fromDate', '00-00-00 00:00:00',['class'=>'form-control form-control-sm','id'=>'fromDate']) }}
-    </div>
-</div>
-<div class="row"> 
-    <div class="col-md-5">
-            {{Form::label('','To'),['class'=>'form-control']}}
-              </div> 
-    <div class="col-md-7">
-  {{ Form::date('toDate', '00-00-00 00:00:00',['class'=>'form-control form-control-sm','id'=>'toDate']) }}
-    </div>
-</div>
-&emsp; {{Form::submit('Submit',['class'=> 'btn btn-primary'])}}&emsp; 
-                {!! Form::close() !!}
-</div>
+ 
     <table class="table table-hover table table-bordered">
         <thead>
         <tr>

@@ -16,7 +16,31 @@ class MatrixPullTestsController extends Controller
      */
     public function index() 
     {
-        $prod = "Gintech";
+       
+       $getLastProd = DB::select("SELECT * FROM prodselect JOIN producttype ON prodselect.productName = producttype.prodName WHERE ProcessName ='Matrix Assembly' ORDER BY prodselect.created_at DESC LIMIT 1"); 
+                      
+        if(count($getLastProd) > 0)
+        {
+            foreach($getLastProd as $field)   
+            {
+                $prod =  $field->productName;
+             $bom = $field->bomType;
+            }
+
+        }else{
+            $prod = "Not Set";
+        }
+
+        
+        if (strpos($prod, '5BB') ) {
+            $bbno = "5bb";
+        }else{
+            $bbno = "4bb";
+        }
+                
+                  
+                 
+        $node="Ribbon-to-BB Pull Strength";
         $aveIndBus1Top1 = $this->getAveInd('Top1','Bussing1',$prod);
         $aveIndBus1Top2 = $this->getAveInd('Top2','Bussing1',$prod);
         $aveIndBus1Bot = $this->getAveInd('Bottom','Bussing1',$prod);
@@ -80,11 +104,13 @@ class MatrixPullTestsController extends Controller
         $perc2ReWTop = $this->getList4percentile('Top','Rework',$prod,0.99865);
         $perc2ReWBot = $this->getList4percentile('Bottom','Rework',$prod,0.99865);
         
-        $USL = 0;
-        $LSL = 0;
-        $target = 0;
-        $UCL=0;
-        $LCL=0;
+        $USL = $this->getSpecsULVal($prod,$node,$bbno);
+        $LSL = $this->getSpecsLLVal($prod,$node,$bbno);
+        $target = $this->getSpecsLimitTarget($prod,$node,$bbno);
+        $UCL=15.65;
+        $LCL=1.68;
+
+
         $CL = (($UCL-$LCL)/2)+$LCL;
         $zBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$CL),$stdOfStdBus1Top1));
         $zBus1Top2 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top2-$CL),$stdOfStdBus1Top2));
@@ -325,6 +351,322 @@ class MatrixPullTestsController extends Controller
     public function store(Request $request)
     {
               
+        if($request->input('prodSel')!=''){
+            $prod =  $request->input('prodSel');
+            $node="Ribbon-to-BB Pull Strength";
+            $getLastProd = DB::select("SELECT * FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'"); 
+                      
+        if(count($getLastProd) > 0)
+        {
+            foreach($getLastProd as $field)   
+            {
+               
+             $bom = $field->bomType;
+             $bbno = $field->BBno;
+            }
+
+        }else{
+            $prod = "Not Set";
+        }
+
+        
+       
+                
+                  
+                 
+        $node="Ribbon-to-BB Pull Strength";
+        $aveIndBus1Top1 = $this->getAveInd('Top1','Bussing1',$prod);
+        $aveIndBus1Top2 = $this->getAveInd('Top2','Bussing1',$prod);
+        $aveIndBus1Bot = $this->getAveInd('Bottom','Bussing1',$prod);
+        $aveIndBus2Top1 = $this->getAveInd('Top1','Bussing2',$prod);
+        $aveIndBus2Top2 = $this->getAveInd('Top2','Bussing2',$prod);
+        $aveIndBus2Bot =  $this->getAveInd('Bottom','Bussing2',$prod);
+        $aveIndReWTop = $this->getAveInd('Top','Rework',$prod);
+        $aveIndReWBot = $this->getAveInd('Bottom','Rework',$prod);
+
+        $stdIndBus1Top1 = $this->getStdInd('Top1','Bussing1',$prod);
+        $stdIndBus1Top2 = $this->getStdInd('Top2','Bussing1',$prod);
+        $stdIndBus1Bot = $this->getStdInd('Bottom','Bussing1',$prod);
+        $stdIndBus2Top1 = $this->getStdInd('Top1','Bussing2',$prod);
+        $stdIndBus2Top2 = $this->getStdInd('Top2','Bussing2',$prod);
+        $stdIndBus2Bot =  $this->getStdInd('Bottom','Bussing2',$prod);
+        $stdIndReWTop = $this->getStdInd('Top','Rework',$prod);
+        $stdIndReWBot = $this->getStdInd('Bottom','Rework',$prod);
+
+        $aveOfAveBus1Top1 = $this->getAveOfAve('Top1','Bussing1',$prod);
+        $aveOfAveBus1Top2 = $this->getAveOfAve('Top2','Bussing1',$prod);
+        $aveOfAveBus1Bot = $this->getAveOfAve('Bottom','Bussing1',$prod);
+        $aveOfAveBus2Top1 = $this->getAveOfAve('Top1','Bussing2',$prod);
+        $aveOfAveBus2Top2 = $this->getAveOfAve('Top2','Bussing2',$prod);
+        $aveOfAveBus2Bot =  $this->getAveOfAve('Bottom','Bussing2',$prod);
+        $aveOfAveReWTop = $this->getAveOfAve('Top','Rework',$prod);
+        $aveOfAveReWBot = $this->getAveOfAve('Bottom','Rework',$prod);
+
+        $stdOfStdBus1Top1 = $this->getStdOfStd('Top1','Bussing1',$prod);
+        $stdOfStdBus1Top2 = $this->getStdOfStd('Top2','Bussing1',$prod);
+        $stdOfStdBus1Bot = $this->getStdOfStd('Bottom','Bussing1',$prod);
+        $stdOfStdBus2Top1 = $this->getStdOfStd('Top1','Bussing2',$prod);
+        $stdOfStdBus2Top2 = $this->getStdOfStd('Top2','Bussing2',$prod);
+        $stdOfStdBus2Bot =  $this->getStdOfStd('Bottom','Bussing2',$prod);
+        $stdOfStdReWTop = $this->getStdOfStd('Top','Rework',$prod);
+        $stdOfStdReWBot = $this->getStdOfStd('Bottom','Rework',$prod);
+
+        $medianBus1Top1 = $this->getMedian('Top1','Bussing1',$prod);
+        $medianBus1Top2 = $this->getMedian('Top2','Bussing1',$prod);
+        $medianBus1Bot = $this->getMedian('Bottom','Bussing1',$prod);
+        $medianBus2Top1 = $this->getMedian('Top1','Bussing2',$prod);
+        $medianBus2Top2 = $this->getMedian('Top2','Bussing2',$prod);
+        $medianBus2Bot =  $this->getMedian('Bottom','Bussing2',$prod);
+        $medianReWTop = $this->getMedian('Top','Rework',$prod);
+        $medianReWBot = $this->getMedian('Bottom','Rework',$prod);
+        
+        $perc1Bus1Top1 = $this->getList4percentile('Top1','Bussing1',$prod,0.00135);
+        $perc1Bus1Top2 = $this->getList4percentile('Top2','Bussing1',$prod,0.00135);
+        $perc1Bus1Bot = $this->getList4percentile('Bottom','Bussing1',$prod,0.00135);
+        $perc1Bus2Top1 = $this->getList4percentile('Top1','Bussing2',$prod,0.00135);
+        $perc1Bus2Top2 = $this->getList4percentile('Top2','Bussing2',$prod,0.00135);
+        $perc1Bus2Bot =  $this->getList4percentile('Bottom','Bussing2',$prod,0.00135);
+        $perc1ReWTop = $this->getList4percentile('Top','Rework',$prod,0.00135);
+        $perc1ReWBot = $this->getList4percentile('Bottom','Rework',$prod,0.00135);
+
+        $perc2Bus1Top1 = $this->getList4percentile('Top1','Bussing1',$prod,0.99865);
+        $perc2Bus1Top2 = $this->getList4percentile('Top2','Bussing1',$prod,0.99865);
+        $perc2Bus1Bot = $this->getList4percentile('Bottom','Bussing1',$prod,0.99865);
+        $perc2Bus2Top1 = $this->getList4percentile('Top1','Bussing2',$prod,0.99865);
+        $perc2Bus2Top2 = $this->getList4percentile('Top2','Bussing2',$prod,0.99865);
+        $perc2Bus2Bot =  $this->getList4percentile('Bottom','Bussing2',$prod,0.99865);
+        $perc2ReWTop = $this->getList4percentile('Top','Rework',$prod,0.99865);
+        $perc2ReWBot = $this->getList4percentile('Bottom','Rework',$prod,0.99865);
+        
+        $USL = $this->getSpecsULVal($prod,$node,$bbno);
+        $LSL = $this->getSpecsLLVal($prod,$node,$bbno);
+        $target = $this->getSpecsLimitTarget($prod,$node,$bbno);
+        $UCL=15.65;
+        $LCL=1.68;
+
+
+        $CL = (($UCL-$LCL)/2)+$LCL;
+        $zBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$CL),$stdOfStdBus1Top1));
+        $zBus1Top2 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top2-$CL),$stdOfStdBus1Top2));
+        $zBus1Bot = ABS($this->divideByZeroExempt(($aveOfAveBus1Bot - $CL),$stdOfStdBus1Bot));
+        $zBus2Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus2Top1-$CL),$stdOfStdBus2Top1));
+        $zBus2Top2 = ABS($this->divideByZeroExempt(($aveOfAveBus2Top2 -$CL), $stdOfStdBus2Top2));
+        $zBus2Bot = ABS($this->divideByZeroExempt(($aveOfAveBus2Bot -$CL),$stdOfStdBus2Bot));
+        $zBusReWBot = ABS($this->divideByZeroExempt(($aveOfAveReWBot -$CL),$stdOfStdReWBot));
+        $zBusReWTop = ABS($this->divideByZeroExempt(($aveOfAveReWTop -$CL),$stdOfStdReWTop));
+
+        $CpLBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$LCL),(3*$stdOfStdBus1Top1) ));
+        $CpLBus1Top2 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top2-$LCL),(3*$stdOfStdBus1Top2) ));
+        $CpLBus1Bot = ABS($this->divideByZeroExempt(($aveOfAveBus1Bot-$LCL),(3*$stdOfStdBus1Bot) ));
+        $CpLBus2Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus2Top1-$LCL),(3*$stdOfStdBus2Top1) ));
+        $CpLBus2Top2 = ABS($this->divideByZeroExempt(($aveOfAveBus2Top2-$LCL),(3*$stdOfStdBus2Top2) ));
+        $CpLBus2Bot = ABS($this->divideByZeroExempt(($aveOfAveBus2Bot-$LCL),(3*$stdOfStdBus2Bot) ));
+        $CpLBusReWBot = ABS($this->divideByZeroExempt(($aveOfAveReWBot-$LCL),(3*$stdOfStdReWBot) ));
+        $CpLBusReWTop = ABS($this->divideByZeroExempt(($aveOfAveReWTop-$LCL),(3*$stdOfStdReWTop) ));
+
+        $CpUBus1Top1 = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus1Top1),(3*$stdOfStdBus1Top1) ));
+        $CpUBus1Top2 = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus1Top2),(3*$stdOfStdBus1Top2) ));
+        $CpUBus1Bot = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus1Bot),(3*$stdOfStdBus1Bot) ));
+        $CpUBus2Top1 = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus2Top1),(3*$stdOfStdBus2Top1) ));
+        $CpUBus2Top2 = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus2Top2),(3*$stdOfStdBus2Top2) ));
+        $CpUBus2Bot = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus2Bot),(3*$stdOfStdBus2Bot) ));
+        $CpUBusReWBot = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveReWBot),(3*$stdOfStdReWBot) ));
+        $CpUBusReWTop = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveReWTop),(3*$stdOfStdReWTop) ));
+
+        $arrValForCpkB1T1 = array( $CpUBus1Top1,$CpLBus1Top1);
+        $arrValForCpkB1T2 = array( $CpUBus1Top2,$CpLBus1Top2);
+        $arrValForCpkB1B = array( $CpUBus1Bot,$CpLBus1Bot);
+        $arrValForCpkB2T1 = array( $CpUBus2Top1,$CpLBus2Top1);
+        $arrValForCpkB2T2 = array( $CpUBus2Top2,$CpLBus2Top2);
+        $arrValForCpkB2B = array( $CpUBus2Bot,$CpLBus2Bot);
+        $arrValForCpkRB = array( $CpUBusReWBot,$CpLBusReWBot);
+        $arrValForCpkRT = array( $CpUBusReWTop,$CpLBusReWTop);
+
+        $CpkB1T1 = min($arrValForCpkB1T1);
+        $CpkB1T2 = min($arrValForCpkB1T2);
+        $CpkB1B = min($arrValForCpkB1B);
+        $CpkB2T1 = min($arrValForCpkB2T1);
+        $CpkB2T2 = min($arrValForCpkB2T2);
+        $CpkB2B = min($arrValForCpkB2B);
+        $CpkRB = min($arrValForCpkRB);
+        $CpkRT = min($arrValForCpkRT);
+
+        $CpnUB1T1 =$this->divideByZeroExempt(($USL - $medianBus1Top1 ),( $perc2Bus1Top1 - $medianBus1Top1));
+        $CpnUB1T2 = $this->divideByZeroExempt(($USL - $medianBus1Top2 ),( $perc2Bus1Top2 - $medianBus1Top2));
+        $CpnUB1B = $this->divideByZeroExempt(($USL - $medianBus1Bot ),( $perc2Bus1Bot - $medianBus1Bot));
+        $CpnUB2T1 = $this->divideByZeroExempt(($USL - $medianBus2Top1 ),( $perc2Bus2Top1 - $medianBus2Top1));
+        $CpnUB2T2 = $this->divideByZeroExempt(($USL - $medianBus2Top2 ),( $perc2Bus2Top2 - $medianBus2Top2));
+        $CpnUB2B = $this->divideByZeroExempt(($USL - $medianBus2Bot ),( $perc2Bus2Bot - $medianBus2Bot));
+        $CpnURT = $this->divideByZeroExempt(($USL - $medianReWTop ),( $perc2Bus2Top2 - $medianBus2Top2));
+        $CpnURB = $this->divideByZeroExempt(($USL - $medianReWBot ),($perc2ReWBot - $medianReWBot));
+
+        $CpnLB1T1 = $this->divideByZeroExempt(($medianBus1Top1  - $LSL),( $medianBus1Top1 -  $perc1Bus1Top1));
+        $CpnLB1T2 = $this->divideByZeroExempt(($medianBus1Top2  - $LSL),( $medianBus1Top2 -  $perc1Bus1Top2));
+        $CpnLB1B = $this->divideByZeroExempt(($medianBus1Bot  - $LSL),( $medianBus1Bot -  $perc1Bus1Bot));
+        $CpnLB2T1 =$this->divideByZeroExempt( ($medianBus2Top1  - $LSL),( $medianBus2Top1 -  $perc1Bus2Top1));
+        $CpnLB2T2 =$this->divideByZeroExempt( ($medianBus2Top2  - $LSL),( $medianBus2Top2 -  $perc1Bus2Top2));
+        $CpnLB2B = $this->divideByZeroExempt(($medianBus2Bot  - $LSL),( $medianBus2Bot -  $perc1Bus2Bot));
+        $CpnLRB = $this->divideByZeroExempt(($medianReWBot  - $LSL),( $medianReWBot -  $perc1ReWBot));
+        $CpnLRT =$this->divideByZeroExempt( ($medianReWTop  - $LSL),( $medianReWTop -  $perc1ReWTop));
+
+        $arrValForCpnB1T1 = array( $CpnUB1T1,  $CpnLB1T1);       
+        $arrValForCpnB1T2 = array( $CpnUB1T2,  $CpnLB1T2);
+        $arrValForCpnB1B = array( $CpnUB1B,  $CpnLB1B);
+        $arrValForCpnB2T1 = array( $CpnUB1T1,  $CpnLB2T1);       
+        $arrValForCpnB2T2 = array( $CpnUB1T2,  $CpnLB2T2);
+        $arrValForCpnB2B = array( $CpnUB1B,  $CpnLB2B);
+        $arrValForCpnRB = array( $CpnURB,  $CpnLRB);
+        $arrValForCpnRT = array( $CpnURT,  $CpnLRT);
+
+        $CpnB1T1 = min($arrValForCpnB1T1);
+        $CpnB1T2 = min($arrValForCpnB1T2);
+        $CpnB1B = min($arrValForCpnB1B);
+        $CpnB2T1 = min($arrValForCpnB2T1);
+        $CpnB2T2 = min($arrValForCpnB2T2);
+        $CpnB2B = min($arrValForCpnB2B);
+        $CpnRT = min($arrValForCpnRT);
+        $CpnRB = min($arrValForCpnRB);
+
+      return view('matrix.matrixpulltest')
+      ->with('aveIndB1T1', $aveIndBus1Top1)
+      ->with('aveIndB1T2', $aveIndBus1Top2)
+      ->with('aveIndB1B', $aveIndBus1Bot)
+      ->with('aveIndB2T1', $aveIndBus2Top1)
+      ->with('aveIndB2T2', $aveIndBus2Top2)
+      ->with('aveIndB2B', $aveIndBus2Bot)
+      ->with('aveIndRT', $aveIndReWTop )
+      ->with('aveIndRB', $aveIndReWBot)
+
+      ->with('stdIndB1T1', $stdIndBus1Top1)
+      ->with('stdIndB1T2', $stdIndBus1Top2)
+      ->with('stdIndB1B', $stdIndBus1Bot)
+      ->with('stdIndB2T1', $stdIndBus2Top1)
+      ->with('stdIndB2T2', $stdIndBus2Top2)
+      ->with('stdIndB2B', $stdIndBus2Bot)
+      ->with('stdIndRT', $stdIndReWTop )
+      ->with('stdIndRB', $stdIndReWBot)
+      
+      ->with('aveOfAveB1T1', $aveOfAveBus1Top1)
+      ->with('aveOfAveB1T2', $aveOfAveBus1Top2)
+      ->with('aveOfAveB1B', $aveOfAveBus1Bot)
+      ->with('aveOfAveB2T1', $aveOfAveBus2Top1)
+      ->with('aveOfAveB2T2', $aveOfAveBus2Top2)
+      ->with('aveOfAveB2B', $aveOfAveBus2Bot)
+      ->with('aveOfAveRT', $aveOfAveReWTop )
+      ->with('aveOfAveRB', $aveOfAveReWBot)
+
+      ->with('stdOfStdB1T1', $stdOfStdBus1Top1)
+      ->with('stdOfStdB1T2', $stdOfStdBus1Top2)
+      ->with('stdOfStdB1B', $stdOfStdBus1Bot)
+      ->with('stdOfStdB2T1', $stdOfStdBus2Top1)
+      ->with('stdOfStdB2T2', $stdOfStdBus2Top2)
+      ->with('stdOfStdB2B', $stdOfStdBus2Bot)
+      ->with('stdOfStdRT', $stdOfStdReWTop )
+      ->with('stdOfStdRB', $stdOfStdReWBot)
+
+      ->with('medianB1T1', $medianBus1Top1)
+      ->with('medianB1T2', $medianBus1Top2)
+      ->with('medianB1B', $medianBus1Bot)
+      ->with('medianB2T1', $medianBus2Top1)
+      ->with('medianB2T2', $medianBus2Top2)
+      ->with('medianB2B', $medianBus2Bot)
+      ->with('medianRT', $medianReWTop )
+      ->with('medianRB', $medianReWBot)
+
+      ->with('perc1B1T1', $perc1Bus1Top1)
+      ->with('perc1B1T2', $perc1Bus1Top2)
+      ->with('perc1B1B', $perc1Bus1Bot)
+      ->with('perc1B2T1', $perc1Bus2Top1)
+      ->with('perc1B2T2', $perc1Bus2Top2)
+      ->with('perc1B2B', $perc1Bus2Bot)
+      ->with('perc1RT', $perc1ReWTop )
+      ->with('perc1RB', $perc1ReWBot)
+
+      ->with('perc2B1T1', $perc2Bus1Top1)
+      ->with('perc2B1T2', $perc2Bus1Top2)
+      ->with('perc2B1B', $perc2Bus1Bot)
+      ->with('perc2B2T1', $perc2Bus2Top1)
+      ->with('perc2B2T2', $perc2Bus2Top2)
+      ->with('perc2B2B', $perc2Bus2Bot)
+      ->with('perc2RT', $perc2ReWTop )
+      ->with('perc2RB', $perc2ReWBot)
+      ->with('dateRange',$this->getDateRangeForSPC())
+      ->with('productBuilt',$prod)
+
+      ->with('USL',$USL)
+      ->with('LSL',$LSL)
+      ->with('UCL',$UCL)
+      ->with('LCL',$LCL)
+      ->with('CL',$CL)
+      ->with('target',$target)
+
+      ->with('zBus1Top1',$zBus1Top1)
+      ->with('zBus1Top2',$zBus1Top2)
+      ->with('zBus1Bot',$zBus1Bot)
+      ->with('zBus2Top1',$zBus2Top1)
+      ->with('zBus2Top2',$zBus2Top2)
+      ->with('zBus2Bot',$zBus2Bot)
+      ->with('zRB',$zBusReWBot)
+      ->with('zRT',$zBusReWTop)
+
+      ->with('CpUB1T1',$CpUBus1Top1)
+      ->with('CpUB1T2',$CpUBus1Top2)
+      ->with('CpUB1B',$CpUBus1Bot)
+      ->with('CpUB2T1',$CpUBus2Top1)
+      ->with('CpUB2T2',$CpUBus2Top2)
+      ->with('CpUB2B',$CpUBus2Bot)
+      ->with('CpURB',$CpUBusReWBot)
+      ->with('CpURT',$CpUBusReWTop)
+
+      ->with('CpLB1T1',$CpLBus1Top1)
+      ->with('CpLB1T2',$CpLBus1Top2)
+      ->with('CpLB1B',$CpLBus1Bot)
+      ->with('CpLB2T1',$CpLBus2Top1)
+      ->with('CpLB2T2',$CpLBus2Top2)
+      ->with('CpLB2B',$CpLBus2Bot)
+      ->with('CpLRB',$CpLBusReWBot)
+      ->with('CpLRT',$CpLBusReWTop)
+
+      ->with('CpkB1T1',$CpkB1T1)
+      ->with('CpkB1T2',$CpkB1T2)
+      ->with('CpkB1B',$CpkB1B)
+      ->with('CpkB2T1',$CpkB2T1)
+      ->with('CpkB2T2',$CpkB2T2)
+      ->with('CpkB2B',$CpkB2B)
+      ->with('CpkRB',$CpkRB)
+      ->with('CpkRT',$CpkRT)
+
+      ->with('CpnB1T1',$CpnB1T1)
+      ->with('CpnB1T2',$CpnB1T2)
+      ->with('CpnB1B',$CpnB1B)
+      ->with('CpnB2T1',$CpnB2T1)
+      ->with('CpnB2T2',$CpnB2T2)
+      ->with('CpnB2B',$CpnB2B)
+      ->with('CpnRB',$CpnRB)
+      ->with('CpnRT',$CpnRT)
+
+      ->with('CpnUB1T1',$CpnUB1T1)
+      ->with('CpnUB1T2',$CpnUB1T2)
+      ->with('CpnUB1B',$CpnUB1B)
+      ->with('CpnUB2T1',$CpnUB2T1)
+      ->with('CpnUB2T2',$CpnUB2T2)
+      ->with('CpnUB2B',$CpnUB2B)
+      ->with('CpnURB',$CpnURB)
+      ->with('CpnURT',$CpnURT)
+
+      ->with('CpnLB1T1',$CpnLB1T1)
+      ->with('CpnLB1T2',$CpnLB1T2)
+      ->with('CpnLB1B',$CpnLB1B)
+      ->with('CpnLB2T1',$CpnLB2T1)
+      ->with('CpnLB2T2',$CpnLB2T2)
+      ->with('CpnLB2B',$CpnLB2B)
+      ->with('CpnLRB',$CpnLRB)
+      ->with('CpnLRT',$CpnLRT);
+ 
+        
+
+        }
+
 
            if( $request->input('process')=='Rework'){
             $this->validate($request,[   
@@ -655,6 +997,8 @@ return redirect('/rtobpulltest')->with('success', 'Record successfully added.');
        
         }
 
+       
+
 
     
 
@@ -717,4 +1061,57 @@ return redirect('/rtobpulltest')->with('success', 'Record successfully added.');
          // return 0;
         }
      }
+
+
+
+
+     public function getSpecsLimitTarget($prod,$node,$bbnum)
+     {
+         
+         $medianCount = DB::table(DB::select("SELECT * FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."' AND parameters.BBno = '".$bbnum."'"));
+         $medianCount2 = DB::table(DB::select("SELECT count(targetVal) as tarval FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."' AND parameters.BBno = '".$bbnum."'"));
+         $ctr=$medianCount2->from[0]->tarval;
+         if( $ctr >  0){
+             $target = $medianCount->from[0]->targetVal;
+             return $target;
+            
+         }else{
+             return 0;
+         }
+       
+         }
+
+         
+     public function getSpecsLLVal($prod,$node,$bbnum)
+     {
+         
+        $medianCount = DB::table(DB::select("SELECT * FROM parameters INNER JOIN producttype ON parameters.BOMType = producttype.bomType WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'  AND parameters.BBno = '".$bbnum."'"));
+        $medianCount2 = DB::table(DB::select("SELECT COUNT(targetVal) as tarval FROM parameters INNER JOIN producttype ON parameters.BOMType = producttype.bomType WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'  AND parameters.BBno = '".$bbnum."'"));
+         $ctr=$medianCount2->from[0]->tarval;
+         if( $ctr >  0){
+             $target = $medianCount->from[0]->LLVal;
+             return $target;
+            
+         }else{
+             return 0;
+         }
+       
+         }
+
+         public function getSpecsULVal($prod,$node,$bbnum)
+         {
+            $medianCount = DB::table(DB::select("SELECT * FROM parameters INNER JOIN producttype ON parameters.BOMType = producttype.bomType WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'  AND parameters.BBno = '".$bbnum."'"));
+                 $medianCount2 = DB::table(DB::select("SELECT COUNT(targetVal) as tarval FROM parameters INNER JOIN producttype ON parameters.BOMType = producttype.bomType WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'  AND parameters.BBno = '".$bbnum."'"));
+             $ctr=$medianCount2->from[0]->tarval;
+             if( $ctr >  0){
+                 $target = $medianCount->from[0]->ULVal;
+                 return $target;
+                
+             }else{
+                 return 0;
+             }
+           
+             }
+
+            
 }

@@ -31,7 +31,19 @@
                                 <div class="col-md-1"> {{Form::label('Date', 'Date:')}} </div>    
                                 <div class="col-md-5"> {{Form::date('fixture_date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}} </div>
                                 <div class="col-md-1"> {{Form::label('ProdBuilt', 'Product Built:')}}</div>  
-                                <div class="col-md-5"> {{Form::select('prodBuilt', array('Gintech' => 'Gintech', 'Own-BOM' => 'Own-BOM'),'',['class' => 'form-control process','placeholder' => 'Select Product Built'])}} <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small> </div>
+                                <div class="col-md-5"> 
+                                        <?php  $getLastProd = DB::select("SELECT * FROM prodselect WHERE ProcessName ='Matrix Assembly' ORDER BY created_at DESC LIMIT 1 "); 
+                      
+                                        ?>
+                                          @if(count($getLastProd) > 0)
+                                          @foreach($getLastProd as $field)   
+                                                 
+                                                   {{Form::text('prodBuilt', $field->productName , ['class' => 'form-control','readonly' => 'true'])}}
+                                                   @endforeach
+                                                   @else
+                                                   Not Set.
+                                                   @endif  
+                                </div>
                             </div></br>
                         </div> 
                     </div>

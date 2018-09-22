@@ -53,7 +53,9 @@ foreach ( $posts as $key => $value) {
      ->with('getdata',$getall)
      ->with('fields',$posts)
      ->with('tbl','Process')
-     ->with('controller','processController@store');
+     ->with('controller','processController@store')
+     ->with('controllerUp','processController@update')
+     ->with('controllerDel','processController@destroy');
         // dd($posts);          
 
     }
@@ -115,6 +117,14 @@ foreach ( $posts as $key => $value) {
     public function update(Request $request, $id)
     {
         //
+        $process = process::find($id);
+       // $process->ProcessName = $txt[0];
+      $txt = $request->input('txt');
+        $process->ProcessDesc = $txt[1];;
+        $process->save();
+        return redirect('/process/create')
+        ->with('success', 'Successfully updated');
+
     }
 
     /**
@@ -125,6 +135,9 @@ foreach ( $posts as $key => $value) {
      */
     public function destroy($id)
     {
-        //
+        $post = process::find($id);
+        $post->delete();
+        return redirect('/process/create')
+        ->with('success', 'Successfully Deleted');
     }
 }

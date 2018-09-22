@@ -50,6 +50,8 @@ foreach ( $posts as $key => $value) {
      ->with('getdata',$getall)
      ->with('fields',$posts)
      ->with('tbl','Bom Type')
+     ->with('controllerUp','BOMtypeController@update')
+     ->with('controllerDel','BOMtypeController@destroy')
      ->with('controller','BOMtypeController@store');
         // dd($posts);          
 
@@ -111,7 +113,14 @@ foreach ( $posts as $key => $value) {
      */
     public function update(Request $request, $id)
     {
-        //
+        $txt = $request->input('txt');
+    
+        $process = BOMtype::find($id);
+      //  $process->bomType = $txt[0];
+        $process->bomDesc = $txt[1];
+        $process->save();
+        return redirect('/bom/create')
+        ->with('success', 'Successfully Updated');
     }
 
     /**
@@ -122,6 +131,9 @@ foreach ( $posts as $key => $value) {
      */
     public function destroy($id)
     {
-        //
+        $post = BOMtype::find($id);
+        $post->delete();
+        return redirect('/bom/create')
+        ->with('success', 'Successfully Deleted');
     }
 }

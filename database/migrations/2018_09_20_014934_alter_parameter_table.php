@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterTableAddProdBuilt extends Migration
+class AlterParameterTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class AlterTableAddProdBuilt extends Migration
      */
     public function up()
     {
-        Schema::table('btobpulltest', function (Blueprint $table) {
+           
+        Schema::table('parameters', function (Blueprint $table) {
             //
-            $table->string('prodBuilt');
+            $table->string('BBno')->comment="BB No";
         });
-        Schema::table('offlinematsoldering', function (Blueprint $table) {
-            //
-            $table->string('prodBuilt');
-        });
-      
     }
 
     /**
@@ -31,6 +27,9 @@ class AlterTableAddProdBuilt extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('parameters', function (Blueprint $table) {
+            //
+            $table->dropColumn('BBno');
+        });
     }
 }

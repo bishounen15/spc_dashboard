@@ -57,6 +57,8 @@ foreach ( $posts as $key => $value) {
      ->with('selectVal2','ProcessName')
      ->with('fields',$posts)
      ->with('tbl','Critical Nodes')
+     ->with('controllerUp','subProcessController@update')
+     ->with('controllerDel','subProcessController@destroy')
      ->with('controller','subProcessController@store');
         // dd($posts);          
 
@@ -119,7 +121,20 @@ foreach ( $posts as $key => $value) {
      */
     public function update(Request $request, $id)
     {
-        //
+        $txt = $request->input('txt');
+    
+        $process = subProcess::find($id);
+       // $process->subProcessName = $txt[0];
+        $process->subProcessDesc = $txt[1];
+        $process->ProcessName = $request->input('bom');
+        $process->save();
+   
+  
+
+  
+    return redirect('/subprocess/create')
+    ->with('success', 'Successfully Created');
+    
     }
 
     /**
@@ -130,6 +145,9 @@ foreach ( $posts as $key => $value) {
      */
     public function destroy($id)
     {
-        //
+        $post = subProcess::find($id);
+        $post->delete();
+        return redirect('/subprocess/create')
+        ->with('success', 'Successfully Deleted');
     }
 }

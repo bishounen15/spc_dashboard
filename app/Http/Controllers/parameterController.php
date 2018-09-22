@@ -31,10 +31,11 @@ class parameterController extends Controller
         $posts = \DB::connection()->getSchemaBuilder()->getColumnListing("parameters");
         
     // $settings = SomeModel::where($items_match)->get(); //Making use of Eloquent
-    $arrAve = array();
+ 
     $arrField = array();
 //  $settings = process::where($items_match)->get(); //Making use of Eloquent
-   
+$posts = \DB::connection()->getSchemaBuilder()->getColumnListing("parameters"); 
+ $arrAve = array();
     $columns = DB::connection()
                 ->getDoctrineSchemaManager()
                 ->listTableDetails("parameters");
@@ -51,8 +52,10 @@ foreach ( $posts as $key => $value) {
      ->with('getdata',$getall)
      ->with('getSubPro',$getSubPro)
      ->with('fields',$posts)
-     ->with('bom',$getBom)
-     ->with('tbl','SPC Chart Indicators')
+     ->with('getbom',$getBom)
+     ->with('tbl','SPC Chart Indicator Specs ')
+     ->with('controllerUp','parameterController@update')
+     ->with('controllerDel','parameterController@destroy')
      ->with('controller','parameterController@store');
         // dd($posts);          
 
@@ -71,14 +74,23 @@ foreach ( $posts as $key => $value) {
         $txt = $request->input('txt');
     
             $process = New parameter();
-            $process->ProcessName = $txt[0];
-            $process->ProcessDesc = $txt[1];
+            $process->paramID = "0";
+            $process->UOM = $txt[0];
+            $process->targetVal = $txt[1];
+            $process->ULVal = $txt[2];
+            $process->LLVal = $txt[3];
+            $process->BOMType = $request->input('bom');
+            $process->subProcessName = $request->input('subPro');
+            $process->cellType = $request->input('cellType');
+            $process->sealantType = $request->input('sealantType');
+            $process->JBOXType = $request->input('jboxType');
+            $process->BBno = $request->input('bbno');
             $process->save();
        
       
 
       
-        return redirect('/process/create')
+        return redirect('/parameter/create')
         ->with('success', 'Successfully Created');
         
     }
@@ -102,8 +114,14 @@ foreach ( $posts as $key => $value) {
      */
     public function edit($id)
     {
-        //
-    }
+        
+      
+ }
+               
+ 
+                     
+                 
+    
 
     /**
      * Update the specified resource in storage.
@@ -114,7 +132,30 @@ foreach ( $posts as $key => $value) {
      */
     public function update(Request $request, $id)
     {
-        //
+       
+    
+        $txt = $request->input('txt');
+    
+            $process = parameter::find($id);
+            $process->paramID = "0";
+            $process->UOM = $txt[0];
+            $process->targetVal = $txt[1];
+            $process->ULVal = $txt[2];
+            $process->LLVal = $txt[3];
+            $process->BOMType = $request->input('bom');
+            $process->subProcessName = $request->input('subPro');
+            $process->cellType = $request->input('cellType');
+            $process->sealantType = $request->input('sealantType');
+            $process->JBOXType = $request->input('jboxType');
+            $process->BBno = $request->input('bbno');
+            $process->save();
+       
+      
+
+      
+        return redirect('/parameter/create')
+        ->with('success', 'Successfully Updated');
+        
     }
 
     /**
@@ -125,7 +166,10 @@ foreach ( $posts as $key => $value) {
      */
     public function destroy($id)
     {
-        //
+        $post = parameter::find($id);
+        $post->delete();
+        return redirect('/parameter/create')
+        ->with('success', 'Successfully Deleted');
     }
 
 }

@@ -30,7 +30,30 @@
                                         <div class="col-md-5"> {{Form::text('remarks','', ['class' => 'form-control','placeholder' => 'Remarks'])}} <small class="form-text text-danger">{{ $errors->first('remarks') }}</small> </div>
                     
                                     <div class="col-md-1"> {{Form::label('ProdBuilt', 'Product Built:')}}</div>  
-                                    <div class="col-md-5"> {{Form::select('prodBuilt', array('Gintech' => 'Gintech', 'Own-BOM' => 'Own-BOM'),'',['class' => 'form-control process','placeholder' => 'Select Product Built'])}} <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small> </div>
+                                    <div class="col-md-5">
+                                            <?php  $getLastProd = DB::select("SELECT * FROM prodselect WHERE ProcessName ='Matrix Assembly' ORDER BY created_at DESC LIMIT 1 "); 
+                                            $getProd = DB::select("SELECT * FROM producttype "); 
+                                                   $lastSet = "";
+                                           ?>
+                                             @if(count($getLastProd) > 0)
+                                             @foreach($getLastProd as $field)   
+                                                    
+                                            <?php $lastSet = $field->productName;  ?>
+                                                      @endforeach
+                                                      @else
+                                                      <?php $lastSet = "Not Set.";  ?>
+                                                      @endif  
+                                     
+                                    
+                                   
+                                       <select id="prodBuilt"  name="prodBuilt" class="form-control" >
+                                               <option selected value="{{$lastSet}}">{{$lastSet}}</option>
+                                                       @foreach ($getProd as $s)
+                                                               <option value="{{ $s->prodName }}">{{ $s->prodName }}</option> 
+                                                       @endforeach
+                                       </select> 
+                                       <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small>  
+                                    </div>
                                 </div></br>
                             </div> 
 

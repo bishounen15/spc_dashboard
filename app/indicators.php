@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class indicators extends Model
 {
-    protected $connection = 'spc';
+   // protected $connection = 'spc';
     protected $table = 'indicators';
     //Primary Key
     protected $primaryKey = 'id';

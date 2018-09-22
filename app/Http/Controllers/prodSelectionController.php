@@ -1,24 +1,26 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\Flash;
+use App\productSelect;
 use DB;
+use Illuminate\Http\Request;
 
-class FlashController extends Controller
+class prodSelectionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+    date_default_timezone_set('Asia/Manila');
+   
+    }
     public function index()
     {
-     //   $posts = DB::select('SELECT * FROM flashes ORDER BY ID DESC'); 
-        //$posts = Post::orderBy('created_at','desc')->paginate(2);
-        return view('pages.flashtestSum') ; 
-                  //  ->with('alldata',$posts);
+        return view('pages.paramSetup');
     }
 
     /**
@@ -28,7 +30,7 @@ class FlashController extends Controller
      */
     public function create()
     {
-        return view ('posts.flash');
+        return view('pages.paramSetup');
     }
 
     /**
@@ -39,32 +41,14 @@ class FlashController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'ModuleID' => 'required|alpha_num|max:15|min:13',
-            'InspTime' => 'required',
-            'ISC' => 'required',
-            'UOC' => 'required',
-            'IMPP' => 'required',
-            'UMPP' => 'required',
-            'PMPP' => 'required',
-            'ShuntResist' => 'required',
-            'FF' => 'required',
-        ]);
+        $process = New  productSelect();
+        $process->productName = $request->input('bom');
+        $process->ProcessName = $request->input('bom2');
+        $process->remarks = "";
 
-        //Create
-        $flash = new Flash();
-        $flash->ModuleID = $request->input('ModuleID');
-        $flash->InspTime = $request->input('InspTime');
-        $flash->ISC = $request->input('ISC');
-        $flash->UOC = $request->input('UOC');
-        $flash->IMPP = $request->input('IMPP');
-        $flash->UMPP = $request->input('UMPP');
-        $flash->PMPP = $request->input('PMPP');
-        $flash->ShuntResist = $request->input('ShuntResist');
-        $flash->FF = $request->input('FF');
-        $flash->save();
-
-        return redirect('/ftd')->with('success', 'Successfully Created');
+        $process->save();
+        return view('pages.paramSetup')
+        ->with('success', 'Product Type Selection Successfully Changed');
     }
 
     /**

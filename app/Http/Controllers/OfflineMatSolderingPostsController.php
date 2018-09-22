@@ -16,8 +16,31 @@ class OfflineMatSolderingPostsController extends Controller
     public function index()
     {
 
+        
+        $getLastProd = DB::select("SELECT * FROM prodselect JOIN producttype ON prodselect.productName = producttype.prodName WHERE ProcessName ='Material Preparation' ORDER BY prodselect.created_at DESC LIMIT 1"); 
+                      
+        if(count($getLastProd) > 0)
+        {
+            foreach($getLastProd as $field)   
+            {
+                $prod =  $field->productName;
+             $bom = $field->bomType;
            
-        $prod = "Gintech";
+            }
+
+        }else{
+            $prod = "Not Set";
+        }
+
+        
+        if (strpos($prod, '5BB') ) {
+            $bbno = "5bb";
+        }else{
+            $bbno = "4bb";
+        }
+    
+        $node1 = "Soldering Temperature MatPrep";
+       // $prod = "Gintech";
         $location ="Busbar Prep";
         $node = "Soldering Temp";
         $aveIndBus1Top1 = $this->getAveInd($location,$node,$prod);
@@ -28,11 +51,19 @@ class OfflineMatSolderingPostsController extends Controller
         $perc1Bus1Top1 = $this->getList4percentile($location,$node,$prod,0.00135);     
         $perc2Bus1Top1 = $this->getList4percentile($location,$node,$prod,0.99865);
        
-        $USL = 360;
+       /* $USL = 360;
         $LSL = 340;
         $target = 350;
         $UCL=0;
+        $LCL=0; */
+
+         
+        $USL = $this->getSpecsULVal($prod,$node1,$bbno);
+        $LSL = $this->getSpecsLLVal($prod,$node1,$bbno);
+        $target = $this->getSpecsLimitTarget($prod,$node1,$bbno);
+        $UCL=0;
         $LCL=0;
+
         $CL = (($UCL-$LCL)/2)+$LCL;
         $zBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$CL),$stdOfStdBus1Top1));
         $CpLBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$LCL),(3*$stdOfStdBus1Top1) ));
@@ -67,7 +98,8 @@ class OfflineMatSolderingPostsController extends Controller
       ->with('CpnB1T1',$CpnB1T1)
       ->with('CpnUB1T1',$CpnUB1T1)     
       ->with('CpnLB1T1',$CpnLB1T1);
-    }
+    
+}
 
     /**
      * Show the form for creating a new resource.
@@ -326,4 +358,58 @@ class OfflineMatSolderingPostsController extends Controller
          // return 0;
         }
      }
+
+
+     public function getSpecsLimitTarget($prod,$node,$bbnum)
+     {
+         
+         $medianCount = DB::table(DB::select("SELECT * FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."' AND parameters.BBno = '".$bbnum."'"));
+         $medianCount2 = DB::table(DB::select("SELECT count(targetVal) as tarval FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."' AND parameters.BBno = '".$bbnum."'"));
+         $ctr=$medianCount2->from[0]->tarval;
+         if( $ctr >  0){
+             $target = $medianCount->from[0]->targetVal;
+             return $target;
+            
+         }else{
+             return 0;
+         }
+       
+         }
+
+         
+     public function getSpecsLLVal($prod,$node,$bbnum)
+     {
+         
+        $medianCount = DB::table(DB::select("SELECT * FROM parameters INNER JOIN producttype ON parameters.BOMType = producttype.bomType WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'  AND parameters.BBno = '".$bbnum."'"));
+        $medianCount2 = DB::table(DB::select("SELECT COUNT(targetVal) as tarval FROM parameters INNER JOIN producttype ON parameters.BOMType = producttype.bomType WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'  AND parameters.BBno = '".$bbnum."'"));
+         $ctr=$medianCount2->from[0]->tarval;
+         if( $ctr >  0){
+             $target = $medianCount->from[0]->LLVal;
+             return $target;
+            
+         }else{
+             return 0;
+         }
+       
+         }
+
+         public function getSpecsULVal($prod,$node,$bbnum)
+         {
+            $medianCount = DB::table(DB::select("SELECT * FROM parameters INNER JOIN producttype ON parameters.BOMType = producttype.bomType WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'  AND parameters.BBno = '".$bbnum."'"));
+                 $medianCount2 = DB::table(DB::select("SELECT COUNT(targetVal) as tarval FROM parameters INNER JOIN producttype ON parameters.BOMType = producttype.bomType WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'  AND parameters.BBno = '".$bbnum."'"));
+             $ctr=$medianCount2->from[0]->tarval;
+             if( $ctr >  0){
+                 $target = $medianCount->from[0]->ULVal;
+                 return $target;
+                
+             }else{
+                 return 0;
+             }
+           
+             }
+
+     
+
+     
+          
 }

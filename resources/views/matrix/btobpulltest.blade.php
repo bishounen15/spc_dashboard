@@ -48,7 +48,19 @@
          
         </div>
         <div class="col-md-7">
-            {{Form::select('prodBuilt', array('Gintech' => 'Gintech', 'Own-BOM' => 'Own-BOM'),'Gintech',['class' => 'form-control process'])}} <small class="form-text text-danger">{{ $errors->first('location') }}</small>   
+                <?php  
+                $getProd = DB::select("SELECT * FROM producttype "); 
+                     
+               ?>
+
+           <select id="prodBuilt"  name="prodBuilt" class="form-control" >
+               
+                           @foreach ($getProd as $s)
+                                   <option value="{{ $s->prodName }}">{{ $s->prodName }}</option> 
+                           @endforeach
+                           <option value="All">All</option> 
+           </select> 
+           <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small>  
             &emsp; {{Form::submit('Submit',['class'=> 'btn btn-primary'])}}&emsp; 
     {!! Form::close() !!}
         </div>
@@ -61,7 +73,7 @@
     <input type="checkbox" id="checkDate" class="form-control"   onclick="toggle('.checkDate', this)" >
             </div>
             <div class="col-md-7">
-                    {{Form::label('dateRange','Date Range'),['class'=>'form-control']}} 
+                    {{Form::label('dateRange','Date Range with Product'),['class'=>'form-control']}} 
             </div>
 
         </div>
