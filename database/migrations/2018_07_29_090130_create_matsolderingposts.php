@@ -28,7 +28,7 @@ class CreateMatsolderingposts extends Migration
             $table->double('temp2');
             $table->double('temp3');
             $table->double('average');
-            $table->date('date');
+       //     $table->date('date');
             $table->timestamps();
         });
     }
