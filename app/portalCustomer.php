@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ftdData extends Model
+class portalCustomer extends Model
 {
     //
     protected $connection = 'web_portal';
-    protected $table = 'ftd_raw';
+    protected $table = 'cus01';
 }

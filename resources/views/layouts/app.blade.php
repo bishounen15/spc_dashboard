@@ -94,6 +94,30 @@
                             </li>
                             @endif
 
+                            @if(Auth::user()->sysadmin == 1)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                MFG Transactions
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                @if(Auth::user()->sysadmin == 1)
+                                <h6 class="dropdown-header">Setup</h6>
+                                {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
+                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Station Assignment</a>
+                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Location and Routing</a>
+                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Module Class</a>
+                                @endif
+                                <h6 class="dropdown-header">Reports</h6>
+                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+                                <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
+                                @if(Auth::user()->sysadmin == 1)
+                                <h6 class="dropdown-header">Transactions</h6>
+                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Line Transactions</a>
+                                @endif
+                                </div>
+                            </li>
+                            @endif
+
                             @if(Auth::user()->proddt_access == 1 || Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
