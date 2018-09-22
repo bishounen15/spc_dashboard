@@ -109,6 +109,7 @@
                                 @endif
                                 <h6 class="dropdown-header">Reports</h6>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+                                <a class="dropdown-item" href="/modules">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
                                 <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
                                 @if(Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Transactions</h6>

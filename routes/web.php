@@ -154,6 +154,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
         Route::get('/mes/data/{start}/{end}', 'MESController@load')->name('mes_data');
         Route::resource('/mes','MESController');
+        
+        Route::post('/modules/inquire','ModulesController@inquire')->name('module_inquiry');
+        Route::get('/modules/ftd/{serial}','ModulesController@ftd')->name('ftd_data');
+        Route::resource('/modules','ModulesController');
     });
 // }); 
 
