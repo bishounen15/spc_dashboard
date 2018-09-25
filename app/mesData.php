@@ -52,4 +52,8 @@ class mesData extends Model
     public function serial() {
         return $this->hasMany('App\serialInfo', 'SERIALNO', 'SERIALNO');
     }
+
+    public function station() {
+        return $this->belongsTo('App\mesStation', 'LOCNCODE', 'STNCODE'); 
+    }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 {{-- <div class="container"> --}}
-    <h3>MFG Daily Transactions</h3>
+    <h3>Module Information Inquiry</h3>
     <br>
     <div class="row">
         <div class="col-sm-4">
@@ -154,7 +154,7 @@
         });
 
         var table = $('#ftd-list').DataTable({
-            // "scrollX": true,
+            "scrollX": true,
             "order": [],
             "searching": false,
             // ajax: '#',

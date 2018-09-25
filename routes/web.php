@@ -153,7 +153,12 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::resource('/proddt/logsheet','DTLogSheetsController');
 
         Route::get('/mes/data/{start}/{end}', 'MESController@load')->name('mes_data');
-        Route::resource('/mes','MESController');
+        Route::get('/mes/transactions/{date}/{shift}/{station}', 'MESController@transactions')->name('mes_trx');
+        Route::post('/mes/validate', 'MESController@serialValidation')->name('mes_validate');
+        Route::get('/mes','MESController@index')->name('mes_daily');
+        Route::get('/mescreate/{station}','MESController@create')->name('add_mes_trx');
+        Route::post('/mescreate/{station}','MESController@store')->name('save_mes_trx');
+        // Route::resource('/mes','MESController');
         
         Route::post('/modules/inquire','ModulesController@inquire')->name('module_inquiry');
         Route::get('/modules/ftd/{serial}','ModulesController@ftd')->name('ftd_data');

@@ -95,6 +95,29 @@
                     </tr>
 
                     <tr>
+                        <th colspan="4" class="table-light">MFG Transactions</th>
+                    </tr>
+                    <tr>
+                        <td width="20%">With Access</td>
+                        <td width="20%" class="text-center">
+                            <input type="checkbox" name="mes_access" id="mes_access" {{old('mes_access', $mes_access) == 1 ? "checked" : ""}}>    
+                        </td>
+                        <td width="20%">User Role</td>
+                        <td width="40%">
+                                <select class="form-control form-control-sm" name="mes_role" id="mes_role" {{old('mes_access', $mes_access) == 1 ? "" : "disabled"}}>
+                                        <option readonly selected value> -- select an option -- </option>
+                                        @foreach($m_roles as $mrole)
+                                        <option value="{{$mrole['code']}}" 
+                                        @if ($mrole['code'] == old('mes_role', $mes_role))
+                                            selected="selected"
+                                        @endif    
+                                        >{{$mrole['description']}}</option>
+                                        @endforeach
+                                </select>
+                        </td>
+                    </tr>
+
+                    <tr>
                         <th colspan="4" class="table-light">Downtime Monitoring</th>
                     </tr>
                     <tr>
@@ -170,6 +193,15 @@
 
             $("#yield_access").click(function () {
                 var el = $("#yield_role");
+                el.removeAttr("disabled");
+
+                if(!$(this).is(":checked")) {
+                    el.attr("disabled", "disabled");
+                }
+            });
+
+            $("#mes_access").click(function () {
+                var el = $("#mes_role");
                 el.removeAttr("disabled");
 
                 if(!$(this).is(":checked")) {

@@ -94,13 +94,13 @@
                             </li>
                             @endif
 
-                            @if(Auth::user()->sysadmin == 1)
+                            @if(Auth::user()->mes_access == 1 || Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 MFG Transactions
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @if(Auth::user()->sysadmin == 1)
+                                @if(Auth::user()->mes_role == 'ADMIN' || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Setup</h6>
                                 {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Station Assignment</a>
@@ -108,12 +108,14 @@
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Module Class</a>
                                 @endif
                                 <h6 class="dropdown-header">Reports</h6>
-                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+                                {{-- <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a> --}}
                                 <a class="dropdown-item" href="/modules">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
                                 <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
-                                @if(Auth::user()->sysadmin == 1)
-                                <h6 class="dropdown-header">Transactions</h6>
-                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Line Transactions</a>
+                                @if(Auth::user()->mes_role != 'VIEW' || Auth::user()->sysadmin == 1)
+                                <h6 class="dropdown-header">Line Transactions</h6>
+                                @foreach(Auth::user()->portalUser->mesUser->assignment as $assign)
+                                <a class="dropdown-item" href="/mescreate/{{$assign->stationInfo->STNID}}">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
+                                @endforeach
                                 @endif
                                 </div>
                             </li>

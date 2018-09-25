@@ -34,4 +34,8 @@ class User extends Authenticatable
     public function department() {
         return $this->hasOne('App\Department', 'id');
     }
+
+    public function portalUser() {
+        return $this->belongsTo('App\portalUser', 'user_id', 'USERID');
+    }
 }

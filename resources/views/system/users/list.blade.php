@@ -12,14 +12,15 @@
                 <th rowspan="2" width="25%">Name</th>
                 <th rowspan="2" width="15%">Department</th>
                 <th rowspan="2" width="15%">Email</th>
-                <th colspan="4">User Role</th>
+                <th colspan="5">User Role</th>
                 <th rowspan="2" width="25%">Actions</th>
             </tr>
             <tr class="text-center">
-                <th width="5%">OSI</th>
-                <th width="5%">YIELD</th>
-                <th width="5%">PRODDT</th>
-                <th width="5%">ITM</th>
+                <th width="4%">OSI</th>
+                <th width="4%">YIELD</th>
+                <th width="4%">MES</th>
+                <th width="4%">PRODDT</th>
+                <th width="4%">ITM</th>
             </tr>
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
@@ -112,6 +113,7 @@
                 { data: 'email' },
                 { sortable: false, data: 'osi_access' },
                 { sortable: false, data: 'yield_access' },
+                { sortable: false, data: 'mes_access' },
                 { sortable: false, data: 'proddt_access' },
                 { sortable: false, data: 'assets_access' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
