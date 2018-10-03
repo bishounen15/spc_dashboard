@@ -93,6 +93,17 @@
                                 <input class="form-check-input" type="radio" name="status" id="stat2" value="2">
                                 <label class="form-check-label" for="inlineRadio3">Scrap</label>
                             </div>
+                            @if($station->STNCODE == 'MRB')
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="stat3" value="3">
+                                <label class="form-check-label" for="inlineRadio3">RMA</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="stat4" value="4">
+                                <label class="form-check-label" for="inlineRadio3">STFET</label>
+                            </div>
+                            @endif
                         </div>
 
                         <div class="form-group">
@@ -163,9 +174,11 @@
                                 if (i == 'statusCode') {
                                     $('#stat'+v).attr('checked',true);
                                     $('input[name="status"]').attr('disabled',false);
+                                    @if(Auth::user()->mes_role == 'OPTR')
                                     for(i=0;i<v;i++) {
                                         $('#stat'+i).attr('disabled',true);
                                     }
+                                    @endif
                                 } else if (i == 'class_list') {
                                     class_list = v;
                                     selitems = "<option disabled selected value> -- select an option -- </option>";
@@ -201,8 +214,11 @@
 
         $('input[name="status"]').change(function() {
             selitems = "<option disabled selected value> -- select an option -- </option>";
-            $.each(class_list[$(this).val()], function(i,v) {
+            stat = $(this).val();
+            $.each(class_list[stat], function(i,v) {
+                if (stat != 4 || (stat == 4 && i == 0)) {
                     selitems += '<option value="' + v.MCLCODE + '">' + v.MCLDESC + '</option>';
+                }
             });
             $('select[name="modclass"]').html(selitems);
         });

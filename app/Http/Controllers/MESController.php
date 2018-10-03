@@ -141,6 +141,8 @@ class MESController extends Controller
                 '0' => $classes->where('MODSTATUS',0),
                 '1' => $classes->where('MODSTATUS',1),
                 '2' => $classes->where('MODSTATUS',2),
+                '3' => $classes,
+                '4' => $classes->where('MODSTATUS',0),
             ];
 
             $data['serial'] = [

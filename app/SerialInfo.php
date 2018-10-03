@@ -42,4 +42,8 @@ class SerialInfo extends Model
     public function mes() {
         return $this->hasMany('App\mesData', 'SERIALNO', 'SERIALNO');
     }
+
+    public function extras() {
+        return $this->hasOne('App\SerialExtras', 'LBLCNO', 'LBLCNO');
+    }
 }
