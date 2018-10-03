@@ -8,7 +8,8 @@
             <tr>
                 <th rowspan="2">#</th>
                 <th rowspan="2">Serial No.</th>
-                <th rowspan="2">Type</th>
+                <th rowspan="2">Device Type</th>
+                <th rowspan="2">Property Type</th>
                 <th rowspan="2">Status</th>
                 <th rowspan="2">Brand</th>
                 <th rowspan="2">Model</th>
@@ -17,8 +18,10 @@
                 <th rowspan="2">Processor</th>
                 <th rowspan="2">RAM</th>
                 <th rowspan="2">HDD</th>
+                <th rowspan="2">Graphics Card</th>
                 <th colspan="2">LAN</th>
                 <th colspan="2">WIFI</th>
+                <th rowspan="2">Site</th>
                 <th rowspan="2">ID Number</th>
                 <th rowspan="2">Name</th>
                 <th rowspan="2">Dept.</th>
@@ -75,6 +78,7 @@
                 { data: 'serial' },
                 { data: 'type' },
                 { data: 'status' },
+                { data: 'device_status' },
                 { data: 'brand' },
                 { data: 'model' },
                 { data: 'host_name' },
@@ -82,10 +86,12 @@
                 { data: 'proc' },
                 { data: 'ram' },
                 { data: 'hdd' },
+                { data: 'gfx_card' },
                 { data: 'lan_ip' },
                 { data: 'lan_mac' },
                 { data: 'wifi_ip' },
                 { data: 'wifi_mac' },
+                { data: 'site' },
                 { data: 'id_number' },
                 { data: 'name' },
                 { data: 'dept' },
