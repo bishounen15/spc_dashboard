@@ -103,6 +103,7 @@
                                 @if(Auth::user()->mes_role == 'ADMIN' || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Setup</h6>
                                 {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
+                                <a class="dropdown-item" href="/mes/setup/custom">&nbsp;&nbsp;&nbsp;&nbsp;Customized Fields</a>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Station Assignment</a>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Location and Routing</a>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Module Class</a>
