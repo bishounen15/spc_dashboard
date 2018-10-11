@@ -13,6 +13,11 @@ class ViewBtobpulltest extends Migration
      */
     public function up()
     {
+        Schema::table('btobpulltest', function (Blueprint $table) {
+            //
+            $table->date('date')->default('1900-01-01');
+        });
+      
         DB::statement('CREATE VIEW view_btobpulltest AS SELECT DISTINCT(date) FROM btobpulltest ORDER BY date DESC Limit 30');
     }
 
@@ -23,6 +28,10 @@ class ViewBtobpulltest extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('btobpulltest', function (Blueprint $table) {
+            //
+            $table->dropColumn('date');
+        });
+        Schema::dropIfExists('view_btobpulltest');
     }
 }
