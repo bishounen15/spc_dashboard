@@ -32,23 +32,35 @@
                                 <div class="col-md-5"> {{Form::date('fixture_date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}} </div>
                                 <div class="col-md-1"> {{Form::label('ProdBuilt', 'Product Built:')}}</div>  
                                 <div class="col-md-5">
-                                        <?php  $getLastProd = DB::select("SELECT * FROM prodselect WHERE ProcessName ='Matrix Assembly' ORDER BY created_at DESC LIMIT 1 "); 
-                      
-                                        ?>
-                                          @if(count($getLastProd) > 0)
-                                          @foreach($getLastProd as $field)   
-                                                 
-                                                   {{Form::text('prodBuilt', $field->productName , ['class' => 'form-control','readonly' => 'true'])}}
-                                                   @endforeach
-                                                   @else
-                                                   Not Set.
-                                                   @endif
-                       
+                                      
+                                    <?php  $getLastProd = DB::select("SELECT * FROM prodselect WHERE ProcessName ='Matrix Assembly' ORDER BY created_at DESC LIMIT 1 "); 
+                                    $getProd = DB::select("SELECT * FROM producttype "); 
+                                           $lastSet = "";
+                                   ?>
+                                     @if(count($getLastProd) > 0)
+                                     @foreach($getLastProd as $field)   
+                                            
+                                    <?php $lastSet = $field->productName;  ?>
+                                              @endforeach
+                                              @else
+                                              <?php $lastSet = "Not Set.";  ?>
+                                              @endif  
+                             
+                            
+                           
+                               <select id="prodBuilt"  name="prodBuilt" class="form-control" >
+                                       <option selected value="{{$lastSet}}">{{$lastSet}}</option>
+                                               @foreach ($getProd as $s)
+                                                       <option value="{{ $s->prodName }}">{{ $s->prodName }}</option> 
+                                               @endforeach
+                               </select> 
+                               <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small>  
                        
                                     
                                     
                                    
-                                    <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small> </div>
+                                 
+                                </div>
                             </div></br>
                         </div> 
                     </div>

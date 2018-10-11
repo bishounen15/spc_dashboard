@@ -23,6 +23,14 @@
           <li class="list-group-item"><a  href="/parameter/create">SPC Chart Indicators Specs</a></li>
         </ul>
     </div>
+
+    <div class="card">
+      <div class="card-header">Other Set-up</div>
+      <ul class="list-group list-group-flush">
+        
+        <li class="list-group-item"><a  href="/flashsetup/create">Flash test Target Cal</a></li>
+      </ul>
+  </div>
   </div>
 
     <div class="col-8">

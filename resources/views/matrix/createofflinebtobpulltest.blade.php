@@ -31,7 +31,7 @@
                     
                                     <div class="col-md-1"> {{Form::label('ProdBuilt', 'Product Built:')}}</div>  
                                     <div class="col-md-5">
-                                            <?php  $getLastProd = DB::select("SELECT * FROM prodselect WHERE ProcessName ='Matrix Assembly' ORDER BY created_at DESC LIMIT 1 "); 
+                                            <?php  $getLastProd = DB::select("SELECT * FROM prodselect WHERE ProcessName ='Material Preparation' ORDER BY created_at DESC LIMIT 1 "); 
                                             $getProd = DB::select("SELECT * FROM producttype "); 
                                                    $lastSet = "";
                                            ?>
@@ -44,8 +44,7 @@
                                                       <?php $lastSet = "Not Set.";  ?>
                                                       @endif  
                                      
-                                    
-                                   
+
                                        <select id="prodBuilt"  name="prodBuilt" class="form-control" >
                                                <option selected value="{{$lastSet}}">{{$lastSet}}</option>
                                                        @foreach ($getProd as $s)

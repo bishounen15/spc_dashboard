@@ -82,6 +82,75 @@
                                     <small class="form-text text-danger">{{ $errors->first('FF') }}</small>
                                 </div>
                         </div><br>
+
+                        <div class="row">
+                                
+                            <div class="col-md-2">
+                                {{Form::label('Product Type', 'Product Type:')}}
+                            </div>    
+                            <div class="col-md-4">
+                                <?php  $getLastProd = DB::select("SELECT * FROM prodselect WHERE ProcessName ='Material Preparation' ORDER BY created_at DESC LIMIT 1 "); 
+                                $getProd = DB::select("SELECT * FROM producttype "); 
+                                       $lastSet = "";
+                               ?>
+                                 @if(count($getLastProd) > 0)
+                                 @foreach($getLastProd as $field)   
+                                        
+                                <?php $lastSet = $field->productName;  ?>
+                                          @endforeach
+                                          @else
+                                          <?php $lastSet = "Not Set.";  ?>
+                                          @endif  
+                         
+
+                           <select id="prodBuilt"  name="prodBuilt" class="form-control" >
+                                   <option selected value="{{$lastSet}}">{{$lastSet}}</option>
+                                           @foreach ($getProd as $s)
+                                                   <option value="{{ $s->prodName }}">{{ $s->prodName }}</option> 
+                                           @endforeach
+                           </select> 
+                           <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small>  
+                            </div>
+                          
+                        
+                            <div class="col-md-1">
+                                {{Form::label('Target', 'Target:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                <?php  $getLastProd = DB::select("SELECT * FROM prodselect WHERE ProcessName ='FLASH TEST DATA' ORDER BY created_at DESC LIMIT 1 "); 
+                              
+                                       $lastSet = "";
+                                       $last = ""
+                               ?>
+                                 @if(count($getLastProd) > 0)
+                                 @foreach($getLastProd as $field)   
+                                        
+                                <?php $lastSet = $field->productName;  
+                                  $getProd = DB::select("SELECT * FROM flashsetup WHERE ProductType = '".$lastSet."' "); 
+                                  
+                                ?>
+                                   @if(count( $getProd) > 0)
+                                   @foreach( $getProd as $field)   
+                                  <?php $last = $field->Pmpp; ?>
+                                   @endforeach
+                                   @endif
+                                          @endforeach
+                                          @else
+                                          <?php $last = "Not Set.";  ?>
+                                          @endif  
+                         
+                                {{Form::text('Target', $last, ['class' => 'form-control'])}}
+                                <small class="form-text text-danger">{{ $errors->first('target') }}</small>
+                            </div>
+                            <div class="col-md-1">
+                                {{Form::label('FF', 'FF:')}}
+                            </div>    
+                            <div class="col-md-2">
+                                {{Form::text('FF', '', ['class' => 'form-control', 'placeholder'=>'FF'])}}
+                                <small class="form-text text-danger">{{ $errors->first('FF') }}</small>
+                            </div>
+                    </div><br>
+                    
                         
                         {{Form::submit('&nbsp;&nbsp;Submit&nbsp;&nbsp;', ['class' => 'btn btn-primary' ])}}  &emsp; <a href="/ftd" class="btn btn-danger">Cancel</a>
                         {!! Form::close() !!}

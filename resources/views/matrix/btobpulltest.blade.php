@@ -42,14 +42,14 @@
         </div>
 </div>
     <div id="prodBuiltForm"> 
-            {!! Form::open(['action' => 'FrameController@store','method' => 'POST']) !!}
+            {!! Form::open(['action' => 'OfflineBtoBPullTestController@store','method' => 'POST']) !!}
             <div class="row"> 
         <div class="col-md-5">
          
         </div>
         <div class="col-md-7">
                 <?php  
-                $getProd = DB::select("SELECT * FROM producttype "); 
+                $getProd = DB::select("SELECT * FROM producttype ORDER BY prodName DESC"); 
                      
                ?>
 
@@ -58,7 +58,7 @@
                            @foreach ($getProd as $s)
                                    <option value="{{ $s->prodName }}">{{ $s->prodName }}</option> 
                            @endforeach
-                           <option value="All">All</option> 
+                          
            </select> 
            <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small>  
             &emsp; {{Form::submit('Submit',['class'=> 'btn btn-primary'])}}&emsp; 
@@ -79,7 +79,7 @@
         </div>
 
 <div id="dateRangeForm">
-        {!! Form::open(['action' => 'FrameController@store','method' => 'POST']) !!}
+        {!! Form::open(['action' => 'OfflineBtoBPullTestController@store','method' => 'POST']) !!}
 <div class="row"> 
     <div class="col-md-5">
             {{Form::label('','From'),['class'=>'form-control']}}
@@ -96,6 +96,30 @@
   {{ Form::date('toDate', '00-00-00 00:00:00',['class'=>'form-control form-control-sm','id'=>'toDate']) }}
     </div>
 </div>
+<div class="row"> 
+        <div class="col-md-5">
+                {{Form::label('','Product Built'),['class'=>'form-control']}}
+                  </div> 
+    <div class="col-md-7">
+
+<?php  
+$getProd = DB::select("SELECT * FROM producttype  ORDER BY prodName DESC "); 
+     
+?>
+
+<select id="prodBuilt"  name="prodBuilt" class="form-control" >
+
+           @foreach ($getProd as $s)
+                   <option value="{{ $s->prodName }}">{{ $s->prodName }}</option> 
+           @endforeach
+          
+</select> 
+<small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small>  
+&emsp; {{Form::submit('Submit',['class'=> 'btn btn-primary'])}}&emsp; 
+</div>
+</div>
+
+
 &emsp; {{Form::submit('Submit',['class'=> 'btn btn-primary'])}}&emsp; 
                 {!! Form::close() !!}
 </div>
@@ -125,7 +149,7 @@
         <tr>
             <th scope="row">3</th>
             <td><b>N</b></td>
-            <td>30</td>
+        <td>{{$N}}</td>
             
             </tr>
         

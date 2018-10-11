@@ -12,30 +12,30 @@
 */
 
  Route::get('/FrameQualRecords', function () {
-        $posts = DB::select('SELECT * FROM frame_quals ORDER BY ID ASC');                                        
+        $posts = DB::select('SELECT * FROM frame_quals ORDER BY id DESC');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
        return view('backEnd.frameQual')->with('frameLogs',$posts);
  });
 
  Route::get('/solderTemp', function () {
-    $posts = DB::select('SELECT * FROM solder_temps');                                        
+    $posts = DB::select('SELECT * FROM solder_temps ORDER BY id DESC');                                        
        //$posts  = Post::orderBy('created_at','desc')->paginate(2);
         return view('backEnd.solderTemp')->with('tempLogs',$posts);
 });
 Route::get('/JBoxDispense', function () {
-      $posts = DB::select('SELECT * FROM jbox_dis_wt_quals');                                        
+      $posts = DB::select('SELECT * FROM jbox_dis_wt_quals ORDER BY id DESC');                                        
          //$posts  = Post::orderBy('created_at','desc')->paginate(2);
           return view('backEnd.jBoxDispense')->with('disLogs',$posts);
   });
 
   Route::get('/mixRatio', function () {
-        $posts = DB::select('SELECT * FROM  pottant_quals');                                        
+        $posts = DB::select('SELECT * FROM  pottant_quals ORDER BY id DESC');                                        
            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
-            return view('backEnd.potMixingRatio')->with('potLogs',$posts);
+            return view('backEnd.potMixingRatio')->with('MixLogs',$posts);
     });
 
     Route::get('/SqBw', function () {
-        $posts = DB::select('SELECT * FROM  frame_sq_bws');                                        
+        $posts = DB::select('SELECT * FROM  frame_sq_bws ORDER BY id DESC');                                        
            //$posts  = Post::orderBy('created_at','desc')->paginate(2);
             return view('backEnd.frameSqBw')->with('frameSBLogs',$posts);
     });
@@ -130,6 +130,7 @@ Route::resource('product','productTypeController');
 Route::resource('subprocess','subProcessController');
 Route::resource('parameter','parameterController');
 Route::resource('prodSelect','prodSelectionController');
+Route::resource('flashsetup','flashsetupController');
 
 
 Route::get('datatable', 'StringerController@datatable');

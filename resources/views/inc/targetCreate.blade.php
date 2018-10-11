@@ -128,7 +128,7 @@
                                                         @foreach($alldata as $cols)   
                                                       @if($cols != null )
                                                         <div class="row">                        
-                                                                <div class="col-md-12"> {{Form::label($cols, $cols)}} </div>                                                            
+                                                                <div class="col-md-12"> {{Form::label($cols, $cols)}} <br/><br/></div>                                                            
                                                             </div>  
                                                          @endif
                                     

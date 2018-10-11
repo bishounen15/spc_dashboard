@@ -45,7 +45,7 @@ $medianAve =number_format((($medianVal1 + $medianVal2)/2),6);
 }else{
     $midval1 = number_format(($medianCountVal/2),2);
  $midval2 = round($midval1,1);
- $medianVal = number_format($median->from[$midval2]->avTemp,6);
+ $medianVal = number_format($median->from[$midval2]->aveTemp,6);
    $medianAve = number_format($medianVal,6);
  // $medianAve = $medianMod;
 }

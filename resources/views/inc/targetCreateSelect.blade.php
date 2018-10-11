@@ -150,7 +150,7 @@
                                             @foreach($alldata as $cols)   
                                                      @if($cols != null )
                                                     <div class="row">                        
-                                                    <div class="col-md-12"> {{Form::label($cols, $cols),['class'=>'form-control'] }} </div>                                                            
+                                                    <div class="col-md-12"> {{Form::label($cols, $cols),['class'=>'form-control'] }} <br/><br/></div>                                                            
                                                     </div>  
                                                      @endif
                                             @endforeach

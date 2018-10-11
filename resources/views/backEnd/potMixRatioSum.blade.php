@@ -11,7 +11,7 @@
             <div class="card-body">
                 
 <a href="/Summary" class="btn btn-secondary">Go Back</a>
-<a href="/Potting" class="btn btn-success">View Records</a>
+<a href="/mixRatio" class="btn btn-success">View Records</a>
 <a href="/MixRatio/create" class="btn btn-success">Add Record</a>           
 
 <div class="container">
