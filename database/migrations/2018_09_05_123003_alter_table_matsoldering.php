@@ -16,7 +16,7 @@ class AlterTableMatsoldering extends Migration
            
         Schema::table('mat_solderings', function (Blueprint $table) {
             //
-            $table->date('date')->nullable();
+            $table->date('date')->default('1900-01-01');
         });
     }
 
