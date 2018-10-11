@@ -18,11 +18,7 @@ class AlterTableAllmatrixpulltest extends Migration
             $table->date('date')->default('1900-01-01');
         });
       
-        Schema::table('rtobpulltest', function (Blueprint $table) {
-            //
-            $table->date('date');
-        });
-      
+       
     }
 
     /**
