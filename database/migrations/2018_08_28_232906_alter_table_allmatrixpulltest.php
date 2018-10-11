@@ -15,9 +15,7 @@ class AlterTableAllmatrixpulltest extends Migration
     {
         Schema::table('mat_solderings', function (Blueprint $table) {
             //
-
-
-             $table->date('date');
+            $table->date('date')->default('1900-01-01');
         });
       
         Schema::table('rtobpulltest', function (Blueprint $table) {
