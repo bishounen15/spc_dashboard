@@ -414,6 +414,10 @@ class yieldController extends Controller
             $retval = $date . " 06:00";
         } else if ($shift == "B") {
             $retval = $date . " 14:00";
+        } else if ($shift == "6AM-6PM") {
+            $retval = $date . " 06:00";
+        } else if ($shift == "6PM-6AM") {
+            $retval = $date . " 18:00";
         } else {
             $retval = $date . " 22:00";
         }
@@ -426,7 +430,11 @@ class yieldController extends Controller
             $retval = $date . " 14:00:00";
         } else if ($shift == "B") {
             $retval = $date . " 22:00:00";
-        } else {
+        } else if ($shift == "6AM-6PM") {
+            $retval = $date . " 18:00:00";
+        } else if ($shift == "6PM-6AM") {
+            $retval = date("Y-m-d",strtotime("+1 days",strtotime($date))) . " 06:00:00";
+        }else {
             $retval = date("Y-m-d",strtotime("+1 days",strtotime($date))) . " 06:00:00";
         }
 

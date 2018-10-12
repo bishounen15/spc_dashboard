@@ -41,14 +41,16 @@
                                         <input type="text" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" readonly>
                                     @endif
                                     </div>
-                                    <div class="col-sm-3 text-right">Current Shift</div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-2 text-right">Shift</div>
+                                    <div class="col-sm-3">
                                     @if(Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
                                         <select class="form-control form-control-sm" name="shift" id="shift" onchange="changeShift()">
                                             <option readonly selected value> -- select an option -- </option>
                                             <option value="A" {{$shift == "A" ? "selected" : ""}}>A</option>
                                             <option value="B" {{$shift == "B" ? "selected" : ""}}>B</option>
                                             <option value="C" {{$shift == "C" ? "selected" : ""}}>C</option>
+                                            <option value="6AM-6PM" {{$shift == "6AM-6PM" ? "selected" : ""}}>6AM-6PM</option>
+                                            <option value="6PM-6AM" {{$shift == "6PM-6AM" ? "selected" : ""}}>6PM-6AM</option>
                                         </select>
                                     @else
                                         <input type="text" class="form-control form-control-sm" name="shift" id="shift" value="{{old('shift', $shift)}}" readonly>
@@ -62,8 +64,8 @@
                                     <div class="col-sm-4">
                                         <input type="text" class="form-control form-control-sm" name="build" id="build" value="GT" readonly>
                                     </div>
-                                    <div class="col-sm-3 text-right">Target (%)</div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-2 text-right">Target (%)</div>
+                                    <div class="col-sm-3">
                                         <input type="text" class="form-control form-control-sm" name="target" id="target" value="99.30" readonly>
                                     </div>
                                 </div> 
