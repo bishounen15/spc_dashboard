@@ -25,6 +25,7 @@
                 <th rowspan="2">ID Number</th>
                 <th rowspan="2">Name</th>
                 <th rowspan="2">Dept.</th>
+                <th rowspan="2">Remarks</th>
             </tr>
             <tr>
                 <th>IP</th>
@@ -54,7 +55,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
                     },
                     text:       'Excel',
                     filename: "assets_excel"
@@ -62,7 +63,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
                     },
                     text:       'CSV',
                     filename: "assets_csv"
@@ -95,6 +96,7 @@
                 { data: 'id_number' },
                 { data: 'name' },
                 { data: 'dept' },
+                { data: 'remarks' },
             ],
         });
     });
