@@ -45,7 +45,10 @@
 @push('jscript')
 <script>
     $(document).ready(function() {
-        $('#asset-list').DataTable({
+        var t = $('#asset-list').DataTable({
+            "columnDefs": [ {
+                "targets": 0
+            } ],
             "scrollX": true,
             "stateSave": true,
             "order": [],
@@ -76,7 +79,7 @@
                 // },
             ],
             columns: [
-                { data: 'id' },
+                { data: null, defaultContent: '0' },
                 // { data: 'serial' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
                     return '<a href="/assets/general/'+full.id+'">'+full.serial+'</a>';
@@ -103,6 +106,12 @@
                 { data: 'remarks' },
             ],
         });
+
+        t.on( 'order.dt search.dt', function () {
+            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
     });
 </script>
 @endpush
