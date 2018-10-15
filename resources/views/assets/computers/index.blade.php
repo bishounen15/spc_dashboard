@@ -76,7 +76,10 @@
             ],
             columns: [
                 { data: 'id' },
-                { data: 'serial' },
+                // { data: 'serial' },
+                { sortable: false, "render": function ( data, type, full, meta ) {
+                    return '<a href="/assets/general/'+full.id+'">'+full.serial+'</a>';
+                }},
                 { data: 'type' },
                 { data: 'status' },
                 { data: 'device_status' },

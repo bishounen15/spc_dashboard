@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Assets;
+use App\Software;
 
 use DataTables;
 
@@ -24,5 +25,29 @@ class AssetsController extends Controller
         ->orderByRaw("status, type, model");
 
         return Datatables::of($assets)->make(true);
+    }
+
+    public function load_software($id)
+    {
+        $sw = Software::selectRaw("rowid, install_date, app_name, version, install_type")
+                            ->where("id",$id)
+                            ->orderByRaw("app_name");
+
+        return Datatables::of($sw)->make(true);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+        $data = [];
+        $data['asset'] = Assets::find($id);
+
+        return view('assets.computers.view', $data);
     }
 }

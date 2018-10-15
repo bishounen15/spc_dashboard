@@ -130,6 +130,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/user/remove/{id}','UserController@destroy')->name('remove_user');
 
         Route::get('/assets/general/data', 'AssetsController@load')->name('asset_data');
+        Route::get('/assets/software/{id}', 'AssetsController@load_software')->name('sw_data');
         Route::resource('/assets/general','AssetsController');
         Route::resource('/assets/dashboard/general','AssetDashboardController');
 
