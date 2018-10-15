@@ -47,6 +47,7 @@
     $(document).ready(function() {
         $('#asset-list').DataTable({
             "scrollX": true,
+            "stateSave": true,
             "order": [],
             ajax: '{!! route('asset_data') !!}',
             dom: 'Blfrtip',
