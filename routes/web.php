@@ -53,6 +53,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::resource('MixRatio','MixRatioController');
 
         // Route::resource('Yield','yieldController');
+        Route::get('/yield/setup/product_types/data', 'ProductTypeController@load')->name('product_type_data');
+        Route::post('/yield/setup/product_types/get', 'ProductTypeController@getTarget')->name('product_type_target');
+        Route::resource('/yield/setup/product_types','ProductTypeController');        
+
         Route::get('/yield/email/data','YieldEmailsController@load')->name('email_yield_data');
         Route::get('/yield/email','YieldEmailsController@list')->name('list_email_yield');
         Route::post('/yield/email/store','YieldEmailsController@store')->name('store_email_yield');

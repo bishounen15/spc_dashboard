@@ -83,9 +83,9 @@
                                 Yield Dashboard
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @if(Auth::user()->yield_role == "SUPV" || Auth::user()->sysadmin == 1)
+                                @if(Auth::user()->yield_role == "ADMIN" || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Setup</h6>
-                                {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
+                                <a class="dropdown-item" href="/yield/setup/product_types">&nbsp;&nbsp;&nbsp;&nbsp;Product Types</a>
                                 <a class="dropdown-item" href="{{route('list_email_yield')}}">&nbsp;&nbsp;&nbsp;&nbsp;Email Distribution</a>
                                 @endif
                                 <h6 class="dropdown-header">Transactions</h6>

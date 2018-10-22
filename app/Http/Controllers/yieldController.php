@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\ProductionTeam as ProductionTeam;
 use App\mesData as mesData;
 use App\YieldData as YieldData;
+use App\ProductTypes;
 use App\User as User;
 use App\YieldEmail;
 use Illuminate\Support\Facades\Auth;
@@ -35,9 +36,13 @@ class yieldController extends Controller
         $data = [];
 
         $data['id'] = $id;
+        $data['prod_types'] = ProductTypes::all(); 
         $data['team'] = null;
         $data['product_size'] = null;
         $data['input_cell'] = 0;
+
+        $data['build'] = "";
+        $data['target'] = "";
 
         $data['inprocess_cell'] = 0;
         $data['ccd_cell'] = 0;
@@ -76,7 +81,7 @@ class yieldController extends Controller
         if ($id == null) {
             $date = date("Y-m-d",strtotime("Today"));
             $time = date('H:i');
-            // $time = date('06:00');
+            // $time = date('14:31');
             
             if ($time < "06:00") {
                 $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
@@ -123,7 +128,32 @@ class yieldController extends Controller
                     $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
                 }
             } else {
-                $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+                if ($shift == "A") {
+                    $shift = "C";
+                } else {
+                    $shift = chr(ord($shift) - 1);
+                }
+
+                $dt = $this->getEnd($date,$shift);
+                $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
+
+                $to = Carbon::createFromFormat('Y-m-d H:i:s', $cdt);
+                $from = Carbon::createFromFormat('Y-m-d H:i:s', $dt);
+                
+                $diff_in_minutes = $to->diffInMinutes($from);
+                // dd($diff_in_minutes);
+
+                if ($diff_in_minutes >= 30) {
+                    $shift = $this->getShift($time);
+                    $last_trx = $this->getStart($date,$shift);
+                    $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+                } else {
+                    $dt = $this->getEnd($date,$shift);
+                }
+
+                // $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+
+                
             }
 
             $last_trx = YieldData::where([
@@ -145,6 +175,9 @@ class yieldController extends Controller
             $data['team'] = $yield_data->team;
             $data['product_size'] = $yield_data->product_size;
             $data['input_cell'] = $yield_data->input_cell;
+
+            $data['build'] = $yield_data->build;
+            $data['target'] = $yield_data->target;
 
             $data['inprocess_cell'] = $yield_data->inprocess_cell;
             $data['ccd_cell'] = $yield_data->ccd_cell;

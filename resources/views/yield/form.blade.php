@@ -62,11 +62,18 @@
                                 <div class="form-row">
                                     <div class="col-sm-3 text-right">Build</div>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control form-control-sm" name="build" id="build" value="GT" readonly>
+                                        {{-- <input type="text" class="form-control form-control-sm" name="build" id="build" value="GT" readonly> --}}
+                                        <select class="form-control form-control-sm" name="build" id="build" onchange="changeBuild()">
+                                            <option readonly selected value> -- select an option -- </option>
+                                            @foreach ($prod_types as $type)
+                                                <option value="{{$type->code}}" {{$prod_types->count() == 1 && $id == null ? "selected" : ($build == $type->code ? "selected" : "")}}>{{$type->code}}</option>
+                                            @endforeach
+                                        </select>
+                                        <small class="form-text text-danger" id="err_build"></small>
                                     </div>
                                     <div class="col-sm-2 text-right">Target (%)</div>
                                     <div class="col-sm-3">
-                                        <input type="text" class="form-control form-control-sm" name="target" id="target" value="99.30" readonly>
+                                        <input type="text" class="form-control form-control-sm" name="target" id="target" value="{{$prod_types->count() == 1 ? number_format($prod_types->first()->target,2) : $target}}" readonly>
                                     </div>
                                 </div> 
                             </div>
@@ -433,6 +440,13 @@
                 $("#err_product_size").html("");
             }
 
+            if ($("#build").val() == null || $("#build").val() == "") {
+                $("#err_build").html("Build is a required field.");
+                err++;
+            } else {
+                $("#err_build").html("");
+            }
+
             if ($('#str_produced').val() != "") { str_produced = parseInt($('#str_produced').val()); } else { str_produced = 0; }
             if ($('#str_defect').val() != "") { str_defect = parseInt($('#str_defect').val()); } else { str_defect = 0; }
 
@@ -501,6 +515,30 @@
                     $('#el2_class_b').val(details.el2_class_b);
 
                     EL2Defect();
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    alert (errorThrown);
+                }	
+            });
+        }
+
+        function changeBuild() {
+            var token = $('input[name=_token]');
+            var formData = new FormData();
+            formData.append('build', $("#build").val());
+            
+            $.ajax({
+                url: "{{route('product_type_target')}}",
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': token.val()
+                },
+                success: function (details) {
+                    $('#target').val(details.target.toFixed(2));
                 },
                 error: function(xhr, textStatus, errorThrown){
                     alert (errorThrown);
