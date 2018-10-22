@@ -64,7 +64,7 @@
                                     <div class="col-sm-4">
                                         {{-- <input type="text" class="form-control form-control-sm" name="build" id="build" value="GT" readonly> --}}
                                         <select class="form-control form-control-sm" name="build" id="build" onchange="changeBuild()">
-                                            <option readonly selected value> -- select an option -- </option>
+                                            <option disabled selected value> -- select an option -- </option>
                                             @foreach ($prod_types as $type)
                                                 <option value="{{$type->code}}" {{$prod_types->count() == 1 && $id == null ? "selected" : ($build == $type->code ? "selected" : "")}}>{{$type->code}}</option>
                                             @endforeach
@@ -483,11 +483,17 @@
             }
         }
 
-        function changeShift() {
+        function changeShift($use_current = false) {
             var token = $('input[name=_token]');
             var formData = new FormData();
             formData.append('date', $("#date").val());
             formData.append('shift', $("#shift").val());
+            formData.append('build', $("#build").val());
+            formData.append('current', $use_current);
+            formData.append('from', $("#from").val());
+            formData.append('to', $("#to").val());
+
+            console.log($use_current);
 
             $.ajax({
                 url: "{{route('refresh_yield_data')}}",
@@ -539,6 +545,7 @@
                 },
                 success: function (details) {
                     $('#target').val(details.target.toFixed(2));
+                    changeShift(true);
                 },
                 error: function(xhr, textStatus, errorThrown){
                     alert (errorThrown);

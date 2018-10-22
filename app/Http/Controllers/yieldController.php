@@ -81,7 +81,7 @@ class yieldController extends Controller
         if ($id == null) {
             $date = date("Y-m-d",strtotime("Today"));
             $time = date('H:i');
-            // $time = date('14:31');
+            // $time = date('13:15');
             
             if ($time < "06:00") {
                 $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
@@ -544,9 +544,16 @@ class yieldController extends Controller
     }
 
     public function getShiftOutput(Request $request) {
-        $start = $this->getStart($request->input('date'),$request->input('shift'));
-        $end = $this->getEnd($request->input('date'),$request->input('shift'));
+        // return Response::json($request);
+        $build = $request->input('build');
 
+        if ($request->input('current') == "true") {
+            $start = $request->input('from');
+            $end = $request->input('to');
+        } else {
+            $start = $this->getStart($request->input('date'),$request->input('shift'));
+            $end = $this->getEnd($request->input('date'),$request->input('shift'));
+        }
         $data = [];
 
         $data["start"] = $start;
@@ -571,12 +578,17 @@ class yieldController extends Controller
                             ])->count("mes01.SERIALNO");
 
         $be_class_c = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+                        ->join("mes01 as test",[
+                            ["lbl02.SERIALNO","=","test.SERIALNO"],
+                            ["test.LOCNCODE","=",DB::raw("'TEST-EL'")],
+                        ])
                         ->where([ 
                             ["mes01.TRXDATE",">=",$last_trx], 
                             ["mes01.TRXDATE","<",$dt], 
                             ["mes01.LOCNCODE","=","VI1"], 
-                            ["lbl02.MODCLASS","=","C"], 
-                            ["lbl02.LBLTYPE","=","1"], 
+                            ["lbl02.MODCLASS","=", ($build == "GT" ? "C" : "") ], 
+                            ["lbl02.LBLTYPE","=","1"],
+                            ["test.MODCLASS","<>",($build == "GT" ? "C" : "")], 
                             ])->count("mes01.SERIALNO");
         
         $el2_class_a = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
@@ -584,8 +596,7 @@ class yieldController extends Controller
             ["mes01.TRXDATE",">=",$last_trx],
             ["mes01.TRXDATE","<",$dt],
             ["mes01.LOCNCODE","=","TEST-EL"],
-            ["lbl02.MODCLASS","=","A"],
-        ])->count("mes01.SERIALNO");
+        ])->whereIn('lbl02.MODCLASS', ["A","A+"])->count("mes01.SERIALNO");
 
         $el2_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
             ->join("mes01 as vi1",[
@@ -611,8 +622,8 @@ class yieldController extends Controller
                 ["mes01.TRXDATE",">=",$last_trx],
                 ["mes01.TRXDATE","<",$dt],
                 ["mes01.LOCNCODE","=","TEST-EL"],
-                ["lbl02.MODCLASS","=","C"],
-                ["vi1.MODCLASS","<>","C"],
+                ["lbl02.MODCLASS","=",($build == "GT" ? "C" : "")],
+                ["vi1.MODCLASS","<>",($build == "GT" ? "C" : "")],
             ])->count("mes01.SERIALNO");
 
         $data['input_mod'] = $input_mod;
