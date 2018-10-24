@@ -74,21 +74,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="category_id">Category</label>
-                            <select class="form-control form-control-sm" name="category_id" id="category_id">
-                                <option readonly selected value> -- select an option -- </option>
-                                @foreach($categories as $category)
-                                <option value="{{$category->id}}"
-                                @if ($category->id == old('category_id', $category_id))
-                                    selected="selected"
-                                @endif
-                                >{{$category->descr}}</option>
-                                @endforeach
-                            </select>
-                            <small class="form-text text-danger">{{ $errors->first('category_id') }}</small>
-                        </div>
-
-                        <div class="form-group">
                             <label for="downtime_id">Issue</label>
                             <select class="form-control form-control-sm" name="downtime_id" id="downtime_id">
                                 <option readonly selected value> -- select an option -- </option>
@@ -102,6 +87,22 @@
                             </select>
                             <small class="form-text text-danger">{{ $errors->first('downtime_id') }}</small>
                         </div>
+
+                        <div class="form-group">
+                            <label for="category_id">Category</label>
+                            <select class="form-control form-control-sm" name="category_id" id="category_id" disabled>
+                                <option readonly selected value> -- select an option -- </option>
+                                @foreach($categories as $category)
+                                <option value="{{$category->id}}"
+                                @if ($category->id == old('category_id', $category_id))
+                                    selected="selected"
+                                @endif
+                                >{{$category->descr}}</option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-danger">{{ $errors->first('category_id') }}</small>
+                        </div>
+
                         <div class="form-group">
                             <label for="remarks">Remarks</label>
                             <textarea class="form-control form-control-sm" name="remarks" id="remarks" rows="5">{{old('remarks', $remarks)}}</textarea>
@@ -174,13 +175,13 @@
         console.log();
     }
 
-    $(document).on('change', 'select[name="station_id"]', function(index) {
+    $(document).on('change', 'select[name="downtime_id"]', function(index) {
         var token = $('input[name=_token]');
         var formData = new FormData();
-        formData.append('station_id', $(this).val());
+        formData.append('downtime_id', $(this).val());
 
         $.ajax({
-            url: "{{route('get_dtcategory_list')}}",
+            url: "{{route('get_dtcategory')}}",
             method: 'POST',
             contentType: false,
             processData: false,
@@ -190,13 +191,7 @@
                 'X-CSRF-TOKEN': token.val()
             },
             success: function (items) {
-                selitems = "<option disabled selected value> -- select an option -- </option>";
-                $('select[name="downtime_id"]').html(selitems);
-                $.each(items, function(i, v) {
-                    if (i == 0) { $("#capacity").val(v.capacity); }
-                    selitems += '<option value="' + v.id + '">' + v.descr + '</option>';
-                });
-                $('select[name="category_id"]').html(selitems);
+                $('select[name="category_id"]').val(items.category_id);
             },
             error: function(xhr, textStatus, errorThrown){
                 alert (errorThrown);
@@ -204,12 +199,12 @@
         });
     });
 
-    $(document).on('change', 'select[name="category_id"]', function(index) {
+    $(document).on('change', 'select[name="station_id"]', function(index) {
         var token = $('input[name=_token]');
         var formData = new FormData();
         console.log($("#station_id").val());
         formData.append('station_id', $("#station_id").val());
-        formData.append('category_id', $(this).val());
+        // formData.append('category_id', $(this).val());
 
         $.ajax({
             url: "{{route('get_dtissue_list')}}",
@@ -223,10 +218,20 @@
             },
             success: function (items) {
                 selitems = "<option disabled selected value> -- select an option -- </option>";
+                catitems = "<option disabled selected value> -- select an option -- </option>";
+                category = '';
                 $.each(items, function(i, v) {
+                    if (i == 0) { $("#capacity").val(v.capacity); }
+
+                    if (category != v.category) {
+                        selitems += '<option disabled value>' + v.category + '</option>';
+                        catitems += '<option value="' + v.category_id + '">' + v.category + '</option>';
+                        category = v.category;
+                    }
                     selitems += '<option value="' + v.id + '">' + v.downtime + '</option>';
                 });
                 $('select[name="downtime_id"]').html(selitems);
+                $('select[name="category_id"]').html(catitems);
             },
             error: function(xhr, textStatus, errorThrown){
                 alert (errorThrown);

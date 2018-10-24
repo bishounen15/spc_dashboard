@@ -259,7 +259,7 @@
 
         $(document).on('change', 'input[name="qty[]"]', function(index) {
             i = $('input[name="qty[]"]').index(this);
-            $('input[name="total-cost[]"]').eq(i).val(parseInt( ($('input[name="qty[]"]').eq(i).val()) * parseFloat($('input[name="unit-cost[]"]').eq(i).val())).toFixed(2) );
+            $('input[name="total-cost[]"]').eq(i).val(parseFloat( ($('input[name="qty[]"]').eq(i).val()) * parseFloat($('input[name="unit-cost[]"]').eq(i).val())).toFixed(2) );
         });
     });
 </script>

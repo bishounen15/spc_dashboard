@@ -98,6 +98,23 @@ class OSTransactionController extends Controller
 
         $trx_statuses = $this->status;
 
+        $qty = explode(",",$request->input('qty'));
+        $cost = explode(",",$request->input('total-cost'));
+        $trxid = explode(",",$request->input('trxid'));
+
+        $ix = 0;
+
+        foreach($qty as $q) {
+            $detail = OSTransactionDetail::find($trxid[$ix]);
+            $detail->qty = $q;
+            $detail->total_cost = $cost[$ix];
+            $detail->save();
+
+            $ix++;
+        }
+
+        // return Response::json($request->input('remarks'));
+
         foreach ($trx_statuses as $trx_status) {
             if ($trx_status['status'] == $status) {
                 $new_status = $trx_status['next'];
@@ -107,9 +124,12 @@ class OSTransactionController extends Controller
 
         $trx = OSTransaction::find($id);
         $trx->status = $new_status;
+
+        if (count($qty) > 0 && $request->input('remarks') != null) {
+            $trx->remarks = $request->input('remarks');
+        }
+
         $trx->save();
-        
-        // return "true";
     }
 
     public function GetTrxInfo(Request $request) {
@@ -125,6 +145,7 @@ class OSTransactionController extends Controller
         $data["status"] = $trx->status;
 
         foreach($trx->details as $detail) {
+            $data["trxid"] = $detail->id;
             $data["category"] = $detail->item->category->description;
             $data["item"] = $detail->item->description;
             $data["current_stock"] = $detail->item->current_stock;

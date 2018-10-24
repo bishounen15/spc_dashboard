@@ -53,6 +53,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::resource('MixRatio','MixRatioController');
 
         // Route::resource('Yield','yieldController');
+        Route::get('/yield/setup/product_types/data', 'ProductTypeController@load')->name('product_type_data');
+        Route::post('/yield/setup/product_types/get', 'ProductTypeController@getTarget')->name('product_type_target');
+        Route::resource('/yield/setup/product_types','ProductTypeController');        
+
         Route::get('/yield/email/data','YieldEmailsController@load')->name('email_yield_data');
         Route::get('/yield/email','YieldEmailsController@list')->name('list_email_yield');
         Route::post('/yield/email/store','YieldEmailsController@store')->name('store_email_yield');
@@ -130,6 +134,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/user/remove/{id}','UserController@destroy')->name('remove_user');
 
         Route::get('/assets/general/data', 'AssetsController@load')->name('asset_data');
+        Route::get('/assets/software/{id}', 'AssetsController@load_software')->name('sw_data');
         Route::resource('/assets/general','AssetsController');
         Route::resource('/assets/dashboard/general','AssetDashboardController');
 
@@ -145,7 +150,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/proddt/setup/downtime/data/{machine_id}/{category_id}', 'DTTypesController@load')->name('dtdowntime_data');
         Route::resource('/proddt/setup/machine/{machine_id}/downtime','DTTypesController');
 
-        Route::post('/proddt/category_list','DTLogSheetsController@listCategories')->name('get_dtcategory_list');
+        Route::post('/proddt/category_id','DTLogSheetsController@getCategory')->name('get_dtcategory');
         Route::post('/proddt/issue_list','DTLogSheetsController@listIssues')->name('get_dtissue_list');
         Route::get('/proddt/logsheet/data', 'DTLogSheetsController@load')->name('logsheet_data');
         Route::get('/proddt/dashboard/data/{date}/{shift}/{station_id}','DTLogSheetsController@dashdata')->name('dt_dashboard_data');

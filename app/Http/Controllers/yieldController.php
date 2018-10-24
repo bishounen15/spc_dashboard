@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\ProductionTeam as ProductionTeam;
 use App\mesData as mesData;
 use App\YieldData as YieldData;
+use App\ProductTypes;
 use App\User as User;
 use App\YieldEmail;
 use Illuminate\Support\Facades\Auth;
@@ -35,9 +36,13 @@ class yieldController extends Controller
         $data = [];
 
         $data['id'] = $id;
+        $data['prod_types'] = ProductTypes::all(); 
         $data['team'] = null;
         $data['product_size'] = null;
         $data['input_cell'] = 0;
+
+        $data['build'] = "";
+        $data['target'] = "";
 
         $data['inprocess_cell'] = 0;
         $data['ccd_cell'] = 0;
@@ -76,7 +81,7 @@ class yieldController extends Controller
         if ($id == null) {
             $date = date("Y-m-d",strtotime("Today"));
             $time = date('H:i');
-            // $time = date('06:00');
+            // $time = date('13:15');
             
             if ($time < "06:00") {
                 $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
@@ -123,7 +128,32 @@ class yieldController extends Controller
                     $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
                 }
             } else {
-                $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+                if ($shift == "A") {
+                    $shift = "C";
+                } else {
+                    $shift = chr(ord($shift) - 1);
+                }
+
+                $dt = $this->getEnd($date,$shift);
+                $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
+
+                $to = Carbon::createFromFormat('Y-m-d H:i:s', $cdt);
+                $from = Carbon::createFromFormat('Y-m-d H:i:s', $dt);
+                
+                $diff_in_minutes = $to->diffInMinutes($from);
+                // dd($diff_in_minutes);
+
+                if ($diff_in_minutes >= 30) {
+                    $shift = $this->getShift($time);
+                    $last_trx = $this->getStart($date,$shift);
+                    $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+                } else {
+                    $dt = $this->getEnd($date,$shift);
+                }
+
+                // $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+
+                
             }
 
             $last_trx = YieldData::where([
@@ -145,6 +175,9 @@ class yieldController extends Controller
             $data['team'] = $yield_data->team;
             $data['product_size'] = $yield_data->product_size;
             $data['input_cell'] = $yield_data->input_cell;
+
+            $data['build'] = $yield_data->build;
+            $data['target'] = $yield_data->target;
 
             $data['inprocess_cell'] = $yield_data->inprocess_cell;
             $data['ccd_cell'] = $yield_data->ccd_cell;
@@ -414,6 +447,10 @@ class yieldController extends Controller
             $retval = $date . " 06:00";
         } else if ($shift == "B") {
             $retval = $date . " 14:00";
+        } else if ($shift == "6AM-6PM") {
+            $retval = $date . " 06:00";
+        } else if ($shift == "6PM-6AM") {
+            $retval = $date . " 18:00";
         } else {
             $retval = $date . " 22:00";
         }
@@ -426,7 +463,11 @@ class yieldController extends Controller
             $retval = $date . " 14:00:00";
         } else if ($shift == "B") {
             $retval = $date . " 22:00:00";
-        } else {
+        } else if ($shift == "6AM-6PM") {
+            $retval = $date . " 18:00:00";
+        } else if ($shift == "6PM-6AM") {
+            $retval = date("Y-m-d",strtotime("+1 days",strtotime($date))) . " 06:00:00";
+        }else {
             $retval = date("Y-m-d",strtotime("+1 days",strtotime($date))) . " 06:00:00";
         }
 
@@ -503,9 +544,16 @@ class yieldController extends Controller
     }
 
     public function getShiftOutput(Request $request) {
-        $start = $this->getStart($request->input('date'),$request->input('shift'));
-        $end = $this->getEnd($request->input('date'),$request->input('shift'));
+        // return Response::json($request);
+        $build = $request->input('build');
 
+        if ($request->input('current') == "true") {
+            $start = $request->input('from');
+            $end = $request->input('to');
+        } else {
+            $start = $this->getStart($request->input('date'),$request->input('shift'));
+            $end = $this->getEnd($request->input('date'),$request->input('shift'));
+        }
         $data = [];
 
         $data["start"] = $start;
@@ -530,12 +578,17 @@ class yieldController extends Controller
                             ])->count("mes01.SERIALNO");
 
         $be_class_c = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+                        ->join("mes01 as test",[
+                            ["lbl02.SERIALNO","=","test.SERIALNO"],
+                            ["test.LOCNCODE","=",DB::raw("'TEST-EL'")],
+                        ])
                         ->where([ 
                             ["mes01.TRXDATE",">=",$last_trx], 
                             ["mes01.TRXDATE","<",$dt], 
                             ["mes01.LOCNCODE","=","VI1"], 
-                            ["lbl02.MODCLASS","=","C"], 
-                            ["lbl02.LBLTYPE","=","1"], 
+                            ["lbl02.MODCLASS","=", ($build == "GT" ? "C" : "") ], 
+                            ["lbl02.LBLTYPE","=","1"],
+                            ["test.MODCLASS","<>",($build == "GT" ? "C" : "")], 
                             ])->count("mes01.SERIALNO");
         
         $el2_class_a = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")->where([
@@ -543,8 +596,7 @@ class yieldController extends Controller
             ["mes01.TRXDATE",">=",$last_trx],
             ["mes01.TRXDATE","<",$dt],
             ["mes01.LOCNCODE","=","TEST-EL"],
-            ["lbl02.MODCLASS","=","A"],
-        ])->count("mes01.SERIALNO");
+        ])->whereIn('lbl02.MODCLASS', ["A","A+"])->count("mes01.SERIALNO");
 
         $el2_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
             ->join("mes01 as vi1",[
@@ -570,8 +622,8 @@ class yieldController extends Controller
                 ["mes01.TRXDATE",">=",$last_trx],
                 ["mes01.TRXDATE","<",$dt],
                 ["mes01.LOCNCODE","=","TEST-EL"],
-                ["lbl02.MODCLASS","=","C"],
-                ["vi1.MODCLASS","<>","C"],
+                ["lbl02.MODCLASS","=",($build == "GT" ? "C" : "")],
+                ["vi1.MODCLASS","<>",($build == "GT" ? "C" : "")],
             ])->count("mes01.SERIALNO");
 
         $data['input_mod'] = $input_mod;

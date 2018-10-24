@@ -8,7 +8,8 @@
             <tr>
                 <th rowspan="2">#</th>
                 <th rowspan="2">Serial No.</th>
-                <th rowspan="2">Type</th>
+                <th rowspan="2">Device Type</th>
+                <th rowspan="2">Property Type</th>
                 <th rowspan="2">Status</th>
                 <th rowspan="2">Brand</th>
                 <th rowspan="2">Model</th>
@@ -17,11 +18,14 @@
                 <th rowspan="2">Processor</th>
                 <th rowspan="2">RAM</th>
                 <th rowspan="2">HDD</th>
+                <th rowspan="2">Graphics Card</th>
                 <th colspan="2">LAN</th>
                 <th colspan="2">WIFI</th>
+                <th rowspan="2">Site</th>
                 <th rowspan="2">ID Number</th>
                 <th rowspan="2">Name</th>
                 <th rowspan="2">Dept.</th>
+                <th rowspan="2">Remarks</th>
             </tr>
             <tr>
                 <th>IP</th>
@@ -41,8 +45,12 @@
 @push('jscript')
 <script>
     $(document).ready(function() {
-        $('#asset-list').DataTable({
+        var t = $('#asset-list').DataTable({
+            "columnDefs": [ {
+                "targets": 0
+            } ],
             "scrollX": true,
+            "stateSave": true,
             "order": [],
             ajax: '{!! route('asset_data') !!}',
             dom: 'Blfrtip',
@@ -51,7 +59,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
                     },
                     text:       'Excel',
                     filename: "assets_excel"
@@ -59,7 +67,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
                     },
                     text:       'CSV',
                     filename: "assets_csv"
@@ -71,10 +79,14 @@
                 // },
             ],
             columns: [
-                { data: 'id' },
-                { data: 'serial' },
+                { data: null, defaultContent: '0' },
+                // { data: 'serial' },
+                { sortable: false, "render": function ( data, type, full, meta ) {
+                    return '<a href="/assets/general/'+full.id+'">'+full.serial+'</a>';
+                }},
                 { data: 'type' },
                 { data: 'status' },
+                { data: 'device_status' },
                 { data: 'brand' },
                 { data: 'model' },
                 { data: 'host_name' },
@@ -82,15 +94,24 @@
                 { data: 'proc' },
                 { data: 'ram' },
                 { data: 'hdd' },
+                { data: 'gfx_card' },
                 { data: 'lan_ip' },
                 { data: 'lan_mac' },
                 { data: 'wifi_ip' },
                 { data: 'wifi_mac' },
+                { data: 'site' },
                 { data: 'id_number' },
                 { data: 'name' },
                 { data: 'dept' },
+                { data: 'remarks' },
             ],
         });
+
+        t.on( 'order.dt search.dt', function () {
+            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
     });
 </script>
 @endpush

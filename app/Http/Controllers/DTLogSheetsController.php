@@ -14,6 +14,11 @@ use Response;
 
 class DTLogSheetsController extends Controller
 {
+    public function __construct()
+    {
+        date_default_timezone_set('Asia/Manila');
+    }  
+
     /**
      * Display a listing of the resource.
      *
@@ -38,10 +43,16 @@ class DTLogSheetsController extends Controller
 
     public function load()
     {
-        $logs = DTLogSheet::selectRaw("log_sheets.id, log_sheets.date, log_sheets.shift, stations.descr as station, log_sheets.start, log_sheets.end, log_sheets.duration, dt_types.downtime as issue, categories.descr as category, log_sheets.remarks")
+        $logs = DTLogSheet::selectRaw("log_sheets.id, log_sheets.date, log_sheets.shift, stations.descr as station, log_sheets.start, log_sheets.end, log_sheets.duration, dt_types.downtime as issue, categories.descr as category, log_sheets.remarks, sp_admin.users.name as user")
                         ->join("stations","log_sheets.station_id","=","stations.id")
                         ->join("dt_types","log_sheets.downtime_id","=","dt_types.id")
                         ->join("categories","dt_types.category_id","=","categories.id")
+                        ->join("sp_admin.audits","log_sheets.id","=","sp_admin.audits.auditable_id")
+                        ->join("sp_admin.users","sp_admin.audits.user_id","=","sp_admin.users.id")
+                        ->where([
+                            ["sp_admin.audits.auditable_type","=","App\DTLogSheet"],
+                            ["sp_admin.audits.event","=","created"],
+                            ])
                         ->orderByRaw("log_sheets.date DESC, log_sheets.shift DESC, DATE_ADD(log_sheets.date, INTERVAL CASE WHEN log_sheets.start < '06:00' THEN 1 ELSE 0 END DAY) DESC, log_sheets.start DESC");
 
         return Datatables::of($logs)->make(true);
@@ -51,16 +62,20 @@ class DTLogSheetsController extends Controller
     {
         $cond = [];
 
+        array_push($cond,["sp_admin.audits.auditable_type","=","App\DTLogSheet"]);
+        array_push($cond,["sp_admin.audits.event","=","created"]);
         array_push($cond,["log_sheets.date",$date]);
 
         if ($shift != "-") { array_push($cond,["log_sheets.shift",$shift]); }
         if ($station_id != 0) { array_push($cond,["log_sheets.station_id",$station_id]); }
 
-        $logs = DTLogSheet::selectRaw("log_sheets.id, log_sheets.date, log_sheets.shift, stations.descr as station, log_sheets.start, log_sheets.end, ROUND(log_sheets.duration,2) AS duration, dt_types.downtime as issue, categories.code as code, categories.descr as category, log_sheets.remarks, machines.descr as machine, log_sheets.capacity")
+        $logs = DTLogSheet::selectRaw("log_sheets.id, log_sheets.date, log_sheets.shift, stations.descr as station, log_sheets.start, log_sheets.end, ROUND(log_sheets.duration,2) AS duration, dt_types.downtime as issue, categories.code as code, categories.descr as category, log_sheets.remarks, machines.descr as machine, log_sheets.capacity, sp_admin.users.name as user")
                         ->join("stations","log_sheets.station_id","=","stations.id")
                         ->join("machines","stations.machine_id","=","machines.id")
                         ->join("dt_types","log_sheets.downtime_id","=","dt_types.id")
                         ->join("categories","dt_types.category_id","=","categories.id")
+                        ->join("sp_admin.audits","log_sheets.id","=","sp_admin.audits.auditable_id")
+                        ->join("sp_admin.users","sp_admin.audits.user_id","=","sp_admin.users.id")
                         ->where($cond)
                         ->orderByRaw("log_sheets.date ASC, log_sheets.shift ASC, DATE_ADD(log_sheets.date, INTERVAL CASE WHEN log_sheets.start < '06:00' THEN 1 ELSE 0 END DAY) ASC, log_sheets.start ASC");
 
@@ -96,14 +111,20 @@ class DTLogSheetsController extends Controller
         return view('proddt.logsheet.form', $data);
     }
 
-    public function listCategories(Request $request) {
-        $categories = Station::find($request->input('station_id'))->machine->categories();
+    public function getCategory(Request $request) {
+        $categories = DTType::find($request->input('downtime_id'));
         return Response::json($categories);
     }
 
     public function listIssues(Request $request) {
-        $types = Station::find($request->input('station_id'))->machine->issues
-                            ->where("category_id",$request->input('category_id'));
+        $machine_id = Station::find($request->input('station_id'))->machine->id;
+        $types = DTType::selectRaw('machines.capacity, dt_types.category_id, categories.descr as category, dt_types.id, dt_types.downtime')
+                            ->join('categories','dt_types.category_id','=','categories.id')
+                            ->join('machines','dt_types.machine_id','=','machines.id')
+                            ->where('machine_id',$machine_id)
+                            ->orderByRaw('dt_types.category_id ASC, dt_types.id ASC')
+                            ->get();
+                            // ->where("category_id",$request->input('category_id'));
         return Response::json($types);
     }
 

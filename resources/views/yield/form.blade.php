@@ -41,14 +41,16 @@
                                         <input type="text" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" readonly>
                                     @endif
                                     </div>
-                                    <div class="col-sm-3 text-right">Current Shift</div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-2 text-right">Shift</div>
+                                    <div class="col-sm-3">
                                     @if(Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
                                         <select class="form-control form-control-sm" name="shift" id="shift" onchange="changeShift()">
                                             <option readonly selected value> -- select an option -- </option>
                                             <option value="A" {{$shift == "A" ? "selected" : ""}}>A</option>
                                             <option value="B" {{$shift == "B" ? "selected" : ""}}>B</option>
                                             <option value="C" {{$shift == "C" ? "selected" : ""}}>C</option>
+                                            <option value="6AM-6PM" {{$shift == "6AM-6PM" ? "selected" : ""}}>6AM-6PM</option>
+                                            <option value="6PM-6AM" {{$shift == "6PM-6AM" ? "selected" : ""}}>6PM-6AM</option>
                                         </select>
                                     @else
                                         <input type="text" class="form-control form-control-sm" name="shift" id="shift" value="{{old('shift', $shift)}}" readonly>
@@ -60,11 +62,18 @@
                                 <div class="form-row">
                                     <div class="col-sm-3 text-right">Build</div>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control form-control-sm" name="build" id="build" value="GT" readonly>
+                                        {{-- <input type="text" class="form-control form-control-sm" name="build" id="build" value="GT" readonly> --}}
+                                        <select class="form-control form-control-sm" name="build" id="build" onchange="changeBuild()">
+                                            <option disabled selected value> -- select an option -- </option>
+                                            @foreach ($prod_types as $type)
+                                                <option value="{{$type->code}}" {{$prod_types->count() == 1 && $id == null ? "selected" : ($build == $type->code ? "selected" : "")}}>{{$type->code}}</option>
+                                            @endforeach
+                                        </select>
+                                        <small class="form-text text-danger" id="err_build"></small>
                                     </div>
-                                    <div class="col-sm-3 text-right">Target (%)</div>
-                                    <div class="col-sm-2">
-                                        <input type="text" class="form-control form-control-sm" name="target" id="target" value="99.30" readonly>
+                                    <div class="col-sm-2 text-right">Target (%)</div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control form-control-sm" name="target" id="target" value="{{$prod_types->count() == 1 ? number_format($prod_types->first()->target,2) : $target}}" readonly>
                                     </div>
                                 </div> 
                             </div>
@@ -431,6 +440,13 @@
                 $("#err_product_size").html("");
             }
 
+            if ($("#build").val() == null || $("#build").val() == "") {
+                $("#err_build").html("Build is a required field.");
+                err++;
+            } else {
+                $("#err_build").html("");
+            }
+
             if ($('#str_produced').val() != "") { str_produced = parseInt($('#str_produced').val()); } else { str_produced = 0; }
             if ($('#str_defect').val() != "") { str_defect = parseInt($('#str_defect').val()); } else { str_defect = 0; }
 
@@ -467,11 +483,17 @@
             }
         }
 
-        function changeShift() {
+        function changeShift($use_current = false) {
             var token = $('input[name=_token]');
             var formData = new FormData();
             formData.append('date', $("#date").val());
             formData.append('shift', $("#shift").val());
+            formData.append('build', $("#build").val());
+            formData.append('current', $use_current);
+            formData.append('from', $("#from").val());
+            formData.append('to', $("#to").val());
+
+            console.log($use_current);
 
             $.ajax({
                 url: "{{route('refresh_yield_data')}}",
@@ -499,6 +521,31 @@
                     $('#el2_class_b').val(details.el2_class_b);
 
                     EL2Defect();
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    alert (errorThrown);
+                }	
+            });
+        }
+
+        function changeBuild() {
+            var token = $('input[name=_token]');
+            var formData = new FormData();
+            formData.append('build', $("#build").val());
+            
+            $.ajax({
+                url: "{{route('product_type_target')}}",
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': token.val()
+                },
+                success: function (details) {
+                    $('#target').val(details.target.toFixed(2));
+                    changeShift(true);
                 },
                 error: function(xhr, textStatus, errorThrown){
                     alert (errorThrown);

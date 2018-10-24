@@ -58,6 +58,12 @@
                         
                     </tbody>
                 </table>
+
+                <div class="form-group" id="group-remarks">
+                    <label for="remarks">Remarks (Optional)</label>
+                    <textarea class="form-control form-control-sm" name="remarks" id="remarks" rows="3"></textarea>
+                    <small class="form-text text-danger"></small>
+                </div>
             </div>
             <div class="modal-footer">
                 <button id="btnEdit" type="button" class="btn btn-info btn-sm" style="width: 100px;" disabled>Edit</button>
@@ -78,6 +84,7 @@
     var table;
 
     function updateStatus() {
+        // console.log($('input[name="qty[]"]').eq(0).val());
         id = $("#trx-id").val();
         cno = $("#cno").html();
         status = $("#stat").html();
@@ -86,6 +93,24 @@
         var formData = new FormData();
         formData.append('transaction_id', id);
         formData.append('status', status);
+
+        if ($('input[name="qty[]"]').eq(0).val() != undefined) {
+            qty = [];
+            cost = [];
+            id = [];
+
+            $.each($('input[name^="qty"]'), function() {
+                i = $('input[name="qty[]"]').index(this);
+                qty.push($(this).val());
+                cost.push($('input[name="total-cost[]"]').eq(i).val());
+                id.push($('input[name="recid[]"]').eq(i).val());
+            });
+
+            formData.append('qty', qty);
+            formData.append('total-cost', cost);
+            formData.append('trxid', id);
+            formData.append('remarks', $('textarea[name="remarks"]').val());
+        }
 
         $.ajax({
             url: "{{route('os_status')}}",
@@ -97,8 +122,10 @@
                 'X-CSRF-TOKEN': token.val()
             },
             success: function (result) {
+                // console.log(result);
                 table.ajax.reload();
                 $("#sys-messages").html('<div class="alert alert-success" id="success-msg">Transaction ['+ cno +'] successfully updated.</div>');
+                $('textarea[name="remarks"]').val("");
                 $("#TrxDetails").modal("toggle");
             },
             error: function(xhr, textStatus, errorThrown){
@@ -133,7 +160,15 @@
                 myRows = "";
 
                 $.each(trx, function(i, v) {
-                    myRows += '<tr><td>'+v.category+'</td><td>'+v.item+'</td><td class="stock">'+v.current_stock+'</td><td>'+v.qty+'</td><td>'+v.unit_cost+'</td><td>'+ v.total_cost +'</td></tr>';
+                    if (trx[0].type == "Request" && trx[0].status == "Submitted" && ("CUST" == "{!! Auth::user()->osi_role !!}" || 1 == {!! Auth::user()->sysadmin !!})) {
+                        inputField = '<td><input type="hidden" name="recid[]" value="'+v.trxid+'"><input type="number" class="form-control form-control-sm" name="qty[]" value="'+v.qty+'"></td><td><input type="text" class="form-control form-control-sm" name="unit-cost[]" value="'+v.unit_cost+'" readonly></td><td><input type="text" class="form-control form-control-sm" name="total-cost[]" value="'+ v.total_cost +'" readonly></td>';
+                        $("#group-remarks").show();
+                    } else {
+                        inputField = '<td>'+v.qty+'</td><td>'+v.unit_cost+'</td><td>'+ v.total_cost +'</td>';
+                        $("#group-remarks").hide();
+                    }
+                    
+                    myRows += '<tr><td>'+v.category+'</td><td>'+v.item+'</td><td class="stock">'+v.current_stock+'</td>'+inputField+'</tr>';
                 });
 
                 $("#item-details").html(myRows);
@@ -197,12 +232,18 @@
                     }
                 }
 
+                $('textarea[name="remarks"]').val("");
                 $("#TrxDetails").modal("toggle");
             },
             error: function(xhr, textStatus, errorThrown){
                 alert (errorThrown);
             }	
         });
+    });
+
+    $(document).on('change', 'input[name="qty[]"]', function(index) {
+        i = $('input[name="qty[]"]').index(this);
+        $('input[name="total-cost[]"]').eq(i).val(parseFloat( ($('input[name="qty[]"]').eq(i).val()) * parseFloat($('input[name="unit-cost[]"]').eq(i).val())).toFixed(2));
     });
 
     $(document).ready(function() {

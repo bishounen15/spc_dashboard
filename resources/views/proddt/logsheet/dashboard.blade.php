@@ -45,7 +45,8 @@
                     <th width="5%">Duration</th>
                     <th width="10%">Issues</th>
                     <th width="15%">Category</th>
-                    <th width="20%">Remarks</th>
+                    <th width="10%">Remarks</th>
+                    <th width="10%">Encoded By</th>
                 </tr>
             </thead>
             <tbody>
@@ -159,6 +160,7 @@
                 { data: 'issue' },
                 { data: 'category' },
                 { data: 'remarks' },
+                { data: 'user' },
             ],
             createdRow: function (row, data, index) {
                 //
@@ -170,7 +172,7 @@
 
                 if(stations.indexOf(data.machine) === -1) {
                     stations.push(data.machine);
-                    total_capacity += data.capacity;
+                    total_capacity += parseInt(data.capacity);
                 }
 
                 currVal = parseFloat($("#total_" + data.code + " h1").html());

@@ -431,7 +431,7 @@
                                     disabled = "";
                                 } else {
                                     btnclass = "secondary";
-                                    disabled = " disabled";
+                                    disabled = "{{ Auth::user()->sysadmin == 1 ? "" : " disabled"}}";
                                 }
                             } else if (i == "id") {
                                 myRows += '<td class="data-edit"><a href="/Yield/edit/'+v+'" role="button" class="btn btn-'+btnclass+' btn-sm'+disabled+'">Edit</a></td>';    
