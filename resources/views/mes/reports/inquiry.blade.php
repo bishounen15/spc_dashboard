@@ -91,6 +91,30 @@
                     </tbody>
                 </table>
             </div>
+            <br>
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    Transaction History
+                </div>
+
+                <table class="table table-condensed table-striped table-sm" id="mes-list" style="width: 100%;">
+                    <thead class="thead-dark" style="font-size: 0.7em;">
+                        {{-- <th>#</th> --}}
+                        <tr>
+                            <th class="serial-hide" hidden>Serial No.</th>
+                            <th width="10%">Location</th>
+                            <th width="15%">Trasaction Date</th>
+                            <th width="10%">Status</th>
+                            <th width="10%">Class</th>
+                            <th width="35%">Remarks</th>
+                            <th width="20%">Transacted By</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody-light" style="font-size: 0.75em;">
+                        
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {{-- </div> --}}
@@ -133,6 +157,7 @@
                             $("#err_sno").html("");
 
                             table.ajax.url( '/modules/ftd/' + serialno ).load();
+                            mes_table.ajax.url( '/modules/mes/' + serialno ).load();
                         } else {
                             $("#err_sno").html("Serial No. [" + serialno + "] does not exists.");
                             $(".serial-info").html("");
@@ -214,6 +239,54 @@
                     $(row).addClass('table-success');
                 }
             },
+        });
+
+        var mes_table = $('#mes-list').DataTable({
+            "scrollX": true,
+            "order": [],
+            "searching": false,
+            // ajax: '#',
+            dom: 'Blfrtip',
+            buttons: [
+                "print",
+                {
+                    extend:     'excel',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+                    },
+                    text:       'Excel',
+                    filename: "mes_excel"
+                },
+                {
+                    extend:     'csv',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+                    },
+                    text:       'CSV',
+                    filename: "mes_csv"
+                },
+                // {
+                //     extend:     'pdf',
+                //     text:       'PDF',
+                //     filename: "os_categories_pdf"
+                // },
+            ],
+            "columnDefs": [
+                {
+                    "targets": [ 0 ],
+                    "visible": false
+                }
+            ],
+            columns: [
+                // { data: 'id' },
+                { data: 'SERIALNO' },
+                { data: 'LOCNCODE' },
+                { data: 'TRXDATE' },
+                { data: 'STATUS' },
+                { data: 'MODCLASS' },
+                { data: 'REMARKS' },
+                { data: 'TRXUSER' },
+            ],
         });
     });
 </script>
