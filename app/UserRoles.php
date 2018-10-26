@@ -21,8 +21,8 @@ class UserRoles extends ReadOnlyBase
             "description" => "Supervisor",
         ],
         [
-            "code" => "MNGR",
-            "description" => "Manager",
+            "code" => "VIEW",
+            "description" => "Viewer",
         ],
         [
             "code" => "ADMIN",

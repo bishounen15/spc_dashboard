@@ -2,8 +2,10 @@
 @section('content')
 {{-- <div class="container"> --}}
     <h3>Yield Dashboard</h3>
+    @if(Auth::user()->yield_role == 'USER' || Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
     <a href="{{route('create_yield')}}" role="button" class="btn btn-primary">Add Yield Record</a>
     <br><br>
+    @endif
     <div>
     <table class="table table-condensed table-hover table-sm" id="yield-list" style="width: 100%;">
         <thead class="thead-light" style="font-size: 0.7em;">
