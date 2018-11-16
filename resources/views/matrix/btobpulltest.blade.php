@@ -42,7 +42,7 @@
         </div>
 </div>
     <div id="prodBuiltForm"> 
-            {!! Form::open(['action' => 'OfflineBtoBPullTestController@store','method' => 'POST']) !!}
+            {!! Form::open(['action' => 'OfflineBtoBPullTestController@store_Sum','method' => 'POST']) !!}
             <div class="row"> 
         <div class="col-md-5">
          
@@ -79,7 +79,7 @@
         </div>
 
 <div id="dateRangeForm">
-        {!! Form::open(['action' => 'OfflineBtoBPullTestController@store','method' => 'POST']) !!}
+        {!! Form::open(['action' => 'OfflineBtoBPullTestController@store_Sum','method' => 'POST']) !!}
 <div class="row"> 
     <div class="col-md-5">
             {{Form::label('','From'),['class'=>'form-control']}}

@@ -15,6 +15,10 @@ class OfflineBtoBPullTestController extends Controller
      */
     public function index()
     {
+        
+    
+     
+      
         $getLastProd = DB::select("SELECT * FROM prodselect JOIN producttype ON prodselect.productName = producttype.prodName WHERE ProcessName ='Material Preparation' ORDER BY prodselect.created_at DESC LIMIT 1"); 
                       
         if(count($getLastProd) > 0)
@@ -36,6 +40,9 @@ class OfflineBtoBPullTestController extends Controller
         }else{
             $bbno = "4bb";
         }
+
+        
+     
     
         $node1 = "BB-to-BB Pull Strength";
         
@@ -53,18 +60,21 @@ class OfflineBtoBPullTestController extends Controller
         $USL = $this->getSpecsULVal($prod,$node1,$bbno);
         $LSL = $this->getSpecsLLVal($prod,$node1,$bbno);
         $target = $this->getSpecsLimitTarget($prod,$node1,$bbno);
-        $UCL=37.4;
-        $LCL=7.09;
+       // $UCL=37.4;
+       // $LCL=7.09;
+       $UCL = $this->getSpecsUCLVal($prod,$node1,$bbno);
+       $LCL = $this->getSpecsLCLVal($prod,$node1,$bbno);
         $CL = (($UCL-$LCL)/2)+$LCL;
         $zBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$CL),$stdOfStdBus1Top1));
         $CpLBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$LCL),(3*$stdOfStdBus1Top1) ));
         $CpUBus1Top1 = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus1Top1),(3*$stdOfStdBus1Top1) ));      
         $arrValForCpkB1T1 = array( $CpUBus1Top1,$CpLBus1Top1);  
-        $CpkB1T1 = min($arrValForCpkB1T1);
+        $CpkB1T1 =  min(array_filter( $arrValForCpkB1T1));  
+
         $CpnUB1T1 =$this->divideByZeroExempt(($USL - $medianBus1Top1 ),( $perc2Bus1Top1 - $medianBus1Top1));
         $CpnLB1T1 = $this->divideByZeroExempt(($medianBus1Top1  - $LSL),( $medianBus1Top1 -  $perc1Bus1Top1));
         $arrValForCpnB1T1 = array( $CpnUB1T1,  $CpnLB1T1);         
-        $CpnB1T1 = min($arrValForCpnB1T1);
+        $CpnB1T1 =  min(array_filter(  $arrValForCpnB1T1));  
        
 
         return view('matrix.btobpulltest') 
@@ -82,7 +92,7 @@ class OfflineBtoBPullTestController extends Controller
       ->with('UCL',$UCL)
       ->with('LCL',$LCL)
       ->with('CL',$CL)
-      ->with('N','30')
+      ->with('N',$this->getMedianCount())
       ->with('target',$target)
       ->with('zBus1Top1',$zBus1Top1)
       ->with('CpUB1T1',$CpUBus1Top1)
@@ -92,9 +102,6 @@ class OfflineBtoBPullTestController extends Controller
       ->with('CpnUB1T1',$CpnUB1T1)     
       ->with('CpnLB1T1',$CpnLB1T1);
      
-
-         
-        
     }
     
     /**
@@ -113,10 +120,10 @@ class OfflineBtoBPullTestController extends Controller
      * @param  \Illuminate\Http\Request  $request   
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+
+    public function store_Sum(Request $request)
     {
-        //Validate
-           
+        
         if($request->input('prodBuilt') != null && $request->input('fromDate') == null && $request->input('toDate') == null ){
             $prod = $request->input('prodBuilt') ;
             if (strpos($prod, '5BB') ) {
@@ -141,18 +148,20 @@ class OfflineBtoBPullTestController extends Controller
             $USL = $this->getSpecsULVal($prod,$node1,$bbno);
             $LSL = $this->getSpecsLLVal($prod,$node1,$bbno);
             $target = $this->getSpecsLimitTarget($prod,$node1,$bbno);
-            $UCL=37.4;
-            $LCL=7.09;
+            //$UCL=37.4;
+            //$LCL=7.09;
+            $UCL = $this->getSpecsUCLVal($prod,$node1,$bbno);
+            $LCL = $this->getSpecsLCLVal($prod,$node1,$bbno);
             $CL = (($UCL-$LCL)/2)+$LCL;
             $zBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$CL),$stdOfStdBus1Top1));
             $CpLBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$LCL),(3*$stdOfStdBus1Top1) ));
             $CpUBus1Top1 = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus1Top1),(3*$stdOfStdBus1Top1) ));      
             $arrValForCpkB1T1 = array( $CpUBus1Top1,$CpLBus1Top1);  
-            $CpkB1T1 = min($arrValForCpkB1T1);
+            $CpkB1T1 = min(array_filter($arrValForCpkB1T1));  
             $CpnUB1T1 =$this->divideByZeroExempt(($USL - $medianBus1Top1 ),( $perc2Bus1Top1 - $medianBus1Top1));
             $CpnLB1T1 = $this->divideByZeroExempt(($medianBus1Top1  - $LSL),( $medianBus1Top1 -  $perc1Bus1Top1));
             $arrValForCpnB1T1 = array( $CpnUB1T1,  $CpnLB1T1);         
-            $CpnB1T1 = min($arrValForCpnB1T1);
+            $CpnB1T1 =  min(array_filter($arrValForCpnB1T1));  
            
     
             return view('matrix.btobpulltest') 
@@ -170,7 +179,7 @@ class OfflineBtoBPullTestController extends Controller
           ->with('UCL',$UCL)
           ->with('LCL',$LCL)
           ->with('CL',$CL)
-          ->with('N','30')
+          ->with('N',$this-> getMedianCount())
           ->with('target',$target)
           ->with('zBus1Top1',$zBus1Top1)
           ->with('CpUB1T1',$CpUBus1Top1)
@@ -182,6 +191,9 @@ class OfflineBtoBPullTestController extends Controller
       
          
         }elseif($request->input('prodBuilt') != null && $request->input('fromDate') != null && $request->input('toDate') != null ){
+
+                   
+   
             $prod = $request->input('prodBuilt') ;
             $from = $request->input('fromDate');
             $to = $request->input('toDate');
@@ -207,19 +219,20 @@ class OfflineBtoBPullTestController extends Controller
             $USL = $this->getSpecsULVal($prod,$node1,$bbno);
             $LSL = $this->getSpecsLLVal($prod,$node1,$bbno);
             $target = $this->getSpecsLimitTarget($prod,$node1,$bbno);
-            $UCL=37.4;
-            $LCL=7.09;
-            $CL = (($UCL-$LCL)/2)+$LCL;
+           // $UCL=37.4;
+           // $LCL=7.09;
+           $UCL = $this->getSpecsUCLVal($prod,$node1,$bbno);
+           $LCL = $this->getSpecsLCLVal($prod,$node1,$bbno);
+           $CL = (($UCL-$LCL)/2)+$LCL;
             $zBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$CL),$stdOfStdBus1Top1));
             $CpLBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$LCL),(3*$stdOfStdBus1Top1) ));
             $CpUBus1Top1 = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus1Top1),(3*$stdOfStdBus1Top1) ));      
             $arrValForCpkB1T1 = array( $CpUBus1Top1,$CpLBus1Top1);  
-            $CpkB1T1 = min($arrValForCpkB1T1);
+            $CpkB1T1 =  min(array_filter( $arrValForCpkB1T1));  
             $CpnUB1T1 =$this->divideByZeroExempt(($USL - $medianBus1Top1 ),( $perc2Bus1Top1 - $medianBus1Top1));
             $CpnLB1T1 = $this->divideByZeroExempt(($medianBus1Top1  - $LSL),( $medianBus1Top1 -  $perc1Bus1Top1));
             $arrValForCpnB1T1 = array( $CpnUB1T1,  $CpnLB1T1);         
-            $CpnB1T1 = min($arrValForCpnB1T1);
-           
+            $CpnB1T1 = min(array_filter(  $arrValForCpnB1T1));  
     
             return view('matrix.btobpulltest') 
           ->with('aveIndB1T1', $aveIndBus1Top1)
@@ -245,7 +258,24 @@ class OfflineBtoBPullTestController extends Controller
           ->with('CpnB1T1',$CpnB1T1)
           ->with('CpnUB1T1',$CpnUB1T1)     
           ->with('CpnLB1T1',$CpnLB1T1);
-         }else{
+         }
+
+    }
+   /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request   
+     * @return \Illuminate\Http\Response
+     */
+
+    public function store(Request $request)
+    {
+        //Validate
+        $prod = $request->input('prodBuilt');
+        $node1 = "BB-to-BB Pull Strength";
+        $target = DB::table(DB::select("SELECT * FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node1."'"));
+        $LLval =  number_format($target->from[0]->LCL,2);
+        $ULval = number_format($target->from[0]->UCL,2);
             $this->validate($request, [  
                 'employeeid' => 'required|numeric',       
                 'process' => 'required',
@@ -260,24 +290,91 @@ class OfflineBtoBPullTestController extends Controller
                 'prodBuilt'=>'required'
             ]);
 
+            $empid = $request->input('employeeid');
+                        $process = $request->input('process');
+                        $shift = $request->input('shift');
+                        $node = $request->input('node');
+                        $sup = $request->input('supplier');
+                        $site1 = $request->input('site1');
+                        $site2 = $request->input('site2');
+                        $site3 = $request->input('site3');
+                        $remarks = $request->input('remarks');
+                        $ave = $request->input('average');
+                        $fixdate = $request->input('fixture_date');
+                        $prodbuilt = $request->input('prodBuilt');
         //Create Post;;;;;;;;;;;;;;;;;;;;;;;;;;;;;pl.pki
         //$post = $request->post;
-        $post = new OfflineBtoBPullTestPost;
-        $post->employeeid = $request->input('employeeid');
-        $post->location = $request->input('process');
-        $post->shift = $request->input('shift');
-        $post->node = $request->input('node');
-        $post->supplier = $request->input('supplier');
-        $post->site1 = $request->input('site1');
-        $post->site2 = $request->input('site2');
-        $post->site3 = $request->input('site3');
-        $post->remarks = $request->input('remarks');
-        $post->average = $request->input('average');
-        $post->date = $request->input('fixture_date');
-        $post->prodBuilt = $request->input('prodBuilt');
-        $post->save ();
-        return redirect('/btobpulltest')->with('success', 'Record Successfully added');
-        }
+                if($ULval != 0 && $ULval > $LLval){
+                        
+                        
+                        //$qualRes = 'pass';
+                       // $site = $request->input('site1');
+                        if($this->checkLLval($site1,$LLval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt)){
+                            return redirect('/offlinebtob/create')->with('error', 'Record added but site1 failed. For Requal.');
+                        }elseif($this->checkULval($site1,$ULval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt)){
+                            return redirect('/offlinebtob/create')->with('error', 'Record added but site1 failed. For Requal.');
+                        }elseif($this->checkLLval($site2,$LLval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt)){
+                            return redirect('/offlinebtob/create')->with('error', 'Record added but site2 failed. For Requal.');
+                        }elseif($this->checkULval($site2,$ULval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt)){
+                            return redirect('/offlinebtob/create')->with('error', 'Record added but site2 failed. For Requal.');
+                        }elseif($this->checkLLval($site3,$LLval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt)){
+                            return redirect('/offlinebtob/create')->with('error', 'Record added but site3 failed. For Requal.');
+                        }elseif($this->checkULval($site3,$ULval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt)){
+                            return redirect('/offlinebtob/create')->with('error', 'Record added but site3 failed. For Requal.');
+                        }else{
+                            $post = new OfflineBtoBPullTestPost;
+                            $post->employeeid = $request->input('employeeid');
+                            $post->location = $request->input('process');
+                            $post->shift = $request->input('shift');
+                            $post->node = $request->input('node');
+                            $post->supplier = $request->input('supplier');
+                            $post->site1 = $request->input('site1');
+                            $post->site2 = $request->input('site2');
+                            $post->site3 = $request->input('site3');
+                            $post->remarks = $request->input('remarks');
+                            $post->average = $request->input('average');
+                            $post->date = $request->input('fixture_date');
+                            $post->prodBuilt = $request->input('prodBuilt');
+                            $post->qualRes = 'pass';
+                            $post->save ();
+                            return redirect('/btobpulltest')->with('success', 'Record Successfully added');
+
+                        }
+
+                      
+               
+                }elseif($ULval == 0){
+                    if($this->checkLLval($site1,$LLval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt)){
+                        return redirect('/offlinebtob/create')->with('error', 'Record added but site1 failed. For Requal.');
+                    }elseif($this->checkLLval($site2,$LLval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt)){
+                        return redirect('/offlinebtob/create')->with('error', 'Record added but site2 failed. For Requal.');
+                    }elseif($this->checkLLval($site3,$LLval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt)){
+                        return redirect('/offlinebtob/create')->with('error', 'Record added but site3 failed. For Requal.');
+                    }else{
+                        $post = new OfflineBtoBPullTestPost;
+                        $post->employeeid = $request->input('employeeid');
+                        $post->location = $request->input('process');
+                        $post->shift = $request->input('shift');
+                        $post->node = $request->input('node');
+                        $post->supplier = $request->input('supplier');
+                        $post->site1 = $request->input('site1');
+                        $post->site2 = $request->input('site2');
+                        $post->site3 = $request->input('site3');
+                        $post->remarks = $request->input('remarks');
+                        $post->average = $request->input('average');
+                        $post->date = $request->input('fixture_date');
+                        $post->prodBuilt = $request->input('prodBuilt');
+                        $post->qualRes = 'pass';
+                        $post->save ();
+                        return redirect('/btobpulltest')->with('success', 'Record Successfully added');
+                    }
+
+                }
+      
+       
+        
+
+    
        
     }
 
@@ -346,16 +443,19 @@ class OfflineBtoBPullTestController extends Controller
         return redirect('/offlinebtobpulltest')->with('success', 'Data Deleted');
     }
 
-
+  
     
     public function getAveInd($location,$process,$product)
     {
         if($product!="All"){
-            $weightAve = DB::table(DB::select("SELECT AVG(site) as aveWt FROM (SELECT date,site1 as site FROM btobpulltest UNION SELECT date,site2 as site FROM btobpulltest UNION SELECT date,site3 as site FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."') as tbl_ave"));
-            $wtAve = number_format($weightAve->from[0]->aveWt,6);
-            return $wtAve;
+            // $cnt = OfflineBtoBPullTestPost::where("prodBuilt",$product)->limit(30)->get()->count() / 10 * 3;
+            $cnt = 3;   
+            $btob = OfflineBtoBPullTestPost::selectRaw("AVG(site1 + site2 + site3) / ? AS AVERAGE", [$cnt])->where("prodBuilt","=",$product)->orderBy("date","desc")->limit(30)->first();
+            // $weightAve = DB::table(DB::select("SELECT AVG(site) as aveWt FROM (SELECT location,node,prodBuilt,date,site1 as site FROM btobpulltest UNION SELECT  location,node,prodBuilt,date,site2 as site FROM btobpulltest UNION SELECT  location,node,prodBuilt,date,site3 as site FROM btobpulltest) as tbl_ave  WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."'"));
+            // $wtAve = number_format($weightAve->from[0]->aveWt,6);
+            return number_format($btob->AVERAGE,6);
         }else{
-            $weightAve = DB::table(DB::select("SELECT AVG(site) as aveWt FROM (SELECT date,site1 as site FROM btobpulltest UNION SELECT date,site2 as site FROM btobpulltest UNION SELECT date,site3 as site FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."') as tbl_ave"));
+            $weightAve = DB::table(DB::select("SELECT AVG(site) as aveWt FROM (SELECT  location,node,prodBuilt,date,site1 as site FROM btobpulltest UNION SELECT  location,node,prodBuilt,date,site2 as site FROM btobpulltest UNION SELECT  location,node,prodBuilt,date,site3 as site FROM btobpulltest ) as tbl_ave WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."'"));
             $wtAve = number_format($weightAve->from[0]->aveWt,6);
             return $wtAve;
         }
@@ -365,11 +465,11 @@ class OfflineBtoBPullTestController extends Controller
     public function wDategetAveInd($location,$process,$product,$from,$to)
     {
         if($product!="All"){
-            $weightAve = DB::table(DB::select("SELECT AVG(site) as aveWt FROM (SELECT date,site1 as site FROM btobpulltest UNION SELECT date,site2 as site FROM btobpulltest UNION SELECT date,site3 as site FROM btobpulltest WHERE location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."' AND date BETWEEN '".$from."' AND '".$to."') as tbl_ave"));
+            $weightAve = DB::table(DB::select("SELECT AVG(site) as aveWt FROM (SELECT  location,node,prodBuilt,date,site1 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site2 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site3 as site FROM btobpulltest ) as tbl_ave WHERE location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."' AND date BETWEEN '".$from."' AND '".$to."'"));
             $wtAve = number_format($weightAve->from[0]->aveWt,6);
             return $wtAve;
         }else{
-            $weightAve = DB::table(DB::select("SELECT AVG(site) as aveWt FROM (SELECT date,site1 as site FROM btobpulltest UNION SELECT date,site2 as site FROM btobpulltest UNION SELECT date,site3 as site FROM btobpulltest WHERE location='".$location."' AND node ='".$process."' AND date BETWEEN '".$from."' AND '".$to."') as tbl_ave"));
+            $weightAve = DB::table(DB::select("SELECT AVG(site) as aveWt FROM (SELECT location,node,prodBuilt,date,site1 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site2 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site3 as site FROM btobpulltest ) as tbl_ave  WHERE date IN (SELECT * FROM view_btobpulltest) AND  location='".$location."' AND node ='".$process."' AND date BETWEEN '".$from."' AND '".$to."'"));
             $wtAve = number_format($weightAve->from[0]->aveWt,6);
             return $wtAve;
         }
@@ -379,11 +479,15 @@ class OfflineBtoBPullTestController extends Controller
     public function getStdInd($location,$process,$product)
     {
         if($product!="All"){
-        $weightAve = DB::table(DB::select("SELECT  STDDEV_SAMP(site) as StdWt FROM (SELECT date,site1 as site FROM btobpulltest UNION SELECT date,site2 as site FROM btobpulltest UNION SELECT date,site3 as site FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."') as tbl_ave"));
-        $wtAve = number_format($weightAve->from[0]->StdWt,6);
-        return $wtAve;
-        }else{
-            $weightAve = DB::table(DB::select("SELECT STDDEV_SAMP(site) as StdWt FROM (SELECT date,site1 as site FROM btobpulltest UNION SELECT date,site2 as site FROM btobpulltest UNION SELECT date,site3 as site FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."') as tbl_ave"));
+       $weightAve = DB::table(DB::select("SELECT  STDDEV_SAMP(site) as StdWt FROM (SELECT location,node,prodBuilt,date,site1 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site2 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site3 as site FROM btobpulltest ) as tbl_ave WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."'"));
+       $wtAve = number_format($weightAve->from[0]->StdWt,6);
+       return $wtAve;
+
+      //  $cnt = 3;   
+       //$btob = OfflineBtoBPullTestPost::selectRaw("STDDEV_SAMP(site1 + site2 + site3) / ? AS STDev", [$cnt])->where("prodBuilt","=",$product)->orderBy("date","desc")->limit(30)->first();
+       // return number_format($btob->STDev,6);
+    }else{
+            $weightAve = DB::table(DB::select("SELECT STDDEV_SAMP(site) as StdWt FROM (SELECT location,node,prodBuilt,date,site1 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site2 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site3 as site FROM btobpulltest ) as tbl_ave WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."'"));
             $wtAve = number_format($weightAve->from[0]->StdWt,6);
             return $wtAve;
         }
@@ -391,11 +495,11 @@ class OfflineBtoBPullTestController extends Controller
     public function wDategetStdInd($location,$process,$product,$from,$to)
     {
         if($product!="All"){
-        $weightAve = DB::table(DB::select("SELECT  STDDEV_SAMP(site) as StdWt FROM (SELECT date,site1 as site FROM btobpulltest UNION SELECT date,site2 as site FROM btobpulltest UNION SELECT date,site3 as site FROM btobpulltest WHERE location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."' AND date BETWEEN '".$from."' AND '".$to."')  as tbl_ave"));
+        $weightAve = DB::table(DB::select("SELECT  STDDEV_SAMP(site) as StdWt FROM (SELECT location,node,prodBuilt,date,site1 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site2 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site3 as site FROM btobpulltest )  as tbl_ave WHERE location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."' AND date BETWEEN '".$from."' AND '".$to."'"));
         $wtAve = number_format($weightAve->from[0]->StdWt,6);
         return $wtAve;
         }else{
-            $weightAve = DB::table(DB::select("SELECT  STDDEV_SAMP(site) as StdWt FROM (SELECT date,site1 as site FROM btobpulltest UNION SELECT date,site2 as site FROM btobpulltest UNION SELECT date,site3 as site FROM btobpulltest WHERE location='".$location."' AND node ='".$process."' AND date BETWEEN '".$from."' AND '".$to."')  as tbl_ave"));
+            $weightAve = DB::table(DB::select("SELECT  STDDEV_SAMP(site) as StdWt FROM (SELECT location,node,prodBuilt,date,site1 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site2 as site FROM btobpulltest UNION SELECT location,node,prodBuilt,date,site3 as site FROM btobpulltest )  as tbl_ave WHERE location='".$location."' AND node ='".$process."' AND date BETWEEN '".$from."' AND '".$to."'"));
             $wtAve = number_format($weightAve->from[0]->StdWt,6);
             return $wtAve; 
         }
@@ -404,9 +508,12 @@ class OfflineBtoBPullTestController extends Controller
     public function getAveOfAve($location,$process,$product)
     {
         if($product!="All"){
-        $weightAve = DB::table(DB::select("SELECT AVG(aveWt) as aveOfAve FROM(SELECT date,AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."') as tbl_ave GROUP BY date) as tbl_aveOfave"));
-        $wtAve = number_format($weightAve->from[0]->aveOfAve,6);
-        return $wtAve;
+      //  $weightAve = DB::table(DB::select("SELECT AVG(aveWt) as aveOfAve FROM(SELECT date,AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."') as tbl_ave GROUP BY date) as tbl_aveOfave"));
+        //$wtAve = number_format($weightAve->from[0]->aveOfAve,6);
+        //return $wtAve;
+        
+        $btob = OfflineBtoBPullTestPost::selectRaw("AVG(average) AS AVERAGE")->where("prodBuilt","=",$product)->orderBy("date","desc")->limit(30)->first();
+        return number_format($btob->AVERAGE,6);
         }else{
             $weightAve = DB::table(DB::select("SELECT AVG(aveWt) as aveOfAve FROM(SELECT date,AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' ) as tbl_ave GROUP BY date) as tbl_aveOfave"));
         $wtAve = number_format($weightAve->from[0]->aveOfAve,6);
@@ -452,34 +559,74 @@ class OfflineBtoBPullTestController extends Controller
         }
        
     }
+    public function getMedianCount()
+    {
+        $medianCount = DB::table(DB::select("SELECT COUNT(aveWt) as aveCount FROM(SELECT AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) ) as tbl_ave GROUP BY date ORDER BY aveWt ASC) as tbl_medCnt"));
+        $medianCountVal = $medianCount->from[0]->aveCount;
+        return  $medianCountVal;
+    }
+    
     public function getMedian($location,$process,$product)
     {
-      
-        $median = DB::table(DB::select("SELECT AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."') as tbl_ave GROUP BY date ORDER BY aveWt ASC"));
-        $medianCount = DB::table(DB::select("SELECT COUNT(aveWt) as aveCount FROM(SELECT AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."') as tbl_ave GROUP BY date ORDER BY aveWt ASC) as tbl_medCnt"));
-       
-        $medianCountVal = $medianCount->from[0]->aveCount;
 
-        if($medianCountVal == 0){
-            return 0;
-        }else{
-            $medianMod = $medianCountVal%2;
-            if($medianMod == 0){
-            $midval1 = ($medianCountVal/2);
-            $midval2 = $midval1 - 1;
-            $medianVal1 = number_format($median->from[$midval1]->aveWt,6);  
-            $medianVal2 = number_format($median->from[$midval2]->aveWt,6);
-            $medianAve =number_format((($medianVal1 + $medianVal2)/2),6);
-            return $medianAve;
+        if($product!="All"){
+            $median = DB::table(DB::select("SELECT AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."') as tbl_ave GROUP BY date ORDER BY aveWt ASC"));
+            $medianCount = DB::table(DB::select("SELECT COUNT(aveWt) as aveCount FROM(SELECT AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' AND prodBuilt = '".$product."') as tbl_ave GROUP BY date ORDER BY aveWt ASC) as tbl_medCnt"));
+           
+            $medianCountVal = $medianCount->from[0]->aveCount;
+    
+            if($medianCountVal == 0){
+                return 0;
             }else{
-            $midval1 = number_format(($medianCountVal/2),2);
-            $midval2 = round($midval1,1);
-            $medianVal = number_format($median->from[$midval2]->aveWt,6);
-            $medianAve = number_format($medianVal,6);
-            return $medianAve;
+                $medianMod = $medianCountVal%2;
+                if($medianMod == 0){
+                $midval1 = ($medianCountVal/2);
+                $midval2 = $midval1 - 1;
+                $medianVal1 = number_format($median->from[$midval1]->aveWt,6);  
+                $medianVal2 = number_format($median->from[$midval2]->aveWt,6);
+                $medianAve =number_format((($medianVal1 + $medianVal2)/2),6);
+                return $medianAve;
+                }else{
+                $midval1 = number_format(($medianCountVal/2),2);
+                $midval2 = round($midval1,1);
+                $medianVal = number_format($median->from[$midval2]->aveWt,6);
+                $medianAve = number_format($medianVal,6);
+                return $medianAve;
+            }
+           
+            }
         }
-       
+        else
+        {
+            $median = DB::table(DB::select("SELECT AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' ) as tbl_ave GROUP BY date ORDER BY aveWt ASC"));
+            $medianCount = DB::table(DB::select("SELECT COUNT(aveWt) as aveCount FROM(SELECT AVG(average) as aveWt FROM (SELECT * FROM btobpulltest WHERE date IN (SELECT * FROM view_btobpulltest) AND location='".$location."' AND node ='".$process."' ) as tbl_ave GROUP BY date ORDER BY aveWt ASC) as tbl_medCnt"));
+           
+            $medianCountVal = $medianCount->from[0]->aveCount;
+    
+            if($medianCountVal == 0){
+                return 0;
+            }else{
+                $medianMod = $medianCountVal%2;
+                if($medianMod == 0){
+                $midval1 = ($medianCountVal/2);
+                $midval2 = $midval1 - 1;
+                $medianVal1 = number_format($median->from[$midval1]->aveWt,6);  
+                $medianVal2 = number_format($median->from[$midval2]->aveWt,6);
+                $medianAve =number_format((($medianVal1 + $medianVal2)/2),6);
+                return $medianAve;
+                }else{
+                $midval1 = number_format(($medianCountVal/2),2);
+                $midval2 = round($midval1,1);
+                $medianVal = number_format($median->from[$midval2]->aveWt,6);
+                $medianAve = number_format($medianVal,6);
+                return $medianAve;
+            }
+           
+            }
+
         }
+      
+    
 
 
     }
@@ -548,7 +695,7 @@ class OfflineBtoBPullTestController extends Controller
         public function getDateRange($from,$to)
         {
          
-            $median = DB::table(DB::select("SELECT COUNT(date) as aveCount FROM btobpulltest WHERE date BETWEEN '".$from."' AND '".$to."'"));
+            $median = DB::table(DB::select("SELECT COUNT(DISTINCT(date)) as aveCount FROM btobpulltest WHERE date BETWEEN '".$from."' AND '".$to."'"));
            // $medianCount = DB::table(DB::select("SELECT COUNT(date) as aveCount FROM view_btobpulltest "));
             
             $medianCountVal = $median->from[0]->aveCount;
@@ -650,8 +797,14 @@ class OfflineBtoBPullTestController extends Controller
         }else if($val2  == 0 && $val21 == 0 ){
             return strval($val1). "/".strval($val2);
         }else {
-          return number_format(($val1)/($val2),4);
+          //return number_format(($val1)/($val2),4);
          // return 0;
+         $quo = number_format(($val1)/($val2),4);
+         if($quo >0){
+             return $quo;
+         }else{
+             return 0;
+         }
         }
      }
 
@@ -690,6 +843,15 @@ class OfflineBtoBPullTestController extends Controller
        
          }
 
+         public function minZero($val){
+             if($val==0){
+                 return ' ';
+             }else{
+                 return $val;
+             }
+
+         }
+
          public function getSpecsULVal($prod,$node,$bbnum)
          {
             $medianCount = DB::table(DB::select("SELECT * FROM parameters INNER JOIN producttype ON parameters.BOMType = producttype.bomType WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'  AND parameters.BBno = '".$bbnum."'"));
@@ -704,6 +866,72 @@ class OfflineBtoBPullTestController extends Controller
              }
            
              }
+             public function getSpecsUCLVal($prod,$node,$bbnum)
+             {
+               
+                $target = DB::table(DB::select("SELECT * FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'"));
+              //  $LLval =  number_format($target->from[0]->LCL,2);
+                $ULval = number_format($target->from[0]->UCL,2);
+                return $ULval;
+               
+            }
+            public function getSpecsLCLVal($prod,$node,$bbnum)
+            {
+               
+               $target = DB::table(DB::select("SELECT * FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'"));
+               $LLval =  number_format($target->from[0]->LCL,2);
+              // $ULval = number_format($target->from[0]->UCL,2);
+               
+              return $LLval;
+           }
+           public function checkULval($site,$ULval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt){
+            if($site  > $ULval )
+            {
+                $post = new OfflineBtoBPullTestPost;
+                $post->employeeid = $empid;
+                $post->location = $process;
+                $post->shift = $shift;
+                $post->node = $node;
+                $post->supplier = $sup;
+                $post->site1 = $site1;
+                $post->site2 = $site2;
+                $post->site3 = $site3;
+                $post->remarks = $remarks;
+                $post->average = $ave;
+                $post->date = $fixdate;
+                $post->prodBuilt = $prodbuilt;
+                $post->qualRes = 'fail';
+                $post->save ();
+                return true;
+               // return redirect('/offlinebtob/create')->with('error', 'Record added but '.$site.' failed. For Requal.');
+            }else{
+                return false;
+            }
+            }
 
+           public function checkLLval($site,$LLval,$empid,$process,$shift,$node,$sup,$site1,$site2,$site3,$remarks,$ave,$fixdate,$prodbuilt){
+            if($LLval > $site )
+            {
+                $post = new OfflineBtoBPullTestPost;
+                $post->employeeid = $empid;
+                $post->location = $process;
+                $post->shift = $shift;
+                $post->node = $node;
+                $post->supplier = $sup;
+                $post->site1 = $site1;
+                $post->site2 = $site2;
+                $post->site3 = $site3;
+                $post->remarks = $remarks;
+                $post->average = $ave;
+                $post->date = $fixdate;
+                $post->prodBuilt = $prodbuilt;
+                $post->qualRes = 'fail';
+                $post->save ();
+                return true;
+               // return redirect('/offlinebtob/create')->with('error', 'Record added but '.$site.' failed. For Requal.');
+            }else{
+                return false;
+            }
+            }
 
 }

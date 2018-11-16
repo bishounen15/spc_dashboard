@@ -1,6 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
+<?php
+$empid='';
+$process='';
+$shift = '';
+$date = '';
+$supplier = '';
+$remarks = '';
+$prodBuilt = '';
+$getLastRec = DB::table(DB::select("SELECT * FROM btobpulltest ORDER BY id DESC"));
+$lastRec = $getLastRec->from[0]->qualRes;
+if($lastRec == 'fail'){
+    $empid=$getLastRec->from[0]->employeeid;
+$process=$getLastRec->from[0]->location;
+$shift = $getLastRec->from[0]->shift;
+$date = $getLastRec->from[0]->date;
+$supplier =$getLastRec->from[0]->supplier;
+$remarks =$getLastRec->from[0]->remarks;
+$prodBuilt = $getLastRec->from[0]->prodBuilt;
+}else{
+    $empid='';
+$process='';
+$shift = '';
+$date = '';
+$supplier = '';
+$remarks = '';
+$prodBuilt = '';
+}
+
+?>
     {!! Form::open(['action' => 'OfflineBtoBPullTestController@store', 'method' => 'POST']) !!}
     <div class="container" style="width:120%">
             <div class="card">
@@ -9,25 +38,25 @@
                     <div class="jumbotron text-center">
                             <div class="row">
                                     <div class="col-md-1"> {{Form::label('employeeid', 'Employee ID:')}} </div>  
-                                    <div class="col-md-5"> {{ Form::text('employeeid', '',['class'=>'form-control'] )}} <small class="form-text text-danger">{{ $errors->first('employeeid') }}</small> </div>
+                                    <div class="col-md-5"> {{ Form::text('employeeid', $empid,['class'=>'form-control'] )}} <small class="form-text text-danger">{{ $errors->first('employeeid') }}</small> </div>
                                     <div class="col-md-1"> {{Form::label('process', 'Process:')}}</div>  
                                     <div class="col-md-5"> {{ Form::text('process', 'Busbar Prep',['class'=>'form-control'] )}} </div>
                                 </div><br>
                                 <div class="row">
                                     <div class="col-md-1"> {{Form::label('shift', 'Shift:')}} </div>  
-                                    <div class="col-md-5"> {{Form::select('shift', array('A' => 'Shift A', 'B' => 'Shift B', 'C' => 'Shift C'),'',['class' => 'form-control','placeholder' => 'Select Shift'])}} <small class="form-text text-danger">{{ $errors->first('shift') }}</small> </div>
+                                    <div class="col-md-5"> {{Form::select('shift', array('A' => 'Shift A', 'B' => 'Shift B', 'C' => 'Shift C'),$shift,['class' => 'form-control','placeholder' => 'Select Shift'])}} <small class="form-text text-danger">{{ $errors->first('shift') }}</small> </div>
                                     <div class="col-md-1"> {{Form::label('node', 'Node:')}} </div>  
                                     <div class="col-md-5"> {{ Form::text('node', 'Busbar to Busbar',['class'=>'form-control'] )}} <small class="form-text text-danger">{{ $errors->first('node') }}</small> </div>
-                                </div></br>
+                                </div><br>
                                 <div class="row">
                                         <div class="col-md-1"> {{Form::label('Date', 'Date:')}} </div>    
                                         <div class="col-md-5"> {{Form::date('fixture_date', \Carbon\Carbon::now() ,['class'=>'form-control'] )}} </div>
                                     <div class="col-md-1"> {{Form::label('supplier', 'Supplier:')}} </div>
-                                    <div class="col-md-5"> {{Form::select('supplier', array('Gigastorage' => 'Gigastorage', 'YourBest' => 'YourBest'),'',['class' => 'form-control process','placeholder' => 'Select Supplier'])}} <small class="form-text text-danger">{{ $errors->first('supplier') }}</small> </div>      
-                                </div></br>
+                                    <div class="col-md-5"> {{Form::select('supplier', array('Gigastorage' => 'Gigastorage', 'YourBest' => 'YourBest'), $supplier,['class' => 'form-control process','placeholder' => 'Select Supplier'])}} <small class="form-text text-danger">{{ $errors->first('supplier') }}</small> </div>      
+                                </div><br>
                                 <div class="row">    
                                         <div class="col-md-1"> {{Form::label('remarks', 'Remarks:')}} </div>
-                                        <div class="col-md-5"> {{Form::text('remarks','', ['class' => 'form-control','placeholder' => 'Remarks'])}} <small class="form-text text-danger">{{ $errors->first('remarks') }}</small> </div>
+                                        <div class="col-md-5"> {{Form::text('remarks',$remarks, ['class' => 'form-control','placeholder' => 'Remarks'])}} <small class="form-text text-danger">{{ $errors->first('remarks') }}</small> </div>
                     
                                     <div class="col-md-1"> {{Form::label('ProdBuilt', 'Product Built:')}}</div>  
                                     <div class="col-md-5">
@@ -53,7 +82,7 @@
                                        </select> 
                                        <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small>  
                                     </div>
-                                </div></br>
+                                </div><br>
                             </div> 
 
                 <div class="card">

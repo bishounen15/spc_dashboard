@@ -94,7 +94,7 @@ Route::get('/link','PagesController@link')->name('portal_link');
 // Route::group(['middleware'=>['auth','revalidate']], function() {
 
 Route::get('/Apps','PagesController@apps')->name('apps');
-
+Route::post('offlinebtob_sum','OfflineBtoBPullTestController@store_Sum')->name('offlinebtob.store_Sum');
 Route::get('/Summary', 'PagesController@Summary');
 Route::get('/Setup', 'PagesController@Setup');
 Route::get('/pulltest', 'PagesController@pulltest');
@@ -141,3 +141,6 @@ Route::resource('ELTest','ELTestController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+

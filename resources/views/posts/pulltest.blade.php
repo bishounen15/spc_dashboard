@@ -318,7 +318,21 @@
                                 <small class="form-text text-danger">{{ $errors->first('PTEBA') }}</small>
                                 
                             </div>
-                        </div><br>
+                        </div>
+                        <br/>
+                        <div class="row">
+                                <div class="col-md-3">
+                                      <center>  {{Form::label('Remarks', 'Remarks:')}}</center>
+                                </div>
+                                <div class="col-md-8">
+                                        {{Form::text('remarks', '0', ['class' => 'form-control', 'placeholder'=>'remarks','id'=>'remarks'])}}
+                                        <small class="form-text text-danger">{{ $errors->first('PTEBA') }}</small>
+                                    </div>
+                                    <div class="col-md-1">
+                                        
+                                        </div>
+                            </div>
+                            <br>
                         {{Form::submit('Submit', ['class' => 'btn btn-primary'])}} &emsp; <a href="/pulltestdata" class="btn btn-danger">Cancel</a>  
                         {!! Form::close() !!}
                     </div>

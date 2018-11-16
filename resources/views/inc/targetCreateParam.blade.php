@@ -64,7 +64,7 @@
                                             <div class="col-md-4"> {{Form::label($cols, $cols)}} </div>  
                                             <div class="col-md-4">
                                                     <select id="sealantType"  name="sealantType" class="form-control">
-                                                        <option selected value="None">None</option> 
+                                                        <option selected value="NA">NA</option> 
                                                                     <option selected value="Sausage">Sausage</option> 
                                                                     <option selected value="Pail">Pail</option> 
                                                         </select>   
@@ -80,7 +80,7 @@
                                                 <div class="col-md-4"> {{Form::label($cols, $cols)}} </div>  
                                                 <div class="col-md-4">
                                                         <select id="jboxType"  name="jboxType" class="form-control">
-                                                                         <option selected value="None">None</option> 
+                                                                         <option selected value="NA">NA</option> 
                                                                          
                                                                          <option selected value="Sunter">Sunter</option> 
                                                                         <option selected value="PVBar">PVBar</option> 
@@ -121,7 +121,7 @@
                                                                              <option selected value="4bb">4bb</option> 
                                                                              
                                                                              <option selected value="5bb">5bb</option> 
-                                                                             <option selected value="None">None</option> 
+                                                                             <option selected value="NA">NA</option> 
                                                                             
                                                                    
                                                                 </select>   
@@ -283,7 +283,7 @@
                                                                                <div class="col-md-12">
                                                                                        <select id="sealantType"  name="sealantType" class="form-control" >
                                                                                                <option selected value="{{$data->sealantType}}">{{$data->sealantType}}</option>
-                                                                                               <option value="None">None</option> 
+                                                                                               <option value="NA">NA</option> 
                                                                                                <option value="Sausage">Sausage</option> 
                                                                                                <option value="Pail">Pail</option> 
                                                                                        </select>   
@@ -294,7 +294,7 @@
                                                                                <div class="col-md-12">
                                                                                        <select id="jboxType"  name="jboxType" class="form-control" >
                                                                                                <option selected value="{{$data->JBOXType}}">{{$data->JBOXType}}</option>
-                                                                                               <option  value="None">None</option> 
+                                                                                               <option  value="NA">NA</option> 
                                                                                                <option  value="Sunter">Sunter</option> 
                                                                                                <option  value="PVBar">PVBar</option> 
                                                                                        </select>   
@@ -305,12 +305,23 @@
                                                                                                               <div class="col-md-12">
                                                                                                                       <select id="bbno"  name="bbno" class="form-control" >
                                                                                                                               <option selected value="{{$data->BBno}}">{{$data->BBno}}</option>
-                                                                                                                              <option value="None">None</option> 
+                                                                                                                              <option value="NA">NA</option> 
                                                                                                                               <option value="5bb">5bb</option> 
                                                                                                                               <option value="4bb">4bb</option> 
                                                                                                                       </select>   
                                                                                                                </div>  
                                                                                                               </div>  
+                                                 @elseif ( $fieldCol == "frameType" )
+                                                <div class="row">                             
+                                                                               <div class="col-md-12">
+                                                                                       <select id="frameType"  name="frameType" class="form-control" >
+                                                                                               <option selected value="{{$data->frameType}}">{{$data->frameType}}</option>
+                                                                                               <option  value="CY">CY</option> 
+                                                                                               <option  value="Gintech">Gintech</option> 
+                                                                                               
+                                                                                       </select>   
+                                                                                </div>  
+                                                                               </div>  
                                                 @else
                                                 <div class="row">                             
                                                 <div class="col-md-12"> {{ Form::text('txt[]',$data->$fieldCol,['class'=>'form-control'] )}} </div>  

@@ -55,7 +55,16 @@
                                </select> 
                                <small class="form-text text-danger">{{ $errors->first('prodBuilt') }}</small>  
                                 </div>
-                            </div></br>
+                            </div>
+                            <div class="row">
+                                    <div class="col-md-1"> {{Form::label('Busbar', 'Busbar:')}} </div>  
+                                    <div class="col-md-5"> {{Form::select('bb', array('5bb' => '5bb', '4bb' => '4bb'), '4bb',['class'=>'form-control bb','placeholder'=>'Select bb'])}}
+                                            <small class="form-text text-danger">{{ $errors->first('bb') }}</small> </div>
+                                    <div class="col-md-1"> </div>  
+                                    <div class="col-md-5">  <small class="form-text text-danger">{{ $errors->first('node') }}</small> </div>
+                                </div>
+                        
+                        </br>
                         </div> 
                     </div>
                 </div>

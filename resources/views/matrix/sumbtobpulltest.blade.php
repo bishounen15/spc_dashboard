@@ -11,7 +11,7 @@
             {{-- <div class="card"> --}}
         <div class="card-body">        
         <a href="/Summary" class="btn btn-secondary">Go Back</a>
-
+        <a href="/offlinebtob/create" class="btn btn-secondary">Input Data</a>
         
             <table class="table table-striped" style="font-size:12px;">
             <tr>
@@ -28,6 +28,7 @@
                 
                 <th>Remarks</th>
                 <th>Date</th>
+                <th>Qual<br/>Result</th>
             </tr>
 
         
@@ -48,6 +49,7 @@
                     <td style="font-size:12px;">{{$potLog->average}}</td>
                     <td>{{$potLog->remarks}}</td>
                     <td>{{$potLog->date}}</td>
+                    <td>{{$potLog->qualRes}}</td>
                  </tr>
             @endforeach  
         @else

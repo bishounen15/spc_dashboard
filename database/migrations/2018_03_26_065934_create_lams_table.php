@@ -13,7 +13,7 @@ class CreateLamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('Lams', function (Blueprint $table) {
+        Schema::create('lams', function (Blueprint $table) {
             $table->increments('id');
             $table->String('Date');
             $table->String('Laminator');

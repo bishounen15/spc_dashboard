@@ -26,6 +26,7 @@
                 <th>Remarks</th>
                 <th>Average</th>
                 <th>Date</th>
+                <th>Qual<br>Result</th>
             </tr>
 
         
@@ -45,6 +46,7 @@
                     <td>{{$potLog->remarks}}</td>
                     <td style="font-size:12px;">{{$potLog->average}}</td>
                     <td>{{$potLog->date}}</td>
+                    <td>{{$potLog->qualRes}}</td>
                  </tr>
             @endforeach  
         @else

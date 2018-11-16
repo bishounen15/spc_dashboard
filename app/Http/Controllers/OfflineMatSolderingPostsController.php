@@ -110,6 +110,154 @@ class OfflineMatSolderingPostsController extends Controller
     {
         return view('matrix.createofflinematsoldering');
     }
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request   
+     * @return \Illuminate\Http\Response
+     */
+
+    public function store_Sum(Request $request)
+    {
+        
+        if($request->input('prodBuilt') != null && $request->input('fromDate') == null && $request->input('toDate') == null ){
+            $prod = $request->input('prodBuilt') ;
+            if (strpos($prod, '5BB') ) {
+                $bbno = "5bb";
+            }else{
+                $bbno = "4bb";
+            }
+        
+            $node1 = "Soldering Temperature MatPrep";
+            
+           // $prod = "Gintech";
+            $location ="Busbar Prep";
+            $node = "Soldering Temp";
+            $aveIndBus1Top1 = $this->getAveInd($location,$node,$prod);
+            $stdIndBus1Top1 = $this->getStdInd($location,$node,$prod);      
+            $aveOfAveBus1Top1 = $this->getAveOfAve($location,$node,$prod);      
+            $stdOfStdBus1Top1 = $this->getStdOfStd($location,$node,$prod);
+            $medianBus1Top1 = $this->getMedian($location,$node,$prod);          
+            $perc1Bus1Top1 = $this->getList4percentile($location,$node,$prod,0.00135);     
+            $perc2Bus1Top1 = $this->getList4percentile($location,$node,$prod,0.99865);
+           
+            $USL = $this->getSpecsULVal($prod,$node1,$bbno);
+            $LSL = $this->getSpecsLLVal($prod,$node1,$bbno);
+            $target = $this->getSpecsLimitTarget($prod,$node1,$bbno);
+            //$UCL=37.4;
+            //$LCL=7.09;
+            $UCL = 4.695624;
+            $LCL = 1.763120;
+            $CL = (($UCL-$LCL)/2)+$LCL;
+            $zBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$CL),$stdOfStdBus1Top1));
+            $CpLBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$LCL),(3*$stdOfStdBus1Top1) ));
+            $CpUBus1Top1 = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus1Top1),(3*$stdOfStdBus1Top1) ));      
+            $arrValForCpkB1T1 = array( $CpUBus1Top1,$CpLBus1Top1);  
+            $CpkB1T1 = min(array_filter($arrValForCpkB1T1));  
+            $CpnUB1T1 =$this->divideByZeroExempt(($USL - $medianBus1Top1 ),( $perc2Bus1Top1 - $medianBus1Top1));
+            $CpnLB1T1 = $this->divideByZeroExempt(($medianBus1Top1  - $LSL),( $medianBus1Top1 -  $perc1Bus1Top1));
+            $arrValForCpnB1T1 = array( $CpnUB1T1,  $CpnLB1T1);         
+            $CpnB1T1 =  min(array_filter($arrValForCpnB1T1));  
+           
+    
+            return view('matrix.btobpulltest') 
+          ->with('aveIndB1T1', $aveIndBus1Top1)
+          ->with('stdIndB1T1', $stdIndBus1Top1)         
+          ->with('aveOfAveB1T1', $aveOfAveBus1Top1)   
+          ->with('stdOfStdB1T1', $stdOfStdBus1Top1)
+          ->with('medianB1T1', $medianBus1Top1)
+          ->with('perc1B1T1', $perc1Bus1Top1)
+          ->with('perc2B1T1', $perc2Bus1Top1)    
+          ->with('dateRange',$this->getDateRangeForSPC())
+          ->with('productBuilt',$prod)
+          ->with('USL',$USL)
+          ->with('LSL',$LSL)
+          ->with('UCL',$UCL)
+          ->with('LCL',$LCL)
+          ->with('CL',$CL)
+          ->with('N',$this-> getMedianCount())
+          ->with('target',$target)
+          ->with('zBus1Top1',$zBus1Top1)
+          ->with('CpUB1T1',$CpUBus1Top1)
+          ->with('CpLB1T1',$CpLBus1Top1)
+          ->with('CpkB1T1',$CpkB1T1)
+          ->with('CpnB1T1',$CpnB1T1)
+          ->with('CpnUB1T1',$CpnUB1T1)     
+          ->with('CpnLB1T1',$CpnLB1T1);
+      
+         
+        }elseif($request->input('prodBuilt') != null && $request->input('fromDate') != null && $request->input('toDate') != null )
+        {         
+   
+       /*     $prod = $request->input('prodBuilt') ;
+            $from = $request->input('fromDate');
+            $to = $request->input('toDate');
+            if (strpos($prod, '5BB') ) {
+                $bbno = "5bb";
+            }else{
+                $bbno = "4bb";
+            }
+        
+            $node1 = "BB-to-BB Pull Strength";
+            
+           // $prod = "Gintech";
+            $location ="Busbar Prep";
+            $node = "Busbar to Busbar";
+            $aveIndBus1Top1 = $this->wDategetAveInd($location,$node,$prod,$from,$to);
+            $stdIndBus1Top1 = $this->wDategetStdInd($location,$node,$prod,$from,$to);      
+            $aveOfAveBus1Top1 = $this->wDategetAveOfAve($location,$node,$prod,$from,$to);      
+            $stdOfStdBus1Top1 = $this->wDategetStdOfStd($location,$node,$prod,$from,$to);
+            $medianBus1Top1 = $this->wDategetMedian($location,$node,$prod,$from,$to);          
+            $perc1Bus1Top1 = $this->wDategetList4percentile($location,$node,$prod,$from,$to,0.00135);     
+            $perc2Bus1Top1 = $this->wDategetList4percentile($location,$node,$prod,$from,$to,0.99865);
+           
+            $USL = $this->getSpecsULVal($prod,$node1,$bbno);
+            $LSL = $this->getSpecsLLVal($prod,$node1,$bbno);
+            $target = $this->getSpecsLimitTarget($prod,$node1,$bbno);
+           // $UCL=37.4;
+           // $LCL=7.09;
+           $UCL = 4.695624;
+           $LCL = 1.763120;
+            $CL = (($UCL-$LCL)/2)+$LCL;
+            $zBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$CL),$stdOfStdBus1Top1));
+            $CpLBus1Top1 = ABS($this->divideByZeroExempt(($aveOfAveBus1Top1-$LCL),(3*$stdOfStdBus1Top1) ));
+            $CpUBus1Top1 = ABS( $this->divideByZeroExempt(($UCL-$aveOfAveBus1Top1),(3*$stdOfStdBus1Top1) ));      
+            $arrValForCpkB1T1 = array( $CpUBus1Top1,$CpLBus1Top1);  
+            $CpkB1T1 =  min(array_filter( $arrValForCpkB1T1));  
+            $CpnUB1T1 =$this->divideByZeroExempt(($USL - $medianBus1Top1 ),( $perc2Bus1Top1 - $medianBus1Top1));
+            $CpnLB1T1 = $this->divideByZeroExempt(($medianBus1Top1  - $LSL),( $medianBus1Top1 -  $perc1Bus1Top1));
+            $arrValForCpnB1T1 = array( $CpnUB1T1,  $CpnLB1T1);         
+            $CpnB1T1 = min(array_filter(  $arrValForCpnB1T1));  
+    
+            return view('matrix.btobpulltest') 
+          ->with('aveIndB1T1', $aveIndBus1Top1)
+          ->with('stdIndB1T1', $stdIndBus1Top1)         
+          ->with('aveOfAveB1T1', $aveOfAveBus1Top1)   
+          ->with('stdOfStdB1T1', $stdOfStdBus1Top1)
+          ->with('medianB1T1', $medianBus1Top1)
+          ->with('perc1B1T1', $perc1Bus1Top1)
+          ->with('perc2B1T1', $perc2Bus1Top1)    
+          ->with('dateRange',$this->getDateRange2($from,$to))
+          ->with('productBuilt',$prod)
+          ->with('USL',$USL)
+          ->with('LSL',$LSL)
+          ->with('UCL',$UCL)
+          ->with('LCL',$LCL)
+          ->with('CL',$CL)
+          ->with('N',$this->getDateRange($from,$to))
+          ->with('target',$target)
+          ->with('zBus1Top1',$zBus1Top1)
+          ->with('CpUB1T1',$CpUBus1Top1)
+          ->with('CpLB1T1',$CpLBus1Top1)
+          ->with('CpkB1T1',$CpkB1T1)
+          ->with('CpnB1T1',$CpnB1T1)
+          ->with('CpnUB1T1',$CpnUB1T1)     
+          ->with('CpnLB1T1',$CpnLB1T1); */
+
+          return view('matrix.btobpulltest');
+         }
+
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -120,6 +268,12 @@ class OfflineMatSolderingPostsController extends Controller
     public function store(Request $request)
     {
         //Validate
+
+        $prod = $request->input('prodBuilt');
+        $node1 = "Soldering Temperature MatPrep";
+        $target = DB::table(DB::select("SELECT * FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node1."'"));
+        $LLval =  number_format($target->from[0]->LCL,2);
+        $ULval = number_format($target->from[0]->UCL,2);
             $this->validate($request, [  
                 'employeeid' => 'required',       
                 'location' => 'required',
@@ -134,13 +288,68 @@ class OfflineMatSolderingPostsController extends Controller
                 'prodBuilt' => 'required',
                 'station' => 'required'
             ]);
+            $empid = $request->input('employeeid');
+            $location = $request->input('location');
+            $station = $request->input('station');
+            $shift = $request->input('shift');
+            $node = $request->input('node');
+            $sup = $request->input('supplier');
+            $temp1 = $request->input('temp1');
+            $temp2 = $request->input('temp2');
+            $temp3 = $request->input('temp3');
+            $remarks = $request->input('remarks');
+            $ave = $request->input('average');
+            $fixdate = $request->input('fixture_date');
+            $prodbuilt = $request->input('prodBuilt');
+            $station = $request->input('station');
+
+            if($ULval != 0 && $ULval > $LLval){
+                if($this->checkULval($temp1,$ULval,$empid,$location,$shift,$node,$sup,$temp1,$temp2,$temp3,$remarks,$ave,$fixdate,$prodbuilt,$station))
+                {   return redirect('/offlinematsolder/create')->with('error', 'Record added but temp1 failed. For Requal.');
+                }elseif($this->checkLLval($temp1,$LLval,$empid,$location,$shift,$node,$sup,$temp1,$temp2,$temp3,$remarks,$ave,$fixdate,$prodbuilt,$station))
+                {  return redirect('/offlinematsolder/create')->with('error', 'Record added but temp1 failed. For Requal.');
+                }elseif($this->checkULval($temp2,$ULval,$empid,$location,$shift,$node,$sup,$temp1,$temp2,$temp3,$remarks,$ave,$fixdate,$prodbuilt,$station))
+                {   return redirect('/offlinematsolder/create')->with('error', 'Record added but temp2 failed. For Requal.');
+                }elseif($this->checkLLval($temp2,$LLval,$empid,$location,$shift,$node,$sup,$temp1,$temp2,$temp3,$remarks,$ave,$fixdate,$prodbuilt,$station))
+                {  return redirect('/offlinematsolder/create')->with('error', 'Record added but temp2 failed. For Requal.');
+                }elseif($this->checkULval($temp3,$ULval,$empid,$location,$shift,$node,$sup,$temp1,$temp2,$temp3,$remarks,$ave,$fixdate,$prodbuilt,$station))
+                {   return redirect('/offlinematsolder/create')->with('error', 'Record added but temp3 failed. For Requal.');
+                }elseif($this->checkLLval($temp3,$LLval,$empid,$location,$shift,$node,$sup,$temp1,$temp2,$temp3,$remarks,$ave,$fixdate,$prodbuilt,$station))
+                {  return redirect('/offlinematsolder/create')->with('error', 'Record added but temp3 failed. For Requal.');
+                }else{
+                    $post =  new OfflineMatSolderingPost;
+                    $post->employeeid = $request->input('employeeid');
+                    $post->location = $request->input('location');
+                    $post->shift = $request->input('shift');
+                    $post->node = $request->input('node');
+                    $post->supplier = $request->input('supplier');
+                    $post->temp1 = $request->input('temp1');
+                    $post->temp2 = $request->input('temp2');
+                    $post->temp3 = $request->input('temp3');
+                    $post->remarks = $request->input('remarks');
+                    $post->average = $request->input('average');
+                    $post->date = $request->input('fixture_date');
+                    $post->prodBuilt = $request->input('prodBuilt');
+                    $post->station = $request->input('station');
+                    $post->qualRes = 'pass';
+                    $post->save ();
+                    $posts = DB::select('SELECT * FROM offlinematsoldering ORDER BY id DESC');
+                    return view('matrix.sumofflinematsoldering')->with('offlinematsolderingtemp', $posts)
+                    ->with('success','Record was successfully added!');
+                }
+            
+            }elseif($ULval == 0){
+
+            }
+
+
 
         //Create Post
         //$post = $request->post;
         $post =  new OfflineMatSolderingPost;
         $post->employeeid = $request->input('employeeid');
         $post->location = $request->input('location');
-        $post->station = $request->input('process');
+        $post->station = $request->input('station');
         $post->shift = $request->input('shift');
         $post->node = $request->input('node');
         $post->supplier = $request->input('supplier');
@@ -294,11 +503,7 @@ class OfflineMatSolderingPostsController extends Controller
             return $startdate."  to  ".$enddate;
         }
        
-        }
-
-
-    
-
+    }
     public function mypercentile($data,$percentile){ 
         if( 0 < $percentile && $percentile < 1 ) { 
             $p = $percentile; 
@@ -407,6 +612,81 @@ class OfflineMatSolderingPostsController extends Controller
              }
            
              }
+
+             public function getSpecsUCLVal($prod,$node,$bbnum)
+             {
+               
+                $target = DB::table(DB::select("SELECT * FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'"));
+              //  $LLval =  number_format($target->from[0]->LCL,2);
+                $ULval = number_format($target->from[0]->UCL,2);
+                return $ULval;
+               
+            }
+            public function getSpecsLCLVal($prod,$node,$bbnum)
+            {
+               
+               $target = DB::table(DB::select("SELECT * FROM parameters JOIN producttype ON parameters.BOMType = producttype.bomType JOIN subprocess ON parameters.subProcessName = subprocess.subProcessName WHERE producttype.prodName ='".$prod."' AND parameters.subProcessName = '".$node."'"));
+               $LLval =  number_format($target->from[0]->LCL,2);
+              // $ULval = number_format($target->from[0]->UCL,2);
+               
+              return $LLval;
+           }
+           public function checkULval($site,$ULval,$empid,$location,$shift,$node,$sup,$temp1,$temp2,$temp3,$remarks,$ave,$fixdate,$prodbuilt,$station){
+            if($site  > $ULval )
+            {
+                $post =  new OfflineMatSolderingPost;
+                $post->employeeid = $empid;
+                $post->location = $location;
+                $post->shift = $shift;
+                $post->node = $node;
+                $post->supplier = $sup;
+                $post->temp1 = $temp1;
+                $post->temp2 = $temp2;
+                $post->temp3 = $temp3;
+                $post->remarks = $remarks;
+                $post->average = $ave;
+                $post->date = $fixdate;
+                $post->prodBuilt = $prodbuilt;
+                $post->station = $station;
+                $post->qualRes = 'fail';
+                $post->save();
+                return true;
+                    /*  $posts = DB::select('SELECT * FROM offlinematsoldering ORDER BY id DESC');
+                return view('matrix.sumofflinematsoldering')->with('offlinematsolderingtemp', $posts)
+                ->with('success','Record was successfully added!'); */
+            }else{
+                return false;
+            }
+            }
+
+           public function checkLLval($site,$ULval,$empid,$location,$shift,$node,$sup,$temp1,$temp2,$temp3,$remarks,$ave,$fixdate,$prodbuilt,$station){
+            if($ULval > $site )
+            {
+                $post =  new OfflineMatSolderingPost;
+                $post->employeeid = $empid;
+                $post->location = $location;
+                $post->shift = $shift;
+                $post->node = $node;
+                $post->supplier = $sup;
+                $post->temp1 = $temp1;
+                $post->temp2 = $temp2;
+                $post->temp3 = $temp3;
+                $post->remarks = $remarks;
+                $post->average = $ave;
+                $post->date = $fixdate;
+                $post->prodBuilt = $prodbuilt;
+                $post->station = $station;
+                $post->qualRes = 'fail';
+                $post->save();
+                return true;
+                    /*  $posts = DB::select('SELECT * FROM offlinematsoldering ORDER BY id DESC');
+                return view('matrix.sumofflinematsoldering')->with('offlinematsolderingtemp', $posts)
+                ->with('success','Record was successfully added!'); */
+            }else{
+                return false;
+            }
+            }
+
 
      
 

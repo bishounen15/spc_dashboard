@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -24,15 +23,11 @@ class JBoxController extends Controller
         $wtAveOfAve = number_format($weightAveOfAve->from[0]->aveOfAve,6);
         $weightStdOfStd = DB::table(DB::select("SELECT STDDEV_SAMP(stdWt) as stdOfStd FROM (SELECT date,AVG(beadWt) as stdWt FROM (SELECT date,beadWt FROM jbox_dis_wt_quals WHERE date IN (SELECT * FROM view_jboxdiswt)) as tblview GROUP BY date) as tbl_stdOfStd"));
         $wtStdOfStd = number_format($weightStdOfStd->from[0]->stdOfStd,6);
-
         
 $median = DB::table(DB::select("SELECT ROUND(AVG(beadWt),6) as aveWt FROM (SELECT date,beadWt FROM jbox_dis_wt_quals WHERE date IN (SELECT * FROM view_jboxdiswt)  )as tblview GROUP BY date ORDER BY aveWt ASC"));
 $medianCount = DB::table(DB::select("SELECT COUNT(aveWt) as aveCount FROM (SELECT ROUND(AVG(beadWt),6) as aveWt FROM (SELECT date,beadWt FROM jbox_dis_wt_quals WHERE date IN (SELECT * FROM view_jboxdiswt)  )as tblview GROUP BY date ORDER BY aveWt ASC) as tblcnt"));
-
 $medianCountVal = $medianCount->from[0]->aveCount;
 $medianMod = $medianCountVal%2;
-
-
 if($medianMod == 0){
 $midval1 = ($medianCountVal/2);
 $midval2 = $midval1 - 1;
@@ -47,8 +42,6 @@ $medianAve =number_format((($medianVal1 + $medianVal2)/2),6);
    $medianAve = number_format($medianVal,6);
  // $medianAve = $medianMod;
 }
-
-
 $wtAveList = DB::table(DB::select("SELECT AVG(beadWt) as aveWt FROM (SELECT date,beadWt FROM jbox_dis_wt_quals WHERE date IN (SELECT * FROM view_jboxdiswt) )as tblview GROUP BY date"));
 //dd($median);
 $arrAve = array();
@@ -57,15 +50,11 @@ for($i=0;$i<$medianCountVal ;$i++){
   //  $arrVal= $arrVal.$wtAveList->from[$i]->aveWt.',';
     array_push($arrAve,$wtAveList->from[$i]->aveWt);
 }
-
-
 $percentile = $this->mypercentile($arrAve,0.00135);
 $percentile2 = $this->mypercentile($arrAve,0.99865);
-
  $UCL = 13.97;
  $LCL = 11.70;
 //$CL = number_format($UCL-$LCL,4);
-
 $CL = ($UCL-$LCL)/2+$LCL;
 $target = 13;
 $USL = $target + 2;
@@ -82,7 +71,6 @@ $zValue = ABS(number_format(($wtAveOfAve-$CL)/$wtStdOfStd,4));
      $xbbfront = 0;
      $stdavg = 0;
      $median = 0;
-
 return view('backEnd.jBoxDisSum')
 ->with('ave',$wtAve)
 ->with('aveStdInd',$wtStd)
@@ -113,14 +101,12 @@ return view('backEnd.jBoxDisSum')
     public function create()
     {
        // return view('backEnd.jBoxDisCreate');
-
         $posts = DB::select('SELECT * FROM jbox_dis_wt_quals ORDER BY ID DESC LIMIT 1');                                        
         //$posts  = Post::orderBy('created_at','desc')->paginate(2);
        return view('backEnd.jBoxDisCreate')->with('disLogs',$posts);
         
     
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -152,13 +138,10 @@ return view('backEnd.jBoxDisSum')
         $post->downStream = $request->input('downStream');
         $post->qualRes= $request->input('result');
         $post->remarks = $request->input('remarks');
-
        // $post->crossSection = $request->input('crossSection');
         $post->save();
-
         return redirect('/JBox')->with('success','Record was successfully added!');
     }
-
     /**
      * Display the specified resource.
      *
@@ -169,7 +152,6 @@ return view('backEnd.jBoxDisSum')
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -180,7 +162,6 @@ return view('backEnd.jBoxDisSum')
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -192,7 +173,6 @@ return view('backEnd.jBoxDisSum')
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -203,7 +183,6 @@ return view('backEnd.jBoxDisSum')
     {
         //
     }
-
     public function mypercentile($data,$percentile){ 
         if( 0 < $percentile && $percentile < 1 ) { 
             $p = $percentile; 
@@ -227,5 +206,4 @@ return view('backEnd.jBoxDisSum')
         } 
         return $result; 
     } 
-
 }
