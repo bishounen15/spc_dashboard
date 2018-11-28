@@ -50,7 +50,7 @@
         var table = $('#mes-list').DataTable({
             // "scrollX": true,
             processing: true,
-            serverSide: true,
+            // serverSide: true,
             "order": [],
             ajax: '/mes/data/' + $('#start').val() + '/' + $('#end').val(),
             dom: 'Blfrtip',
