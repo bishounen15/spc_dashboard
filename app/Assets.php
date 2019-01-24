@@ -18,7 +18,7 @@ class Assets extends Model
     }
 
     public function software() {
-        return $this->hasMany('App\Software', 'id', 'id');
+        return $this->hasMany('App\Software', 'service_id', 'id');
     }
 
     public function partitions() {

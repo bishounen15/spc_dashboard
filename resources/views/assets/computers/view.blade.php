@@ -8,6 +8,8 @@
                 <div class="card-body text-center">
                     <img class="card-img-top" height="300px" src="{{$asset->image_path()}}" alt="Card image cap">
                     <hr>
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ServiceRecord">Log Service Record</button>
+                    <hr>
                     {{$asset->brand . " " . $asset->device_model()}} <br>
                     {{$asset->serial}} <br>
                     {{$asset->host_name}} <br>
@@ -70,9 +72,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($asset->partitions as $partition)
+                            @foreach ($asset->partitions as $key => $partition)
                             <tr>
-                                <td>#</td>
+                                <td>{{$key + 1}}</td>
                                 <td>{{$partition->root_dir}}</td>
                                 <td>{{$partition->capacity}}</td>
                                 <td>{{$partition->free_space}}</td>
@@ -97,9 +99,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($asset->network as $net)
+                            @foreach ($asset->network as $key => $net)
                             <tr>
-                                <td>#</td>
+                                <td>{{$key + 1}}</td>
                                 <td>{{$net->ip}}</td>
                                 <td>{{$net->mac}}</td>
                                 <td>{{$net->name}}</td>
@@ -131,6 +133,150 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ServiceRecord" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Service Record</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="trx-id">
+                <table class="table table-sm" style="font-size: 0.9em;">
+                    <tr>
+                        <th>Date Raised:</th>
+                        <td>
+                            <div class="form-group">
+                                <input type="date" class="form-control form-control-sm" name="date_raised" id="date_raised" value="{{date('Y-m-d')}}">
+                            </div>    
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Raised by:</th>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-sm" name="raised_by" id="raised_by" value="">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Problem Encountered:</th><td>
+                            <div class="form-group" id="group-issue">
+                                <textarea class="form-control form-control-sm" name="issue_details" id="issue_details" rows="2"></textarea>
+                                <small class="form-text text-danger"></small>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Date Reported:</th>
+                        <td>
+                            <div class="form-group">
+                                <input type="date" class="form-control form-control-sm" name="date_reported" id="date_reported" value="">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Reported by:</th>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-sm" name="reported_by" id="reported_by" value="">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Vendor Commitment:</th><td>
+                            <div class="form-group" id="group-issue">
+                                <textarea class="form-control form-control-sm" name="vendor_commitment" id="vendor_commitment" rows="2"></textarea>
+                                <small class="form-text text-danger"></small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Commitment Date:</th><td>
+                            <div class="form-group">
+                                <input type="date" class="form-control form-control-sm" name="date[]" value="">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="form-row">
+                    <div class="form-group text-right">
+                        &nbsp;
+                        <a href="#" id="add-item" role="button" class="btn btn-success btn-sm">Add</a>
+                        <a href="#" id="rem-item" role="button" class="btn btn-danger btn-sm">Remove</a>
+                    </div>
+                </div>
+
+                <table class="table table-condensed table-striped table-sm" style="width: 100%;">
+                    <thead class="thead-dark" style="font-size: 0.7em;">
+                            <th width="10%"></th>
+                        <th width="20%">Date</th>
+                        <th width="70%">Service Log</th>
+                    </thead>
+                    <tbody id="item-details" class="tbody-light" style="font-size: 0.75em;">
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="line-item[]" value="1" id="defaultCheck1">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input type="date" class="form-control form-control-sm" name="date[]" value="{{date('Y-m-d')}}">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <div class="form-group" id="group-log">
+                                        <textarea class="form-control form-control-sm" name="log[]" rows="3"></textarea>
+                                        <small class="form-text text-danger"></small>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="table table-sm" style="font-size: 0.9em;">
+                    <tr>
+                        <th>Date Closed:</th>
+                        <td>
+                            <div class="form-group">
+                                <input type="date" class="form-control form-control-sm" name="date_closed" id="date_closed" value="{{date('Y-m-d')}}">
+                            </div>    
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Closed by:</th>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-sm" name="closed_by" id="closed_by" value="">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Remarks (Optional):</th><td>
+                            <div class="form-group" id="group-remarks">
+                                <textarea class="form-control form-control-sm" name="remarks" id="remarks" rows="3"></textarea>
+                                <small class="form-text text-danger"></small>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                {{-- onclick="updateStatus()" --}}
+                <button id="btnSave" type="button" class="btn btn-success btn-sm" style="width: 100px;">Save</button> 
+                <button id="btnClose" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" style="width: 100px;">Close</button>
+            </div>
+          </div>
         </div>
     </div>
 @endsection

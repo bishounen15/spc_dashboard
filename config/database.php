@@ -35,7 +35,7 @@ return [
 
         'yield' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.9',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'sp_yield',
             'username' => 'laravel_user',
@@ -50,7 +50,7 @@ return [
 
         'osi' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.9',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'sp_osi',
             'username' => 'laravel_user',
@@ -80,7 +80,7 @@ return [
 
         'assets' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.9',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'asset_inv',
             'username' => 'laravel_user',
@@ -95,7 +95,7 @@ return [
 
         'proddt' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.9',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'sp_proddt',
             'username' => 'laravel_user',
@@ -110,11 +110,26 @@ return [
 
         'web_portal' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.7',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'spmmc00',
             'username' => 'spmmc01',
             'password' => 'password@01',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'tickets' => [
+            'driver' => 'mysql',
+            'host' => '192.168.128.217',
+            'port' => '3306',
+            'database' => 'd56cb677eaab3383',
+            'username' => 'chris',
+            'password' => 'p3@h13ie0827',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
