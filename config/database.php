@@ -123,6 +123,21 @@ return [
             'engine' => null,
         ],
 
+        'tickets' => [
+            'driver' => 'mysql',
+            'host' => '192.168.128.217',
+            'port' => '3306',
+            'database' => 'd56cb677eaab3383',
+            'username' => 'chris',
+            'password' => 'p3@h13ie0827',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'database' => env('DB_DATABASE', database_path('database.sqlite')),

@@ -16,6 +16,7 @@ class SerialInfo extends Model
         $model = str_replace('[C]',$this->CELLCOUNT,$model);
         $model = str_replace('[R]',$this->CUSTOMER == 'GEN1' && $this->CELLCOLOR == 'E' ? 'M' : $this->CELLCOLOR,$model);
         $model = str_replace('[P]',$this->ftd->count() > 0 ? $this->ftd->last()->Bin : 'XXX',$model);
+        $model = str_replace('[T]',$this->CTYPE,$model);
         return $model;
     }
 
