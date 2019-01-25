@@ -12,11 +12,13 @@ class SerialInfo extends Model
     protected $table = 'lbl02';
 
     public function modelName() {
+        $first = SerialInfo::where("SERIALNO",$this->SERIALNO)->first();
+
         $model = $this->template() == null ? $this->customerInfo->PRODCODE : $this->template()->MODELNAME;
         $model = str_replace('[C]',$this->CELLCOUNT,$model);
         $model = str_replace('[R]',$this->CUSTOMER == 'GEN1' && $this->CELLCOLOR == 'E' ? 'M' : $this->CELLCOLOR,$model);
         $model = str_replace('[P]',$this->ftd->count() > 0 ? $this->ftd->last()->Bin : 'XXX',$model);
-        $model = str_replace('[T]',$this->CTYPE ? $this->CTYPE : $this->first()->CTYPE,$model);
+        $model = str_replace('[T]',$this->CTYPE != null ? $this->CTYPE : $first->CTYPE,$model);
         return $model;
     }
 
