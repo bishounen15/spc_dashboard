@@ -20,10 +20,10 @@ class ShiftsController extends Controller
 
     public function load()
     {
-        $prod_types = Shift::selectRaw("id, code, descr, start_time, end_time, CASE overday WHEN 1 THEN 'Yes' ELSE 'No' END AS overday")
+        $shifts = Shift::selectRaw("id, code, descr, start_time, end_time, CASE overday WHEN 1 THEN 'Yes' ELSE 'No' END AS overday")
         ->orderByRaw("code ASC");
 
-        return Datatables::of($prod_types)->make(true);
+        return Datatables::of($shifts)->make(true);
     }
 
     /**

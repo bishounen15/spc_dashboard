@@ -174,6 +174,9 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/planning/setup/shift/data', 'Planning\ShiftsController@load')->name('shift_data');
         Route::resource('/planning/setup/shift','Planning\ShiftsController');
 
+        Route::get('/planning/schedule/data', 'Planning\ProductionSchedulesController@load')->name('sched_data');
+        Route::resource('/planning/schedule','Planning\ProductionSchedulesController');
+
         Route::resource('mes/setup/custom','mesCustomFieldController');
     });
 // }); 
