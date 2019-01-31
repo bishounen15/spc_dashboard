@@ -170,6 +170,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/modules/mes/{serial}','ModulesController@mes')->name('mod_mes');
         Route::resource('/modules','ModulesController');
 
+        //Planning
+        Route::get('/planning/setup/shift/data', 'Planning\ShiftsController@load')->name('shift_data');
+        Route::resource('/planning/setup/shift','Planning\ShiftsController');
+
         Route::resource('mes/setup/custom','mesCustomFieldController');
     });
 // }); 

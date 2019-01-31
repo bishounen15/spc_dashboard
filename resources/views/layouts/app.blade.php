@@ -107,6 +107,7 @@
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Station Assignment</a>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Location and Routing</a>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Module Class</a>
+                                <a class="dropdown-item" href="/planning/setup/shift">&nbsp;&nbsp;&nbsp;&nbsp;Shift</a>
                                 @endif
                                 <h6 class="dropdown-header">Reports</h6>
                                 {{-- <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a> --}}

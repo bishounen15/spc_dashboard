@@ -138,6 +138,21 @@ return [
             'engine' => null,
         ],
 
+        'planning' => [
+            'driver' => 'mysql',
+            'host' => '127.0.0.1',
+            'port' => '3306',
+            'database' => 'sp_planning',
+            'username' => 'laravel_user',
+            'password' => 'password@1',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
