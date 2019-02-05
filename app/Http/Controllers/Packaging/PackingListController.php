@@ -307,5 +307,10 @@ class PackingListController extends Controller
     public function destroy($id)
     {
         //
+        $pallet = PackingLists::find($id);
+        $pno = $pallet->PALLETNO;
+        $pallet->delete();
+
+        return redirect('mes/packaging')->with("success","Transaction [".$pno."] successfully deleted.");
     }
 }

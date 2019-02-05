@@ -12,6 +12,10 @@
             <p>Do you want to delete "<small><span id="descr"></span></small>"?</p>
         </div>
         <div class="modal-footer">
+            <form id="delete-record" action="#" method="POST">
+                @csrf;
+                @method("DELETE");
+            </form>
             <a class="btn btn-primary btn-yes remove-record">Yes</a>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
         </div>
@@ -21,10 +25,17 @@
 
 @push('jscript')
 <script>
-    // $('#confirm-delete').on('show.bs.modal', function(e) {
-    //     console.log("test");
-    //     $("#descr").html($(e.relatedTarget).attr('id'));
-    //     // $(this).find('.btn-yes').attr('href', $(e.relatedTarget).data('href'));
-    // });
+    $(document).ready(function() {
+        $('#confirm-delete').on('show.bs.modal', function(e) {
+            console.log("test");
+            $("#descr").html($(e.relatedTarget).attr('id'));
+            // $(this).find('.btn-yes').attr('href', $(e.relatedTarget).data('href'));
+            $("#delete-record").attr("action", $(e.relatedTarget).data('href'));
+        });
+
+        $(".remove-record").click(function() {
+            $("#delete-record").submit();
+        });
+    });
 </script>
 @endpush
