@@ -13,8 +13,8 @@
         </div>
         <div class="modal-footer">
             <form id="delete-record" action="#" method="POST">
-                @csrf;
-                @method("DELETE");
+                @csrf
+                @method("DELETE")
             </form>
             <a class="btn btn-primary btn-yes remove-record">Yes</a>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>

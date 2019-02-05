@@ -10,6 +10,7 @@ use App\SerialInfo;
 use App\Pallets;
 use Illuminate\Support\Facades\Auth;
 
+use Validator;
 use DB;
 use DataTables;
 use Response;
@@ -160,6 +161,8 @@ class PackingListController extends Controller
     public function store(Request $request)
     {
         //
+        $data = [];
+
         $pallet = $request->input('PALLETNO');
         $pos = strpos($pallet,"[S");
         $pre = substr($pallet,0,$pos);
@@ -182,30 +185,51 @@ class PackingListController extends Controller
         $phead['MODELNAME'] = $request->input('MODELNAME');
         $phead['UIDCREATE'] = Auth::user()->user_id;
         $phead['PALLETSTAT'] = 0;
-
-        PackingLists::create($phead);
-
         $SERIALNO = $request->input('SERIALNO');
 
-        $ix = 1;
-        foreach( $SERIALNO as $serial ) {
-            $s = explode(',',$serial);
+        $snos = explode(',',$SERIALNO[0]);
 
-            foreach($s as $sno) {
+        $validator = Validator::make($request->all(), [
+            'PALLETNO' => 'required|unique:web_portal.epl01',
+        ]);
+
+        $serr = [];
+
+        if ($validator->fails()) {
+            array_push($pallet." already exists.");
+        } else {
+            foreach($snos as $sno) {
+                $req = ["SERIALNO" => $sno];
+                $validator = Validator::make($req, [
+                    'SERIALNO' => 'unique:web_portal.epl02',
+                ]);
+
+                if ($validator->fails()) {
+                    array_push($serr,$sno." already exists.");
+                }
+            }
+        }
+
+        $data['errors'] = $serr;
+
+        if (count($serr) == 0) {
+            PackingLists::create($phead);
+
+            $ix = 1;
+            
+            foreach($snos as $sno) {
                 $pdetails = [];
                 $pdetails["PALLETNO"] = $phead['PALLETNO'];
                 $pdetails["CARTONNO"] = $phead['CARTONNO'];
                 $pdetails["ITMIX"] = $ix;
                 $pdetails["SERIALNO"] = $sno;
                 $ix++;
-    
+
                 PackingListItems::create($pdetails);
             }
         }
 
         // return redirect('mes/packaging')->with("success","Transaction [".$phead["PALLETNO"]."] successfully created.");
-
-        $data = [];
 
         return Response::json($data);
     }

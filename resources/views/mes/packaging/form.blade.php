@@ -162,6 +162,33 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="errors-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">Errors</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        The following errors were encountered while saving transaction.
+                    </p>
+                    <ul id="error-list">
+
+                    </ul>
+                    <p>
+                        Please data entered.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnClose" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" style="width: 100px;">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
 {{-- </div> --}}
 </form>
 @endsection
@@ -183,39 +210,53 @@
     });
 
     function SaveTransaction() {
-        var token = $('input[name=_token]');
-        var formData = new FormData();
-        formData.append('PALLETNO', $("#PALLETNO").val());
-        formData.append('TRXDATE', $("#TRXDATE").val());
-        formData.append('CUSTOMER', $("#CUSTOMER").val());
-        formData.append('PRODUCTNO', $("#PRODUCTNO").val());
-        formData.append('MODELNAME', $("#MODELNAME").val());
+        if ($('#serial-list tr').length > 0) {
+            var token = $('input[name=_token]');
+            var formData = new FormData();
+            formData.append('PALLETNO', $("#PALLETNO").val());
+            formData.append('TRXDATE', $("#TRXDATE").val());
+            formData.append('CUSTOMER', $("#CUSTOMER").val());
+            formData.append('PRODUCTNO', $("#PRODUCTNO").val());
+            formData.append('MODELNAME', $("#MODELNAME").val());
 
-        plserials = [];
+            plserials = [];
 
-        $('#serial-list tr').each(function(e){
-            plserials.push($(this).children('td').slice(1, 2).html());
-        });
+            $('#serial-list tr').each(function(e){
+                plserials.push($(this).children('td').slice(1, 2).html());
+            });
 
-        formData.append('SERIALNO[]', plserials);
+            formData.append('SERIALNO[]', plserials);
 
-        $.ajax({
-            url: '/mes/packaging',
-            method: 'POST',
-            contentType: false,
-            processData: false,
-            data: formData,
-            dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': token.val()
-            },
-            success: function (dt) {
-                window.location.href="/mes/packaging";
-            },
-            error: function(xhr, textStatus, errorThrown){
-                alert (errorThrown);
-            }	
-        });
+            $.ajax({
+                url: '/mes/packaging',
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': token.val()
+                },
+                success: function (dt) {
+                    if (dt.errors.length > 0) {
+                        $('#error-list').html('');
+                        $.each(dt.errors, function(index, value) {
+                            $('#error-list').append('<li>'+ value +'</li>');
+                        });
+                        $('#errors-modal').modal('toggle');
+                    } else {
+                        window.location.href="/mes/packaging";
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    alert (errorThrown);
+                }	
+            });
+        } else {
+            $('#error-list').html('');
+            $('#error-list').append('<li>No serial scanned.</li>');
+            $('#errors-modal').modal('toggle');
+        }
     }
 
     $(document).ready(function () {
@@ -239,7 +280,7 @@
                     fullpallet = (modcount[0].trim() == modcount[1].trim());
                 }
 
-                if(serials.indexOf(serialno.toUpperCase()) >= 0) {
+                if (serials.indexOf(serialno.toUpperCase()) >= 0) {
                     $("#err_sno").html("Serial No. ["+serialno.toUpperCase()+"] was already scanned."); 
                 } else if (fullpallet) {
                     $("#err_sno").html("Max load has been fulfilled. You cannot scan another serial."); 
