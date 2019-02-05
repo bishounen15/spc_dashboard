@@ -14,6 +14,9 @@ use DB;
 use DataTables;
 use Response;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+
 class PackingListController extends Controller
 {
     public function __construct()
@@ -161,7 +164,7 @@ class PackingListController extends Controller
         $pos = strpos($pallet,"[S");
         $pre = substr($pallet,0,$pos);
         $srs = substr($pallet,$pos,strlen($pallet));
-        $pno = Pallets::where("PALLETNO","LIKE",DB::raw("'".$pre."%'"))->orderBy("PALLETNO","DESC")->first();
+        $pno = PackingLists::where("PALLETNO","LIKE",DB::raw("'".$pre."%'"))->orderBy("PALLETNO","DESC")->first();
 
         if ($pno == null) {
             $pallet = $pre . sprintf("%'.0".(strlen($srs)-2)."d",1);
@@ -205,6 +208,60 @@ class PackingListController extends Controller
         $data = [];
 
         return Response::json($data);
+    }
+
+    public function export($id) {
+        $pallet = PackingLists::find($id);
+        
+        $inputFileType = 'Xls'; // Xlsx - Xml - Ods - Slk - Gnumeric - Csv
+        $inputFileName = 'storage/Templates/Packing List.xls';
+
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+        $spreadsheet = $reader->load($inputFileName);
+        
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', "Model Name : " . $pallet->MODELNAME);
+        $sheet->setCellValue('D4', $pallet->PALLETNO);
+        $sheet->setCellValue('D8', $pallet->PRODUCTNO);
+        $sheet->setCellValue('I6', $pallet->details()->count().'pcs');
+
+        $settings = DB::connection('web_portal')
+                    ->table("epl00")
+                    ->select("COLCOUNT", "COL1", "COL2")
+                    ->first();
+
+        $i = 13;
+        $sc = 0;
+        $col = $settings->COL1;
+
+        foreach($pallet->details as $detail) {
+            $sheet->setCellValue($col.($i-1), '="*"&'.$col.$i.'&"*"');
+            $sheet->setCellValue($col.$i, $detail->SERIALNO);
+            $i+=2;
+            $sc++;
+
+            if ($sc == $settings->COLCOUNT) {
+                $i = 13;
+                $col = $settings->COL2;
+            }
+        }
+
+        $sheet->getProtection()->setSheet(true);
+        $sheet->getProtection()->setSort(true);
+        $sheet->getProtection()->setInsertRows(true);
+        $sheet->getProtection()->setFormatCells(true);
+
+        $sheet->getProtection()->setPassword('P@ssw0rd@01');
+
+        $writer = new Xls($spreadsheet);
+        // $writer->save($pallet->PALLETNO . '.xlsx');
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="'.$pallet->PALLETNO.'.xls"');
+        $writer->save("php://output");
+
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
     }
 
     /**

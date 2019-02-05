@@ -134,7 +134,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1 ]
+                        columns: [ 0, 1, 2, 3, 4 ]
                     },
                     text:       'Excel',
                     filename: "packaging_excel"
@@ -142,7 +142,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1 ]
+                        columns: [ 0, 1, 2, 3, 4 ]
                     },
                     text:       'CSV',
                     filename: "packaging_csv"
@@ -164,7 +164,7 @@
                 { data: 'MODELNAME' },
                 { data: 'TOTALMODS' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
-                    return '<div class="row"><div class="col-sm-6"><a href="#" role="button" class="btn btn-sm btn-success" style="width: 100%;">Print</a></div><div class="col-sm-6"><a href="#" data-href="/mes/packaging/destroy/'+full.id+'" role="button" class="btn btn-sm btn-danger disabled" data-toggle="modal" data-target="#confirm-delete" id="'+full.description+'" style="width: 100%;">Release</a></div></div>';
+                    return '<div class="row"><div class="col-sm-6"><a href="/mes/packaging/export/'+full.ROWID+'" role="button" class="btn btn-sm btn-success" style="width: 100%;">Print</a></div><div class="col-sm-6"><a href="#" data-href="/mes/packaging/destroy/'+full.ROWID+'" role="button" class="btn btn-sm btn-danger disabled" data-toggle="modal" data-target="#confirm-delete" id="'+full.PALLETNO+'" style="width: 100%;">Release</a></div></div>';
                 }},
             ],
         });
