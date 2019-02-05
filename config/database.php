@@ -110,11 +110,11 @@ return [
 
         'web_portal' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.7',
+            'host' => '127.0.0.1',
             'port' => '3306',
             'database' => 'spmmc00',
-            'username' => 'spmmc01',
-            'password' => 'password@01',
+            'username' => 'laravel_admin',
+            'password' => '$0l@rd0m@1n',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
