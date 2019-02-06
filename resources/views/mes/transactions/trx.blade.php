@@ -197,7 +197,11 @@
                                 }
                             });
 
-                            $('#MESCreate').modal('toggle');
+                            if (dt.serial.allowcls != '') {
+                                $("#SaveButton").click();
+                            } else {
+                                $('#MESCreate').modal('toggle');
+                            }
                             // table.ajax.url( '/modules/ftd/' + serialno ).load();
                         } else {
                             $("#err_sno").html(dt.errors.error_msg);
@@ -261,7 +265,10 @@
                     success: function (dt) {
                         console.log(dt);
                         table.ajax.reload();
-                        $("#MESCreate").modal('toggle');
+
+                        if (($("#MESCreate").data('bs.modal') || {})._isShown != undefined) {
+                            $("#MESCreate").modal('toggle');
+                        }
                     },
                     error: function(xhr, textStatus, errorThrown){
                         alert (errorThrown);
