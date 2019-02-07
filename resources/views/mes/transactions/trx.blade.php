@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 {{-- <div class="container"> --}}
-    <h3>MES Transactions [{{$station->STNDESC}}]</h3>
+    <h3>Line Transactions [{{$station->STNDESC}}]</h3>
     <h4>{{$date}} - Shift {{$shift}}</h4>
     {{-- <a href="#" role="button" class="btn btn-primary">Create Log Entry</a> --}}
     {{-- <br><br> --}}
@@ -279,6 +279,7 @@
 
         var table = $('#mes-list').DataTable({
             // "scrollX": true,
+            processing: true,
             "order": [],
             "searching": false,
             ajax: '/mes/transactions/{{$date}}/{{$shift}}/{{$station->STNID}}',

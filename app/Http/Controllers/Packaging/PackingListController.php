@@ -75,6 +75,7 @@ class PackingListController extends Controller
     public function serialValidation(Request $request) {
         $serial = $request->input('serial');
         $currModel = $request->input('model');
+        $currClass = $request->input('class');
         $trxDate = $request->input('date');
 
         $serialInfo = SerialInfo::where("SERIALNO",$serial)->first();
@@ -84,18 +85,20 @@ class PackingListController extends Controller
 
         if ($serialInfo != null) {
             if ($serialInfo->mes->last()->LOCNCODE != 'FG-PROD') {
-                $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is not yet scanned in FG-PROD. Current Location is at ['.$serialInfo->mes->last()->LOCNCODE.']'];
+                $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is not yet scanned in FG-PROD.<br>Current Location is at ['.$serialInfo->mes->last()->LOCNCODE.']'];
             } else {
                 if ($serialInfo->palletInfo != null) {
                     $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is already scanned in Pallet No. ['.$serialInfo->palletInfo->PALLETNO.']'];
                 } else {
                     if ($serialInfo->mrb->first() != null) {
-                        $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is currently in MRB Status. Date inserted to MRB: ['.$serialInfo->mrb->first()->DTINSRT.']'];
+                        $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is currently in MRB Status.<br>Date inserted to MRB: ['.$serialInfo->mrb->first()->DTINSRT.']'];
                     } else {
                         if ($serialInfo->modelName() != $currModel && $currModel != "") {
-                            $data['errors'] = ['error_msg' => 'Product Code Mismatach.<br>The serial number\'s ['.$serial.'] Product Code ['.$serialInfo->modelName().'] does not match with the current transaction.'];
+                            $data['errors'] = ['error_msg' => 'Product Code Mismatach.<br>The serial number\'s ['.$serial.'] Product Code ['.$serialInfo->modelName().'] does not match with the current transaction ['.$currModel.'].'];
                         } else {
-                            // if ($serialInfo->MODCLASS)
+                            if ($serialInfo->MODCLASS != $currClass && $currClass != "") {
+                                $data['errors'] = ['error_msg' => 'Module Class Mismatach.<br>The serial number\'s ['.$serial.'] Module Class ['.$serialInfo->MODCLASS.'] does not match with the current transaction ['.$currClass.'].'];
+                            } 
                         }
                     }
                 }
@@ -148,6 +151,7 @@ class PackingListController extends Controller
         $data['CUSTOMER'] = "";
         $data['PRODUCTNO'] = "";
         $data['MODELNAME'] = "";
+        $data['MODCLASS'] = "";
 
         return view('mes.packaging.form',$data);
     }

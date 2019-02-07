@@ -127,6 +127,7 @@
         var table = $('#pack-list').DataTable({
             // "scrollX": true,
             "order": [],
+            processing: true,
             ajax: '/mes/packaging/data/' + $('#start').val() + '/' + $('#end').val(),
             dom: 'Blfrtip',
             buttons: [

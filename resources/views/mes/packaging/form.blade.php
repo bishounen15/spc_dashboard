@@ -22,16 +22,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th>Product No.</th>
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-sm" name="PRODUCTNO" id="PRODUCTNO" placeholder="Generated from 1st Scan" value="{{ old('PRODUCTNO') ? old('PRODUCTNO') : $PRODUCTNO }}" readonly>
-                                            <small class="form-text text-danger">{{ $errors->first('PRODUCTNO') }}</small>
-                                        </div>
-                                    </td>
-                                </tr>
-            
+                                            
                                 <tr>
                                     <th>Date</th>
                                     <td>
@@ -41,12 +32,33 @@
                                         </div>
                                     </td>
                                 </tr>
+
+                                <tr>
+                                    <th>Product No.</th>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-sm" name="PRODUCTNO" id="PRODUCTNO" placeholder="Generated from 1st Scan" value="{{ old('PRODUCTNO') ? old('PRODUCTNO') : $PRODUCTNO }}" readonly>
+                                            <small class="form-text text-danger">{{ $errors->first('PRODUCTNO') }}</small>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
                                 <tr>
                                     <th>Model Name</th>
                                     <td>
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-sm" name="MODELNAME" id="MODELNAME" placeholder="Generated from 1st Scan" value="{{ old('MODELNAME') ? old('MODELNAME') : $MODELNAME }}" readonly>
                                             <small class="form-text text-danger">{{ $errors->first('MODELNAME') }}</small>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Module Class</th>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-sm" name="MODCLASS" id="MODCLASS" placeholder="Generated from 1st Scan" value="{{ old('MODCLASS') ? old('MODCLASS') : $MODCLASS }}" readonly>
+                                            <small class="form-text text-danger">{{ $errors->first('MODCLASS') }}</small>
                                         </div>
                                     </td>
                                 </tr>
@@ -289,6 +301,7 @@
                     var formData = new FormData();
                     formData.append('serial', serialno);
                     formData.append('model', $("#MODELNAME").val());
+                    formData.append('class', $("#MODCLASS").val());
                     formData.append('date', $("#TRXDATE").val());
 
                     $.ajax({
@@ -318,6 +331,7 @@
                                     if ($("#serial-list > tr").length == 0) {
                                         $("#PALLETNO").val(dt.PALLETFORMAT);
                                         $("#CUSTOMER").val(dt.CUSTOMER);
+                                        $("#MODCLASS").val(dt.MODCLASS);
                                         $("#MODELNAME").val(dt.MODELNAME);
                                         $("#PRODUCTNO").val(dt.PRODUCTNO);
 
