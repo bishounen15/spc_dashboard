@@ -269,7 +269,7 @@ class PackingListController extends Controller
 
         foreach($pallet->details as $detail) {
             $sheet->setCellValue($col.($i-1), '="*"&'.$col.$i.'&"*"');
-            $sheet->setCellValue($col.$i, $detail->SERIALNO);
+            $sheet->setCellValue($col.$i, '="'.$detail->SERIALNO.'"');
             $i+=2;
             $sc++;
 

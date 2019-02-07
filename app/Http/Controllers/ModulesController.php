@@ -38,6 +38,7 @@ class ModulesController extends Controller
 
             $data['SERIALNO'] = $mod->SERIALNO;
             $data['CUSTOMER'] = $mod->CUSTOMER;
+            $data['PARTNO'] = $mod->itemDetails() == null ? "Not Found" : $mod->itemDetails()->ITMCODE;
             $data['MODEL'] = $prd->modelName();
             $data['COLOR'] = $mod->COLOR;
             $data['MODCLASS'] = $mod->MODCLASS;
