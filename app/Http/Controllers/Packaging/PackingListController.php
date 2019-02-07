@@ -44,8 +44,13 @@ class PackingListController extends Controller
         $sdate = $start == '' ? date('Y-m-d') : date('Y-m-d',strtotime($start));
         $edate = $end == '' ? date('Y-m-d') : date('Y-m-d',strtotime($end));
 
-        $packing = DB::connection('web_portal')
-                    ->select("SELECT A.ROWID, A.PALLETNO, A.CUSTOMER, A.PRODUCTNO, A.MODELNAME, COUNT(B.SERIALNO) AS TOTALMODS FROM epl01 A LEFT JOIN epl02 B ON A.PALLETNO = B.PALLETNO AND A.CARTONNO = B.CARTONNO WHERE TRXDATE BETWEEN ? AND ? GROUP BY A.ROWID, A.PALLETNO, A.CUSTOMER, A.PRODUCTNO, A.MODELNAME ORDER BY A.CUSTOMER ASC, A.PALLETNO DESC",[$sdate,$edate]);
+        if (Auth::user()->mes_role == "QUAL") {
+            $query = "SELECT A.ROWID, A.PALLETNO, A.CUSTOMER, A.PRODUCTNO, A.MODELNAME, COUNT(B.SERIALNO) AS TOTALMODS FROM epl01 A LEFT JOIN epl02 B ON A.PALLETNO = B.PALLETNO AND A.CARTONNO = B.CARTONNO WHERE TRXDATE BETWEEN ? AND ? AND A.PALLETNO LIKE 'MRB%' GROUP BY A.ROWID, A.PALLETNO, A.CUSTOMER, A.PRODUCTNO, A.MODELNAME ORDER BY A.CUSTOMER ASC, A.PALLETNO DESC";
+        } else {
+            $query = "SELECT A.ROWID, A.PALLETNO, A.CUSTOMER, A.PRODUCTNO, A.MODELNAME, COUNT(B.SERIALNO) AS TOTALMODS FROM epl01 A LEFT JOIN epl02 B ON A.PALLETNO = B.PALLETNO AND A.CARTONNO = B.CARTONNO WHERE TRXDATE BETWEEN ? AND ? AND A.PALLETNO NOT LIKE 'MRB%' GROUP BY A.ROWID, A.PALLETNO, A.CUSTOMER, A.PRODUCTNO, A.MODELNAME ORDER BY A.CUSTOMER ASC, A.PALLETNO DESC";
+        }
+
+        $packing = DB::connection('web_portal')->select($query,[$sdate,$edate]);
 
         return Datatables::of($packing)->make(true);
     }
