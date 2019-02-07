@@ -110,7 +110,7 @@ return [
 
         'web_portal' => [
             'driver' => 'mysql',
-            'host' => '127.0.0.1',
+            'host' => '192.168.128.7',
             'port' => '3306',
             'database' => 'spmmc00',
             'username' => 'laravel_admin',
