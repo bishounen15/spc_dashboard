@@ -31,6 +31,11 @@
                         </tr>
 
                         <tr>
+                            <th width="35%" class="bg-dark text-light">Part Number</th>
+                            <td width="65%" id="PARTNO" class="serial-info"></td>
+                        </tr>
+
+                        <tr>
                             <th width="35%" class="bg-dark text-light">Model</th>
                             <td width="65%" id="MODEL" class="serial-info"></td>
                         </tr>
@@ -155,13 +160,13 @@
                             });
 
                             $("#err_sno").html("");
-
-                            table.ajax.url( '/modules/ftd/' + serialno ).load();
-                            mes_table.ajax.url( '/modules/mes/' + serialno ).load();
                         } else {
                             $("#err_sno").html("Serial No. [" + serialno + "] does not exists.");
                             $(".serial-info").html("");
                         }
+
+                        table.ajax.url( '/modules/ftd/' + serialno ).load();
+                        mes_table.ajax.url( '/modules/mes/' + serialno ).load();
                     },
                     error: function(xhr, textStatus, errorThrown){
                         alert (errorThrown);

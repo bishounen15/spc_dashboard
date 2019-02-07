@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\labelTemplate;
+use App\PortalItem;
 
 class SerialInfo extends Model
 {
@@ -20,6 +21,13 @@ class SerialInfo extends Model
         $model = str_replace('[P]',$this->ftd->count() > 0 ? $this->ftd->last()->Bin : 'XXX',$model);
         $model = str_replace('[T]',$this->CTYPE != null ? $this->CTYPE : $first->CTYPE,$model);
         return $model;
+    }
+
+    public function itemDetails() {
+        $first = SerialInfo::where("SERIALNO",$this->SERIALNO)->first();
+        $item = PortalItem::where("ITMDESC",$first->modelName())->first();
+
+        return $item;
     }
 
     public function template() {
@@ -44,6 +52,10 @@ class SerialInfo extends Model
 
     public function mes() {
         return $this->hasMany('App\mesData', 'SERIALNO', 'SERIALNO');
+    }
+
+    public function mrb() {
+        return $this->hasMany('App\MRBList', 'SERIALNO', 'SERIALNO');
     }
 
     public function extras() {

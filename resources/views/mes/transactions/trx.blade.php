@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 {{-- <div class="container"> --}}
-    <h3>MES Transactions [{{$station->STNDESC}}]</h3>
+    <h3>Line Transactions [{{$station->STNDESC}}]</h3>
     <h4>{{$date}} - Shift {{$shift}}</h4>
     {{-- <a href="#" role="button" class="btn btn-primary">Create Log Entry</a> --}}
     {{-- <br><br> --}}
@@ -197,7 +197,11 @@
                                 }
                             });
 
-                            $('#MESCreate').modal('toggle');
+                            if (dt.serial.allowcls != '') {
+                                $("#SaveButton").click();
+                            } else {
+                                $('#MESCreate').modal('toggle');
+                            }
                             // table.ajax.url( '/modules/ftd/' + serialno ).load();
                         } else {
                             $("#err_sno").html(dt.errors.error_msg);
@@ -261,7 +265,10 @@
                     success: function (dt) {
                         console.log(dt);
                         table.ajax.reload();
-                        $("#MESCreate").modal('toggle');
+
+                        if (($("#MESCreate").data('bs.modal') || {})._isShown != undefined) {
+                            $("#MESCreate").modal('toggle');
+                        }
                     },
                     error: function(xhr, textStatus, errorThrown){
                         alert (errorThrown);
@@ -272,6 +279,7 @@
 
         var table = $('#mes-list').DataTable({
             // "scrollX": true,
+            processing: true,
             "order": [],
             "searching": false,
             ajax: '/mes/transactions/{{$date}}/{{$shift}}/{{$station->STNID}}',

@@ -178,6 +178,12 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::resource('/planning/schedule','Planning\ProductionSchedulesController');
 
         Route::resource('mes/setup/custom','mesCustomFieldController');
+
+        Route::get('/mes/packaging/data/{start}/{end}', 'Packaging\PackingListController@load')->name('packaging_data');
+        Route::post('/mes/packaging/trx_info','Packaging\PackingListController@GetTrxInfo')->name('packing_trx_info');
+        Route::post('/mes/packaging/validate', 'Packaging\PackingListController@serialValidation')->name('packaging_validate');
+        Route::get('/mes/packaging/export/{id}', 'Packaging\PackingListController@export')->name('packaging_export');
+        Route::resource('mes/packaging','Packaging\PackingListController');
     });
 // }); 
 
