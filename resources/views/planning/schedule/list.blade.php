@@ -11,8 +11,9 @@
             <th>WW</th>
             <th></th>
             <th>Qty</th>
-            <th>Line 1</th>
-            <th>Line 2</th>
+            @foreach($lines as $line)
+            <th>Line {{$line->LINCODE}}</th>
+            @endforeach
             <th>Activity</th>
             <th>Cell</th>
             <th>Backsheet</th>
@@ -65,9 +66,10 @@
                 { data: 'work_week' },
                 { data: 'weekday' },
                 { data: 'qty' },
-                { data: 'line_1' },
-                { data: 'line_2' },
-                { data: 'model_name' },
+                @foreach($lines as $line)
+                { data: 'line_{!! $line->LINCODE !!}' },
+                @endforeach
+                { data: 'activity' },
                 { data: 'cell' },
                 { data: 'backsheet' },
                 { data: 'shifts' },

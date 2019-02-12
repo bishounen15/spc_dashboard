@@ -5,7 +5,7 @@
     <input type="hidden" name="_method" value="put" />
     @endif
     @csrf 
-    <div class="container">
+    {{-- <div class="container"> --}}
         <h3>Scheduled {{ $modify == 1 ? 'Update' : 'Creation' }}</h3>
         <div class="card">
             <div class="card-header">Schedule Information</div>
@@ -14,7 +14,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="production_date">Production Date</label>
-                            <input type="date" class="form-control form-control-sm" name="production_date" id="production_date" placeholder="Production Date" value="{{ old('production_date') ? old('production_date') : $production_date }}">
+                            <input type="date" class="form-control form-control-sm" name="production_date" id="production_date" placeholder="Production Date" value="{{ old('production_date') ? old('production_date') : $production_date }}"{{ $modify == 1 ? ' readonly' : '' }}>
                             <small class="form-text text-danger">{{ $errors->first('production_date') }}</small>
                         </div>
                         <div class="form-group">
@@ -30,16 +30,161 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        
+                    <div class="col-md-5 offset-md-1">
+                        <div class="form-group">
+                            <label>Select Shift</label>
+                            <p>
+                            @foreach($shifts as $shift)
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="selected_shifts[]" value="{{$shift->id}}" 
+                                @if ($modify == 1 && $sched->associated($shift->id) > 0)
+                                checked
+                                @endif
+                                >
+                                <label class="form-check-label" for="defaultCheck1">
+                                    {{$shift->code}} - {{$shift->descr}}
+                                </label>
+                            </div>
+                            @endforeach
+                            </p>
+                        </div>
                     </div>
                 </div>
                 
+                <div class="form-row">
+                    <div class="form-group text-right">
+                        &nbsp;
+                        <a href="#" id="add-item" role="button" class="btn btn-success btn-sm" style="width: 100px;" onclick="addItem()">Add</a>
+                        <a href="#" id="rem-item" role="button" class="btn btn-danger btn-sm" style="width: 100px;">Remove</a>
+                    </div>
+                </div>   
+
+                <table class="table table-sm table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th class="table-dark text-center" colspan="{{5 + $lines->count()}}">Product Type Selection</th>
+                        </tr>
+                        <tr>
+                            <th width="5%" rowspan="2">#</th>
+                            <th width="{{100 - (($lines->count() * 10) + 40)}}%" rowspan="2">Product Type</th>
+                            <th colspan="{{$lines->count()}}" class="text-center">Plan Quantity</th>
+                            <th width="15%" rowspan="2">Cell</th>
+                            <th width="15%" rowspan="2">Backsheet</th>
+                            <th width="5%" rowspan="2">Default</th>
+                        </tr>
+                        <tr>
+                            @foreach($lines as $line)
+                            <th width="10%">Line {{$line->LINCODE}}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody id="product-types">
+                        @if($products != null && $products->count() > 0)
+                            @foreach($products as $product)
+                                @if ($loop->first)
+                                <tr class="tr-clone">
+                                @else
+                                <tr>
+                                @endif
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="line-item[]" value="1" id="defaultCheck1">
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="form-group">
+                                            <select name="product-type[]" class="form-control">
+                                                <option disabled selected value> -- select an option -- </option>
+                                                @foreach($types as $type)
+                                                <option value="{{$type->PRODTYPE}}"
+                                                @if($type->PRODTYPE == $product->model_name)
+                                                selected="selected"
+                                                @endif
+                                                >{{$type->PRODTYPE}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </td>
+
+                                    @foreach($lines as $line)
+                                        <td>
+                                            <input type="number" name="line-{{$line->LINCODE}}[]" class="form-control" value="{{$product["line_".$line->LINCODE]}}">
+                                        </td>
+                                    @endforeach
+
+                                    <td>
+                                        <input type="text" name="cell[]" class="form-control" value="{{$product->cell}}">
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="backsheet[]" class="form-control" value="{{$product->backsheet}}">
+                                    </td>
+
+                                    <td class="text-right">
+                                        <div class="form-group">
+                                            <div class="default-check">
+                                                <input class="form-check-input" type="checkbox" name="is-default[]" value="1" id="defaultCheck1">
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr class="tr-clone">
+                                <td>
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="line-item[]" value="1" id="defaultCheck1">
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="form-group">
+                                        <select name="product-type[]" class="form-control">
+                                            <option disabled selected value> -- select an option -- </option>
+                                            @foreach($types as $type)
+                                            <option value="{{$type->PRODTYPE}}">{{$type->PRODTYPE}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </td>
+
+                                @foreach($lines as $line)
+                                    <td>
+                                        <input type="number" name="line-{{$line->LINCODE}}[]" class="form-control" value="0">
+                                    </td>
+                                @endforeach
+
+                                <td>
+                                    <input type="text" name="cell[]" class="form-control">
+                                </td>
+
+                                <td>
+                                    <input type="text" name="backsheet[]" class="form-control">
+                                </td>
+
+                                <td class="text-right">
+                                    <div class="form-group">
+                                        <div class="default-check">
+                                            <input class="form-check-input" type="checkbox" name="is-default[]" value="1" id="defaultCheck1">
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
             <div class="card-footer">
                 <div class="form-row">
                     <div class="form-group col-sm-6">
-                        <input type="submit" class="btn btn-success" name="save" id="save" value="{{ $modify == 1 ? 'Update' : 'Create' }} Shift" style="width: 200px;">
+                        <input type="submit" class="btn btn-success" name="save" id="save" value="{{ $modify == 1 ? 'Update' : 'Create' }} Schedule" style="width: 200px;">
                     </div>
                     <div class="form-group col-sm-6 text-right">
                         <a href="/planning/schedule" role="button" class="btn btn-danger" style="width: 200px;">Cancel</a>
@@ -47,54 +192,51 @@
                 </div>
             </div>
         </div>
-    </div> 
+    {{-- </div>  --}}
 </form>
 @endsection
 
 @push('jscript')
     <script>
-        $(document).on('change', '.time-input', function () {
-            getOverday();
-        });
+        Date.prototype.getWeek = function() {
+            var onejan = new Date(this.getFullYear(),0,1);
+            var today = new Date(this.getFullYear(),this.getMonth(),this.getDate());
+            var dayOfYear = ((today - onejan +1)/86400000);
+            return Math.ceil((dayOfYear+1)/7)
+        };
 
-        function getOverday() {
-            var timeStart = $("#start_time").val();
-            var timeEnd = $("#end_time").val();
+        var $tr;
+        function addItem() {
+            var $clone = $tr.clone().find("input,textarea").val("0").end();
+            $("#product-types").append($clone);
+        }
 
-            if (moment(timeStart, 'HH:mm').isValid() && moment(timeEnd, 'HH:mm').isValid()) {
-                if (timeStart > timeEnd) {
-                    $("#overday").val("Yes");
+        $(document).ready(function() {
+            $tr = $(".tr-clone");
+
+            $("#rem-item").click(function() {
+                selected = $('input[name="line-item[]"]:checked');
+                if ($(selected).length > 0) {
+                    $(selected).closest('tr').remove();
+                }
+            });
+
+            $('#production_date').change(function() {
+                var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+                var myDate = new Date($(this).val());
+                var work_week = myDate.getWeek();
+                var ww;
+
+                if (work_week < 10) {
+                    ww = "0" + work_week;
                 } else {
-                    $("#overday").val("No");
+                    ww = work_week;
                 }
 
-                getDuration();
-            } else {
-                $("#overday").val("Invalid Time Range");
-            }
-        }
-
-        function getDuration() {
-            var timeStart = $("#start_time").val();
-            var timeEnd = $("#end_time").val();
-
-            if (moment(timeStart, 'HH:mm').isValid() && moment(timeEnd, 'HH:mm').isValid()) {
-                tstart = moment('2019-01-01' + ' ' + timeStart);
-                tend = moment('2019-01-01' + ' ' + timeEnd);
-
-                if (timeStart < "06:00") {
-                    tstart = moment(tstart).add(1, 'days');
-                }
-
-                if (timeEnd <= "06:00") {
-                    tend = moment(tend).add(1, 'days');
-                }
-
-                $("#duration").val(Math.round(((tend - tstart) * 0.00000027778) * 100) / 100);
-            } else {
-                $("#duration").val(0);
-            }
-            console.log();
-        }
+                $("#work_week").val("WW" + ww);
+                $("#weekday").val(weekday[myDate.getDay()]);
+            });
+        });
     </script>
 @endpush

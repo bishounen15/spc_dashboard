@@ -13,7 +13,7 @@ class CreateProductionScheduleProductsTable extends Migration
      */
     public function up()
     {
-        Schema::connection('web_portal')->create('sch02', function (Blueprint $table) {
+        Schema::connection('planning')->create('production_schedule_products', function (Blueprint $table) {
             $table->charset = 'latin1';
             $table->collation = 'latin1_swedish_ci';
             
@@ -37,6 +37,6 @@ class CreateProductionScheduleProductsTable extends Migration
      */
     public function down()
     {
-        Schema::connection('web_portal')->dropIfExists('sch02');
+        Schema::connection('planning')->dropIfExists('production_schedule_products');
     }
 }

@@ -113,6 +113,10 @@
                                 {{-- <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a> --}}
                                 <a class="dropdown-item" href="/modules">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
                                 <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
+
+                                <h6 class="dropdown-header">Planning</h6>
+                                <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;<small>Production Schedule</small></a>
+
                                 @if(Auth::user()->mes_role != 'VIEW' || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Line Transactions</h6>
                                 @foreach(Auth::user()->portalUser->mesUser->assignment as $assign)
