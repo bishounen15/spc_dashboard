@@ -173,8 +173,14 @@
                                 </td>
 
                                 <td>
-                                    <input type="text" name="backsheet[]" class="form-control">
-                                    <span class="form-text text-danger" id="err_backsheet[]"></span>
+                                    <div class="form-group">
+                                        <select name="backsheet[]" class="form-control">
+                                            <option disabled selected value> -- select an option -- </option>
+                                            <option value="Thin">Thin</option>
+                                            <option value="Thick">Thick</option>
+                                        </select>
+                                        <span class="form-text text-danger" id="err_backsheet[]"></span>
+                                    </div>
                                 </td>
 
                                 <td class="text-right">
@@ -193,7 +199,6 @@
             <div class="card-footer">
                 <div class="form-row">
                     <div class="form-group col-sm-6">
-                        {{-- <input type="submit" class="btn btn-success" name="save" id="save" value="{{ $modify == 1 ? 'Update' : 'Create' }} Schedule" style="width: 200px;"> --}}
                         <a href="#" role="button" class="btn btn-success" id="save-trx" style="width: 200px;">{{ $modify == 1 ? 'Update' : 'Create' }} Schedule</a>
                     </div>
                     <div class="form-group col-sm-6 text-right">
@@ -259,7 +264,7 @@
                     });
 
                     $('input[name^="cell"]').each( function() {
-                        i = $('select[name="cell[]"]').index(this);
+                        i = $('input[name="cell[]"]').index(this);
                         
                         if ($(this).val() == "") {
                             $('span[id="err_cell[]"]').eq(i).html("Cell field is required.");
@@ -269,10 +274,10 @@
                         }
                     });
 
-                    $('input[name^="backsheet"]').each( function() {
+                    $('select[name^="backsheet"]').each( function() {
                         i = $('select[name="backsheet[]"]').index(this);
                         
-                        if ($(this).val() == "") {
+                        if ($(this).val() == "" || $(this).val() == null) {
                             $('span[id="err_backsheet[]"]').eq(i).html("Backsheet field is required.");
                             validated = false;
                         } else {
