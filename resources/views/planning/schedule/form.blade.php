@@ -46,6 +46,12 @@
                                 </label>
                             </div>
                             @endforeach
+                            <br>
+                            <span class="text-danger" id="shift-label">
+                                @if($selected_sched == 0)
+                                <small>Product Types will not be saved since no shift is selected.<br>This date will be treated as <strong>RESTDAY</strong>.</small>
+                                @endif
+                            </span>
                             </p>
                         </div>
                     </div>
@@ -151,6 +157,7 @@
                                             <option value="{{$type->PRODTYPE}}">{{$type->PRODTYPE}}</option>
                                             @endforeach
                                         </select>
+                                        <span class="form-text text-danger" id="err_product_type[]"></span>
                                     </div>
                                 </td>
 
@@ -162,10 +169,12 @@
 
                                 <td>
                                     <input type="text" name="cell[]" class="form-control">
+                                    <span class="form-text text-danger" id="err_cell[]"></span>
                                 </td>
 
                                 <td>
                                     <input type="text" name="backsheet[]" class="form-control">
+                                    <span class="form-text text-danger" id="err_backsheet[]"></span>
                                 </td>
 
                                 <td class="text-right">
@@ -184,7 +193,8 @@
             <div class="card-footer">
                 <div class="form-row">
                     <div class="form-group col-sm-6">
-                        <input type="submit" class="btn btn-success" name="save" id="save" value="{{ $modify == 1 ? 'Update' : 'Create' }} Schedule" style="width: 200px;">
+                        {{-- <input type="submit" class="btn btn-success" name="save" id="save" value="{{ $modify == 1 ? 'Update' : 'Create' }} Schedule" style="width: 200px;"> --}}
+                        <a href="#" role="button" class="btn btn-success" id="save-trx" style="width: 200px;">{{ $modify == 1 ? 'Update' : 'Create' }} Schedule</a>
                     </div>
                     <div class="form-group col-sm-6 text-right">
                         <a href="/planning/schedule" role="button" class="btn btn-danger" style="width: 200px;">Cancel</a>
@@ -220,6 +230,69 @@
                     $(selected).closest('tr').remove();
                 }
             });
+
+            $("#save-trx").click(function () {
+                var validated = true;
+
+                if ($("input[name='selected_shifts[]']:checked").length > 0) {
+                    $('select[name^="product-type"]').each( function() {
+                        i = $('select[name="product-type[]"]').index(this);
+                        
+                        if ($(this).val() == "" || $(this).val() == null) {
+                            $('span[id="err_product_type[]"]').eq(i).html("You have not selected a product type.");
+                            validated = false;
+                        } else {
+                            var qty = 0;
+
+                            @foreach($lines as $line)
+                            lq = $('input[name="line-{{$line->LINCODE}}[]"]').eq(i).val();
+                            qty += lq;
+                            @endforeach
+
+                            if (qty == 0) {
+                                $('span[id="err_product_type[]"]').eq(i).html("Plan quantity is not set for this product type.");
+                                validated = false;
+                            } else {
+                                $('span[id="err_product_type[]"]').eq(i).html("");
+                            }
+                        }
+                    });
+
+                    $('input[name^="cell"]').each( function() {
+                        i = $('select[name="cell[]"]').index(this);
+                        
+                        if ($(this).val() == "") {
+                            $('span[id="err_cell[]"]').eq(i).html("Cell field is required.");
+                            validated = false;
+                        } else {
+                            $('span[id="err_cell[]"]').eq(i).html("");
+                        }
+                    });
+
+                    $('input[name^="backsheet"]').each( function() {
+                        i = $('select[name="backsheet[]"]').index(this);
+                        
+                        if ($(this).val() == "") {
+                            $('span[id="err_backsheet[]"]').eq(i).html("Backsheet field is required.");
+                            validated = false;
+                        } else {
+                            $('span[id="err_backsheet[]"]').eq(i).html("");
+                        }
+                    });
+                }
+
+                if (validated == true) {
+                    $("#SchedForm").submit();
+                }
+            });
+
+            $("input[name='selected_shifts[]']").change(function() {
+                if ($("input[name='selected_shifts[]']:checked").length == 0) {
+                    $("#shift-label").html("<small>Product Types will not be saved since no shift is selected.<br>This date will be treated as <strong>RESTDAY</strong>.</small>");
+                } else {
+                    $("#shift-label").html("");
+                }
+            })
 
             $('#production_date').change(function() {
                 var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];

@@ -64,6 +64,7 @@ class ProductionSchedulesController extends Controller
         $data['lines'] = ProductionLine::all();
         $data['types'] = ProductType::where("ACTIVE",1)->get();
         $data['products'] = ProductionScheduleProduct::find(-1);
+        $data['selected_sched'] = 0;
 
         // dd($data['products']);
                 
@@ -100,44 +101,43 @@ class ProductionSchedulesController extends Controller
         }
 
         $activity = "";
-        $product_types = $request->input('product-type');
+        $cell = "";
+        $backsheet = "";
 
-        foreach( $product_types as $key => $n ) {
-            if ($n <> "") {
-                $activity .= ($activity != "" ? " / " : "") . $n;
+        if (!empty($request->input('product-type'))) {
+            $product_types = $request->input('product-type');
+
+            foreach( $product_types as $key => $n ) {
+                if ($n <> "") {
+                    $activity .= ($activity != "" ? " / " : "") . $n;
+                }
+            }
+
+            if (!empty($request->input('cell'))) {
+                $cells = $request->input('cell');
+                foreach( $cells as $key => $n ) {
+                    if ($n <> "") {
+                        if (strpos($cell, $n) === false) {
+                            $cell .= ($cell != "" ? " / " : "") . $n;
+                        }
+                    }
+                }
+            }
+
+            if (!empty($request->input('backsheet'))) {
+                $backsheets = $request->input('backsheet');
+                foreach( $backsheets as $key => $n ) {
+                    if ($n <> "") {
+                        if (strpos($backsheet, $n) === false) {
+                            $backsheet .= ($backsheet != "" ? " / " : "") . $n;
+                        }
+                    }
+                }
             }
         }
 
         $data['activity'] = $activity;
-
-        $cell = "";
-        
-        if (!empty($request->input('cell'))) {
-            $cells = $request->input('cell');
-            foreach( $cells as $key => $n ) {
-                if ($n <> "") {
-                    if (strpos($cell, $n) === false) {
-                        $cell .= ($cell != "" ? " / " : "") . $n;
-                    }
-                }
-            }
-        }
-
         $data['cells'] = $cell;
-
-        $backsheet = "";
-        
-        if (!empty($request->input('backsheet'))) {
-            $backsheets = $request->input('backsheet');
-            foreach( $backsheets as $key => $n ) {
-                if ($n <> "") {
-                    if (strpos($backsheet, $n) === false) {
-                        $backsheet .= ($backsheet != "" ? " / " : "") . $n;
-                    }
-                }
-            }
-        }
-
         $data['backsheets'] = $backsheet;
 
         if ($request->isMethod('post')) {
@@ -232,6 +232,9 @@ class ProductionSchedulesController extends Controller
         $products = ProductionScheduleProduct::selectRaw("model_name".$lineqry.", cell, backsheet")->where("schedule_id",$id)->groupBy("model_name","cell","backsheet")->get();
 
         $data['products'] = $products;
+
+        $selected_sched = ProductionScheduleShift::where("schedule_id",$id)->count();
+        $data['selected_sched'] = $selected_sched;
 
         // dd($data['products']);
                 

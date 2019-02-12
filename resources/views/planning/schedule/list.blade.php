@@ -33,6 +33,7 @@
     $(document).ready(function() {
         $('#sched-list').DataTable({
             // "scrollX": true,
+            "stateSave": true,
             "order": [],
             ajax: '{!! route('sched_data') !!}',
             dom: 'Blfrtip',

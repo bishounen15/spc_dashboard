@@ -113,11 +113,13 @@
                                 {{-- <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a> --}}
                                 <a class="dropdown-item" href="/modules">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
                                 <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
-
+                                
+                                @if(Auth::user()->mes_role == 'PLAN' || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Planning</h6>
-                                <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;<small>Production Schedule</small></a>
+                                <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>
+                                @endif
 
-                                @if(Auth::user()->mes_role != 'VIEW' || Auth::user()->sysadmin == 1)
+                                @if(Auth::user()->mes_role == 'OPTR' || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Line Transactions</h6>
                                 @foreach(Auth::user()->portalUser->mesUser->assignment as $assign)
                                 <a class="dropdown-item" href="/mescreate/{{$assign->stationInfo->STNID}}">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
