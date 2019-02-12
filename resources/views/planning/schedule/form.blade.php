@@ -72,11 +72,11 @@
                         </tr>
                         <tr>
                             <th width="5%" rowspan="2">#</th>
-                            <th width="{{100 - (($lines->count() * 10) + 40)}}%" rowspan="2">Product Type</th>
+                            <th width="{{100 - (($lines->count() * 10) + 45)}}%" rowspan="2">Product Type</th>
                             <th colspan="{{$lines->count()}}" class="text-center">Plan Quantity</th>
                             <th width="15%" rowspan="2">Cell</th>
                             <th width="15%" rowspan="2">Backsheet</th>
-                            <th width="5%" rowspan="2">Default</th>
+                            {{-- <th width="5%" rowspan="2">Default</th> --}}
                         </tr>
                         <tr>
                             @foreach($lines as $line)
@@ -112,6 +112,7 @@
                                                 >{{$type->PRODTYPE}}</option>
                                                 @endforeach
                                             </select>
+                                            <span class="form-text text-danger" id="err_product_type[]"></span>
                                         </div>
                                     </td>
 
@@ -123,19 +124,35 @@
 
                                     <td>
                                         <input type="text" name="cell[]" class="form-control" value="{{$product->cell}}">
+                                        <span class="form-text text-danger" id="err_cell[]"></span>
                                     </td>
 
                                     <td>
-                                        <input type="text" name="backsheet[]" class="form-control" value="{{$product->backsheet}}">
+                                        <div class="form-group">
+                                            <select name="backsheet[]" class="form-control">
+                                                <option disabled selected value> -- select an option -- </option>
+                                                <option value="Thin"
+                                                @if($product->backsheet == "Thin")
+                                                selected="selected"
+                                                @endif
+                                                >Thin</option>
+                                                <option value="Thick"
+                                                @if($product->backsheet == "Thick")
+                                                selected="selected"
+                                                @endif
+                                                >Thick</option>
+                                            </select>
+                                            <span class="form-text text-danger" id="err_backsheet[]"></span>
+                                        </div>
                                     </td>
 
-                                    <td class="text-right">
+                                    {{-- <td class="text-right">
                                         <div class="form-group">
                                             <div class="default-check">
                                                 <input class="form-check-input" type="checkbox" name="is-default[]" value="1" id="defaultCheck1">
                                             </div>
                                         </div>
-                                    </td>
+                                    </td> --}}
 
                                 </tr>
                             @endforeach
@@ -222,7 +239,7 @@
 
         var $tr;
         function addItem() {
-            var $clone = $tr.clone().find("input,textarea").val("0").end();
+            var $clone = $tr.clone().find("input,select").val("").end();
             $("#product-types").append($clone);
         }
 
@@ -238,6 +255,7 @@
 
             $("#save-trx").click(function () {
                 var validated = true;
+                var exists = [];
 
                 if ($("input[name='selected_shifts[]']:checked").length > 0) {
                     $('select[name^="product-type"]').each( function() {
@@ -258,7 +276,14 @@
                                 $('span[id="err_product_type[]"]').eq(i).html("Plan quantity is not set for this product type.");
                                 validated = false;
                             } else {
-                                $('span[id="err_product_type[]"]').eq(i).html("");
+                                if (exists.indexOf($(this).val()) >= 0) {
+                                    $('span[id="err_product_type[]"]').eq(i).html("This product type has already been selected.");
+                                    validated = false;
+                                } else {
+                                    $('span[id="err_product_type[]"]').eq(i).html("");
+                                    exists.push($(this).val());
+                                    console.log(exists);
+                                }
                             }
                         }
                     });

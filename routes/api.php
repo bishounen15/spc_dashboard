@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Models\Planning\ProductionSchedule;
+use App\Models\Planning\ProductionScheduleProduct;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +17,28 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('prodtypes/{date}', function($date) {
+    $sched_id = ProductionSchedule::where("production_date",$date)->first()->id;
+    $products = ProductionScheduleProduct::select("model_name")->where("schedule_id",$sched_id)->get();
+
+    $prod = "";
+    foreach($products as $product) {
+        $prod .= ($prod == "" ? "" : "|") . $product->model_name;
+    }
+
+    return $prod;
+});
+
+Route::get('prodlines/{date}', function($date) {
+    $sched_id = ProductionSchedule::where("production_date",$date)->first()->id;
+    $lines = ProductionScheduleProduct::select("production_line")->distinct()->where("schedule_id",$sched_id)->get();
+
+    $prodline = "";
+    foreach($lines as $line) {
+        $prodline .= ($prodline == "" ? "" : "|") . "Line " . $line->production_line;
+    }
+
+    return $prodline;
 });

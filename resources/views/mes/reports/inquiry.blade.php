@@ -231,7 +231,9 @@
                 { data: 'ShuntResistance' },
                 { data: 'FF' },
                 { data: 'Bin' },
-                { data: null, defaultContent: '' },
+                { sortable: false, "render": function ( data, type, full, meta ) {
+                    return '<a href="#" data-href="/planning/schedule/destroy/'+full.id+'" role="button" class="btn btn-sm btn-success{{Auth::user()->sysadmin == 1 ? "" : " disabled"}}" data-toggle="modal" data-target="#confirm-delete" id="'+full.description+'" style="width: 100%;">Reset</a></div>';
+                }},
                 // { data: 'USER' },
             ],
             createdRow: function (row, data, index) {
