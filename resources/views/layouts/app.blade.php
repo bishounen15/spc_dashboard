@@ -119,7 +119,7 @@
                                 <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>
                                 @endif
 
-                                @if(Auth::user()->mes_role == 'OPTR' || Auth::user()->sysadmin == 1)
+                                @if(Auth::user()->mes_role == 'OPRT' || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Line Transactions</h6>
                                 @foreach(Auth::user()->portalUser->mesUser->assignment as $assign)
                                 <a class="dropdown-item" href="/mescreate/{{$assign->stationInfo->STNID}}">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
