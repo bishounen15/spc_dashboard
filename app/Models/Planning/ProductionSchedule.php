@@ -47,4 +47,8 @@ class ProductionSchedule extends Model implements Auditable
     public function selectedShifts() {
         return $this->hasMany('App\Models\Planning\ProductionScheduleShift', 'schedule_id', 'id');
     }
+
+    public function products() {
+        return $this->hasMany('App\Models\Planning\ProductionScheduleProduct', 'schedule_id', 'id');
+    }
 }
