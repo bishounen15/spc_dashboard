@@ -9,6 +9,7 @@ use App\YieldData as YieldData;
 use App\ProductTypes;
 use App\User as User;
 use App\YieldEmail;
+use App\Models\Planning\ProductionSchedule;
 use Illuminate\Support\Facades\Auth;
 
 use DB;
@@ -80,19 +81,23 @@ class yieldController extends Controller
 
         if ($id == null) {
             $date = date("Y-m-d",strtotime("Today"));
+            // $date = date("Y-m-d",strtotime("+1 days",strtotime("Today")));
             $time = date('H:i');
-            // $time = date('13:15');
+            // $time = date('06:30');
             
             if ($time < "06:00") {
                 $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
             }
 
-            $shift = $this->getShift($time);
+            $schedshift = ProductionSchedule::where("production_date",$date)->first()->selectedShifts()->get();
+            $data['schedshift'] = $schedshift;
+
+            $shift = $this->getShift($time, $schedshift);
             
-            if ($shift == "A") {
-                $fval = $this->getStart($date,$shift) . ":00";
+            if ($shift == $schedshift->first()->details->descr) {
+                $fval = $this->getStart($date,$shift,$schedshift) . ":00";
                 $tval = date("Y-m-d",strtotime($date)) . " " . $time . ":00";
-                
+
                 $to = Carbon::createFromFormat('Y-m-d H:i:s', $tval);
                 $from = Carbon::createFromFormat('Y-m-d H:i:s', $fval);
                 
@@ -100,12 +105,11 @@ class yieldController extends Controller
                 
                 if ($diff_in_minutes < 30) {
                     $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
-                    // dd($date);
                 }
             }
 
             $last_yield = YieldData::where("date",$date)->orderBy("id","desc")->first();
-            // dd($last_yield);
+            
             if ($last_yield != null) {
                 if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
                     $date = $last_yield->date;
@@ -120,40 +124,55 @@ class yieldController extends Controller
                     $diff_in_minutes = $to->diffInMinutes($from);
                     
                     if ($diff_in_minutes >= 30) {
-                        $shift = $this->getShift($time);
-                        $last_trx = $this->getStart($date,$shift);
+                        $shift = $this->getShift($time,$schedshift);
+                        $last_trx = $this->getStart($date,$shift,$schedshift);
                         $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
                     }
                 } else {
                     $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
                 }
             } else {
-                if ($shift == "A") {
-                    $shift = "C";
-                } else {
-                    $shift = chr(ord($shift) - 1);
+                $shifts = ProductionSchedule::whereBetween("production_date",[
+                        date("Y-m-d",strtotime("-1 days",strtotime($date))),
+                        $date
+                    ])->orderBy("production_date","DESC")->get();
+                
+                $found = false;
+                $got = false;
+                
+                foreach($shifts as $sc) {
+                    foreach($sc->selectedShifts()->orderBy("shift_id","DESC")->get() as $sd) {
+                        if ($sd->details->descr == $shift) {
+                            $found = true;
+                            continue;
+                        }
+    
+                        if ($found == true) {
+                            $shift = $sd->details->descr;
+                            $got = true;
+                            break;
+                        }
+                    }
+
+                    if ($got == true) { break; }
                 }
 
-                $dt = $this->getEnd($date,$shift);
+                $dt = $this->getEnd($date,$shift) . ":00";
+                // $cdt = date("Y-m-d",strtotime("+1 days",strtotime("Today"))) . " " . $time . ":00";
                 $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
 
                 $to = Carbon::createFromFormat('Y-m-d H:i:s', $cdt);
                 $from = Carbon::createFromFormat('Y-m-d H:i:s', $dt);
                 
                 $diff_in_minutes = $to->diffInMinutes($from);
-                // dd($diff_in_minutes);
-
+                
                 if ($diff_in_minutes >= 30) {
-                    $shift = $this->getShift($time);
-                    $last_trx = $this->getStart($date,$shift);
+                    $shift = $this->getShift($time,$schedshift);
+                    $last_trx = $this->getStart($date,$shift,$schedshift);
                     $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
                 } else {
                     $dt = $this->getEnd($date,$shift);
                 }
-
-                // $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
-
-                
             }
 
             $last_trx = YieldData::where([
@@ -162,7 +181,7 @@ class yieldController extends Controller
             ])->max("to");
 
             if ($last_trx == null) {
-                $last_trx = $this->getStart($date,$shift);
+                $last_trx = $this->getStart($date,$shift,$schedshift);
             }
         } else {
             $yield_data = YieldData::find($id);
@@ -171,6 +190,9 @@ class yieldController extends Controller
             $dt = $yield_data->to;
             $date = $yield_data->date;
             $shift = $yield_data->shift;
+
+            $schedshift = ProductionSchedule::where("production_date",$date)->first()->selectedShifts()->get();
+            $data['schedshift'] = $schedshift;
 
             $data['team'] = $yield_data->team;
             $data['product_size'] = $yield_data->product_size;
@@ -192,15 +214,7 @@ class yieldController extends Controller
             $data['el1_inspected'] = $yield_data->el1_inspected;
             $data['el1_defect'] = $yield_data->el1_defect;
 
-            // $data['be_inspected'] = $yield_data->be_inspected;
-            // $data['be_defect'] = $yield_data->be_defect;
-            // $data['be_class_b'] = $yield_data->be_class_b;
-            // $data['be_class_c'] = $yield_data->be_class_c;
-
-            // $data['el2_class_a'] = $yield_data->el2_class_a;
             $data['el2_defect'] = $yield_data->el2_defect;
-            // $data['el2_class_b'] = $yield_data->el2_class_b;
-            // $data['el2_class_c'] = $yield_data->el2_class_c;
             $data['el2_low_power'] = $yield_data->el2_low_power;
 
             $data['man'] = $yield_data->man;
@@ -212,9 +226,6 @@ class yieldController extends Controller
             $data['total_defect'] = $yield_data->total_defect;
         }
 
-        // $last_trx = "2018-07-13 06:00";
-        // $dt = "2018-07-13 14:00";
-        
         $input_mod = mesData::where([
             ["TRXDATE",">=",$last_trx],
             ["TRXDATE","<",$dt],
@@ -289,8 +300,7 @@ class yieldController extends Controller
         $data['el2_class_a'] = $el2_class_a;
         $data['el2_class_c'] = $el2_class_c;
         $data['el2_class_b'] = $el2_class_b;
-        // $data['be_class_c'] = $be_class_c;
-
+        
         return view('yield.form', $data);
     }
 
@@ -430,45 +440,59 @@ class yieldController extends Controller
         return redirect('/Yield/list')->with("success","Record Successfully Updated.");
     }
 
-    private function getShift($time) {
-        if ($time >= "06:00" && $time <= "13:59") {
-            $retval = "A";
-        } else if ($time >= "14:00" && $time <= "21:59") {
-            $retval = "B";
-        } else {
-            $retval = "C";
-        }
+    private function getShift($time, $sched) {
+        $retval = "";
 
+        $date = date("Y-m-d",strtotime("Today"));
+        $sdate = $date;
+
+        if ($time < "06:00") {
+            $date = date("Y-m-d",strtotime("1 days",strtotime($date)));
+        }
+        
+        $edate = $sdate;
+
+        foreach($sched as $shift) {
+            if ($shift->details->overday == 1) {
+                $edate = date("Y-m-d",strtotime("1 days",strtotime($sdate)));
+            }
+            
+            if ($date . " " . $time >= $sdate . " " . date("H:i",strtotime($shift->details->start_time)) && $date . " " . $time < $edate . " " . date("H:i",strtotime($shift->details->end_time))) {
+                $retval = $shift->details->descr;
+                break;
+            }
+        }
+        
         return $retval;
     }
 
-    private function getStart($date, $shift) {
-        if ($shift == "A") {
-            $retval = $date . " 06:00";
-        } else if ($shift == "B") {
-            $retval = $date . " 14:00";
-        } else if ($shift == "6AM-6PM") {
-            $retval = $date . " 06:00";
-        } else if ($shift == "6PM-6AM") {
-            $retval = $date . " 18:00";
-        } else {
-            $retval = $date . " 22:00";
+    private function getStart($date, $shift, $sched) {
+        $retval = "";
+        foreach($sched as $sc) {
+            if ($sc->details->descr == $shift) {
+                $stime = $sc->details->start_time;
+                $retval = $date . " " . date("H:i",strtotime($stime));
+                break;
+            }
         }
 
         return $retval;
     }
 
     private function getEnd($date, $shift) {
-        if ($shift == "A") {
-            $retval = $date . " 14:00:00";
-        } else if ($shift == "B") {
-            $retval = $date . " 22:00:00";
-        } else if ($shift == "6AM-6PM") {
-            $retval = $date . " 18:00:00";
-        } else if ($shift == "6PM-6AM") {
-            $retval = date("Y-m-d",strtotime("+1 days",strtotime($date))) . " 06:00:00";
-        }else {
-            $retval = date("Y-m-d",strtotime("+1 days",strtotime($date))) . " 06:00:00";
+        $sched = ProductionSchedule::where("production_date",$date)->first()->selectedShifts()->get();
+        $retval = "";
+
+        foreach($sched as $sc) {
+            if ($sc->details->descr == $shift) {
+                $etime = $sc->details->end_time;
+                if ($sc->details->overday == 1) {
+                    $retval = date("Y-m-d",strtotime("+1 days",strtotime($date))) . " " . date("H:i",strtotime($etime));
+                } else {
+                    $retval = $date . " " . date("H:i",strtotime($etime));
+                }
+                break;
+            }
         }
 
         return $retval;
@@ -547,14 +571,18 @@ class yieldController extends Controller
         // return Response::json($request);
         $build = $request->input('build');
 
+        $schedshift = ProductionSchedule::where("production_date",$request->input('date'))->first()->selectedShifts()->get();
+
         if ($request->input('current') == "true") {
             $start = $request->input('from');
             $end = $request->input('to');
         } else {
-            $start = $this->getStart($request->input('date'),$request->input('shift'));
+            $start = $this->getStart($request->input('date'),$request->input('shift'),$schedshift);
             $end = $this->getEnd($request->input('date'),$request->input('shift'));
         }
         $data = [];
+
+        $data['schedshift'] = $schedshift;
 
         $data["start"] = $start;
         $data["end"] = $end;
