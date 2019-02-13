@@ -83,7 +83,7 @@ class yieldController extends Controller
             $date = date("Y-m-d",strtotime("Today"));
             // $date = date("Y-m-d",strtotime("+1 days",strtotime("Today")));
             $time = date('H:i');
-            // $time = date('06:30');
+            // $time = date('06:29');
             
             if ($time < "06:00") {
                 $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
