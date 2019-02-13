@@ -200,13 +200,13 @@
                                     </div>
                                 </td>
 
-                                <td class="text-right">
+                                {{-- <td class="text-right">
                                     <div class="form-group">
                                         <div class="default-check">
                                             <input class="form-check-input" type="checkbox" name="is-default[]" value="1" id="defaultCheck1">
                                         </div>
                                     </div>
-                                </td>
+                                </td> --}}
 
                             </tr>
                         @endif
