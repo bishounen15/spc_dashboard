@@ -159,6 +159,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
         Route::get('/mes/data/{start}/{end}', 'MESController@load')->name('mes_data');
         Route::get('/mes/transactions/{date}/{shift}/{station}', 'MESController@transactions')->name('mes_trx');
+        Route::get('/mes/output/{date}', 'MESController@dailyOutput')->name('mes_output');
         Route::post('/mes/validate', 'MESController@serialValidation')->name('mes_validate');
         Route::get('/mes','MESController@index')->name('mes_daily');
         Route::get('/mescreate/{station}','MESController@create')->name('add_mes_trx');

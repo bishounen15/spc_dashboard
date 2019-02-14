@@ -55,6 +55,41 @@ class MESController extends Controller
 
         return Datatables::of($mes)->make(true);
     }
+
+    public function dailyOutput($date) {
+        $sql = "SELECT LOCNCODE, COUNT(SERIALNO) AS 'Total', ";
+        $dt = date("Y-m-d",strtotime($date));
+
+        $fd = "";
+        $ed = "";
+
+        $hrs = [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5 ];
+
+        $sq = "";
+
+        foreach($hrs as $hr) {
+            $h = sprintf("%'.02d",$hr);
+            
+            if ($dt == date("Y-m-d",strtotime("Today")) && date('H') < $h) { break; }
+
+            if ($hr == 0) { 
+                $dt = date("Y-m-d",strtotime("1 days",strtotime($dt)));
+            }
+            
+            if ($fd == "") { $fd = $dt." ".$h.":00:00"; }
+            $ed = $dt." ".$h.":59:59";
+
+            $sq .= ($sq == "" ? "" : ", ") . "SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END) AS '".$h."'" ;
+        }
+
+        $sql .= $sq . "FROM mes01 WHERE TRXDATE BETWEEN '".$fd."' AND '".$ed."' GROUP BY LOCNCODE";
+
+        $output = DB::connection('web_portal')
+                    ->select($sql);
+
+        return Datatables::of($output)->make(true);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
