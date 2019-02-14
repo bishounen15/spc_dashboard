@@ -56,6 +56,11 @@
                         </tr>
                         
                         <tr>
+                            <th width="35%" class="bg-dark text-light">Production Line</th>
+                            <td width="65%" id="PRODLINE" class="serial-info"></td>
+                        </tr>
+
+                        <tr>
                             <th width="35%" class="bg-dark text-light">Pallet Number</th>
                             <td width="65%" id="PALLETNO" class="serial-info"></td>
                         </tr>

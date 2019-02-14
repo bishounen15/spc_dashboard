@@ -43,6 +43,7 @@ class ModulesController extends Controller
             $data['COLOR'] = $mod->COLOR;
             $data['MODCLASS'] = $mod->MODCLASS;
             $data['STATUS'] = $mod->mes->count() > 0 ? $mes->moduleStatus() : '';
+            $data['PRODLINE'] = "Line " . $mod->PRODLINE;
             $data['PALLETNO'] = $mod->palletInfo != null ? $mod->palletInfo->PALLETNO : '';
             $data['CONTAINER'] = '';
         }
