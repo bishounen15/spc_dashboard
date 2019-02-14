@@ -88,7 +88,7 @@ class yieldController extends Controller
             if ($time < "06:00") {
                 $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
             }
-
+            
             $schedshift = ProductionSchedule::where("production_date",$date)->first()->selectedShifts()->get();
             $data['schedshift'] = $schedshift;
 
@@ -114,13 +114,13 @@ class yieldController extends Controller
                 if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
                     $date = $last_yield->date;
                     $shift = $last_yield->shift;
-
-                    $dt = $this->getEnd($date,$last_yield->shift);
+                    
+                    $dt = $this->getEnd($date,$last_yield->shift) . ":00";
                     $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
-
+                    
                     $to = Carbon::createFromFormat('Y-m-d H:i:s', $cdt);
                     $from = Carbon::createFromFormat('Y-m-d H:i:s', $dt);
-
+                    
                     $diff_in_minutes = $to->diffInMinutes($from);
                     
                     if ($diff_in_minutes >= 30) {
