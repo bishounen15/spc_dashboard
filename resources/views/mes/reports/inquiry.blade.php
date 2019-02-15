@@ -112,11 +112,12 @@
                         {{-- <th>#</th> --}}
                         <tr>
                             <th class="serial-hide" hidden>Serial No.</th>
-                            <th width="10%">Location</th>
+                            <th width="5%">Prod. Line</th>
+                            <th width="10%">Station</th>
                             <th width="15%">Trasaction Date</th>
                             <th width="10%">Status</th>
                             <th width="10%">Class</th>
-                            <th width="35%">Remarks</th>
+                            <th width="30%">Remarks</th>
                             <th width="20%">Transacted By</th>
                         </tr>
                     </thead>
@@ -264,7 +265,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
                     },
                     text:       'Excel',
                     filename: "mes_excel"
@@ -272,7 +273,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
                     },
                     text:       'CSV',
                     filename: "mes_csv"
@@ -292,6 +293,7 @@
             columns: [
                 // { data: 'id' },
                 { data: 'SERIALNO' },
+                { data: 'PRODLINE' },
                 { data: 'LOCNCODE' },
                 { data: 'TRXDATE' },
                 { data: 'STATUS' },
