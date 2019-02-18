@@ -333,6 +333,8 @@ class ProductionSchedulesController extends Controller
             $sched->save();
 
             ProductionScheduleShift::where("schedule_id",$id)->delete();
+            ProductionScheduleProduct::where("schedule_id",$id)->delete();
+            
             if (!empty($request->input('selected_shifts'))) {
                 foreach($request->input('selected_shifts') as $shift_id) {
                     ProductionScheduleShift::create([
@@ -341,7 +343,6 @@ class ProductionSchedulesController extends Controller
                     ]);
                 }
 
-                ProductionScheduleProduct::where("schedule_id",$id)->delete();
                 if (!empty($request->input('product-type'))) {
                     $product_types = $request->input('product-type');
                     $cells = $request->input('cell');
