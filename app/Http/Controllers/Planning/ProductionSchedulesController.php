@@ -272,47 +272,47 @@ class ProductionSchedulesController extends Controller
         }
         
         $activity = "";
-        
-        if (!empty($request->input('product-type'))) {
-            $product_types = $request->input('product-type');
-            foreach( $product_types as $key => $n ) {
-                if ($n <> "") {
-                    $activity .= ($activity != "" ? " / " : "") . $n;
-                }
-            }
-        }
-
-        $data['activity'] = $activity;
-
         $cell = "";
-        
-        if (!empty($request->input('cell'))) {
-            $cells = $request->input('cell');
-            foreach( $cells as $key => $n ) {
-                if ($n <> "") {
-                    if (strpos($cell, $n) === false) {
-                        $cell .= ($cell != "" ? " / " : "") . $n;
-                    }
-                }
-            }
-        }
-
-        $data['cells'] = $cell;
-
         $backsheet = "";
         
-        if (!empty($request->input('backsheet'))) {
-            $backsheets = $request->input('backsheet');
-            foreach( $backsheets as $key => $n ) {
-                if ($n <> "") {
-                    if (strpos($backsheet, $n) === false) {
-                        $backsheet .= ($backsheet != "" ? " / " : "") . $n;
+        if (!empty($request->input('selected_shifts'))) {
+            if (!empty($request->input('product-type'))) {
+                $product_types = $request->input('product-type');
+                foreach( $product_types as $key => $n ) {
+                    if ($n <> "") {
+                        $activity .= ($activity != "" ? " / " : "") . $n;
                     }
                 }
             }
-        }
 
-        $data['backsheets'] = $backsheet;
+            $data['activity'] = $activity;
+            
+            if (!empty($request->input('cell'))) {
+                $cells = $request->input('cell');
+                foreach( $cells as $key => $n ) {
+                    if ($n <> "") {
+                        if (strpos($cell, $n) === false) {
+                            $cell .= ($cell != "" ? " / " : "") . $n;
+                        }
+                    }
+                }
+            }
+
+            $data['cells'] = $cell;
+            
+            if (!empty($request->input('backsheet'))) {
+                $backsheets = $request->input('backsheet');
+                foreach( $backsheets as $key => $n ) {
+                    if ($n <> "") {
+                        if (strpos($backsheet, $n) === false) {
+                            $backsheet .= ($backsheet != "" ? " / " : "") . $n;
+                        }
+                    }
+                }
+            }
+
+            $data['backsheets'] = $backsheet;
+        }
 
         // dd($request);
         if ($request->isMethod('PUT')) {
@@ -334,7 +334,7 @@ class ProductionSchedulesController extends Controller
 
             ProductionScheduleShift::where("schedule_id",$id)->delete();
             ProductionScheduleProduct::where("schedule_id",$id)->delete();
-            
+
             if (!empty($request->input('selected_shifts'))) {
                 foreach($request->input('selected_shifts') as $shift_id) {
                     ProductionScheduleShift::create([
