@@ -285,8 +285,6 @@ class ProductionSchedulesController extends Controller
                 }
             }
 
-            $data['activity'] = $activity;
-            
             if (!empty($request->input('cell'))) {
                 $cells = $request->input('cell');
                 foreach( $cells as $key => $n ) {
@@ -298,8 +296,6 @@ class ProductionSchedulesController extends Controller
                 }
             }
 
-            $data['cells'] = $cell;
-            
             if (!empty($request->input('backsheet'))) {
                 $backsheets = $request->input('backsheet');
                 foreach( $backsheets as $key => $n ) {
@@ -310,9 +306,11 @@ class ProductionSchedulesController extends Controller
                     }
                 }
             }
-
-            $data['backsheets'] = $backsheet;
         }
+
+        $data['activity'] = $activity;
+        $data['cells'] = $cell;
+        $data['backsheets'] = $backsheet;
 
         // dd($request);
         if ($request->isMethod('PUT')) {
