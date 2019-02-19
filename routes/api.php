@@ -19,9 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('prodtypes/{date}', function($date) {
+Route::get('prodtypes/{date}/{line}', function($date, $line) {
     $sched_id = ProductionSchedule::where("production_date",$date)->first()->id;
-    $products = ProductionScheduleProduct::select("model_name")->where("schedule_id",$sched_id)->get();
+    $products = ProductionScheduleProduct::select("model_name")->where([
+        ["schedule_id",$sched_id],
+        ["production_line",$line],
+    ])->get();
 
     $prod = "";
     foreach($products as $product) {
