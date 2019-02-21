@@ -36,7 +36,7 @@ Route::get('prodtypes/{date}/{line}', function($date, $line) {
 
 Route::get('prodlines/{date}', function($date) {
     $sched_id = ProductionSchedule::where("production_date",$date)->first()->id;
-    $lines = ProductionScheduleProduct::select("production_line")->distinct()->where("schedule_id",$sched_id)->get();
+    $lines = ProductionScheduleProduct::select("production_line")->distinct()->where("schedule_id",$sched_id)->orderBy("production_line","ASC")->get();
 
     $prodline = "";
     foreach($lines as $line) {
