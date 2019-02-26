@@ -41,4 +41,8 @@ class PackingLists extends Model implements Auditable
     public function details() {
         return $this->hasMany('App\Models\Packaging\PackingListItems', 'PALLETNO', 'PALLETNO');
     }
+
+    public function customer() {
+        return $this->hasOne('App\portalCustomer', 'CUSCODE', 'CUSTOMER');
+    }
 }

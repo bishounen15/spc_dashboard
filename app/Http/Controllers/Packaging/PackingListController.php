@@ -247,35 +247,54 @@ class PackingListController extends Controller
         $pallet = PackingLists::find($id);
         
         $inputFileType = 'Xls'; // Xlsx - Xml - Ods - Slk - Gnumeric - Csv
-        $inputFileName = 'storage/Templates/Packing List.xls';
+        $inputFileName = 'storage/Templates/' . ($pallet->customer->TEMPLATE == null ? "Packing List.xls" : $pallet->customer->TEMPLATE);
+
+        // dd($inputFileName);
 
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
         $spreadsheet = $reader->load($inputFileName);
         
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', "Model Name : " . $pallet->MODELNAME);
-        $sheet->setCellValue('D4', $pallet->PALLETNO);
-        $sheet->setCellValue('D8', $pallet->PRODUCTNO);
-        $sheet->setCellValue('I6', $pallet->details()->count().'pcs');
+        
+        if ($pallet->customer->TEMPLATE == null) {
+            $sheet->setCellValue('A1', "Model Name : " . $pallet->MODELNAME);
+            $sheet->setCellValue('D4', $pallet->PALLETNO);
+            $sheet->setCellValue('D8', $pallet->PRODUCTNO);
+            $sheet->setCellValue('I6', $pallet->details()->count().'pcs');
+        } else {
+            $sheet->SetCellValue('H3', $pallet->MODELNAME);
+			$sheet->SetCellValue('H4', $pallet->PALLETNO);
+        }
 
         $settings = DB::connection('web_portal')
                     ->table("epl00")
                     ->select("COLCOUNT", "COL1", "COL2")
                     ->first();
 
-        $i = 13;
+        $i = $pallet->customer->TEMPLATE == null ? 13 : 10;
         $sc = 0;
         $col = $settings->COL1;
 
         foreach($pallet->details as $detail) {
-            $sheet->setCellValue($col.($i-1), '="*"&'.$col.$i.'&"*"');
-            $sheet->setCellValue($col.$i, '="'.$detail->SERIALNO.'"');
-            $i+=2;
-            $sc++;
+            if ($pallet->customer->TEMPLATE == null) {
+                $sheet->setCellValue($col.($i-1), '="*"&'.$col.$i.'&"*"');
+                $sheet->setCellValue($col.$i, '="'.$detail->SERIALNO.'"');
+                $i+=2;
+                $sc++;
 
-            if ($sc == $settings->COLCOUNT) {
-                $i = 13;
-                $col = $settings->COL2;
+                if ($sc == $settings->COLCOUNT) {
+                    $i = 13;
+                    $col = $settings->COL2;
+                }
+            } else {
+                if ($i == 10) {
+                    $sheet->SetCellValue('H6', $pallet->PRODUCTNO . "-" . $detail->serialInfo->first()->ftd()->orderBy("InspectionTime","DESC")->first()->Bin);
+                }
+
+                $sheet->SetCellValue("B".$i, '="'.strtoupper($detail->SERIALNO).'"');
+                $sheet->SetCellValue("C".$i, '="*'.strtoupper($detail->SERIALNO).'*"');
+
+                $i++;
             }
         }
 
