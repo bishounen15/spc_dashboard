@@ -288,7 +288,7 @@ class PackingListController extends Controller
                 }
             } else {
                 if ($i == 10) {
-                    $sheet->SetCellValue('H6', $pallet->PRODUCTNO . "-" . $detail->serialInfo->first()->ftd()->orderBy("InspectionTime","DESC")->first()->Bin);
+                    $sheet->SetCellValue('H6', $detail->serialInfo->first()->itemDetails()->ITMSPECS);
                 }
 
                 $sheet->SetCellValue("B".$i, '="'.strtoupper($detail->SERIALNO).'"');
