@@ -113,6 +113,7 @@
                                 {{-- <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a> --}}
                                 <a class="dropdown-item" href="/modules">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
                                 <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
+                                <a class="dropdown-item" href="/mes/output/{{date('Y-m-d')}}">&nbsp;&nbsp;&nbsp;&nbsp;Daily Output</a>
                                 
                                 <h6 class="dropdown-header">Planning</h6>
                                 <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>

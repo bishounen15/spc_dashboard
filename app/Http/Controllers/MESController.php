@@ -7,6 +7,7 @@ use App\mesData;
 use App\mesClasses;
 use App\mesStation;
 use App\SerialInfo;
+use App\Models\Planning\ProductionSchedule;
 use Illuminate\Support\Facades\Auth;
 
 use DB;
@@ -57,37 +58,67 @@ class MESController extends Controller
     }
 
     public function dailyOutput($date) {
-        $sql = "SELECT LOCNCODE, COUNT(SERIALNO) AS 'Total', ";
-        $dt = date("Y-m-d",strtotime($date));
+        $sched = ProductionSchedule::where("production_date",$date)->first();
+        $shifts = $sched->selectedShifts;
 
-        $fd = "";
-        $ed = "";
+        $daily = [];
 
-        $hrs = [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5 ];
+        $od = date("Y-m-d",strtotime("1 days",strtotime($date)));
+        
+        foreach ($shifts as $shift) {
+            $st = date("Y-m-d H:i:s",strtotime($date . $shift->details->start_time));
+            $et = date("Y-m-d H:i:s",strtotime( ($shift->details->overday == 0 ? $date : $od) . $shift->details->end_time));
 
-        $sq = "";
+            $sh = "TRXDATE >= '" . $st . "' AND TRXDATE < '" . $et . "'";
 
-        foreach($hrs as $hr) {
-            $h = sprintf("%'.02d",$hr);
-            
-            if ($dt == date("Y-m-d",strtotime("Today")) && date('H') < $h) { break; }
+            $sql = "SELECT '" . $shift->details->descr . "' AS SHIFT, IFNULL(A.PRODLINE, C.PRODLINE) AS PRODLINE, PRODTYPE, LOCNCODE, COUNT(A.SERIALNO) AS 'Total', ";
 
-            if ($hr == 0) { 
-                $dt = date("Y-m-d",strtotime("1 days",strtotime($dt)));
+            $dt = date("Y-m-d",strtotime($et));
+
+            $fd = "";
+            $ed = "";
+
+            $hrs = [];
+
+            $et = date("Y-m-d H:i:s",strtotime("-1 hour",strtotime($et)));
+            while ($et >= $st) {
+                array_push($hrs,date("H",strtotime($et)));
+                $et = date("Y-m-d H:i:s",strtotime("-1 hour",strtotime($et)));
             }
-            
-            if ($fd == "") { $fd = $dt." ".$h.":00:00"; }
-            $ed = $dt." ".$h.":59:59";
 
-            $sq .= ($sq == "" ? "" : ", ") . "SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END) AS '".$h."'" ;
+            $sq = "";
+            $ix = 0;
+
+            foreach($hrs as $hr) {
+                $h = sprintf("%'.02d",$hr);
+                
+                if ($hr == 23) { 
+                    $dt = date("Y-m-d",strtotime("-1 days",strtotime($dt)));
+                }
+
+                // if (date("YmdH",strtotime($dt . " " . $h.":00:00")) > date('YmdH')) { continue; }
+                
+                if ($ed == "") { $ed = $dt." ".$h.":59:59"; }
+                $fd = $dt." ".$h.":00:00";
+
+                $sq .= ($sq == "" ? "" : ", ") . "SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END) AS '".$h."'" ;
+            }
+
+            $sql .= $sq . " FROM mes01 A INNER JOIN lts02 B ON A.LOCNCODE = B.STNCODE INNER JOIN lbl02 C ON A.SERIALNO = C.SERIALNO AND C.LBLTYPE = 1 WHERE ".$sh." AND SORTIX IS NOT NULL GROUP BY IFNULL(A.PRODLINE, C.PRODLINE), PRODTYPE, LOCNCODE ORDER BY PRODTYPE, PRODLINE, SORTIX";
+
+            $output = DB::connection('web_portal')
+                            ->select($sql);
+
+            array_push($daily, $output);
         }
 
-        $sql .= $sq . "FROM mes01 WHERE TRXDATE BETWEEN '".$fd."' AND '".$ed."' GROUP BY LOCNCODE";
+        // return Datatables::of($output)->make(true);
+        $data = [];
 
-        $output = DB::connection('web_portal')
-                    ->select($sql);
+        $data['output'] = $daily;
+        $data['date'] = $date;
 
-        return Datatables::of($output)->make(true);
+        return view('mes.reports.output',$data);
     }
 
     /**
