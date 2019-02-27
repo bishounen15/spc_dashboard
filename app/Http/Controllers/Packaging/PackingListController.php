@@ -205,7 +205,7 @@ class PackingListController extends Controller
         $serr = [];
 
         if ($validator->fails()) {
-            array_push($pallet." already exists.");
+            array_push($serr, $pallet." already exists.");
         } else {
             foreach($snos as $sno) {
                 $req = ["SERIALNO" => $sno];
