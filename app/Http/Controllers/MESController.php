@@ -196,7 +196,7 @@ class MESController extends Controller
                             $fill_serial = true;    
                         }
                     } else {
-                        if ($cclass != $assignment->ALLOWCLS) {
+                        if ((strpos($cclass, $assignment->ALLOWCLS) !== false) == false) {
                             $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is not Class '.$assignment->ALLOWCLS.'. (Current Class: '.$serialInfo->MODCLASS.')'];
                         } else {
                             $fill_serial = true;
