@@ -104,7 +104,7 @@ class MESController extends Controller
             }
             
             $sql .= $sq . " FROM mes01 A INNER JOIN lts02 B ON A.LOCNCODE = B.STNCODE INNER JOIN lbl02 C ON A.SERIALNO = C.SERIALNO AND C.LBLTYPE = 1 WHERE ".$sh." AND SORTIX IS NOT NULL GROUP BY IFNULL(A.PRODLINE, C.PRODLINE), PRODTYPE, LOCNCODE ORDER BY PRODTYPE, PRODLINE, SORTIX";
-            // dd($sql);
+            
             $output = DB::connection('web_portal')
                             ->select($sql);
 
@@ -115,6 +115,13 @@ class MESController extends Controller
 
         $data['output'] = $daily;
         $data['date'] = $date;
+        $data['cdate'] = "";
+
+        $cdate = date('Y-m-d',strtotime((date('H') < 6 ? "-1" : "0")." days",strtotime(date('Y-m-d'))));
+
+        if ($date == $cdate) {
+            $data['cdate'] = " as of " . date('H:i');
+        }
 
         return view('mes.reports.output',$data);
     }

@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('content')
-    <h3>Daily Output Report</h3>
+    <h3>
+        Daily Output Report{{$cdate}}
+    </h3>
     <div class="card">
         <div class="card-body">
             
