@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-{{-- <div class="container"> --}}
     <h3>Daily Output Report</h3>
     <div class="card">
         <div class="card-body">
@@ -14,13 +13,12 @@
         </div>
     </div>
 
-    <table class="table table-condensed table-striped table-sm" id="mes-list" style="width: 100%;">
-        <tbody class="tbody-light">
             @php
                 $prodline = 0;
                 $shift = "";
                 $model = "";
                 $rw = 0;
+                $tb = false;
             @endphp
 
             @foreach($output as $op)
@@ -42,11 +40,27 @@
                                 $rw = 0;
                             @endphp
                         @elseif($key == "SHIFT" && $shift != $value)
+                            @if($tb == true)
+                                </table><br><hr><br>
+                                @php
+                                    $tb = false;
+                                @endphp
+                            @endif
+
+                            @if($tb == false)
+                                <table class="table table-condensed table-striped table-sm" id="mes-list" style="width: 100%;">
+                                        <tbody class="tbody-light">
+                                @php
+                                    $tb = true;
+                                @endphp
+                            @endif
+
                             <tr>
                                 <th class="text-center text-white bg-success" colspan="{{count($ar) - 3}}">
                                     Shift: {{$value}}
                                 </th>
                             </tr>
+                            
                             @php
                                 $shift = $value;
                                 $model = "";
@@ -98,7 +112,7 @@
                             $ix++;
                         @endphp
 
-                        @if($ix == 17)
+                        @if($ix == count($ar))
                             </tr>
                         @endif
                     @endforeach
@@ -106,8 +120,6 @@
             @endforeach
         </tbody>
     </table>
-    
-{{-- </div> --}}
 @endsection
 
 @push('jscript')

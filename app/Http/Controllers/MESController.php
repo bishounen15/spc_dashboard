@@ -71,7 +71,7 @@ class MESController extends Controller
 
             $sh = "TRXDATE >= '" . $st . "' AND TRXDATE < '" . $et . "'";
 
-            $sql = "SELECT '" . $shift->details->descr . "' AS SHIFT, IFNULL(A.PRODLINE, C.PRODLINE) AS PRODLINE, PRODTYPE, LOCNCODE, COUNT(A.SERIALNO) AS 'Total', ";
+            $sql = "SELECT '" . $shift->details->descr . "' AS SHIFT, IFNULL(A.PRODLINE, C.PRODLINE) AS PRODLINE, PRODTYPE, LOCNCODE, COUNT(A.SERIALNO) AS 'Total' ";
 
             $dt = date("Y-m-d",strtotime($et));
 
@@ -96,23 +96,21 @@ class MESController extends Controller
                     $dt = date("Y-m-d",strtotime("-1 days",strtotime($dt)));
                 }
 
-                // if (date("YmdH",strtotime($dt . " " . $h.":00:00")) > date('YmdH')) { continue; }
-                
+                if (date("YmdH",strtotime($dt . " " . $h.":00:00")) > date('YmdH')) { continue; }
                 if ($ed == "") { $ed = $dt." ".$h.":59:59"; }
                 $fd = $dt." ".$h.":00:00";
 
-                $sq .= ($sq == "" ? "" : ", ") . "SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END) AS '".$h."'" ;
+                $sq .= ", SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END) AS '".$h."'" ;
             }
-
+            
             $sql .= $sq . " FROM mes01 A INNER JOIN lts02 B ON A.LOCNCODE = B.STNCODE INNER JOIN lbl02 C ON A.SERIALNO = C.SERIALNO AND C.LBLTYPE = 1 WHERE ".$sh." AND SORTIX IS NOT NULL GROUP BY IFNULL(A.PRODLINE, C.PRODLINE), PRODTYPE, LOCNCODE ORDER BY PRODTYPE, PRODLINE, SORTIX";
-
+            // dd($sql);
             $output = DB::connection('web_portal')
                             ->select($sql);
 
             array_push($daily, $output);
         }
 
-        // return Datatables::of($output)->make(true);
         $data = [];
 
         $data['output'] = $daily;
