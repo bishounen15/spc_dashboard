@@ -24,7 +24,7 @@ class SerialInfo extends Model
     }
 
     public function itemDetails() {
-        $first = SerialInfo::where("SERIALNO",$this->SERIALNO)->first();
+        $first = SerialInfo::where("SERIALNO",$this->SERIALNO)->orderBy("LBLTYPE","DESC")->first();
         $item = PortalItem::where("ITMDESC",$first->modelName())->first();
 
         return $item;

@@ -84,6 +84,7 @@ class PackingListController extends Controller
         $trxDate = $request->input('date');
 
         $serialInfo = SerialInfo::where("SERIALNO",$serial)->first();
+        $modelInfo = SerialInfo::where("SERIALNO",$serial)->orderBy("LBLTYPE","DESC")->first();
         
         $data = [];
         $data['errors'] = ['error_msg' => ''];
@@ -114,8 +115,8 @@ class PackingListController extends Controller
 
         if ($data['errors']['error_msg'] == '') {
             $data['CUSTOMER'] = $serialInfo->CUSTOMER;
-            $data['PRODUCTNO'] = $serialInfo->itemDetails()->ITMCODE;
-            $data['MODELNAME'] = $serialInfo->modelName();
+            $data['PRODUCTNO'] = $modelInfo->itemDetails()->ITMCODE;
+            $data['MODELNAME'] = $modelInfo->modelName();
             $data['MODCLASS'] = $serialInfo->MODCLASS;
             $data['MAXPALLET'] = $serialInfo->customerInfo->MAXPALLET;
             $data['BIN'] = $serialInfo->ftd->last()->Bin;

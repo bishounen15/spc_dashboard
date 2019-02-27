@@ -57,7 +57,8 @@ class MESController extends Controller
         return Datatables::of($mes)->make(true);
     }
 
-    public function dailyOutput($date) {
+    public function dailyOutput($date = null) {
+        if ($date == null) { $date = date('Y-m-d'); }
         $sched = ProductionSchedule::where("production_date",$date)->first();
         $shifts = $sched->selectedShifts;
 
