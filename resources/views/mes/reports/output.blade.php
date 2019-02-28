@@ -127,6 +127,10 @@
 @push('jscript')
 <script>
     $(document).ready(function() {
+        setInterval(function() {
+                  window.location.reload();
+        }, 300000);
+        
         $("#RefreshButton").click(function() {
             window.location = "/mes/output/" + $("#start").val();
         });
