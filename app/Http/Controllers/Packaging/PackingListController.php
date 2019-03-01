@@ -99,8 +99,8 @@ class PackingListController extends Controller
                     if ($serialInfo->mrb->first() != null) {
                         $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is currently in MRB Status.<br>Date inserted to MRB: ['.$serialInfo->mrb->first()->DTINSRT.']'];
                     } else {
-                        if ($serialInfo->modelName() != $currModel && $currModel != "") {
-                            $data['errors'] = ['error_msg' => 'Product Code Mismatach.<br>The serial number\'s ['.$serial.'] Product Code ['.$serialInfo->modelName().'] does not match with the current transaction ['.$currModel.'].'];
+                        if ($modelInfo->modelName() != $currModel && $currModel != "") {
+                            $data['errors'] = ['error_msg' => 'Product Code Mismatach.<br>The serial number\'s ['.$serial.'] Product Code ['.$modelInfo->modelName().'] does not match with the current transaction ['.$currModel.'].'];
                         } else {
                             if ($serialInfo->MODCLASS != $currClass && $currClass != "") {
                                 $data['errors'] = ['error_msg' => 'Module Class Mismatach.<br>The serial number\'s ['.$serial.'] Module Class ['.$serialInfo->MODCLASS.'] does not match with the current transaction ['.$currClass.'].'];
