@@ -203,7 +203,7 @@ class MESController extends Controller
 
         $serialInfo = SerialInfo::where('SERIALNO',$serial)->first();
         $stationInfo = mesStation::where('STNCODE',DB::raw("'".$station."'"))->first();
-        $cclass = $serialInfo->MODCLASS == null || $serialInfo->MODCLASS == '' || $serialInfo->MODCLASS == 'null'  ? '' : $serialInfo->MODCLASS;
+        $cclass = $serialInfo == null ? '' : ($serialInfo->MODCLASS == null || $serialInfo->MODCLASS == '' || $serialInfo->MODCLASS == 'null'  ? '' : $serialInfo->MODCLASS);
         $fill_serial = false;
 
         $recent_loc = $mes == null ? 'Not yet scanned' : $mes->LOCNCODE;
