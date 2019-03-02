@@ -89,7 +89,13 @@ class MESController extends Controller
             }
 
             $sq = "";
+            $sp = "";
+            $se = "";
+            $ls = "";
+            $le = "";
+
             $ix = 0;
+            $hi = 0;
 
             foreach($hrs as $hr) {
                 $h = sprintf("%'.02d",$hr);
@@ -102,10 +108,26 @@ class MESController extends Controller
                 if ($ed == "") { $ed = $dt." ".$h.":59:59"; }
                 $fd = $dt." ".$h.":00:00";
 
-                $sq .= ", SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END) AS '".$h."'" ;
+                if ($hi < 4) {
+                    $sq .= ", SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END) AS '".$h."'" ;
+                } else {
+                    if ($hi == 4) {
+                        $se = "AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END)";
+                        $ls = $h;
+                    }
+
+                    $sp = ", SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' ";
+                    $le = $h;
+                }
+
+                $hi++;
             }
             
-            $sql .= $sq . " FROM (SELECT PRODLINE, LOCNCODE, TRXDATE, SERIALNO FROM mes01 WHERE ".$sh." AND LOCNCODE NOT LIKE 'EL%' UNION ALL SELECT DISTINCT A.PRODLINE, A.MACHINE AS LOCNCODE, CAST(CONCAT(B.ELDATE,' ',B.ELTIME) AS DATETIME) AS TRXDATE, A.SERIALNO FROM elt01 A INNER JOIN elt02 B ON A.ROWID = B.ID WHERE ".$eh.") A INNER JOIN lts02 B ON A.LOCNCODE = B.STNCODE INNER JOIN lbl02 C ON A.SERIALNO = C.SERIALNO AND C.LBLTYPE = 1 WHERE SORTIX IS NOT NULL GROUP BY IFNULL(A.PRODLINE, C.PRODLINE), PRODTYPE, LOCNCODE ORDER BY PRODTYPE, PRODLINE, SORTIX";
+            if ($sp != "") {
+                $sp .= $se . " AS '".($ls==$le ? $ls : $ls."-".$le)."'";
+            }
+
+            $sql .= $sq . $sp . " FROM (SELECT PRODLINE, LOCNCODE, TRXDATE, SERIALNO FROM mes01 WHERE ".$sh." AND LOCNCODE NOT LIKE 'EL%' UNION ALL SELECT DISTINCT A.PRODLINE, A.MACHINE AS LOCNCODE, CAST(CONCAT(B.ELDATE,' ',B.ELTIME) AS DATETIME) AS TRXDATE, A.SERIALNO FROM elt01 A INNER JOIN elt02 B ON A.ROWID = B.ID WHERE ".$eh.") A INNER JOIN lts02 B ON A.LOCNCODE = B.STNCODE INNER JOIN lbl02 C ON A.SERIALNO = C.SERIALNO AND C.LBLTYPE = 1 WHERE SORTIX IS NOT NULL GROUP BY IFNULL(A.PRODLINE, C.PRODLINE), PRODTYPE, LOCNCODE ORDER BY PRODTYPE, PRODLINE, SORTIX";
             
             $output = DB::connection('web_portal')
                             ->select($sql);

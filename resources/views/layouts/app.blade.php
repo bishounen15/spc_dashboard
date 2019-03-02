@@ -217,7 +217,7 @@
         </nav>
 
         <main class="py-4">
-            <div align= "center">
+            <div class="text-center">
             @include('inc.messages')
             </div>
             @yield('content')
