@@ -71,6 +71,7 @@ class MESController extends Controller
             $et = date("Y-m-d H:i:s",strtotime( ($shift->details->overday == 0 ? $date : $od) . $shift->details->end_time));
 
             $sh = "TRXDATE >= '" . $st . "' AND TRXDATE < '" . $et . "'";
+            $eh = "CAST(CONCAT(B.ELDATE,' ',B.ELTIME) AS DATETIME) >= '" . $st . "' AND CAST(CONCAT(B.ELDATE,' ',B.ELTIME) AS DATETIME) < '" . $et . "'";
 
             $sql = "SELECT '" . $shift->details->descr . "' AS SHIFT, IFNULL(A.PRODLINE, C.PRODLINE) AS PRODLINE, PRODTYPE, LOCNCODE, COUNT(A.SERIALNO) AS 'Total' ";
 
@@ -104,7 +105,7 @@ class MESController extends Controller
                 $sq .= ", SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END) AS '".$h."'" ;
             }
             
-            $sql .= $sq . " FROM mes01 A INNER JOIN lts02 B ON A.LOCNCODE = B.STNCODE INNER JOIN lbl02 C ON A.SERIALNO = C.SERIALNO AND C.LBLTYPE = 1 WHERE ".$sh." AND SORTIX IS NOT NULL GROUP BY IFNULL(A.PRODLINE, C.PRODLINE), PRODTYPE, LOCNCODE ORDER BY PRODTYPE, PRODLINE, SORTIX";
+            $sql .= $sq . " FROM (SELECT PRODLINE, LOCNCODE, TRXDATE, SERIALNO FROM mes01 WHERE ".$sh." AND LOCNCODE NOT LIKE 'EL%' UNION ALL SELECT DISTINCT A.PRODLINE, A.MACHINE AS LOCNCODE, CAST(CONCAT(B.ELDATE,' ',B.ELTIME) AS DATETIME) AS TRXDATE, A.SERIALNO FROM elt01 A INNER JOIN elt02 B ON A.ROWID = B.ID WHERE ".$eh.") A INNER JOIN lts02 B ON A.LOCNCODE = B.STNCODE INNER JOIN lbl02 C ON A.SERIALNO = C.SERIALNO AND C.LBLTYPE = 1 WHERE SORTIX IS NOT NULL GROUP BY IFNULL(A.PRODLINE, C.PRODLINE), PRODTYPE, LOCNCODE ORDER BY PRODTYPE, PRODLINE, SORTIX";
             
             $output = DB::connection('web_portal')
                             ->select($sql);
