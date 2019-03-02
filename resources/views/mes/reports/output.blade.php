@@ -53,7 +53,7 @@
                         @endif
 
                         @if($tb == false)
-                            <div class="col-sm-6">
+                            <div class="col-sm">
                             <table class="table table-condensed table-striped table-sm" id="mes-list" style="width: 100%;">
                                     <tbody class="tbody-light">
                             @php
