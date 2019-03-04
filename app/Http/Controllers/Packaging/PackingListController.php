@@ -8,6 +8,7 @@ use App\Models\Packaging\PackingLists;
 use App\Models\Packaging\PackingListItems;
 use App\SerialInfo;
 use App\Pallets;
+use App\mesData;
 use Illuminate\Support\Facades\Auth;
 
 use Validator;
@@ -225,7 +226,7 @@ class PackingListController extends Controller
 
         if (count($serr) == 0) {
             PackingLists::create($phead);
-
+            $pdate = date('Y-m-d H:i:s');
             $ix = 1;
             
             foreach($snos as $sno) {
@@ -237,6 +238,26 @@ class PackingListController extends Controller
                 $ix++;
 
                 PackingListItems::create($pdetails);
+
+                $info = SerialInfo::selectRaw("(SELECT CONCAT(DATE_FORMAT(now(),'%Y%m'),LPAD(SUBSTR(MAX(MESCNO),7,6) + 1,6,0)) AS MESCNO FROM spmmc00.mes01 WHERE MESCNO LIKE CONCAT(DATE_FORMAT(now(),'%Y%m'),'%')) AS CNO, lbl02.MODCLASS, cls01.MODSTATUS")
+                            ->join("cls01", function ($join) {
+                                $join->on("lbl02.MODCLASS","=","cls01.MCLCODE"); 
+                                $join->on("lbl02.CUSTOMER","=","cls01.CUSTOMER");
+                            })->where([
+                                ["lbl02.SERIALNO",$sno],
+                                ["lbl02.LBLTYPE",1]
+                            ])->first();
+
+                mesData::insert([
+                    'SERIALNO' => $sno,
+                    'LOCNCODE' => 'PACKAGING',
+                    'MODCLASS' => $info->MODCLASS,
+                    'SNOSTAT' => $info->MODSTATUS,
+                    'REMARKS' => 'Pallet Number: ' . $phead['PALLETNO'],
+                    'MESCNO' => $info->CNO,
+                    'TRXUID' => Auth::user()->user_id,
+                    'TRXDATE' => $pdate,
+                ]);
             }
         }
 
