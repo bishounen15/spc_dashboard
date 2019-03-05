@@ -185,6 +185,9 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/mes/packaging/validate', 'Packaging\PackingListController@serialValidation')->name('packaging_validate');
         Route::get('/mes/packaging/export/{id}', 'Packaging\PackingListController@export')->name('packaging_export');
         Route::resource('mes/packaging','Packaging\PackingListController');
+
+        Route::post('/mes/lam/validate', 'MESController@lamValidation')->name('lam_validate');
+        Route::post('/mes/lam', 'MESController@createLamTrx')->name('lam_create');
     });
 // }); 
 

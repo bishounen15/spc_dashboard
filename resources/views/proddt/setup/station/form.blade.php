@@ -34,6 +34,20 @@
                     </select>
                     <small class="form-text text-danger">{{ $errors->first('machine_id') }}</small>
                 </div>
+                <div class="form-group">
+                    <label for="production_line">Production Line</label>
+                    <select class="form-control form-control-sm" name="production_line" id="production_line">
+                        <option readonly selected value> -- select an option -- </option>
+                        @foreach($lines as $line)
+                        <option value="{{$line->LINCODE}}" 
+                        @if ($line->LINCODE == old('production_line', $production_line))
+                            selected="selected"
+                        @endif    
+                        >{{$line->LINDESC}}</option>
+                        @endforeach
+                    </select>
+                    <small class="form-text text-danger">{{ $errors->first('production_line') }}</small>
+                </div>
             </div>
             <div class="card-footer">
                 <div class="form-row">

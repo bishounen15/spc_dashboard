@@ -7,12 +7,20 @@ use App\mesData;
 use App\mesClasses;
 use App\mesStation;
 use App\SerialInfo;
+
+use App\Models\WebPortal\DeviceAssignment;
+use App\Station;
+
+use App\Models\MFG\LamTransaction;
+use App\Models\MFG\LamTransactionDetail;
+
 use App\Models\Planning\ProductionSchedule;
 use Illuminate\Support\Facades\Auth;
 
 use DB;
 use DataTables;
 use Response;
+use Validator;
 
 class MESController extends Controller
 {
@@ -150,6 +158,33 @@ class MESController extends Controller
         return view('mes.reports.output',$data);
     }
 
+    public function lamValidation(Request $request) {
+        $serial = $request->input('serial');
+        
+        $serialInfo = SerialInfo::where("SERIALNO",$serial)->first();
+        
+        $data = [];
+        $data['errors'] = ['error_msg' => ''];
+
+        if ($serialInfo != null) {
+            if ($serialInfo->mes->last()->LOCNCODE != 'FG-PROD') {
+                if ($serialInfo->mes->last()->LOCNCODE == "PRELAM") {
+                    $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is already scanned in '.$serialInfo->mes->last()->LOCNCODE.'.'];
+                } else if ($serialInfo->mes->last()->LOCNCODE != 'EL1' && $serialInfo->mes->last()->LOCNCODE != 'EL3') {
+                    $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is already scanned post PRELAM.<br>Current Location is at ['.$serialInfo->mes->last()->LOCNCODE.']'];
+                }
+            } 
+        } else {
+            $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] does not exists.'];
+        }
+
+        if ($data['errors']['error_msg'] == '') {
+            $data['SCANDATE'] = date("Y-m-d H:i:s");
+        }
+
+        return Response::json($data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -182,8 +217,119 @@ class MESController extends Controller
 
         $data['shift'] = $shift;
 
-        return view('mes.transactions.trx',$data);
+        if ($data["station"]->STNCODE == "PRELAM") {
+            $lam_outs = DB::connection('mfg')->select("SELECT A.code as laminator, COUNT(C.serial_no) AS total, SUM(CASE IFNULL(C.location,'-') WHEN 'A' THEN 1 ELSE 0 END) AS 'A', SUM(CASE IFNULL(C.location,'-') WHEN 'B' THEN 1 ELSE 0 END) AS 'B', SUM(CASE IFNULL(C.location,'-') WHEN 'C' THEN 1 ELSE 0 END) AS 'C', SUM(CASE IFNULL(C.location,'-') WHEN 'D' THEN 1 ELSE 0 END) AS 'D' FROM sp_proddt.stations A LEFT JOIN sp_mfg.lam_transactions B ON A.id = B.station_id  LEFT JOIN sp_mfg.lam_transaction_details C ON B.id = c.trx_id AND C.date_scanned BETWEEN ? AND ? WHERE A.production_line = ? GROUP BY A.code",["2019-03-05 06:00:00","2019-03-05 17:59:59","1"]);
+
+            $data['lam_outs'] = $lam_outs;
+
+            $ip = $_SERVER['REMOTE_ADDR']?:($_SERVER['HTTP_X_FORWARDED_FOR']?:$_SERVER['HTTP_CLIENT_IP']);
+            $prod_line = DeviceAssignment::where([
+                ["IPADDRESS",$ip],
+                ["STATION","PRELAM"],
+            ])->first()->PRODLINE;
+
+            $data["prod_line"] = $prod_line;
+            $data["laminators"] = Station::select("stations.id","stations.code","stations.descr","stations.production_line")
+                                    ->join("machines","stations.machine_id","machines.id")
+                                    ->where([
+                                        ["machines.descr","Laminator"],
+                                        ["stations.production_line",$prod_line],
+                                    ])->orderBy("stations.code","ASC")->get();
+
+            return view('mes.transactions.lam.form',$data);
+        } else {
+            return view('mes.transactions.trx',$data);
+        }
         // return view('mes.reports.transactions');            
+    }
+
+    public function createLamTrx(Request $request) {
+        $data = [];
+
+        $cno = DB::connection('mfg')->select("SELECT CONCAT(DATE_FORMAT(now(),'%Y%m'),LPAD(IFNULL(SUBSTR(MAX(control_no),7,6),0) + 1,6,0)) AS control_no FROM lam_transactions WHERE control_no LIKE CONCAT(DATE_FORMAT(now(),'%Y%m'),'%')");
+
+        $lhead = [];
+        $lhead['control_no'] = $cno[0]->control_no;
+        $lhead['station_id'] = $request->input('STATIONID');
+        $SERIALNO = $request->input('SERIALNO');
+
+        $snos = explode(',',$SERIALNO[0]);
+
+        $validator = Validator::make($lhead, [
+            'control_no' => 'required|unique:mfg.lam_transactions',
+        ]);
+
+        $serr = [];
+        $ix = 0;
+        $field_names = ['location','serial_no','date_scanned'];
+        $sd = ["location" => "","serial_no" => "", "date_scanned" => ""];
+
+        $req = [];
+
+        if ($validator->fails()) {
+            array_push($serr, $lhead['control_no']." already exists.");
+        } else {
+            foreach($snos as $key => $value) {
+                $sd[$field_names[$ix]] = $value;
+                $ix++;
+
+                if ($ix >= count($field_names)) {
+                    $validator = Validator::make($sd, [
+                        'serial_no' => 'unique:mfg.lam_transaction_details',
+                    ]);
+
+                    if ($validator->fails()) {
+                        array_push($serr,$sno." already exists.");
+                    } else {
+                        array_push($req, $sd);
+                    }
+
+                    $ix = 0;
+                }
+            }
+        }
+        
+        $data['errors'] = $serr;
+
+        if (count($serr) == 0) {
+            $trx = LamTransaction::create($lhead);
+            
+            foreach($req as $r) {
+                $details = [];
+                $details["serial_no"] = $r['serial_no'];
+                $details["location"] = $r['location'];
+                $details["date_scanned"] = $r['date_scanned'];
+                $details["trx_id"] = $trx->id;
+                
+                LamTransactionDetail::create($details);
+
+                // $info = SerialInfo::selectRaw("(SELECT CONCAT(DATE_FORMAT(now(),'%Y%m'),LPAD(SUBSTR(MAX(MESCNO),7,6) + 1,6,0)) AS MESCNO FROM spmmc00.mes01 WHERE MESCNO LIKE CONCAT(DATE_FORMAT(now(),'%Y%m'),'%')) AS CNO, lbl02.MODCLASS, cls01.MODSTATUS")
+                //             ->join("cls01", function ($join) {
+                //                 $join->on("lbl02.MODCLASS","=","cls01.MCLCODE"); 
+                //                 $join->on("lbl02.CUSTOMER","=","cls01.CUSTOMER");
+                //             })->where([
+                //                 ["lbl02.SERIALNO",$sno],
+                //                 ["lbl02.LBLTYPE",1]
+                //             ])->first();
+
+                $cno = DB::connection('web_portal')->select("SELECT CONCAT(DATE_FORMAT(now(),'%Y%m'),LPAD(IFNULL(SUBSTR(MAX(MESCNO),7,6),0) + 1,6,0)) AS MESCNO FROM mes01 WHERE MESCNO LIKE CONCAT(DATE_FORMAT(now(),'%Y%m'),'%')");
+
+                $mescno = $cno[0]->MESCNO;
+
+                mesData::insert([
+                    'SERIALNO' => $r['serial_no'],
+                    'LOCNCODE' => 'PRELAM',
+                    'MODCLASS' => '',
+                    'SNOSTAT' => '0',
+                    'REMARKS' => 'Good',
+                    'MESCNO' => $mescno,
+                    'TRXUID' => Auth::user()->user_id,
+                    'TRXDATE' => $r['date_scanned'],
+                ]);
+            }
+        }
+
+        return Response::json($data);
     }
 
     public function serialValidation(Request $request) {

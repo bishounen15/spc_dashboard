@@ -95,7 +95,7 @@ return [
 
         'proddt' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.9',
+            'host' => '127.0.0.1',
             'port' => '3306',
             'database' => 'sp_proddt',
             'username' => 'laravel_user',
@@ -110,7 +110,7 @@ return [
 
         'web_portal' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.7',
+            'host' => '127.0.0.1',
             'port' => '3306',
             'database' => 'spmmc00',
             'username' => 'laravel_admin',
@@ -143,6 +143,21 @@ return [
             'host' => '192.168.128.9',
             'port' => '3306',
             'database' => 'sp_planning',
+            'username' => 'laravel_user',
+            'password' => 'password@1',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'mfg' => [
+            'driver' => 'mysql',
+            'host' => '127.0.0.1',
+            'port' => '3306',
+            'database' => 'sp_mfg',
             'username' => 'laravel_user',
             'password' => 'password@1',
             'unix_socket' => '',

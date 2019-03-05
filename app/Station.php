@@ -13,6 +13,7 @@ class Station extends Model implements Auditable
         'code',
         'descr',
         'machine_id',
+        'production_line',        
     ];
 
     use \OwenIt\Auditing\Auditable;
@@ -20,6 +21,7 @@ class Station extends Model implements Auditable
         'code',
         'descr',
         'machine_id',
+        'production_line',
     ];
 
     public function machine() {
