@@ -91,7 +91,7 @@ class PackingListController extends Controller
         $data['errors'] = ['error_msg' => ''];
 
         if ($serialInfo != null) {
-            if ($serialInfo->mes->last()->LOCNCODE != 'FG-PROD') {
+            if ($serialInfo->mes->whereNotIn('LOCNCODE', DB::connection('web_portal')->table('lts02')->where("EXEMPTROUTE",1)->pluck('STNCODE'))->last()->LOCNCODE != 'FG-PROD') {
                 $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is not yet scanned in FG-PROD.<br>Current Location is at ['.$serialInfo->mes->last()->LOCNCODE.']'];
             } else {
                 if ($serialInfo->palletInfo != null) {
