@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-{{-- <div class="container"> --}}
+<div class="container-fluid">
     <h3>Module Information Inquiry</h3>
     <br>
     <div class="row">
@@ -128,7 +128,7 @@
             </div>
         </div>
     </div>
-{{-- </div> --}}
+</div>
 @endsection
 
 @push('jscript')
