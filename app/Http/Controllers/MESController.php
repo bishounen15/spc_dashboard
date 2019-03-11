@@ -198,7 +198,7 @@ class MESController extends Controller
         $data['serial'] = [];
 
         $mes = mesData::where('SERIALNO',$serial)
-                            ->orderBy('ROWID','DESC')
+                            ->orderBy('TRXDATE','DESC')
                             ->first();
 
         $serialInfo = SerialInfo::where('SERIALNO',$serial)->first();
