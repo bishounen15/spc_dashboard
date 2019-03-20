@@ -46,11 +46,9 @@
                                     @if(Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
                                         <select class="form-control form-control-sm" name="shift" id="shift" onchange="changeShift()">
                                             <option readonly selected value> -- select an option -- </option>
-                                            <option value="A" {{$shift == "A" ? "selected" : ""}}>A</option>
-                                            <option value="B" {{$shift == "B" ? "selected" : ""}}>B</option>
-                                            <option value="C" {{$shift == "C" ? "selected" : ""}}>C</option>
-                                            <option value="6AM-6PM" {{$shift == "6AM-6PM" ? "selected" : ""}}>6AM-6PM</option>
-                                            <option value="6PM-6AM" {{$shift == "6PM-6AM" ? "selected" : ""}}>6PM-6AM</option>
+                                            @foreach($schedshift as $sched)
+                                            <option value="{{$sched->details->descr}}" {{$shift == $sched->details->descr ? "selected" : ""}}>{{$sched->details->descr}}</option>
+                                            @endforeach
                                         </select>
                                     @else
                                         <input type="text" class="form-control form-control-sm" name="shift" id="shift" value="{{old('shift', $shift)}}" readonly>

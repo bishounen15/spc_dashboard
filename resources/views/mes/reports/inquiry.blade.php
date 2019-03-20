@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-{{-- <div class="container"> --}}
+<div class="container-fluid">
     <h3>Module Information Inquiry</h3>
     <br>
     <div class="row">
@@ -31,6 +31,11 @@
                         </tr>
 
                         <tr>
+                            <th width="35%" class="bg-dark text-light">Part Number</th>
+                            <td width="65%" id="PARTNO" class="serial-info"></td>
+                        </tr>
+
+                        <tr>
                             <th width="35%" class="bg-dark text-light">Model</th>
                             <td width="65%" id="MODEL" class="serial-info"></td>
                         </tr>
@@ -50,6 +55,11 @@
                             <td width="65%" id="STATUS" class="serial-info"></td>
                         </tr>
                         
+                        <tr>
+                            <th width="35%" class="bg-dark text-light">Production Line</th>
+                            <td width="65%" id="PRODLINE" class="serial-info"></td>
+                        </tr>
+
                         <tr>
                             <th width="35%" class="bg-dark text-light">Pallet Number</th>
                             <td width="65%" id="PALLETNO" class="serial-info"></td>
@@ -102,11 +112,12 @@
                         {{-- <th>#</th> --}}
                         <tr>
                             <th class="serial-hide" hidden>Serial No.</th>
-                            <th width="10%">Location</th>
+                            <th width="5%">Prod. Line</th>
+                            <th width="10%">Station</th>
                             <th width="15%">Trasaction Date</th>
                             <th width="10%">Status</th>
                             <th width="10%">Class</th>
-                            <th width="35%">Remarks</th>
+                            <th width="30%">Remarks</th>
                             <th width="20%">Transacted By</th>
                         </tr>
                     </thead>
@@ -117,7 +128,7 @@
             </div>
         </div>
     </div>
-{{-- </div> --}}
+</div>
 @endsection
 
 @push('jscript')
@@ -155,13 +166,13 @@
                             });
 
                             $("#err_sno").html("");
-
-                            table.ajax.url( '/modules/ftd/' + serialno ).load();
-                            mes_table.ajax.url( '/modules/mes/' + serialno ).load();
                         } else {
                             $("#err_sno").html("Serial No. [" + serialno + "] does not exists.");
                             $(".serial-info").html("");
                         }
+
+                        table.ajax.url( '/modules/ftd/' + serialno ).load();
+                        mes_table.ajax.url( '/modules/mes/' + serialno ).load();
                     },
                     error: function(xhr, textStatus, errorThrown){
                         alert (errorThrown);
@@ -226,7 +237,9 @@
                 { data: 'ShuntResistance' },
                 { data: 'FF' },
                 { data: 'Bin' },
-                { data: null, defaultContent: '' },
+                { sortable: false, "render": function ( data, type, full, meta ) {
+                    return '<a href="#" data-href="/planning/schedule/destroy/'+full.id+'" role="button" class="btn btn-sm btn-success{{Auth::user()->sysadmin == 1 ? "" : " disabled"}}" data-toggle="modal" data-target="#confirm-delete" id="'+full.description+'" style="width: 100%;">Reset</a></div>';
+                }},
                 // { data: 'USER' },
             ],
             createdRow: function (row, data, index) {
@@ -252,7 +265,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
                     },
                     text:       'Excel',
                     filename: "mes_excel"
@@ -260,7 +273,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
                     },
                     text:       'CSV',
                     filename: "mes_csv"
@@ -280,6 +293,7 @@
             columns: [
                 // { data: 'id' },
                 { data: 'SERIALNO' },
+                { data: 'PRODLINE' },
                 { data: 'LOCNCODE' },
                 { data: 'TRXDATE' },
                 { data: 'STATUS' },

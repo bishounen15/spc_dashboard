@@ -23,6 +23,7 @@
             {{-- <th>#</th> --}}
             <th width="10%">Serial Number</th>
             <th width="10%">Model</th>
+            <th width="5%">Line</th>
             <th width="5%">Class</th>
             <th width="5%">Location</th>
             <th width="5%">Customer</th>
@@ -31,7 +32,7 @@
             <th width="5%">Shift</th>
             <th width="5%">Status</th>
             <th width="20%">Remarks</th>
-            <th width="15%">User</th>
+            <th width="10%">User</th>
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
             
@@ -59,7 +60,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
                     },
                     text:       'Excel',
                     filename: "MES_excel"
@@ -67,7 +68,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
                     },
                     text:       'CSV',
                     filename: "MES_csv"
@@ -82,6 +83,7 @@
                 // { data: 'id' },
                 { data: 'SERIALNO' },
                 { data: 'MODEL' },
+                { data: 'PRODLINE' },
                 { data: 'MODCLASS' },
                 { data: 'LOCNCODE' },
                 { data: 'CUSTOMER' },

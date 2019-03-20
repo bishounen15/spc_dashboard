@@ -107,15 +107,24 @@
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Station Assignment</a>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Location and Routing</a>
                                 <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Module Class</a>
+                                <a class="dropdown-item" href="/planning/setup/shift">&nbsp;&nbsp;&nbsp;&nbsp;Shift</a>
                                 @endif
                                 <h6 class="dropdown-header">Reports</h6>
                                 {{-- <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a> --}}
                                 <a class="dropdown-item" href="/modules">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
                                 <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
-                                @if(Auth::user()->mes_role != 'VIEW' || Auth::user()->sysadmin == 1)
+                                <a class="dropdown-item" href="/mes/output">&nbsp;&nbsp;&nbsp;&nbsp;Daily Output</a>
+                                
+                                <h6 class="dropdown-header">Planning</h6>
+                                <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>
+                                
+                                @if(Auth::user()->mes_role == 'OPRT' || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Line Transactions</h6>
                                 @foreach(Auth::user()->portalUser->mesUser->assignment as $assign)
                                 <a class="dropdown-item" href="/mescreate/{{$assign->stationInfo->STNID}}">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
+                                @if($assign->STNCODE == 'FG-PROD')
+                                <a class="dropdown-item" href="/mes/packaging">&nbsp;&nbsp;&nbsp;&nbsp;<small>Packaging</small></a>
+                                @endif
                                 @endforeach
                                 @endif
                                 </div>
@@ -208,7 +217,7 @@
         </nav>
 
         <main class="py-4">
-            <div align= "center">
+            <div class="text-center">
             @include('inc.messages')
             </div>
             @yield('content')

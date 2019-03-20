@@ -4,10 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Pallets extends Model
+class ModelName extends Model
 {
     //
     protected $connection = 'web_portal';
-    protected $table = 'epl01';
-    protected $primaryKey = "ROWID";
+    protected $table = 'typ00';
 }

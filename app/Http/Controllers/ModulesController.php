@@ -38,10 +38,12 @@ class ModulesController extends Controller
 
             $data['SERIALNO'] = $mod->SERIALNO;
             $data['CUSTOMER'] = $mod->CUSTOMER;
+            $data['PARTNO'] = $mod->itemDetails() == null ? "Not Found" : $mod->itemDetails()->ITMCODE;
             $data['MODEL'] = $prd->modelName();
             $data['COLOR'] = $mod->COLOR;
             $data['MODCLASS'] = $mod->MODCLASS;
             $data['STATUS'] = $mod->mes->count() > 0 ? $mes->moduleStatus() : '';
+            $data['PRODLINE'] = "Line " . $mod->PRODLINE;
             $data['PALLETNO'] = $mod->palletInfo != null ? $mod->palletInfo->PALLETNO : '';
             $data['CONTAINER'] = '';
         }
@@ -53,17 +55,21 @@ class ModulesController extends Controller
     {
         $ftd = ftdData::selectRaw("ROWID, ModuleID, InspectionTime, Isc, Uoc, Impp, Umpp, Pmpp, ShuntResistance, FF, Bin, CASE WHEN ModuleID LIKE '%*%' THEN 1 ELSE 0 END AS skip")
                         ->where('ModuleID','LIKE',DB::raw("'" . $serial . "%'"))
-                        ->orderByRaw("ROWID DESC");
+                        ->orderByRaw("InspectionTime DESC");
 
         return Datatables::of($ftd)->make(true);
     }
 
     public function mes($serial)
     {
-        $mes = mesData::selectRaw("mes01.ROWID, mes01.SERIALNO, mes01.LOCNCODE, mes01.TRXDATE, CASE mes01.SNOSTAT WHEN 0 THEN 'Good' WHEN 1 THEN 'MRB' WHEN 2 THEN 'Scrap' ELSE '-' END AS STATUS, mes01.MODCLASS, mes01.REMARKS, sys01.USERNAME AS TRXUSER")
+        $mes = mesData::selectRaw("mes01.ROWID, mes01.SERIALNO, CONCAT('Line ',IFNULL(mes01.PRODLINE,lbl02.PRODLINE)) AS PRODLINE, mes01.LOCNCODE, mes01.TRXDATE, CASE mes01.SNOSTAT WHEN 0 THEN 'Good' WHEN 1 THEN 'MRB' WHEN 2 THEN 'Scrap' ELSE '-' END AS STATUS, mes01.MODCLASS, mes01.REMARKS, sys01.USERNAME AS TRXUSER")
                         ->join("sys01","mes01.TRXUID","=","sys01.USERID")
-                        ->where('mes01.SERIALNO','=',$serial)
-                        ->orderByRaw("ROWID DESC");
+                        ->join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+                        ->where([
+                            ['mes01.SERIALNO','=',$serial],
+                            ['lbl02.LBLTYPE','=',1],
+                        ])
+                        ->orderByRaw("mes01.TRXDATE DESC");
 
         return Datatables::of($mes)->make(true);
     }

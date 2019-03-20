@@ -159,6 +159,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
         Route::get('/mes/data/{start}/{end}', 'MESController@load')->name('mes_data');
         Route::get('/mes/transactions/{date}/{shift}/{station}', 'MESController@transactions')->name('mes_trx');
+        Route::get('/mes/output/{date?}', 'MESController@dailyOutput')->name('mes_output');
         Route::post('/mes/validate', 'MESController@serialValidation')->name('mes_validate');
         Route::get('/mes','MESController@index')->name('mes_daily');
         Route::get('/mescreate/{station}','MESController@create')->name('add_mes_trx');
@@ -170,7 +171,20 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/modules/mes/{serial}','ModulesController@mes')->name('mod_mes');
         Route::resource('/modules','ModulesController');
 
+        //Planning
+        Route::get('/planning/setup/shift/data', 'Planning\ShiftsController@load')->name('shift_data');
+        Route::resource('/planning/setup/shift','Planning\ShiftsController');
+
+        Route::get('/planning/schedule/data', 'Planning\ProductionSchedulesController@load')->name('sched_data');
+        Route::resource('/planning/schedule','Planning\ProductionSchedulesController');
+
         Route::resource('mes/setup/custom','mesCustomFieldController');
+
+        Route::get('/mes/packaging/data/{start}/{end}', 'Packaging\PackingListController@load')->name('packaging_data');
+        Route::post('/mes/packaging/trx_info','Packaging\PackingListController@GetTrxInfo')->name('packing_trx_info');
+        Route::post('/mes/packaging/validate', 'Packaging\PackingListController@serialValidation')->name('packaging_validate');
+        Route::get('/mes/packaging/export/{id}', 'Packaging\PackingListController@export')->name('packaging_export');
+        Route::resource('mes/packaging','Packaging\PackingListController');
     });
 // }); 
 

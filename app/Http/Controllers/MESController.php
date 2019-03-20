@@ -7,6 +7,7 @@ use App\mesData;
 use App\mesClasses;
 use App\mesStation;
 use App\SerialInfo;
+use App\Models\Planning\ProductionSchedule;
 use Illuminate\Support\Facades\Auth;
 
 use DB;
@@ -41,7 +42,7 @@ class MESController extends Controller
         $edate = $end == '' ? date('Y-m-d') : date('Y-m-d',strtotime($end));
 
         $mes = DB::connection('web_portal')
-                    ->select("SELECT A.SERIALNO, REPLACE(REPLACE(REPLACE(IFNULL(H.MODELNAME,E.PRODCODE),'[R]',CASE WHEN B.CELLCOLOR = 'E' AND B.CUSTOMER = 'GEN1' THEN 'M' ELSE B.CELLCOLOR END),'[C]',B.CELLCOUNT),'[P]',IFNULL(F.Bin,'XXX')) AS MODEL, B.CUSTOMER, DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) AS 'DATE', A.TRXDATE, CONCAT('Shift ',CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END) AS SHIFT, CASE A.SNOSTAT WHEN 0 THEN 'GOOD' WHEN 1 THEN 'MRB' ELSE 'SCRAP' END AS STATUS, A.REMARKS, A.MODCLASS, IFNULL(CONCAT(C.LASTNAME,', ',C.FIRSTNAME),D.USERNAME) AS USER, A.LOCNCODE FROM mes01 A INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 LEFT JOIN hri01 C ON A.TRXUID = C.IDNUMBER INNER JOIN sys01 D ON A.TRXUID = D.USERID LEFT JOIN cus01 E ON B.CUSTOMER = E.CUSCODE LEFT JOIN ftd_upd F ON B.SERIALNO = F.ModuleID LEFT JOIN lbl02 G ON A.SERIALNO = G.SERIALNO AND G.LBLTYPE = 3 LEFT JOIN lbt00 H ON G.CUSTOMER = H.CUSTOMER AND G.TEMPLATE = H.TMPCODE WHERE DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) BETWEEN ? AND ? ORDER BY A.ROWID DESC",[$sdate,$edate]);
+                    ->select("SELECT A.SERIALNO, REPLACE(REPLACE(REPLACE(REPLACE(IFNULL(H.MODELNAME,E.PRODCODE),'[R]',CASE WHEN B.CELLCOLOR = 'E' AND B.CUSTOMER = 'GEN1' THEN 'M' ELSE B.CELLCOLOR END),'[C]',B.CELLCOUNT),'[P]',IFNULL(F.Bin,'XXX')),'[T]',IFNULL(B.CTYPE,'??')) AS MODEL, CONCAT('Line ',IFNULL(A.PRODLINE,B.PRODLINE)) AS PRODLINE, B.CUSTOMER, DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) AS 'DATE', A.TRXDATE, CONCAT('Shift ',CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END) AS SHIFT, CASE A.SNOSTAT WHEN 0 THEN 'GOOD' WHEN 1 THEN 'MRB' ELSE 'SCRAP' END AS STATUS, A.REMARKS, A.MODCLASS, IFNULL(CONCAT(C.LASTNAME,', ',C.FIRSTNAME),D.USERNAME) AS USER, A.LOCNCODE FROM mes01 A INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 LEFT JOIN hri01 C ON A.TRXUID = C.IDNUMBER INNER JOIN sys01 D ON A.TRXUID = D.USERID LEFT JOIN cus01 E ON B.CUSTOMER = E.CUSCODE LEFT JOIN ftd_upd F ON B.SERIALNO = F.ModuleID LEFT JOIN lbl02 G ON A.SERIALNO = G.SERIALNO AND G.LBLTYPE = 3 LEFT JOIN lbt00 H ON G.CUSTOMER = H.CUSTOMER AND G.TEMPLATE = H.TMPCODE WHERE DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) BETWEEN ? AND ? ORDER BY A.ROWID DESC",[$sdate,$edate]);
 
         return Datatables::of($mes)->make(true);
     }
@@ -51,10 +52,104 @@ class MESController extends Controller
         $stationInfo = mesStation::where('STNID',$station)->first();
         
         $mes = DB::connection('web_portal')
-                    ->select("SELECT A.SERIALNO, REPLACE(REPLACE(REPLACE(IFNULL(H.MODELNAME,E.PRODCODE),'[R]',CASE WHEN B.CELLCOLOR = 'E' AND B.CUSTOMER = 'GEN1' THEN 'M' ELSE B.CELLCOLOR END),'[C]',B.CELLCOUNT),'[P]',IFNULL(F.Bin,'XXX')) AS MODEL, B.CUSTOMER, DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) AS 'DATE', A.TRXDATE, CONCAT('Shift ',CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END) AS SHIFT, CASE A.SNOSTAT WHEN 0 THEN 'GOOD' WHEN 1 THEN 'MRB' ELSE 'SCRAP' END AS STATUS, A.REMARKS, A.MODCLASS, IFNULL(CONCAT(C.LASTNAME,', ',C.FIRSTNAME),D.USERNAME) AS USER, A.LOCNCODE FROM mes01 A INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 LEFT JOIN hri01 C ON A.TRXUID = C.IDNUMBER INNER JOIN sys01 D ON A.TRXUID = D.USERID LEFT JOIN cus01 E ON B.CUSTOMER = E.CUSCODE LEFT JOIN ftd_upd F ON B.SERIALNO = F.ModuleID LEFT JOIN lbl02 G ON A.SERIALNO = G.SERIALNO AND G.LBLTYPE = 3 LEFT JOIN lbt00 H ON G.CUSTOMER = H.CUSTOMER AND G.TEMPLATE = H.TMPCODE WHERE DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) = ? AND CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END = ? AND A.LOCNCODE = ? ORDER BY A.ROWID DESC",[$date,$shift,$stationInfo->STNCODE]);
+                    ->select("SELECT A.SERIALNO, REPLACE(REPLACE(REPLACE(REPLACE(IFNULL(H.MODELNAME,E.PRODCODE),'[R]',CASE WHEN B.CELLCOLOR = 'E' AND B.CUSTOMER = 'GEN1' THEN 'M' ELSE B.CELLCOLOR END),'[C]',B.CELLCOUNT),'[P]',IFNULL(F.Bin,'XXX')),'[T]',IFNULL(B.CTYPE,'??')) AS MODEL, CONCAT('Line ',IFNULL(A.PRODLINE,B.PRODLINE)) AS PRODLINE, B.CUSTOMER, DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) AS 'DATE', A.TRXDATE, CONCAT('Shift ',CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END) AS SHIFT, CASE A.SNOSTAT WHEN 0 THEN 'GOOD' WHEN 1 THEN 'MRB' ELSE 'SCRAP' END AS STATUS, A.REMARKS, A.MODCLASS, IFNULL(CONCAT(C.LASTNAME,', ',C.FIRSTNAME),D.USERNAME) AS USER, A.LOCNCODE FROM mes01 A INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 LEFT JOIN hri01 C ON A.TRXUID = C.IDNUMBER INNER JOIN sys01 D ON A.TRXUID = D.USERID LEFT JOIN cus01 E ON B.CUSTOMER = E.CUSCODE LEFT JOIN ftd_upd F ON B.SERIALNO = F.ModuleID LEFT JOIN lbl02 G ON A.SERIALNO = G.SERIALNO AND G.LBLTYPE = 3 LEFT JOIN lbt00 H ON G.CUSTOMER = H.CUSTOMER AND G.TEMPLATE = H.TMPCODE WHERE DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) = ? AND CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END = ? AND A.LOCNCODE = ? ORDER BY A.ROWID DESC",[$date,$shift,$stationInfo->STNCODE]);
 
         return Datatables::of($mes)->make(true);
     }
+
+    public function dailyOutput($date = null) {
+        if ($date == null) { $date = date('Y-m-d'); }
+        $sched = ProductionSchedule::where("production_date",$date)->first();
+        $shifts = $sched->selectedShifts;
+
+        $daily = [];
+
+        $od = date("Y-m-d",strtotime("1 days",strtotime($date)));
+        
+        foreach ($shifts as $shift) {
+            $st = date("Y-m-d H:i:s",strtotime($date . $shift->details->start_time));
+            $et = date("Y-m-d H:i:s",strtotime( ($shift->details->overday == 0 ? $date : $od) . $shift->details->end_time));
+
+            $sh = "TRXDATE >= '" . $st . "' AND TRXDATE < '" . $et . "'";
+            $eh = "CAST(CONCAT(B.ELDATE,' ',B.ELTIME) AS DATETIME) >= '" . $st . "' AND CAST(CONCAT(B.ELDATE,' ',B.ELTIME) AS DATETIME) < '" . $et . "'";
+
+            $sql = "SELECT '" . $shift->details->descr . "' AS SHIFT, IFNULL(A.PRODLINE, C.PRODLINE) AS PRODLINE, PRODTYPE, LOCNCODE, COUNT(A.SERIALNO) AS 'Total' ";
+
+            $dt = date("Y-m-d",strtotime($et));
+
+            $fd = "";
+            $ed = "";
+
+            $hrs = [];
+
+            $et = date("Y-m-d H:i:s",strtotime("-1 hour",strtotime($et)));
+            while ($et >= $st) {
+                array_push($hrs,date("H",strtotime($et)));
+                $et = date("Y-m-d H:i:s",strtotime("-1 hour",strtotime($et)));
+            }
+
+            $sq = "";
+            $sp = "";
+            $se = "";
+            $ls = "";
+            $le = "";
+
+            $ix = 0;
+            $hi = 0;
+
+            foreach($hrs as $hr) {
+                $h = sprintf("%'.02d",$hr);
+                
+                if ($hr == 23) { 
+                    $dt = date("Y-m-d",strtotime("-1 days",strtotime($dt)));
+                }
+
+                if (date("YmdH",strtotime($dt . " " . $h.":00:00")) > date('YmdH')) { continue; }
+                if ($ed == "") { $ed = $dt." ".$h.":59:59"; }
+                $fd = $dt." ".$h.":00:00";
+
+                if ($hi < 4) {
+                    $sq .= ", SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END) AS '".$h."'" ;
+                } else {
+                    if ($hi == 4) {
+                        $se = "AND '".$dt." ".$h.":59:59' THEN 1 ELSE 0 END)";
+                        $ls = $h;
+                    }
+
+                    $sp = ", SUM(CASE WHEN TRXDATE BETWEEN '".$dt." ".$h.":00:00' ";
+                    $le = $h;
+                }
+
+                $hi++;
+            }
+            
+            if ($sp != "") {
+                $sp .= $se . " AS '".($ls==$le ? $ls : $ls."-".$le)."'";
+            }
+
+            $sql .= $sq . $sp . " FROM (SELECT DISTINCT PRODLINE, LOCNCODE, TRXDATE, SERIALNO FROM mes01 WHERE ".$sh." AND LOCNCODE NOT LIKE 'EL%' UNION ALL SELECT DISTINCT A.PRODLINE, A.MACHINE AS LOCNCODE, CAST(CONCAT(B.ELDATE,' ',B.ELTIME) AS DATETIME) AS TRXDATE, A.SERIALNO FROM elt01 A INNER JOIN elt02 B ON A.ROWID = B.ID WHERE ".$eh.") A INNER JOIN lts02 B ON A.LOCNCODE = B.STNCODE INNER JOIN lbl02 C ON A.SERIALNO = C.SERIALNO AND C.LBLTYPE = 1 WHERE SORTIX IS NOT NULL GROUP BY IFNULL(A.PRODLINE, C.PRODLINE), PRODTYPE, LOCNCODE ORDER BY PRODLINE, PRODTYPE, SORTIX";
+            
+            $output = DB::connection('web_portal')
+                            ->select($sql);
+
+            array_push($daily, $output);
+        }
+
+        $data = [];
+
+        $data['output'] = $daily;
+        $data['date'] = $date;
+        $data['cdate'] = "";
+
+        $cdate = date('Y-m-d',strtotime((date('H') < 6 ? "-1" : "0")." days",strtotime(date('Y-m-d'))));
+
+        if ($date == $cdate) {
+            $data['cdate'] = " as of " . date('H:i');
+        }
+
+        return view('mes.reports.output',$data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -103,11 +198,12 @@ class MESController extends Controller
         $data['serial'] = [];
 
         $mes = mesData::where('SERIALNO',$serial)
-                            ->orderBy('ROWID','DESC')
+                            ->orderBy('TRXDATE','DESC')
                             ->first();
 
         $serialInfo = SerialInfo::where('SERIALNO',$serial)->first();
         $stationInfo = mesStation::where('STNCODE',DB::raw("'".$station."'"))->first();
+        $cclass = $serialInfo == null ? '' : ($serialInfo->MODCLASS == null || $serialInfo->MODCLASS == '' || $serialInfo->MODCLASS == 'null'  ? '' : $serialInfo->MODCLASS);
         $fill_serial = false;
 
         $recent_loc = $mes == null ? 'Not yet scanned' : $mes->LOCNCODE;
@@ -121,10 +217,14 @@ class MESController extends Controller
                         if ($stationInfo->INITLOC == 0 || ($stationInfo->INITLOC == 1 && $recent_loc != 'Not yet scanned')) {
                             $data['errors'] = ['error_msg' => 'You cannot transact this serial number ['.$serial.'] in this location. (Current Location: '.$recent_loc.')'];
                         } else {
-                            $fill_serial = true;
+                            $fill_serial = true;    
                         }
                     } else {
-                        $fill_serial = true;    
+                        if ((strpos($cclass, $assignment->ALLOWCLS) !== false) == false) {
+                            $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is not Class '.$assignment->ALLOWCLS.'. (Current Class: '.$serialInfo->MODCLASS.')'];
+                        } else {
+                            $fill_serial = true;
+                        }
                     }
                 }
             } else {
@@ -154,7 +254,8 @@ class MESController extends Controller
                 'station' => $recent_loc,
                 'statusCode' => $mes == null ? 0 : $mes->SNOSTAT,
                 'status' => $mes == null ? 'GOOD' : strtoupper($mes->moduleStatus()),
-                'remarks' => $mes == null ? '' : $mes->REMARKS,
+                'remarks' => $mes == null ? '' : $assignment->ALLOWCLS == '' ? $mes->REMARKS : "Endorsed to " . $assignment->stationInfo->STNDESC,
+                'allowcls' => $assignment->ALLOWCLS,
             ];
         }
 
