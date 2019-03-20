@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Department;
-Use App\OSIRoles;
 use App\UserRoles;
-use App\MESRoles;
 use App\ITRoles;
-use App\DTRoles;
 
 use Validator;
 use DataTables;
@@ -20,13 +17,10 @@ class UserController extends Controller
     //
     protected $username = 'user_id';
 
-    public function __construct( OSIRoles $osi_roles, UserRoles $user_roles, MESRoles $mes_roles, ITRoles $it_roles, DTRoles $dt_roles )
+    public function __construct( UserRoles $user_roles, ITRoles $it_roles )
     {
-        $this->oroles = $osi_roles->all();
         $this->uroles = $user_roles->all();
-        $this->mroles = $mes_roles->all();
         $this->itroles = $it_roles->all();
-        $this->dtroles = $dt_roles->all();
     }
 
     public function list() {
@@ -96,11 +90,7 @@ class UserController extends Controller
         // $data['head_email'] = $user->head_email;
 
         $data['depts'] = Department::orderBy("description","ASC")->get();
-        $data['o_roles'] = $this->oroles;
-        $data['y_roles'] = $this->uroles;
-        $data['m_roles'] = $this->mroles;
         $data['it_roles'] = $this->itroles;
-        $data['dt_roles'] = $this->dtroles;
         return view('system.users.form', $data);
     }
 
@@ -140,16 +130,8 @@ class UserController extends Controller
             $user->dept_id = $data['dept_id'];
             $user->email = $data['email'];
             $user->sysadmin = $data['sysadmin'];
-            $user->osi_access = $data['osi_access'];
-            $user->osi_role = $data['osi_role'];
-            $user->yield_access = $data['yield_access'];
-            $user->yield_role = $data['yield_role'];
-            $user->mes_access = $data['mes_access'];
-            $user->mes_role = $data['mes_role'];
             $user->assets_access = $data['assets_access'];
             $user->assets_role = $data['assets_role'];
-            $user->proddt_access = $data['proddt_access'];
-            $user->proddt_role = $data['proddt_role'];
             
             $user->save();
             return redirect('user/list')->with("success","User [".$data["user_id"]." - ".$data["name"]."] successfully updated.");

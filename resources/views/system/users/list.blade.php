@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-{{-- <div class="container"> --}}
+<div class="container-fluid">
     <h3>User Master</h3>
     <a href="#" role="button" class="btn btn-primary" data-toggle="modal" data-target="#UserCreate">Create User Account</a>
     <br><br>
@@ -8,20 +8,20 @@
         <thead class="thead-dark" style="font-size: 0.7em;">
             {{-- <th>#</th> --}}
             <tr class="text-center">
-                <th rowspan="2" width="10%">ID Number</th>
-                <th rowspan="2" width="25%">Name</th>
-                <th rowspan="2" width="15%">Department</th>
-                <th rowspan="2" width="15%">Email</th>
-                <th colspan="5">User Role</th>
-                <th rowspan="2" width="25%">Actions</th>
+                <th width="10%">ID Number</th>
+                <th width="25%">Name</th>
+                <th width="15%">Department</th>
+                <th width="15%">Email</th>
+                <th width="10%">User Role</th>
+                <th width="25%">Actions</th>
             </tr>
-            <tr class="text-center">
+            {{-- <tr class="text-center">
                 <th width="4%">OSI</th>
                 <th width="4%">YIELD</th>
                 <th width="4%">MES</th>
                 <th width="4%">PRODDT</th>
                 <th width="4%">ITM</th>
-            </tr>
+            </tr> --}}
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
             
@@ -69,7 +69,7 @@
             </div>
         </div>
     </div>
-{{-- </div> --}}
+</div>
 @endsection
 
 @include('layouts.modal')
@@ -89,7 +89,7 @@
                         columns: [ 0, 1, 2, 3, 4 ]
                     },
                     text:       'Excel',
-                    filename: "os_categories_excel"
+                    filename: "users_excel"
                 },
                 {
                     extend:     'csv',
@@ -97,7 +97,7 @@
                         columns: [ 0, 1, 2, 3, 4 ]
                     },
                     text:       'CSV',
-                    filename: "os_categories_csv"
+                    filename: "users_csv"
                 },
                 // {
                 //     extend:     'pdf',
@@ -111,10 +111,6 @@
                 { data: 'name' },
                 { data: 'description' },
                 { data: 'email' },
-                { sortable: false, data: 'osi_access' },
-                { sortable: false, data: 'yield_access' },
-                { sortable: false, data: 'mes_access' },
-                { sortable: false, data: 'proddt_access' },
                 { sortable: false, data: 'assets_access' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
                     return '<div class="row"><div class="col-sm-6"><a href="/user/'+full.id+'" role="button" class="btn btn-sm btn-success" style="width: 100%;">Edit</a></div>' +

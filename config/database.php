@@ -80,7 +80,7 @@ return [
 
         'assets' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
+            'host' => '127.0.0.1',
             'port' => '3306',
             'database' => 'asset_inv',
             'username' => 'laravel_user',

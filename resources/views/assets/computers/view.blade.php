@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<div class="container-fluid">
     <h3>Device Information</h3>
     <div class="row">
         <div class="col-sm-4">
@@ -279,6 +280,7 @@
           </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('jscript')

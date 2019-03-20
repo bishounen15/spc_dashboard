@@ -46,7 +46,8 @@
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             {{-- <div class="container"> --}}
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{-- {{ config('app.name', 'Laravel') }} --}}
+                    <img src="/storage/Images/logo.png" alt="">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -59,100 +60,6 @@
                         @else
                             {{-- <li><a class="nav-link" href="{{ route('apps') }}">{{ __('My Apps') }}</a></li> --}}
                             
-                            @if(Auth::user()->osi_access == 1 || Auth::user()->sysadmin == 1)
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Office Supplies
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @if(Auth::user()->osi_role == "CUST" || Auth::user()->sysadmin == 1)
-                                <h6 class="dropdown-header">Setup</h6>
-                                <a class="dropdown-item" href="{{route('list_categories')}}">&nbsp;&nbsp;&nbsp;&nbsp;Category Master</a>
-                                <a class="dropdown-item" href="{{route('list_uofm')}}">&nbsp;&nbsp;&nbsp;&nbsp;U of M Master</a>
-                                <a class="dropdown-item" href="{{route('list_items')}}">&nbsp;&nbsp;&nbsp;&nbsp;Item Master</a>
-                                @endif
-                                <h6 class="dropdown-header">Transactions</h6>
-                                <a class="dropdown-item" href="{{route('list_trx')}}">&nbsp;&nbsp;&nbsp;&nbsp;Requisition and Inventory</a>
-                                </div>
-                            </li>
-                            @endif
-
-                            @if(Auth::user()->yield_access == 1 || Auth::user()->sysadmin == 1)
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Yield Dashboard
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @if(Auth::user()->yield_role == "ADMIN" || Auth::user()->sysadmin == 1)
-                                <h6 class="dropdown-header">Setup</h6>
-                                <a class="dropdown-item" href="/yield/setup/product_types">&nbsp;&nbsp;&nbsp;&nbsp;Product Types</a>
-                                <a class="dropdown-item" href="{{route('list_email_yield')}}">&nbsp;&nbsp;&nbsp;&nbsp;Email Distribution</a>
-                                @endif
-                                <h6 class="dropdown-header">Transactions</h6>
-                                <a class="dropdown-item" href="{{route('list_yield')}}">&nbsp;&nbsp;&nbsp;&nbsp;Data Entry</a>
-                                </div>
-                            </li>
-                            @endif
-
-                            @if(Auth::user()->mes_access == 1 || Auth::user()->sysadmin == 1)
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                MFG Transactions
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @if(Auth::user()->mes_role == 'ADMIN' || Auth::user()->sysadmin == 1)
-                                <h6 class="dropdown-header">Setup</h6>
-                                {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
-                                <a class="dropdown-item" href="/mes/setup/custom">&nbsp;&nbsp;&nbsp;&nbsp;Customized Fields</a>
-                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Station Assignment</a>
-                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Location and Routing</a>
-                                <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Module Class</a>
-                                <a class="dropdown-item" href="/planning/setup/shift">&nbsp;&nbsp;&nbsp;&nbsp;Shift</a>
-                                @endif
-                                <h6 class="dropdown-header">Reports</h6>
-                                {{-- <a class="dropdown-item" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a> --}}
-                                <a class="dropdown-item" href="/modules">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
-                                <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
-                                <a class="dropdown-item" href="/mes/output">&nbsp;&nbsp;&nbsp;&nbsp;Daily Output</a>
-                                
-                                <h6 class="dropdown-header">Planning</h6>
-                                <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>
-                                
-                                @if(Auth::user()->mes_role == 'OPRT' || Auth::user()->sysadmin == 1)
-                                <h6 class="dropdown-header">Line Transactions</h6>
-                                @foreach(Auth::user()->portalUser->mesUser->assignment as $assign)
-                                <a class="dropdown-item" href="/mescreate/{{$assign->stationInfo->STNID}}">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
-                                @if($assign->STNCODE == 'FG-PROD')
-                                <a class="dropdown-item" href="/mes/packaging">&nbsp;&nbsp;&nbsp;&nbsp;<small>Packaging</small></a>
-                                @endif
-                                @endforeach
-                                @endif
-                                </div>
-                            </li>
-                            @endif
-
-                            @if(Auth::user()->proddt_access == 1 || Auth::user()->sysadmin == 1)
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Downtime Monitoring
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @if(Auth::user()->proddt_role == "SUPV" || Auth::user()->proddt_role == "ADMIN" || Auth::user()->sysadmin == 1)
-                                <h6 class="dropdown-header">Setup</h6>
-                                {{-- <a class="dropdown-item" href="#">Global Parameters</a> --}}
-                                <a class="dropdown-item" href="/proddt/setup/category">&nbsp;&nbsp;&nbsp;&nbsp;Downtime Categories</a>
-                                <a class="dropdown-item" href="/proddt/setup/machine">&nbsp;&nbsp;&nbsp;&nbsp;Machine</a>
-                                <a class="dropdown-item" href="/proddt/setup/station">&nbsp;&nbsp;&nbsp;&nbsp;Stations</a>
-                                @endif
-                                <h6 class="dropdown-header">Transactions</h6>
-                                <a class="dropdown-item" href="/proddt/dashboard">&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
-                                @if(Auth::user()->proddt_role != "VIEW" || Auth::user()->sysadmin == 1)
-                                <a class="dropdown-item" href="/proddt/logsheet">&nbsp;&nbsp;&nbsp;&nbsp;Log Sheet</a>
-                                @endif
-                                </div>
-                            </li>
-                            @endif
-
                             @if(Auth::user()->assets_access == 1 || Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -191,7 +98,7 @@
                         @guest
                             <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
                             {{-- <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li> --}}
-                            <li><a class="nav-link" href="{{ route('portal_link') }}">{{ __('Link Portal Account') }}</a></li>
+                            {{-- <li><a class="nav-link" href="{{ route('portal_link') }}">{{ __('Link Portal Account') }}</a></li> --}}
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
