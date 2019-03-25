@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('content')
         <title>{{config('app.name', 'SOLARPH')}}</title>
-<div class="jumbotron text-center">
+<div class="container-fluid">
+        <div class="jumbotron text-center">
         <h1><strong>Welcome to HGS Philippines!</strong></h1>
         <h2>HGS Asset Management System</h3>
         <hr>
@@ -13,4 +14,5 @@
                 @endguest
         </p> 
         </div>
+</div>
 @endsection
