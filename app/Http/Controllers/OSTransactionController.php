@@ -103,7 +103,7 @@ class OSTransactionController extends Controller
         $trxid = explode(",",$request->input('trxid'));
 
         $ix = 0;
-
+        
         foreach($qty as $q) {
             $detail = OSTransactionDetail::find($trxid[$ix]);
             $detail->qty = $q;

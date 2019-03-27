@@ -98,7 +98,7 @@
             qty = [];
             cost = [];
             id = [];
-
+            
             $.each($('input[name^="qty"]'), function() {
                 i = $('input[name="qty[]"]').index(this);
                 qty.push($(this).val());
@@ -164,7 +164,8 @@
                         inputField = '<td><input type="hidden" name="recid[]" value="'+v.trxid+'"><input type="number" class="form-control form-control-sm" name="qty[]" value="'+v.qty+'"></td><td><input type="text" class="form-control form-control-sm" name="unit-cost[]" value="'+v.unit_cost+'" readonly></td><td><input type="text" class="form-control form-control-sm" name="total-cost[]" value="'+ v.total_cost +'" readonly></td>';
                         $("#group-remarks").show();
                     } else {
-                        inputField = '<td>'+v.qty+'</td><td>'+v.unit_cost+'</td><td>'+ v.total_cost +'</td>';
+                        // inputField = '<td>'+v.qty+'</td><td>'+v.unit_cost+'</td><td>'+ v.total_cost +'</td>';
+                        inputField = '<td><input type="hidden" name="recid[]" value="'+v.trxid+'"><input type="number" class="form-control form-control-sm" name="qty[]" value="'+v.qty+'" readonly></td><td><input type="text" class="form-control form-control-sm" name="unit-cost[]" value="'+v.unit_cost+'" readonly></td><td><input type="text" class="form-control form-control-sm" name="total-cost[]" value="'+ v.total_cost +'" readonly></td>';
                         $("#group-remarks").hide();
                     }
                     
