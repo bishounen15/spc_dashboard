@@ -207,7 +207,7 @@ class MESController extends Controller
         $fill_serial = false;
 
         // $recent_loc = $mes == null ? 'Not yet scanned' : $mes->LOCNCODE;
-        $recent_loc = $mes == null ? 'Not yet scanned' : $mes->whereNotIn('LOCNCODE', DB::connection('web_portal')->table('lts02')->where("EXEMPTROUTE",1)->pluck('STNCODE'))->first()->LOCNCODE;
+        $recent_loc = $mes == null ? 'Not yet scanned' : $serialInfo->CURRENTLOC;
 
         if ($serialInfo != null) {
             if ($assignment->UNISNO == 1) {
