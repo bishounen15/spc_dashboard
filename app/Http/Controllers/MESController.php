@@ -206,7 +206,8 @@ class MESController extends Controller
         $cclass = $serialInfo == null ? '' : ($serialInfo->MODCLASS == null || $serialInfo->MODCLASS == '' || $serialInfo->MODCLASS == 'null'  ? '' : $serialInfo->MODCLASS);
         $fill_serial = false;
 
-        $recent_loc = $mes == null ? 'Not yet scanned' : $mes->LOCNCODE;
+        // $recent_loc = $mes == null ? 'Not yet scanned' : $mes->LOCNCODE;
+        $recent_loc = $mes == null ? 'Not yet scanned' : $mes->whereNotIn('LOCNCODE', DB::connection('web_portal')->table('lts02')->where("EXEMPTROUTE",1)->pluck('STNCODE'))->first()->LOCNCODE;
 
         if ($serialInfo != null) {
             if ($assignment->UNISNO == 1) {
