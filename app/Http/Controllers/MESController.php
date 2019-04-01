@@ -150,6 +150,48 @@ class MESController extends Controller
         return view('mes.reports.output',$data);
     }
 
+    public function ftd() {
+        return view('mes.reports.ftd');
+    }
+
+    public function ftdReport(Request $request) {
+        $cond = '';
+        $param = $request->input('param');
+
+        if ($param == 'pallet') {
+            $pallets = $request->input('palletno');
+            $pnos = explode(",",$pallets . ",");
+            
+            $cond = "A.PALLETNO IN (";
+
+            foreach($pnos as $pno) {
+                $cond .= ($pno !="" ? ($cond == 'A.PALLETNO IN (' ? '' : ',') . "'" . $pno . "'" : "");
+            }
+
+            $cond .= ")";
+        } else {
+            $start = $request->input('start');
+            $end = $request->input('end');
+
+            $cond = "A.TRXDATE BETWEEN '".$start."' AND '".$end."'";
+
+            $type = $request->input('type');
+
+            if ($type == 'standard') {
+                $cond .= " AND A.PALLETNO NOT LIKE 'MRB%'";
+            } else if ($type == 'mrb') {
+                $cond .= " AND A.PALLETNO LIKE 'MRB%'";
+            }
+        }
+
+        $sql = "SELECT X.PALLETNO AS 'PalletNo', X.CARTONNO AS 'CartonNo', DATE_FORMAT(TRXDATE,'%Y-%m-%d') AS 'Date', PRODUCTNO AS 'ProductNo', MODELNAME AS 'ModelName', SEQNO AS 'SeqNo', X.SERIALNO AS 'SerialNo', CASE IFNULL(W.MODCLASS,'') WHEN '' THEN 'A' ELSE W.MODCLASS END AS 'ModuleClass', IFNULL(GENDESC, CASE X.CUSTOMER WHEN 'ASTRO' THEN CASE WHEN IFNULL(Y.Impp,0) >= X.LOWRATE AND IFNULL(Y.Impp,0) < X.MIDRATE THEN 'L' ELSE 'H' END WHEN 'JA ' THEN CASE WHEN IFNULL(Y.Impp,0) < X.LOWRATE THEN 'L' WHEN IFNULL(Y.Impp,0) > X.HIGHRATE THEN 'H' ELSE 'M' END ELSE '-' END) AS 'Remarks', Y.InspectionTime AS 'TestDate', IFNULL(Y.Bin,0) AS 'Bin', IFNULL(Y.Pmpp,0) AS 'Power', IFNULL(Y.Uoc,0) AS 'Voc', IFNULL(Y.Isc,0) AS 'Isc', IFNULL(Y.Umpp,0) AS 'Vmp', IFNULL(Y.Impp,0) AS 'Imp', IFNULL(Y.ShuntResistance,0) AS 'Rsh', IFNULL(Y.FF,0)AS 'FF', CONCAT(Z.CONTNO,Z.CONTSFX) AS 'ContainerNo' FROM (SELECT CASE A.PALLETNO WHEN @PALLETNO THEN CASE A.CARTONNO WHEN @CARTONNO THEN @curRow := @curRow + 1 ELSE @curRow := 1 END ELSE @curRow :=1 END AS SEQNO, B.SERIALNO, @PALLETNO := A.PALLETNO AS PALLETNO, @CARTONNO := A.CARTONNO AS CARTONNO, A.PRODUCTNO, A.MODELNAME, C.GENDESC, A.TRXDATE, IFNULL(D.LOWRATE,0) AS LOWRATE, IFNULL(D.MIDRATE,0) AS MIDRATE, IFNULL(D.HIGHRATE,0) AS HIGHRATE, A.CUSTOMER, A.ROWID FROM epl01 A INNER JOIN epl02 B ON A.PALLETNO = B.PALLETNO AND A.CARTONNO = B.CARTONNO LEFT JOIN itm01 C ON A.PRODUCTNO = C.ITMCODE LEFT JOIN fdd01 D ON A.MODELNAME LIKE D.MODCODE AND CASE A.CUSTOMER WHEN 'ASTRO' THEN RIGHT(A.MODELNAME,3) WHEN 'JA' THEN SUBSTRING(A.MODELNAME,12,3) ELSE 0 END = D.POWRATE JOIN (SELECT @curRow := 0, @PALLETNO := '', @CARTONNO := '') r WHERE ".$cond.") X LEFT JOIN ftd_upd Y ON X.SERIALNO = Y.ModuleID LEFT JOIN epc01 Z ON X.palletno = Z.PALLETNO AND X.CARTONNO = Z.CARTONNO LEFT JOIN lbl02 W ON X.SERIALNO = W.SERIALNO AND W.LBLTYPE = 1 ORDER BY X.CUSTOMER, Z.CONTNO, Z.CONTSFX, X.ROWID, X.PALLETNO, X.CARTONNO, X.SEQNO";
+
+        $ftd = DB::connection('web_portal')
+                            ->select($sql);
+
+        return Response::json($ftd);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

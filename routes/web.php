@@ -164,6 +164,8 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/mes','MESController@index')->name('mes_daily');
         Route::get('/mescreate/{station}','MESController@create')->name('add_mes_trx');
         Route::post('/mescreate/{station}','MESController@store')->name('save_mes_trx');
+        Route::get('/mes/ftd', 'MESController@ftd')->name('mes_ftd');
+        Route::post('/mes/ftdreport', 'MESController@ftdReport')->name('mes_ftdreport');
         // Route::resource('/mes','MESController');
         
         Route::post('/modules/inquire','ModulesController@inquire')->name('module_inquiry');
