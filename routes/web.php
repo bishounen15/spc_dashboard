@@ -166,6 +166,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/mescreate/{station}','MESController@store')->name('save_mes_trx');
         Route::get('/mes/ftd', 'MESController@ftd')->name('mes_ftd');
         Route::post('/mes/ftdreport', 'MESController@ftdReport')->name('mes_ftdreport');
+        Route::post('/mes/resetpower/{serial}/{rowid}', 'MESController@resetPower')->name('mes_resetpower');
         // Route::resource('/mes','MESController');
         
         Route::post('/modules/inquire','ModulesController@inquire')->name('module_inquiry');

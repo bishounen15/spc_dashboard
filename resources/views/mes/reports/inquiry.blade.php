@@ -129,10 +129,32 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="confirm-reset" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Reset Power</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" name="id" id="id" value="0">
+            <p>Do you want to reset power to "<small><span id="descr"></span></small>"?</p>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary btn-yes reset-power">Yes</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('jscript')
 <script>
+    var mylink = '';
     $(document).ready(function() {
         $("#sno").focus();
 
@@ -184,6 +206,34 @@
 				 $(this).val("");
 			}
 		});
+
+        $('#confirm-reset').on('show.bs.modal', function(e) {
+            $("#descr").html($(e.relatedTarget).attr('id'));
+            mylink = $(e.relatedTarget).data('href');
+            // $("#delete-record").attr("action", $(e.relatedTarget).data('href'));
+        });
+
+        $(".reset-power").click(function() {
+            var token = $('input[name=_token]');
+
+            $.ajax({
+                url: mylink,
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': token.val()
+                },
+                success: function (dt) {
+                    console.log(dt);
+                    table.ajax.url( '/modules/ftd/' + dt ).load();
+                    $("#confirm-reset").modal('toggle');                    
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    alert (errorThrown);
+                }	
+            });
+        });
 
         $("#RefreshButton").click(function() {
             // table.ajax.url( '/mes/data/' + $('#start').val() + '/' + $('#end').val() ).load();
@@ -238,7 +288,7 @@
                 { data: 'FF' },
                 { data: 'Bin' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
-                    return '<a href="#" data-href="/planning/schedule/destroy/'+full.id+'" role="button" class="btn btn-sm btn-success{{Auth::user()->sysadmin == 1 ? "" : " disabled"}}" data-toggle="modal" data-target="#confirm-delete" id="'+full.description+'" style="width: 100%;">Reset</a></div>';
+                    return '<a href="#" data-href="/mes/resetpower/'+full.ModuleID+'/'+full.ROWID+'" role="button" class="btn btn-sm btn-success{{Auth::user()->sysadmin == 1 ? "" : " disabled"}}" data-toggle="modal" data-target="#confirm-reset" id="'+full.Bin+'" style="width: 100%;">Reset</a></div>';
                 }},
                 // { data: 'USER' },
             ],

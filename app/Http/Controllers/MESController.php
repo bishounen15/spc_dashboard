@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\ftdData;
 use App\mesData;
 use App\mesClasses;
 use App\mesStation;
@@ -190,6 +191,18 @@ class MESController extends Controller
                             ->select($sql);
 
         return Response::json($ftd);
+    }
+
+    public function resetPower($serial,$rowid) {
+        $sno = str_replace('*','',$serial);
+        $ftd = ftdData::where("ModuleID","LIKE",$sno."%")->orderBy('ROWID','desc')->get();
+
+        foreach($ftd as $ft) {
+            $ft->ModuleID = str_replace('*','',$ft->ModuleID) . ($ft->ROWID > $rowid ? '*' : '');
+            $saved = $ft->save();
+        }
+
+        return Response::json($sno);
     }
 
     /**
