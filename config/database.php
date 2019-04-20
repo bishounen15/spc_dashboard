@@ -153,6 +153,21 @@ return [
             'engine' => null,
         ],
 
+        'trina' => [
+            'driver' => 'mysql',
+            'host' => '192.168.128.25',
+            'port' => '3306',
+            'database' => 'omes',
+            'username' => 'mesadmin',
+            'password' => '1qAZ2wSX',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'database' => env('DB_DATABASE', database_path('database.sqlite')),

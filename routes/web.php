@@ -168,6 +168,8 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/mes/ftdreport', 'MESController@ftdReport')->name('mes_ftdreport');
         Route::post('/mes/resetpower/{serial}/{rowid}', 'MESController@resetPower')->name('mes_resetpower');
         // Route::resource('/mes','MESController');
+        Route::get('/trina/ftdreport', 'TRINA\ReportsController@ftdReport')->name('trina_ftd_report');
+        Route::get('/trina/ftd/{start}/{end}', 'TRINA\ReportsController@ftd')->name('trina_ftd');
         
         Route::post('/modules/inquire','ModulesController@inquire')->name('module_inquiry');
         Route::get('/modules/ftd/{serial}','ModulesController@ftd')->name('ftd_data');

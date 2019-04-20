@@ -17,6 +17,10 @@ use DataTables;
 
 class ProductionSchedulesController extends Controller
 {
+    public function __construct()
+    {
+        date_default_timezone_set('Asia/Manila');
+    }
     /**
      * Display a listing of the resource.
      *
