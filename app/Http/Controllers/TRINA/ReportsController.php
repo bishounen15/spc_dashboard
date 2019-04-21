@@ -28,4 +28,14 @@ class ReportsController extends Controller
 
         return Datatables::of($ftd)->make(true);
     }
+
+    function lotReport() {
+        return view('mes.trina.lot');
+    }
+
+    function LotNumbers() {
+        $lot = DB::connection("trina")->select("SELECT A.Module, A.Material, A.LotNumber, A.total, D.max_total FROM omes.v_lotnumbers A INNER JOIN omes.z_material_setup D ON A.Material = D.Material INNER JOIN (SELECT * FROM omes.rt_mid_frameup_hist ORDER BY Process_time DESC LIMIT 1) B ON A.LotNumber = B.frame_lot OR A.LotNumber = B.ShortFrame_lot union all SELECT A.Module, A.Material, A.LotNumber, A.total, D.max_total FROM omes.v_lotnumbers A INNER JOIN omes.z_material_setup D ON A.Material = D.Material INNER JOIN (SELECT * FROM omes.rt_mid_layup_hist ORDER BY Process_time DESC LIMIT 1) C ON A.LotNumber = C.Backsheet_lot OR A.LotNumber = C.EVA_lot OR A.LotNumber = C.OrdinaryEVA_lot OR A.LotNumber = C.Glass_lot");
+
+        return Datatables::of($lot)->make(true);
+    }
 }

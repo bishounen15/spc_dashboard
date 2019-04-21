@@ -117,6 +117,7 @@
                                 <a class="dropdown-item" href="/mes/ftd">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
                                 
                                 <h6 class="dropdown-header">TRINA SOLAR</h6>
+                                <a class="dropdown-item" href="/trina/lotreport">&nbsp;&nbsp;&nbsp;&nbsp;Lot Number Monitoring</a>
                                 <a class="dropdown-item" href="/trina/ftdreport">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
 
                                 <h6 class="dropdown-header">Planning</h6>

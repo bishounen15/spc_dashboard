@@ -170,6 +170,9 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         // Route::resource('/mes','MESController');
         Route::get('/trina/ftdreport', 'TRINA\ReportsController@ftdReport')->name('trina_ftd_report');
         Route::get('/trina/ftd/{start}/{end}', 'TRINA\ReportsController@ftd')->name('trina_ftd');
+
+        Route::get('/trina/lotreport', 'TRINA\ReportsController@lotReport')->name('trina_lot_report');
+        Route::get('/trina/lot', 'TRINA\ReportsController@LotNumbers')->name('trina_ftd');
         
         Route::post('/modules/inquire','ModulesController@inquire')->name('module_inquiry');
         Route::get('/modules/ftd/{serial}','ModulesController@ftd')->name('ftd_data');
