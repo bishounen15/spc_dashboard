@@ -22,6 +22,8 @@
         <thead class="thead-dark" style="font-size: 0.7em;">
             <th>Work Order ID</th>
             <th>Module ID</th>
+            <th>Product ID</th>
+            <th>Product Type</th>
             <th>Test Date/Time</th>
             <th>Title</th>
             <th>Grade</th>
@@ -62,18 +64,18 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ]
                     },
                     text:       'Excel',
-                    filename: "MES_excel"
+                    filename: "TRINA_ftd_excel"
                 },
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ]
                     },
                     text:       'CSV',
-                    filename: "MES_csv"
+                    filename: "TRINA_ftd_csv"
                 },
                 // {
                 //     extend:     'pdf',
@@ -92,6 +94,8 @@
                         return full.Module_ID;
                     }
                 }},
+                { data: 'Product_ID' },
+                { data: 'Product_Type' },
                 { data: 'TEST_DATETIME' },
                 { data: 'TITLE' },
                 { data: 'Grade' },
