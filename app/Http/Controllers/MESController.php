@@ -61,6 +61,11 @@ class MESController extends Controller
     public function dailyOutput($date = null) {
         if ($date == null) { $date = date('Y-m-d'); }
         $sched = ProductionSchedule::where("production_date",$date)->first();
+
+        if ($sched == null) {
+            $sched = ProductionSchedule::where("activity","!=","Restday")->orderBy("production_date","desc")->first();
+        }
+
         $shifts = $sched->selectedShifts;
 
         $daily = [];
