@@ -30,6 +30,7 @@
             <th>Product ID</th>
             <th>Product Type</th>
             <th>Carton No.</th>
+            <th>Packing Date</th>
             <th>Container No.</th>
             <th>Test Date/Time</th>
             <th>Title</th>
@@ -104,6 +105,7 @@
                 { data: 'Product_ID' },
                 { data: 'Product_Type' },
                 { data: 'Carton_no' },
+                { data: 'Packing_Date' },
                 { data: 'Container_No' },
                 { data: 'TEST_DATETIME' },
                 { data: 'TITLE' },
