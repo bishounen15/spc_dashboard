@@ -21,11 +21,12 @@ class ReportsController extends Controller
         return view('mes.trina.ftd');
     }
 
-    function ftd($sdate = null, $edate = null) {
+    function ftd($sdate = null, $edate = null, $pack = null) {
         $start = ($sdate == null ? date('Y-m-d') : date('Y-m-d',strtotime($sdate)))  . " 06:00:00";
         $end = date('Y-m-d',strtotime("+1 days",strtotime(($edate == null ? "Today" : $edate)))) . " 05:59:59";
+        $cond = ($pack == null || $pack == "false" ? "" : "AND f.Module_ID IS NOT NULL");
 
-        $ftd = DB::connection("trina")->select("SELECT a.WorkOrder_ID, a.Module_ID, d.Product_ID, e.Product_Type, a.TEST_DATETIME, a.TITLE, b.LOWERPOWER as Grade, a.PMAX, a.FF, a.VOC, a.ISC, a.VPM, a.IPM, a.RS, a.RSH, a.EnvTemp, a.SurfTemp, IFNULL(CONCAT('ftp://192.168.128.25/',SUBSTR(a.Module_ID,1,10),'/',MAX(c.FILEPATH)),'') AS FILEPATH FROM omes.rt_mid_flash a inner join omes.df_wo_mat d on a.WorkOrder_ID = d.WorkOrder_ID inner join omes.df_module_powersetting b on a.WorkOrder_ID = b.WorkOrder_id  and d.Product_ID = b.Product_ID inner join omes.df_pid_type_mapping e on d.Product_ID = e.Q1_ID and (a.PMAX >= b.LOWERPOWER and a.PMAX < b.UPPERPOWER) LEFT JOIN omes.rt_modulepelresults c on a.Module_ID = c.MODULEID where Module_ID like 'S98%' AND TEST_DATETIME BETWEEN ? AND ? GROUP BY a.WorkOrder_ID, a.Module_ID, d.Product_ID, e.Product_Type, a.TEST_DATETIME, a.TITLE, b.LOWERPOWER, a.PMAX, a.FF, a.VOC, a.ISC, a.VPM, a.IPM, a.RS, a.RSH, a.EnvTemp, a.SurfTemp",[$start,$end]);
+        $ftd = DB::connection("trina")->select("SELECT a.WorkOrder_ID, a.Module_ID, d.Product_ID, e.Product_Type, IFNULL(f.Carton_No,'') as Carton_no, IFNULL(f.Container_No,'') AS Container_No, a.TEST_DATETIME, a.TITLE, b.LOWERPOWER as Grade, a.PMAX, a.FF, a.VOC, a.ISC, a.VPM, a.IPM, a.RS, a.RSH, a.EnvTemp, a.SurfTemp, IFNULL(CONCAT('ftp://192.168.128.25/',SUBSTR(a.Module_ID,1,10),'/',MAX(c.FILEPATH)),'') AS FILEPATH FROM omes.rt_mid_flash a inner join omes.df_wo_mat d on a.WorkOrder_ID = d.WorkOrder_ID inner join omes.df_module_powersetting b on a.WorkOrder_ID = b.WorkOrder_id and d.Product_ID = b.Product_ID inner join omes.df_pid_type_mapping e on d.Product_ID = e.Q1_ID and (a.PMAX >= b.LOWERPOWER and a.PMAX < b.UPPERPOWER) LEFT JOIN omes.rt_modulepelresults c on a.Module_ID = c.MODULEID left join omes.rt_mid_packing f on a.Module_ID = f.Module_ID and f.State = 'Packed' where a.Module_ID like 'S98%' AND TEST_DATETIME BETWEEN ? AND ? ".$cond." GROUP BY a.WorkOrder_ID, a.Module_ID, d.Product_ID, e.Product_Type, f.Carton_No, f.Container_No, a.TEST_DATETIME, a.TITLE, b.LOWERPOWER, a.PMAX, a.FF, a.VOC, a.ISC, a.VPM, a.IPM, a.RS, a.RSH, a.EnvTemp, a.SurfTemp",[$start,$end]);
 
         return Datatables::of($ftd)->make(true);
     }

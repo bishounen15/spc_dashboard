@@ -14,6 +14,11 @@
                     <label class="my-1 mr-2" for="end">End Date</label>
                     <input type="date" class="form-control form-control-sm my-1 mr-sm-2" name="end" id="end" value="{{ date('Y-m-d') }}">        
                     
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="pack" name="pack" value="option1">
+                        <label class="form-check-label" for="pack">Packed Only</label>
+                    </div>
+
                     <button type="submit" class="btn btn-primary my-1" id="RefreshButton">Refresh Dashboard</button>
             </div>
         </div>
@@ -24,6 +29,8 @@
             <th>Module ID</th>
             <th>Product ID</th>
             <th>Product Type</th>
+            <th>Carton No.</th>
+            <th>Container No.</th>
             <th>Test Date/Time</th>
             <th>Title</th>
             <th>Grade</th>
@@ -49,7 +56,7 @@
 <script>
     $(document).ready(function() {
         $("#RefreshButton").click(function() {
-            table.ajax.url( '/trina/ftd/' + $('#start').val() + '/' + $('#end').val() ).load();
+            table.ajax.url( '/trina/ftd/' + $('#start').val() + '/' + $('#end').val() + "/" + $("#pack").is(":checked") ).load();
         });
 
         var table = $('#ftd-list').DataTable({
@@ -57,14 +64,14 @@
             processing: true,
             // serverSide: true,
             "order": [],
-            ajax: '/trina/ftd/' + $('#start').val() + '/' + $('#end').val(),
+            ajax: '/trina/ftd/' + $('#start').val() + '/' + $('#end').val() + "/" + $("#pack").is(":checked"),
             dom: 'Blfrtip',
             buttons: [
                 "print",
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ]
                     },
                     text:       'Excel',
                     filename: "TRINA_ftd_excel"
@@ -72,7 +79,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ]
                     },
                     text:       'CSV',
                     filename: "TRINA_ftd_csv"
@@ -96,6 +103,8 @@
                 }},
                 { data: 'Product_ID' },
                 { data: 'Product_Type' },
+                { data: 'Carton_no' },
+                { data: 'Container_No' },
                 { data: 'TEST_DATETIME' },
                 { data: 'TITLE' },
                 { data: 'Grade' },
