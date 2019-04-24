@@ -74,6 +74,33 @@
 
                     <div class="form-row mb-1">
                         <div class="col-sm-5">
+                            <label for="Module_Grade">Module Grade</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control form-control-sm" name="Module_Grade" id="Module_Grade" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-1">
+                        <div class="col-sm-5">
+                            <label for="EL_Grade">EL Grade</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control form-control-sm" name="EL_Grade" id="EL_Grade" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-1">
+                        <div class="col-sm-5">
+                            <label for="Status">Status</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control form-control-sm" name="Status" id="Status" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-1">
+                        <div class="col-sm-5">
                             <label for="Operation">Current Operation</label>
                         </div>
                         <div class="col-sm-7">
