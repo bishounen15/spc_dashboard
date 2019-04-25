@@ -25,6 +25,7 @@
     </div>
     <table class="table table-condensed table-striped table-sm" id="ftd-list" style="width: 100%;">
         <thead class="thead-dark" style="font-size: 0.7em;">
+            {{-- <th>OBA</th> --}}
             <th>Work Order ID</th>
             <th>Module ID</th>
             <th>Product ID</th>
@@ -72,7 +73,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ]
                     },
                     text:       'Excel',
                     filename: "TRINA_ftd_excel"
@@ -80,7 +81,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ]
                     },
                     text:       'CSV',
                     filename: "TRINA_ftd_csv"
@@ -92,9 +93,14 @@
                 // },
             ],
             columns: [
-                // { data: 'id' },
+                // { "render": function ( data, type, full, meta ) {
+                //     if (full.Carton_no != "") {
+                //         return '<div class="btn-group" role="group" aria-label="Button group with nested dropdown"><div class="btn-group" role="group"><button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle pt-0 pb-0 pl-1 pr-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>Judgement</small></button><div class="dropdown-menu p-0" aria-labelledby="btnGroupDrop1"><small><a class="dropdown-item bg-success text-white" href="#">Pass</a><a class="dropdown-item bg-danger text-white" href="#">Fail</a></small></div></div></div>';
+                //     } else {
+                //         return '';
+                //     }
+                // }},
                 { data: 'WorkOrder_ID' },
-                // { data: 'Module_ID' },
                 { "render": function ( data, type, full, meta ) {
                     if (full.FILEPATH != "") {
                         return '<a href="'+full.FILEPATH+'" target="_blank" type="vnd.sealedmedia.softseal.jpg">'+full.Module_ID+'</a>';
