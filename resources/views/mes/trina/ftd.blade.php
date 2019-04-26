@@ -25,7 +25,8 @@
     </div>
     <table class="table table-condensed table-striped table-sm" id="ftd-list" style="width: 100%;">
         <thead class="thead-dark" style="font-size: 0.7em;">
-            {{-- <th>OBA</th> --}}
+            <th>OBA</th>
+            <th>OBA Status</th>
             <th>Work Order ID</th>
             <th>Module ID</th>
             <th>Product ID</th>
@@ -51,14 +52,85 @@
             
         </tbody>
     </table>
+
+    <div class="modal fade" id="OBAModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title text-white"><strong>OBA Judgement</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to tag this serial [<span id="moduleid" class="text-danger"></span>] carton no [<span id="cartonno" class="text-danger"></span>] as <strong><span id="judgement" class="text-white p-1"></span></strong>?</p>
+                <div class="form-row">
+                <label for="remarks">Remarks <span id="isoption"></span></label>
+                <textarea class="form-control form-control-sm" name="remarks" id="remarks" rows="4"></textarea>
+                <small class="form-text text-danger" id="err_remarks"></small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="SaveButton">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection
 
 @push('jscript')
 <script>
+    $(document).on("click",".oba-judgement", function () {
+        $("#judgement").html($(this).html());
+        $("#moduleid").html($(this).data('mid'));
+        $("#cartonno").html($(this).data('cno'));
+        if ($(this).html() == "Pass") {
+            $("#judgement").removeClass("bg-danger").addClass("bg-success");
+            $("#isoption").html("(Optional)");
+        } else {
+            $("#judgement").removeClass("bg-success").addClass("bg-danger");
+            $("#isoption").html("");
+        }
+    });
+
     $(document).ready(function() {
         $("#RefreshButton").click(function() {
             table.ajax.url( '/trina/ftd/' + $('#start').val() + '/' + $('#end').val() + "/" + $("#pack").is(":checked") ).load();
+        });
+
+        $("#SaveButton").click(function() {
+            if ($("#judgement").html() == "Fail" && $("#remarks").val() == "") {
+                alert("Remarks is required.");
+            } else {
+                var token = $('input[name=_token]');
+                var formData = new FormData();
+                formData.append('Module_ID', $("#moduleid").html());
+                formData.append('Carton_no', $("#cartonno").html());
+                formData.append('Judgement', $("#judgement").html());
+                formData.append('Remarks', $("#remarks").val());
+                
+                $.ajax({
+                    url: '/trina/oba',
+                    method: 'POST',
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': token.val()
+                    },
+                    success: function (dt) {
+                        $("#RefreshButton").click();
+                        $("#OBAModal").modal("toggle");
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        alert (errorThrown);
+                    }	
+                });
+            }
         });
 
         var table = $('#ftd-list').DataTable({
@@ -73,7 +145,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ]
+                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
                     },
                     text:       'Excel',
                     filename: "TRINA_ftd_excel"
@@ -81,29 +153,50 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ]
+                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
                     },
                     text:       'CSV',
                     filename: "TRINA_ftd_csv"
                 },
-                // {
-                //     extend:     'pdf',
-                //     text:       'PDF',
-                //     filename: "os_categories_pdf"
-                // },
+            ],
+            "columnDefs": [
+                {
+                    "targets": [ 
+                        @if(Auth::user()->mes_role != 'QUAL' && Auth::user()->sysadmin != 1)
+                            0
+                        @else
+                            1
+                        @endif
+                     ],
+                    "visible": false
+                }
             ],
             columns: [
-                // { "render": function ( data, type, full, meta ) {
-                //     if (full.Carton_no != "") {
-                //         return '<div class="btn-group" role="group" aria-label="Button group with nested dropdown"><div class="btn-group" role="group"><button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle pt-0 pb-0 pl-1 pr-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>Judgement</small></button><div class="dropdown-menu p-0" aria-labelledby="btnGroupDrop1"><small><a class="dropdown-item bg-success text-white" href="#">Pass</a><a class="dropdown-item bg-danger text-white" href="#">Fail</a></small></div></div></div>';
-                //     } else {
-                //         return '';
-                //     }
-                // }},
+                { "render": function ( data, type, full, meta ) {
+                    if (full.Carton_no != "") {
+                        jdg = full.Judgement;
+                        hdr = '<h6 class="dropdown-header bg-secondary text-white">Change Status</h6>';
+
+                        if (full.Judgement == "Pass") {
+                            cls = "btn-success";
+                        } else if (full.Judgement == "Fail") {
+                            cls = "btn-danger";
+                        } else {
+                            cls = "btn-secondary";
+                            jdg = "Judgement";
+                            hdr = '';
+                        }
+
+                        return '<div class="btn-group" role="group" aria-label="Button group with nested dropdown"><div class="btn-group" role="group"><button id="btnGroupDrop1" type="button" class="btn '+cls+' dropdown-toggle pt-0 pb-0 pl-1 pr-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>'+jdg+'</small></button><div class="dropdown-menu p-0" aria-labelledby="btnGroupDrop1"><small>'+hdr+'</small><a class="dropdown-item bg-success text-white oba-judgement" href="#" data-toggle="modal" data-target="#OBAModal" data-mid="'+full.Module_ID+'" data-cno="'+full.Carton_no+'">Pass</a><a class="dropdown-item bg-danger text-white oba-judgement" href="#" data-toggle="modal" data-target="#OBAModal" data-mid="'+full.Module_ID+'" data-cno="'+full.Carton_no+'">Fail</a></div></div></div>';
+                    } else {
+                        return '';
+                    }
+                }},
+                { data: 'Judgement' },
                 { data: 'WorkOrder_ID' },
                 { "render": function ( data, type, full, meta ) {
                     if (full.FILEPATH != "") {
-                        return '<a href="'+full.FILEPATH+'" target="_blank" type="vnd.sealedmedia.softseal.jpg">'+full.Module_ID+'</a>';
+                        return '<a href="'+full.FILEPATH+'" target="_blank" type="vnd.sealedmedia.softseal.jpg" class="modid">'+full.Module_ID+'</a>';
                     } else {
                         return full.Module_ID;
                     }
