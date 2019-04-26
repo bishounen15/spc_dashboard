@@ -53,4 +53,17 @@ class ReportsController extends Controller
 
         return Response::json($info);
     }
+
+    function containerReport() {
+        return view('mes.trina.container');
+    }
+
+    function containerInfo($sdate = null, $edate = null) {
+        $start = ($sdate == null ? date('Y-m-d') : date('Y-m-d',strtotime($sdate)))  . " 06:00:00";
+        $end = date('Y-m-d',strtotime("+1 days",strtotime(($edate == null ? "Today" : $edate)))) . " 05:59:59";
+        
+        $container = DB::connection("trina")->select("SELECT '' as `Contract no`, a.Container_No as `Batch No`, a.Carton_No as 'Carton No', a.WorkOrder_ID as 'Workorder ID', a.Module_ID as 'Module ID', a.Product_ID as 'Product ID', a.Product_Type as 'Product Type', '' as 'Purchase Order', '' as 'Country Of Original', b.Cell_Suppliers as 'Cell Suppliers', '' as 'CONTAINER No', '' as 'SEAL', '' as 'BOL', '' as 'Ship destination', b.Layout_QTY_of_Cell as 'Cells Per Panel', DATE_ADD(c.Create_Date,INTERVAL 15 HOUR) as 'Production Date', b.Cell_MID as 'cell No', a.Module_Grade as 'MODULE GRADE' FROM omes.rt_mid_packing a inner join omes.df_wo_mat b on a.WorkOrder_ID = b.WorkOrder_ID inner join omes.rt_wo_mid c on a.Module_ID = c.Module_ID where a.Module_ID like 'S98%' AND a.State = 'Packed' AND DATE_ADD(a.Packing_Date,INTERVAL 15 HOUR) BETWEEN ? AND ? ORDER BY a.Carton_No, a.Packing_Date",[$start,$end]);
+
+        return Datatables::of($container)->make(true);
+    }
 }

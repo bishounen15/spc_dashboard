@@ -178,6 +178,9 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/trina/inquire', 'TRINA\ReportsController@Inquire')->name('trina_inquire');
 
         Route::post('/trina/oba', 'TRINA\OBAController@saveOBA')->name('trina_oba');
+
+        Route::get('/trina/containerinfo', 'TRINA\ReportsController@containerReport')->name('trina_cont_report');
+        Route::get('/trina/container/{start}/{end}', 'TRINA\ReportsController@containerInfo')->name('trina_cont');
         
         Route::post('/modules/inquire','ModulesController@inquire')->name('module_inquiry');
         Route::get('/modules/ftd/{serial}','ModulesController@ftd')->name('ftd_data');

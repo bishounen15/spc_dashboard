@@ -120,6 +120,7 @@
                                 <a class="dropdown-item" href="/trina/inquiry">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
                                 <a class="dropdown-item" href="/trina/lotreport">&nbsp;&nbsp;&nbsp;&nbsp;Lot Number Monitoring</a>
                                 <a class="dropdown-item" href="/trina/ftdreport">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
+                                <a class="dropdown-item" href="/trina/containerinfo">&nbsp;&nbsp;&nbsp;&nbsp;Container Information</a>
 
                                 <h6 class="dropdown-header">Planning</h6>
                                 <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>
