@@ -176,6 +176,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
         Route::get('/trina/inquiry', 'TRINA\ReportsController@moduleInquiry')->name('trina_mod_inquiry');
         Route::post('/trina/inquire', 'TRINA\ReportsController@Inquire')->name('trina_inquire');
+        Route::post('/trina/updateEL', 'TRINA\ModuleController@updateELGrade')->name('trina_updateEL');
 
         Route::post('/trina/oba', 'TRINA\OBAController@saveOBA')->name('trina_oba');
 

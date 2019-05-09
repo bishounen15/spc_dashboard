@@ -86,7 +86,19 @@
                             <label for="EL_Grade">EL Grade</label>
                         </div>
                         <div class="col-sm-7">
+                            @if(Auth::user()->mes_role != 'QUAL' && Auth::user()->sysadmin != 1)
                             <input type="text" class="form-control form-control-sm" name="EL_Grade" id="EL_Grade" readonly>
+                            @else
+                            @php
+                                $status = ['', 'Q1', 'Q2'];
+                            @endphp
+                            <input type="hidden" id="origStatus" name="origStatus" value="">
+                            <select class="form-control form-control-sm" name="EL_Grade" id="EL_Grade">
+                                @foreach ($status as $stat)
+                                <option value="{{$stat}}">{{$stat}}</option>
+                                @endforeach
+                            </select>
+                            @endif
                         </div>
                     </div>
 
@@ -115,6 +127,12 @@
                         <div class="col-sm-7">
                             <input type="text" class="form-control form-control-sm" name="LabelDate" id="LabelDate" readonly>
                         </div>
+                    </div>
+
+                    <div class="form-row">
+                        @if(Auth::user()->mes_role == 'QUAL' || Auth::user()->sysadmin == 1)
+                            <button class="btn btn-sm btn-block btn-info" disabled="disabled" id="UpdateEL">Update EL Grade</button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -465,6 +483,30 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="ELModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title text-white"><strong>Update EL Grade</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    You are about to change the EL Grade of [<span id="moduleid" class="text-danger"></span>] <br> 
+                    from <strong>'<span id="origStat"></span>'</strong> to <strong>'<span id="newStat"></span>'</strong>?<br><br>
+                    Press YES to proceed.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="SaveButton">Yes</button>
+                <button type="button" class="btn btn-secondary" id="CancelButton" data-dismiss="modal">No</button>
+            </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -482,6 +524,50 @@
 
     $(document).ready(function() {
         $("#sno").focus();
+
+        $("#EL_Grade").change(function() {
+            if ($(this).val() != $("#origStatus").val()) {
+                $("#UpdateEL").attr("disabled", false);
+            } else {
+                $("#UpdateEL").attr("disabled", true);
+            }
+        });
+
+        $("#UpdateEL").click(function() {
+            $("#moduleid").html( $("#Module_ID").val() );
+            $("#origStat").html( $("#origStatus").val() );
+            $("#newStat").html( $("#EL_Grade").val() );
+            $("#ELModal").modal('toggle');
+        });
+
+        $("#CancelButton").click(function() {
+            $("#EL_Grade").val( $("#origStatus").val() );
+        });
+
+        $("#SaveButton").click(function() {
+            var token = $('input[name=_token]');
+            var formData = new FormData();
+            formData.append('Module_ID', $("#Module_ID").val());
+            formData.append('EL_Grade', $("#EL_Grade").val());
+            
+            $.ajax({
+                url: '/trina/updateEL',
+                method: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': token.val()
+                },
+                success: function (dt) {
+                    $("#ELModal").modal("toggle");
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    alert (errorThrown);
+                }	
+            });
+        });
 
         $("#sno").keypress(function (e) {
 			var key = e.which;
@@ -507,6 +593,9 @@
                                 if (i == "ELPath") {
                                     $("#" + i).html(v);
                                     $("#" + i).attr("href",v);
+                                } else if (i == "EL_Grade") {
+                                    $("#origStatus").val(v);
+                                    $("#" + i).val(v);
                                 } else {
                                     $("#" + i).val(v);
                                 }
