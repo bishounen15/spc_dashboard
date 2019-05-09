@@ -11,4 +11,13 @@ class Software extends Model
     protected $table = 'tbl_software';
     //Primary Key
     protected $primaryKey = 'rowid';
+    public $timestamps = false;
+    
+    protected $fillable = [
+        'id',
+        'install_date',
+        'app_name',
+        'version',
+        'install_type',
+    ];
 }

@@ -45,3 +45,11 @@ Route::get('prodlines/{date}', function($date) {
 
     return $prodline;
 });
+
+Route::post('asset/update', 'AssetsController@saveAsset');
+Route::post('asset/network', 'AssetsController@saveNetwork');
+Route::post('asset/disks', 'AssetsController@saveDisks');
+Route::post('asset/apps', 'AssetsController@saveApps');
+Route::post('asset/delete/network', 'AssetsController@deleteNetwork');
+Route::post('asset/delete/disks', 'AssetsController@deleteDisks');
+Route::post('asset/delete/apps', 'AssetsController@deleteApps');

@@ -11,4 +11,12 @@ class HDDPartitions extends Model
     protected $table = 'tbl_hdd';
     //Primary Key
     protected $primaryKey = 'rowid';
+    public $timestamps = false;
+    
+    protected $fillable = [
+        'id',
+        'root_dir',
+        'capacity',
+        'free_space',
+    ];
 }

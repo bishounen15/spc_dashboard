@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Assets;
+use App\NetInterface;
+use App\HDDPartitions;
 use App\Software;
 
 use DataTables;
+use Response;
 
 class AssetsController extends Controller
 {
+    public function __construct()
+    {
+        date_default_timezone_set('Asia/Manila');
+    }
     //
     public function index() {
         return view('assets.computers.index');
@@ -49,5 +56,97 @@ class AssetsController extends Controller
         $data['asset'] = Assets::find($id);
 
         return view('assets.computers.view', $data);
+    }
+
+    public function saveAsset(Request $request) {
+        $asset_item = Assets::updateOrCreate(
+                            [
+                                'serial' => $request->serial
+                            ],
+                            [
+                                'type' => $request->type, 
+                                'brand' => $request->brand,
+                                'model' => $request->model,
+                                'os' => $request->os,
+                                'host_name' => $request->host_name,
+                                'id_number' => $request->id_number,
+                                'name' => $request->name,
+                                'dept' => $request->dept,
+                                'site' => $request->site,
+                                'sub_site' => $request->sub_site,
+                                'status' => $request->status,
+                                'device_status' => $request->device_status,
+                                'proc' => $request->proc,
+                                'ram' => $request->ram,
+                                'hdd' => $request->hdd,
+                                'gfx_card' => $request->gfx_card,
+                                'remarks' => $request->remarks,
+                            ]
+                        );
+
+        return Response::json($asset_item);
+    }
+
+    public function saveNetwork(Request $request) {
+        $asset_network = NetInterface::updateOrCreate(
+                    [
+                        'id' => $request->id,
+                        'mac' => $request->mac,
+                    ],
+                    [
+                        'ip' => $request->ip, 
+                        'name' => $request->name,
+                        'descr' => $request->descr,
+                        'interface' => $request->interface,
+                    ]
+                );
+
+        return Response::json($asset_network);
+    }
+
+    public function deleteNetwork(Request $request) {
+        $deleted = NetInterface::whereNotIn("rowid",$request->IDs)->delete();
+        return Response::json($deleted);
+    }
+
+    public function saveDisks(Request $request) {
+        $asset_disk = HDDPartitions::updateOrCreate(
+                    [
+                        'id' => $request->id,
+                        'root_dir' => $request->root_dir,
+                    ],
+                    [
+                        'capacity' => $request->capacity, 
+                        'free_space' => $request->free_space,
+                    ]
+                );
+
+        return Response::json($asset_disk);
+    }
+
+    public function deleteDisks(Request $request) {
+        $deleted = HDDPartitions::whereNotIn("rowid",$request->IDs)->delete();
+        return Response::json($deleted);
+    }
+
+    public function saveApps(Request $request) {
+        $asset_apps = Software::updateOrCreate(
+                    [
+                        'id' => $request->id,
+                        'app_name' => $request->app_name,
+                    ],
+                    [
+                        'install_date' => $request->install_date, 
+                        'version' => $request->version,
+                        'install_type' => $request->install_type,
+                    ]
+                );
+
+        return Response::json($asset_apps);    
+    }
+
+    public function deleteApps(Request $request) {
+        $deleted = Software::whereNotIn("rowid",$request->IDs)->delete();
+        return Response::json($deleted);
     }
 }

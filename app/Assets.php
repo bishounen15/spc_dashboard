@@ -13,6 +13,27 @@ class Assets extends Model
     //Primary Key
     protected $primaryKey = 'id';
 
+    protected $fillable = [
+        'serial',
+        'type', 
+        'brand',
+        'model',
+        'os',
+        'host_name',
+        'id_number',
+        'name',
+        'dept',
+        'site',
+        'sub_site',
+        'status',
+        'device_status',
+        'proc',
+        'ram',
+        'hdd',
+        'gfx_card',
+        'remarks',
+    ];
+
     public function network() {
         return $this->hasMany('App\NetInterface', 'id', 'id');
     }

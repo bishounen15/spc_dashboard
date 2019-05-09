@@ -11,4 +11,14 @@ class NetInterface extends Model
     protected $table = 'tbl_network';
     //Primary Key
     protected $primaryKey = 'rowid';
+    public $timestamps = false;
+    
+    protected $fillable = [
+        'id',
+        'ip',
+        'mac',
+        'name',
+        'descr',
+        'interface',
+    ];
 }
