@@ -31,8 +31,9 @@
             <th>Module ID</th>
             <th>Product ID</th>
             <th>Product Type</th>
-            <th>Cell Color</th>
+            <th>Grade of Cell Power</th>
             <th>Cell Power</th>
+            <th>Cell Color</th>
             <th>Cell Eff.</th>
             <th>Carton No.</th>
             <th>Packing Date</th>
@@ -148,7 +149,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 ]
+                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 ]
                     },
                     text:       'Excel',
                     filename: "TRINA_ftd_excel"
@@ -156,7 +157,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 ]
+                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 ]
                     },
                     text:       'CSV',
                     filename: "TRINA_ftd_csv"
@@ -208,6 +209,7 @@
                 { data: 'Product_Type' },
                 { data: 'Grade_of_Cell_Power' },
                 { data: 'Cell_Power' },
+                { data: 'Cell_Color' },
                 { data: 'EFF' },
                 { data: 'Carton_no' },
                 { data: 'Packing_Date' },
