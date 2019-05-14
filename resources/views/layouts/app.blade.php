@@ -116,13 +116,6 @@
                                 <a class="dropdown-item" href="/mes/output">&nbsp;&nbsp;&nbsp;&nbsp;Daily Output</a>
                                 <a class="dropdown-item" href="/mes/ftd">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
                                 
-                                <h6 class="dropdown-header">TRINA SOLAR</h6>
-                                <a class="dropdown-item" href="/trina/inquiry">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
-                                <a class="dropdown-item" href="/trina/workorder">&nbsp;&nbsp;&nbsp;&nbsp;Work Order Info</a>
-                                <a class="dropdown-item" href="/trina/lotreport">&nbsp;&nbsp;&nbsp;&nbsp;Lot Number Monitoring</a>
-                                <a class="dropdown-item" href="/trina/ftdreport">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
-                                <a class="dropdown-item" href="/trina/containerinfo">&nbsp;&nbsp;&nbsp;&nbsp;Container Information</a>
-
                                 <h6 class="dropdown-header">Planning</h6>
                                 <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>
                                 
@@ -135,6 +128,20 @@
                                 @endif
                                 @endforeach
                                 @endif
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                TRINA Solar
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <h6 class="dropdown-header">Reports</h6>
+                                <a class="dropdown-item" href="/trina/inquiry">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
+                                <a class="dropdown-item" href="/trina/workorder">&nbsp;&nbsp;&nbsp;&nbsp;Work Order Info</a>
+                                <a class="dropdown-item" href="/trina/lotreport">&nbsp;&nbsp;&nbsp;&nbsp;Lot Number Monitoring</a>
+                                <a class="dropdown-item" href="/trina/ftdreport">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
+                                <a class="dropdown-item" href="/trina/containerinfo">&nbsp;&nbsp;&nbsp;&nbsp;Container Information</a>
                                 </div>
                             </li>
                             @endif
