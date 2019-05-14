@@ -6,6 +6,7 @@
         <thead class="thead-dark">
             <th>Work Order ID</th>
             <th>Work Order Version</th>
+            <th>Order ID</th>
             <th>Product ID</th>
             <th>Product Type</th>
             <th>Cell Supplier</th>
@@ -61,6 +62,7 @@
                     return '<a href="/trina/workorder/'+full.WorkOrder_ID+'/'+full.WorkOrder_vertion+'">'+full.WorkOrder_ID+'</a>';
                 }},
                 { data: 'WorkOrder_vertion' },
+                { data: 'OrderID' },
                 { data: 'Product_ID' },
                 { data: 'Product_Type' },
                 { data: 'Cell_Suppliers' },
