@@ -180,6 +180,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
         Route::post('/trina/oba', 'TRINA\OBAController@saveOBA')->name('trina_oba');
 
+        Route::get('/trina/workorder', 'TRINA\WorkOrderController@index')->name('trina_wo');
+        Route::get('/trina/workorder/{id}/{version}', 'TRINA\WorkOrderController@show');
+        Route::get('/trina/wo/load', 'TRINA\WorkOrderController@load')->name('trina_wo_load');
+
         Route::get('/trina/containerinfo', 'TRINA\ReportsController@containerReport')->name('trina_cont_report');
         Route::get('/trina/container/{start}/{end}', 'TRINA\ReportsController@containerInfo')->name('trina_cont');
         
