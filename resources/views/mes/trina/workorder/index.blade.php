@@ -5,7 +5,7 @@
     <table class="table table-condensed table-striped table-sm" id="wo-list" style="width: 100%;">
         <thead class="thead-dark">
             <th>Work Order ID</th>
-            <th>Work Order Version</th>
+            <th>Version</th>
             <th>Order ID</th>
             <th>Product ID</th>
             <th>Product Type</th>

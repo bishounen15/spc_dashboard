@@ -43,7 +43,15 @@
                 <div class="col-sm-3">
                     <div class="form-group table-danger">
                         <label for="Module_Colour">Module Color</label>
+                        @if(Auth::user()->mes_role == 'PLAN' || Auth::user()->sysadmin == 1)
+                        <select class="form-control form-control-sm" name="Module_Colour" id="Module_Colour">
+                            @foreach($modColor as $mc)
+                            <option value="{{$mc->descr}}" {{ $mc->descr == $wo->Module_Colour ? "selected" : "" }}>{{$mc->descr}}</option>
+                            @endforeach
+                        </select>
+                        @else
                         <input type="text" class="form-control form-control-sm" name="Module_Colour" id="Module_Colour" value="{{ $wo->Module_Colour }}" readonly>
+                        @endif
                         {{-- <small class="form-text text-danger">{{ $errors->first('code') }}</small> --}}
                     </div>
                 </div>
@@ -67,7 +75,15 @@
                 <div class="col-sm-3">
                     <div class="form-group table-danger">
                         <label for="Cell_Suppliers">Cell Suppliers</label>
+                        @if(Auth::user()->mes_role == 'PLAN' || Auth::user()->sysadmin == 1)
+                        <select class="form-control form-control-sm" name="Cell_Suppliers" id="Cell_Suppliers">
+                            @foreach($cellSup as $cs)
+                            <option value="{{$cs->code}}" {{ $cs->code == $wo->Cell_Suppliers ? "selected" : "" }}>{{$cs->descr}}</option>
+                            @endforeach
+                        </select>
+                        @else
                         <input type="text" class="form-control form-control-sm" name="Cell_Suppliers" id="Cell_Suppliers" value="{{ $wo->Cell_Suppliers }}" readonly>
+                        @endif
                         {{-- <small class="form-text text-danger">{{ $errors->first('code') }}</small> --}}
                     </div>
                 </div>
@@ -211,7 +227,15 @@
                 <div class="col-sm-3">
                     <div class="form-group table-danger">
                         <label for="IsBonded">Is Bonded?</label>
+                        @if(Auth::user()->mes_role == 'PLAN' || Auth::user()->sysadmin == 1)
+                        <select class="form-control form-control-sm" name="IsBonded" id="IsBonded">
+                            @foreach($isBondedList as $ib)
+                            <option value="{{$ib->code}}" {{ $ib->code == $wo->IsBonded ? "selected" : "" }}>{{$ib->descr}}</option>
+                            @endforeach
+                        </select>
+                        @else
                         <input type="text" class="form-control form-control-sm" name="IsBonded" id="IsBonded" value="{{ $wo->IsBonded }}" readonly>
+                        @endif
                         {{-- <small class="form-text text-danger">{{ $errors->first('code') }}</small> --}}
                     </div>
                 </div>
