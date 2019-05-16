@@ -184,6 +184,11 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/trina/workorder/{id}/{version}', 'TRINA\WorkOrderController@show');
         Route::get('/trina/wo/load', 'TRINA\WorkOrderController@load')->name('trina_wo_load');
 
+        Route::get('/trina/flashtest', 'TRINA\FlashTestController@index')->name('trina_flash_test');
+        Route::post('/trina/loadtest/{ModuleID}', 'TRINA\FlashTestController@load')->name('trina_ft_load');
+        Route::get('/trina/testresults/{ModuleID}', 'TRINA\FlashTestController@testResults')->name('trina_test_results');
+        Route::post('/trina/resetpower/{WorkOrder_ID}/{Module_ID}/{TEST_DATETIME}', 'TRINA\FlashTestController@resetPower')->name('trina_test_results');
+
         Route::get('/trina/containerinfo', 'TRINA\ReportsController@containerReport')->name('trina_cont_report');
         Route::get('/trina/container/{start}/{end}', 'TRINA\ReportsController@containerInfo')->name('trina_cont');
         

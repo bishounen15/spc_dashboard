@@ -138,6 +138,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <h6 class="dropdown-header">Reports</h6>
                                 <a class="dropdown-item" href="/trina/inquiry">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
+                                <a class="dropdown-item" href="/trina/flashtest">&nbsp;&nbsp;&nbsp;&nbsp;Flash Test Inquiry</a>
                                 <a class="dropdown-item" href="/trina/workorder">&nbsp;&nbsp;&nbsp;&nbsp;Work Order Info</a>
                                 <a class="dropdown-item" href="/trina/lotreport">&nbsp;&nbsp;&nbsp;&nbsp;Lot Number Monitoring</a>
                                 <a class="dropdown-item" href="/trina/ftdreport">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
