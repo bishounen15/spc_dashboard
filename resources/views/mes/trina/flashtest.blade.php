@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid">
-    <h3>TRINA Module Inquiry</h3>
+    <h3>TRINA Flash Test Inquiry</h3>
 
     <div class="row">
         <div class="col-sm-4">
