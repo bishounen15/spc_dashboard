@@ -68,13 +68,12 @@ class FlashTestController extends Controller
         $data['SurfTemp'] = $eflash->SurfTemp;
         $data['Remark'] = $eflash->Remark;
         
-        $eflash->where([
+        \App\Models\TRINA\MidFlash::where([
             ["WorkOrder_ID",$WorkOrder_ID],
             ["Module_ID",$Module_ID],
-            ["TEST_DATETIME",$TEST_DATETIME],
         ])->delete();
 
-        $eflash = \App\Models\TRINA\EqpFlash::insert($data);
+        $eflash = \App\Models\TRINA\MidFlash::insert($data);
 
         return Response::json($eflash);
     }
