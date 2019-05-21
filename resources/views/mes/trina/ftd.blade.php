@@ -29,6 +29,8 @@
             <th>OBA Status</th>
             <th>Work Order ID</th>
             <th>Module ID</th>
+            <th>Module Grade</th>
+            <th>EL Grade</th>
             <th>Product ID</th>
             <th>Product Type</th>
             <th>Grade of Cell Power</th>
@@ -149,7 +151,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 ]
+                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ]
                     },
                     text:       'Excel',
                     filename: "TRINA_ftd_excel"
@@ -157,7 +159,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 ]
+                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ]
                     },
                     text:       'CSV',
                     filename: "TRINA_ftd_csv"
@@ -205,6 +207,8 @@
                         return full.Module_ID;
                     }
                 }},
+                { data: 'Module_Grade' },
+                { data: 'EL_Grade' },
                 { data: 'Product_ID' },
                 { data: 'Product_Type' },
                 { data: 'Grade_of_Cell_Power' },
