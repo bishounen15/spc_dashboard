@@ -171,6 +171,9 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/trina/ftdreport', 'TRINA\ReportsController@ftdReport')->name('trina_ftd_report');
         Route::get('/trina/ftd/{start}/{end}/{pack}', 'TRINA\ReportsController@ftd')->name('trina_ftd');
 
+        Route::get('/trina/moduleinfo', 'TRINA\ReportsController@modInfo')->name('trina_module_info');
+        Route::get('/trina/modinfo/{start}/{end}', 'TRINA\ReportsController@moduleInfo')->name('trina_mod_info');
+
         Route::get('/trina/lotreport', 'TRINA\ReportsController@lotReport')->name('trina_lot_report');
         Route::get('/trina/lot', 'TRINA\ReportsController@LotNumbers')->name('trina_ftd');
 
