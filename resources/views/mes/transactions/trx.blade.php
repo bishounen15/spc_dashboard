@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
-{{-- <div class="container"> --}}
+<div class="container-fluid">
     <h3>Line Transactions [{{$station->STNDESC}}]</h3>
-    <h4>{{$date}} - Shift {{$shift}}</h4>
+    <h4>{{$date}} - Shift {{ $shift . ($prodline == null ? "" : " - Line " . $prodline) }}</h4>
     {{-- <a href="#" role="button" class="btn btn-primary">Create Log Entry</a> --}}
     {{-- <br><br> --}}
     <div class="card">
@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-sm-7">
                     <input type="text" class="form-control" name="sno" id="sno" placeholder="Scan your serial here">
-                    <small class="form-text text-danger" id="err_sno"></small>
+                    <span class="form-text text-danger" id="err_sno"></span>
                 </div>
             </div>
         </div>
@@ -49,6 +49,10 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div class="jumbotron p-3 bg-danger text-center text-white">
+                    <h3 class="display-6" id="warn-msg"></h1>
+                </div>
+                
                 <div class="form-row">
                     <div class="col-sm-5">
                         <div class="form-group">
@@ -128,14 +132,19 @@
             </div>
         </div>
     </div>
-{{-- </div> --}}
+</div>
 @endsection
 
 @push('jscript')
 <script>
     $(document).ready(function() {
+        $(".jumbotron").hide();
+        $("#warn_msg").hide();
+
         var class_list;
         var class_allowed = '{{Auth::user()->portalUser->mesUser->assignment->where('STNCODE',$station->STNCODE)->first()->ALLOWCLS}}';
+        var custom_class = "";
+        var warning_msg = "";
 
         $("#sno").focus()
 
@@ -157,7 +166,7 @@
                 formData.append('station', '{!!$station->STNCODE!!}');
                 
                 $.ajax({
-                    url: '/mes/validate',
+                    url: '/mes/validate{{ ($prodline == null ? "" : "/" . $prodline) }}',
                     method: 'POST',
                     contentType: false,
                     processData: false,
@@ -173,7 +182,7 @@
 
                             $.each(dt.serial, function(i,v) {
                                 if (i == 'statusCode') {
-                                    $('#stat'+v).attr('checked',true);
+                                    $('#stat'+v).prop("checked", true);
                                     $('input[name="status"]').attr('disabled',false);
                                     @if(Auth::user()->mes_role == 'OPTR')
                                     for(i=0;i<v;i++) {
@@ -193,11 +202,16 @@
                                         selitems += '<option value="' + v.MCLCODE + '"' + selected + '>' + v.MCLDESC + '</option>';
                                     });
                                     $('select[name="modclass"]').html(selitems);
+                                } else if (i == 'custclass') {
+                                    custom_class = v;
+                                } else if (i == 'warning') {
+                                    warning_msg = v;
                                 } else {
                                     $('#' + i).val(v);
                                 }
                             });
 
+                            customClassCheck();
                             if (dt.serial.allowcls != '') {
                                 $("#SaveButton").click();
                             } else {
@@ -226,7 +240,25 @@
                 }
             });
             $('select[name="modclass"]').html(selitems);
+            customClassCheck();
         });
+
+        $("#modclass").change(function() {
+            customClassCheck();
+        });
+
+        function customClassCheck() {
+            if (custom_class != "") {
+                console.log($("#modclass").val());
+                if ($("#modclass").val() != custom_class) {
+                    $("#warn-msg").html(warning_msg);
+                    $(".jumbotron").show();
+                } else {
+                    $("#warn-msg").html("");
+                    $(".jumbotron").hide();
+                }
+            }
+        }
 
         $("#SaveButton").click(function() {
             class_count = $('select[name="modclass"] option').length;
@@ -254,7 +286,7 @@
                 formData.append('REMARKS', $("#remarks").val());
 
                 $.ajax({
-                    url: '/mescreate/{!!$station->STNID!!}',
+                    url: '/mescreate/{!!$station->STNID!!}{{ ($prodline == null ? "" : "/" . $prodline) }}',
                     method: 'POST',
                     contentType: false,
                     processData: false,
@@ -283,7 +315,7 @@
             processing: true,
             "order": [],
             "searching": false,
-            ajax: '/mes/transactions/{{$date}}/{{$shift}}/{{$station->STNID}}',
+            ajax: '/mes/transactions/{{$date}}/{{$shift}}/{{$station->STNID}}{{ ($prodline == null ? "" : "/" . $prodline) }}',
             dom: 'Blfrtip',
             buttons: [
                 "print",

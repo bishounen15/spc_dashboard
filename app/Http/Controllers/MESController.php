@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\ftdData;
 use App\mesData;
 use App\mesClasses;
 use App\mesStation;
 use App\SerialInfo;
 use App\Models\Planning\ProductionSchedule;
+use App\Models\WebPortal\OEMCondition;
 use Illuminate\Support\Facades\Auth;
 
 use DB;
@@ -51,12 +53,17 @@ class MESController extends Controller
         return Datatables::of($mes)->make(true);
     }
 
-    public function transactions($date = '2018-09-23', $shift = 'A', $station = 0)
+    public function transactions($date = '2018-09-23', $shift = 'A', $station = 0, $line = null)
     {
         $stationInfo = mesStation::where('STNID',$station)->first();
+        $values = [$date,$shift,$stationInfo->STNCODE];
         
+        if ($line != null) {
+            array_push($values,$line);
+        }
+
         $mes = DB::connection('web_portal')
-                    ->select("SELECT A.SERIALNO, REPLACE(REPLACE(REPLACE(REPLACE(IFNULL(H.MODELNAME,E.PRODCODE),'[R]',CASE WHEN B.CELLCOLOR = 'E' AND B.CUSTOMER = 'GEN1' THEN 'M' ELSE B.CELLCOLOR END),'[C]',B.CELLCOUNT),'[P]',IFNULL(F.Bin,'XXX')),'[T]',IFNULL(B.CTYPE,'??')) AS MODEL, CONCAT('Line ',IFNULL(A.PRODLINE,B.PRODLINE)) AS PRODLINE, B.CUSTOMER, DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) AS 'DATE', A.TRXDATE, CONCAT('Shift ',CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END) AS SHIFT, CASE A.SNOSTAT WHEN 0 THEN 'GOOD' WHEN 1 THEN 'MRB' ELSE 'SCRAP' END AS STATUS, A.REMARKS, A.MODCLASS, IFNULL(CONCAT(C.LASTNAME,', ',C.FIRSTNAME),D.USERNAME) AS USER, A.LOCNCODE FROM mes01 A INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 LEFT JOIN hri01 C ON A.TRXUID = C.IDNUMBER INNER JOIN sys01 D ON A.TRXUID = D.USERID LEFT JOIN cus01 E ON B.CUSTOMER = E.CUSCODE LEFT JOIN ftd_upd F ON B.SERIALNO = F.ModuleID LEFT JOIN lbl02 G ON A.SERIALNO = G.SERIALNO AND G.LBLTYPE = 3 LEFT JOIN lbt00 H ON G.CUSTOMER = H.CUSTOMER AND G.TEMPLATE = H.TMPCODE WHERE DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) = ? AND CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END = ? AND A.LOCNCODE = ? ORDER BY A.ROWID DESC",[$date,$shift,$stationInfo->STNCODE]);
+                    ->select("SELECT A.SERIALNO, REPLACE(REPLACE(REPLACE(REPLACE(IFNULL(H.MODELNAME,E.PRODCODE),'[R]',CASE WHEN B.CELLCOLOR = 'E' AND B.CUSTOMER = 'GEN1' THEN 'M' ELSE B.CELLCOLOR END),'[C]',B.CELLCOUNT),'[P]',IFNULL(F.Bin,'XXX')),'[T]',IFNULL(B.CTYPE,'??')) AS MODEL, CONCAT('Line ',IFNULL(A.PRODLINE,B.PRODLINE)) AS PRODLINE, B.CUSTOMER, DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) AS 'DATE', A.TRXDATE, CONCAT('Shift ',CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END) AS SHIFT, CASE A.SNOSTAT WHEN 0 THEN 'GOOD' WHEN 1 THEN 'MRB' ELSE 'SCRAP' END AS STATUS, A.REMARKS, A.MODCLASS, IFNULL(CONCAT(C.LASTNAME,', ',C.FIRSTNAME),D.USERNAME) AS USER, A.LOCNCODE FROM mes01 A INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 LEFT JOIN hri01 C ON A.TRXUID = C.IDNUMBER INNER JOIN sys01 D ON A.TRXUID = D.USERID LEFT JOIN cus01 E ON B.CUSTOMER = E.CUSCODE LEFT JOIN ftd_upd F ON B.SERIALNO = F.ModuleID LEFT JOIN lbl02 G ON A.SERIALNO = G.SERIALNO AND G.LBLTYPE = 3 LEFT JOIN lbt00 H ON G.CUSTOMER = H.CUSTOMER AND G.TEMPLATE = H.TMPCODE WHERE DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) = ? AND CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END = ? AND A.LOCNCODE = ?" . ($line == null ? "" : " AND A.PRODLINE = ?") . " ORDER BY A.ROWID DESC",$values);
 
         return Datatables::of($mes)->make(true);
     }
@@ -218,13 +225,14 @@ class MESController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($station)
+    public function create($station,$line = null)
     {
         //
         $data = [];
 
         $data['station'] = mesStation::where('STNID',$station)->first();
-        
+        $data['prodline'] = $line;
+
         $time = date('H:i');
 
         if ($time < date('H:i',strtotime('06:00'))) {
@@ -249,7 +257,7 @@ class MESController extends Controller
         // return view('mes.reports.transactions');            
     }
 
-    public function serialValidation(Request $request) {
+    public function serialValidation(Request $request, $line = null) {
         $serial = $request->input('serial');
         $station = $request->input('station');
 
@@ -260,67 +268,105 @@ class MESController extends Controller
         $data['errors'] = ['error_msg' => ''];
         $data['serial'] = [];
 
-        $mes = mesData::where('SERIALNO',$serial)
-                            ->orderBy('TRXDATE','DESC')
-                            ->first();
+        $params = [
+            ['LOCNCODE',$station],
+        ];
 
-        $serialInfo = SerialInfo::where('SERIALNO',$serial)->first();
-        $stationInfo = mesStation::where('STNCODE',DB::raw("'".$station."'"))->first();
-        $cclass = $serialInfo == null ? '' : ($serialInfo->MODCLASS == null || $serialInfo->MODCLASS == '' || $serialInfo->MODCLASS == 'null'  ? '' : $serialInfo->MODCLASS);
-        $fill_serial = false;
-
-        // $recent_loc = $mes == null ? 'Not yet scanned' : $mes->LOCNCODE;
-        $recent_loc = $mes == null ? 'Not yet scanned' : $serialInfo->CURRENTLOC;
-
-        if ($serialInfo != null) {
-            if ($assignment->UNISNO == 1) {
-                if ($recent_loc == $station) {
-                    $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] already within the current location.'];
-                } else {
-                    if ($stationInfo->routing->where('SRCLOC',$recent_loc)->first() == null) {
-                        if ($stationInfo->INITLOC == 0 || ($stationInfo->INITLOC == 1 && $recent_loc != 'Not yet scanned')) {
-                            $data['errors'] = ['error_msg' => 'You cannot transact this serial number ['.$serial.'] in this location. (Current Location: '.$recent_loc.')'];
-                        } else {
-                            $fill_serial = true;    
-                        }
-                    } else {
-                        if ((strpos($cclass, $assignment->ALLOWCLS) !== false) == false) {
-                            $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is not Class '.$assignment->ALLOWCLS.'. (Current Class: '.$serialInfo->MODCLASS.')'];
-                        } else {
-                            $fill_serial = true;
-                        }
-                    }
-                }
-            } else {
-                $fill_serial = true;
-            }
-        } else {
-            $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] does not exists.'];
+        if ($line != null) {
+            array_push($params,["PRODLINE",$line]);
         }
 
-        if ($fill_serial == true) {
-            $classes = mesClasses::where('CUSTOMER',$serialInfo->CUSTOMER)->get(); 
+        $last_mes = mesData::where($params)
+                                ->orderBy('TRXDATE','DESC')
+                                ->first();
 
-            $class = [
-                '0' => $classes->where('MODSTATUS',0),
-                '1' => $classes->where('MODSTATUS',1),
-                '2' => $classes->where('MODSTATUS',2),
-                '3' => $classes,
-                '4' => $classes->where('MODSTATUS',0),
-            ];
+        $cond = OEMCondition::where([
+            ["CUSTOMER", $last_mes->serial->first()->CUSTOMER],
+            ["STATION", $station],
+        ])->first();
 
-            $data['serial'] = [
-                'serialno' => $serialInfo->SERIALNO,
-                'customer' => $serialInfo->CUSTOMER,
-                'model' => $serialInfo->modelName(),
-                'class' => $serialInfo->MODCLASS == '' && $mes == null ? 'A' : $serialInfo->MODCLASS,
-                'class_list' => $class,
-                'station' => $recent_loc,
-                'statusCode' => $mes == null ? 0 : $mes->SNOSTAT,
-                'status' => $mes == null ? 'GOOD' : strtoupper($mes->moduleStatus()),
-                'remarks' => $mes == null ? '' : $assignment->ALLOWCLS == '' ? $mes->REMARKS : "Endorsed to " . $assignment->stationInfo->STNDESC,
-                'allowcls' => $assignment->ALLOWCLS,
-            ];
+        $custom_error = false;
+
+        if ($cond != null) {
+            $check = DB::connection($cond->CONN)->select("SELECT COUNT(*) AS TRX FROM ".$cond->TABLE_NAME." WHERE ".$cond->FIELD_NAME." = ?",[$last_mes->SERIALNO]);
+
+            if ($check[0]->TRX == 0 && $last_mes->MODCLASS <> 'Q1') {
+                eval($cond->ERR_MSG);
+                $data['errors'] = ['error_msg' => $e_msg];
+
+                $custom_error = true;
+            }
+        }
+
+        if ($custom_error == false) {
+            $mes = mesData::where('SERIALNO',$serial)
+                                ->orderBy('TRXDATE','DESC')
+                                ->first();
+
+            $serialInfo = SerialInfo::where('SERIALNO',$serial)->first();
+            $stationInfo = mesStation::where('STNCODE',DB::raw("'".$station."'"))->first();
+            $cclass = $serialInfo == null ? '' : ($serialInfo->MODCLASS == null || $serialInfo->MODCLASS == '' || $serialInfo->MODCLASS == 'null'  ? '' : $serialInfo->MODCLASS);
+            $fill_serial = false;
+
+            // $recent_loc = $mes == null ? 'Not yet scanned' : $mes->LOCNCODE;
+            $recent_loc = $mes == null ? 'Not yet scanned' : $serialInfo->CURRENTLOC;
+
+            if ($serialInfo != null) {
+                if ($assignment->UNISNO == 1) {
+                    if ($recent_loc == $station) {
+                        $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] already within the current location.'];
+                    } else {
+                        if ($stationInfo->routing->where('SRCLOC',$recent_loc)->first() == null) {
+                            if ($stationInfo->INITLOC == 0 || ($stationInfo->INITLOC == 1 && $recent_loc != 'Not yet scanned')) {
+                                $data['errors'] = ['error_msg' => 'You cannot transact this serial number ['.$serial.'] in this location. (Current Location: '.$recent_loc.')'];
+                            } else {
+                                $fill_serial = true;    
+                            }
+                        } else {
+                            if ($assignment->ALLOWCLS != "") {
+                                if ((strpos($cclass, $assignment->ALLOWCLS) !== false) == false) {
+                                    $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is not Class '.$assignment->ALLOWCLS.'. (Current Class: '.$serialInfo->MODCLASS.')'];
+                                } else {
+                                    $fill_serial = true;
+                                }
+                            } else {
+                                $fill_serial = true;
+                            }
+                        }
+                    }
+                } else {
+                    $fill_serial = true;
+                }
+            } else {
+                $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] does not exists.'];
+            }
+
+            if ($fill_serial == true) {
+                $classes = mesClasses::where('CUSTOMER',$serialInfo->CUSTOMER)->get(); 
+
+                $class = [
+                    '0' => $classes->where('MODSTATUS',0),
+                    '1' => $classes->where('MODSTATUS',1),
+                    '2' => $classes->where('MODSTATUS',2),
+                    '3' => $classes,
+                    '4' => $classes->where('MODSTATUS',0),
+                ];
+
+                $data['serial'] = [
+                    'serialno' => $serialInfo->SERIALNO,
+                    'customer' => $serialInfo->CUSTOMER,
+                    'model' => $serialInfo->modelName(),
+                    'class' => $serialInfo->MODCLASS == '' && $mes == null ? 'A' : $serialInfo->MODCLASS,
+                    'class_list' => $class,
+                    'station' => $recent_loc,
+                    'statusCode' => $mes == null ? 0 : $mes->SNOSTAT,
+                    'status' => $mes == null ? 'GOOD' : strtoupper($mes->moduleStatus()),
+                    'remarks' => $mes == null ? '' : $assignment->ALLOWCLS == '' ? $mes->REMARKS : "Endorsed to " . $assignment->stationInfo->STNDESC,
+                    'allowcls' => $assignment->ALLOWCLS,
+                    'custclass' => $cond != null ? $cond->CLASS_ALLOW : "",
+                    'warning' => $cond != null ? $cond->WARNING_MSG : "",
+                ];
+            }
         }
 
         return Response::json($data);
@@ -346,7 +392,7 @@ class MESController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $station)
+    public function store(Request $request, $station, $line = null)
     {
         //
         $serial = $request->input('SERIALNO');
@@ -357,16 +403,22 @@ class MESController extends Controller
 
         $cno = $this->generateControl();
 
-        mesData::insert([
-            'SERIALNO' => $serial,
-            'LOCNCODE' => $location,
-            'MODCLASS' => $class,
-            'SNOSTAT' => $status,
-            'REMARKS' => $remarks,
-            'MESCNO' => $cno,
-            'TRXUID' => Auth::user()->user_id,
-            'TRXDATE' => DB::raw('now()'),
-        ]);
+        $data = [];
+
+        $data['SERIALNO'] = $serial;
+        $data['LOCNCODE'] = $location;
+        $data['MODCLASS'] = $class;
+        $data['SNOSTAT'] = $status;
+        $data['REMARKS'] = $remarks;
+        $data['MESCNO'] = $cno;
+        $data['TRXUID'] = Auth::user()->user_id;
+        $data['TRXDATE'] = DB::raw('now()');
+
+        if ($line != null) {
+            $data['PRODLINE'] = $line;
+        }
+
+        mesData::insert($data);
 
         return Response::json(['cno' => $cno, 'location' => $location]);
     }
