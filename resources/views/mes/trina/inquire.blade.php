@@ -604,7 +604,7 @@
                             toggleClass(dt[0].StringDate,"string-card","string-body");
                             toggleClass(dt[0].LayupDate,"layup-card","layup-body");
                             toggleClass(dt[0].FrameUpDate,"frame-card","frame-body");
-                            toggleClass(dt[0].CleanHoldDate,"clean-card","clean-body");
+                            toggleClass(dt[0].CleaningHoldDate,"clean-card","clean-body");
                             toggleClass(dt[0].Testdate,"iv-card","iv-body");
                             toggleClass(dt[0].ELTIME,"el-card","el-body");
                             toggleClass(dt[0].QCPassDate,"qa-card","qa-body");
