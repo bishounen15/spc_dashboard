@@ -14,6 +14,11 @@
                     <label class="my-1 mr-2" for="end">End Date</label>
                     <input type="date" class="form-control form-control-sm my-1 mr-sm-2" name="end" id="end" value="{{ date('Y-m-d') }}">        
                     
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="shipped" name="shipped" value="option1">
+                        <label class="form-check-label" for="shipped">Exclude Shipped</label>
+                    </div>
+
                     <button type="submit" class="btn btn-primary my-1" id="RefreshButton">Refresh Dashboard</button>
             </div>
         </div>
@@ -51,7 +56,7 @@
 <script>
     $(document).ready(function() {
         $("#RefreshButton").click(function() {
-            table.ajax.url( '/trina/container/' + $('#start').val() + '/' + $('#end').val() ).load();
+            table.ajax.url( '/trina/container/' + $('#start').val() + '/' + $('#end').val() + "/" + $("#shipped").is(":checked") ).load();
         });
 
         var table = $('#cont-list').DataTable({
@@ -59,7 +64,7 @@
             processing: true,
             // serverSide: true,
             "order": [],
-            ajax: '/trina/container/' + $('#start').val() + '/' + $('#end').val(),
+            ajax: '/trina/container/' + $('#start').val() + '/' + $('#end').val() + "/" + $("#shipped").is(":checked"),
             dom: 'Blfrtip',
             buttons: [
                 "print",
