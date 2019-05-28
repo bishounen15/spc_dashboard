@@ -19,6 +19,11 @@
                         <label class="form-check-label" for="pack">Packed Only</label>
                     </div>
 
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="shipped" name="shipped" value="option1">
+                        <label class="form-check-label" for="shipped">Exclude Shipped</label>
+                    </div>
+
                     <button type="submit" class="btn btn-primary my-1" id="RefreshButton">Refresh Dashboard</button>
             </div>
         </div>
@@ -104,7 +109,7 @@
 
     $(document).ready(function() {
         $("#RefreshButton").click(function() {
-            table.ajax.url( '/trina/ftd/' + $('#start').val() + '/' + $('#end').val() + "/" + $("#pack").is(":checked") ).load();
+            table.ajax.url( '/trina/ftd/' + $('#start').val() + '/' + $('#end').val() + "/" + $("#pack").is(":checked") + "/" + $("#shipped").is(":checked") ).load();
         });
 
         $("#SaveButton").click(function() {
@@ -144,7 +149,7 @@
             processing: true,
             // serverSide: true,
             "order": [],
-            ajax: '/trina/ftd/' + $('#start').val() + '/' + $('#end').val() + "/" + $("#pack").is(":checked"),
+            ajax: '/trina/ftd/' + $('#start').val() + '/' + $('#end').val() + "/" + $("#pack").is(":checked") + "/" + $("#shipped").is(":checked"),
             dom: 'Blfrtip',
             buttons: [
                 "print",
