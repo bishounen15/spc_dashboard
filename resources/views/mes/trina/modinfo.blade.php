@@ -28,6 +28,8 @@
             <th>EL Grade</th>
             <th>Status</th>
             <th>Carton No.</th>
+            <th>Test Line</th>
+            <th>Test Date</th>
             <th>Packing Date</th>
             <th>Packing State</th>
             <th>Container No.</th>
@@ -60,7 +62,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
                     },
                     text:       'Excel',
                     filename: "TRINA_module_info_excel"
@@ -68,7 +70,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
                     },
                     text:       'CSV',
                     filename: "TRINA_module_info_csv"
@@ -85,6 +87,8 @@
                 { data: 'EL_Grade' },
                 { data: 'Status' },
                 { data: 'Carton_No' },
+                { data: 'Title' },
+                { data: 'TEST_DATETIME' },
                 { data: 'Packing_Date' },
                 { data: 'PackingState' },
                 { data: 'Container_no' },
