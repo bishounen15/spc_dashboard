@@ -169,7 +169,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/mes/resetpower/{serial}/{rowid}', 'MESController@resetPower')->name('mes_resetpower');
         // Route::resource('/mes','MESController');
         Route::get('/trina/ftdreport', 'TRINA\ReportsController@ftdReport')->name('trina_ftd_report');
-        Route::get('/trina/ftd/{start}/{end}/{pack}/{shipped}', 'TRINA\ReportsController@ftd')->name('trina_ftd');
+        Route::get('/trina/ftd/{start}/{end}/{pack?}/{shipped?}', 'TRINA\ReportsController@ftd')->name('trina_ftd');
 
         Route::get('/trina/moduleinfo', 'TRINA\ReportsController@modInfo')->name('trina_module_info');
         Route::get('/trina/modinfo/{start}/{end}', 'TRINA\ReportsController@moduleInfo')->name('trina_mod_info');
@@ -193,7 +193,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/trina/resetpower/{WorkOrder_ID}/{Module_ID}/{TEST_DATETIME}', 'TRINA\FlashTestController@resetPower')->name('trina_test_results');
 
         Route::get('/trina/containerinfo', 'TRINA\ReportsController@containerReport')->name('trina_cont_report');
-        Route::get('/trina/container/{start}/{end}/{shipped}', 'TRINA\ReportsController@containerInfo')->name('trina_cont');
+        Route::get('/trina/container/{start}/{end}/{shipped?}', 'TRINA\ReportsController@containerInfo')->name('trina_cont');
         
         Route::post('/modules/inquire','ModulesController@inquire')->name('module_inquiry');
         Route::get('/modules/ftd/{serial}','ModulesController@ftd')->name('ftd_data');

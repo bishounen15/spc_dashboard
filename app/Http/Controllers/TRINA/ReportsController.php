@@ -18,31 +18,115 @@ class ReportsController extends Controller
 
     //
     function ftdReport() {
-        return view('mes.trina.ftd');
+        $data = [];
+
+        $data['product_types'] = DB::connection('trina')->select("SELECT DISTINCT Product_Type FROM df_pid_type_mapping A WHERE EXISTS (SELECT Product_ID FROM df_wo_mat WHERE WorkOrder_ID LIKE 'S%' AND Product_ID = A.Q1_ID) ORDER BY Product_Type");
+
+        $data['work_orders'] = DB::connection('trina')->select("SELECT A.WorkOrder_ID, B.Product_Type FROM df_wo_mat A INNER JOIN df_pid_type_mapping B ON A.Product_ID = B.Q1_ID WHERE A.WorkOrder_ID LIKE 'S%' ORDER BY A.WorkOrder_ID");
+
+        return view('mes.trina.ftd', $data);
     }
 
-    function ftd($sdate = null, $edate = null, $pack = null, $shipped = null) {
+    function ftd(Request $request, $sdate = null, $edate = null, $pack = null, $shipped = null) {
         $start = ($sdate == null ? date('Y-m-d') : date('Y-m-d',strtotime($sdate)))  . " 06:00:00";
         $end = date('Y-m-d',strtotime("+1 days",strtotime(($edate == null ? "Today" : $edate)))) . " 05:59:59";
-        $cond = ($pack == null || $pack == "false" ? "" : "AND f.Module_ID IS NOT NULL");
-        $sort = ($pack == null || $pack == "false" ? "a.TEST_DATETIME" : "f.Packing_Date");
+        $cond = ($request->form_PackStatus == "All" ? "" : "AND f.Module_ID IS".($request->form_PackStatus == "Packed" ? " NOT" : "")." NULL");
+        $sort = ($request->form_PackStatus == "All" || $request->form_PackStatus == "Not Packed" ? "a.TEST_DATETIME" : "f.Packing_Date");
         $dfield = ($pack == null || $pack == "false" ? "TEST_DATETIME" : "DATE_ADD(Packing_Date, INTERVAL CASE WHEN f.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR)");
-        $scond = ($shipped == null || $shipped == "false" ? "" : " AND NOT EXISTS (SELECT container_no FROM solarph.shipped_container WHERE container_no = f.Container_No)");
+        $scond = ($request->form_ShipStatus == "All" ? "" : " AND".($request->form_ShipStatus == "Not Shipped" ? " NOT" : "")." EXISTS (SELECT container_no FROM solarph.shipped_container WHERE container_no = f.Container_No)");
         
-        $ftd = DB::connection("trina")->select("SELECT IFNULL(g.Judgement,'-') as Judgement, a.WorkOrder_ID, a.Module_ID, h.Grade_of_Cell_Power, h.Cell_Power, h.Cell_Color, i.EFF, h.Module_Grade, h.EL_Grade, CASE WHEN h.Module_Grade = 'Q1' AND h.EL_Grade = 'Q1' THEN e.Q1_ID ELSE e.Q2_ID END Product_ID, REPLACE(e.Product_Type,'***', IFNULL(IFNULL(f.PGrade,IFNULL(k.POWER_GRADE, b.LOWERPOWER)),'***') ) AS Product_Type, IFNULL(f.Carton_No,'') as Carton_no, (DATE_ADD(Packing_Date, INTERVAL CASE WHEN f.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR)) as Packing_Date, IFNULL(f.Container_No,'') AS Container_No, a.TEST_DATETIME, a.TITLE, IFNULL(IFNULL(f.PGrade,IFNULL(k.POWER_GRADE, b.LOWERPOWER)),'Out of Range') as Grade, a.PMAX, a.FF, a.VOC, a.ISC, a.VPM, a.IPM, a.RS, a.RSH, a.EnvTemp, a.SurfTemp, IFNULL(CONCAT('ftp://192.168.128.25/',SUBSTR(a.Module_ID,1,10),'/',MAX(c.FILEPATH)),'') AS FILEPATH FROM omes.rt_mid_flash a inner join omes.df_wo_mat d on a.WorkOrder_ID = d.WorkOrder_ID inner join omes.rt_wo_mid h on a.Module_ID = h.Module_ID inner join omes.df_pid_type_mapping e on d.Product_ID = e.Q1_ID left join omes.df_module_powersetting b on a.WorkOrder_ID = b.WorkOrder_id and CASE WHEN h.Module_Grade = 'Q1' AND h.EL_Grade = 'Q1' THEN e.Q1_ID ELSE e.Q2_ID END = b.Product_ID and (a.PMAX >= b.LOWERPOWER and a.PMAX < b.UPPERPOWER) LEFT JOIN omes.rt_modulepelresults c on a.Module_ID = c.MODULEID left join omes.rt_mid_packing f on a.Module_ID = f.Module_ID and f.State = 'Packed' left join solarph.oba g on a.Module_ID = g.Module_ID and f.Carton_No = g.Carton_no inner join omes.df_module_cell_power i on d.Cell_Suppliers = i.factory and h.Grade_of_Cell_Power = i.Code and h.Cell_Power = i.power left join omes.v_rt_nameplate_history j on a.Module_ID = j.Module_id left join omes.df_module_powerinfo k on d.Product_ID = k.Product_ID and (a.PMAX >= k.LOWERPOWER and a.PMAX < k.UPPERPOWER) and k.WorkOrder_id = '*' where a.Module_ID like 'S98%' AND ".$dfield." BETWEEN ? AND ? ".$cond.$scond." GROUP BY g.Judgement, a.WorkOrder_ID, a.Module_ID, h.Grade_of_Cell_Power, h.Cell_Power, h.Cell_Color, i.EFF, d.Product_ID, e.Product_Type, f.Carton_No, f.Packing_Date, f.Container_No, a.TEST_DATETIME, a.TITLE, j.Grade, k.POWER_GRADE, b.LOWERPOWER, a.PMAX, a.FF, a.VOC, a.ISC, a.VPM, a.IPM, a.RS, a.RSH, a.EnvTemp, a.SurfTemp ORDER BY ".$sort,[$start,$end]);
+        $filtercond =  $request->form_ModuleGrade == "All" ? "" : " AND CASE WHEN h.Module_Grade = h.EL_Grade AND h.Module_Grade = 'Q1' THEN 'Q1' ELSE 'Q2' END = '" . $request->form_ModuleGrade . "'";
+
+        if ($request->form_Product_Type != null) {
+            $ptype = "";
+            if (strpos($request->form_Product_Type, '|') !== false) {
+                $ptypes = [];
+                $ptypes = explode("|",$request->form_Product_Type);
+
+                foreach($ptypes as $pt) {
+                    $ptype .= ($ptype == "" ? "" : ",") . "'" . $pt . "'";
+                }
+            } else {
+                $ptype = "'" . $request->form_Product_Type . "'";
+            }
+
+            $filtercond .= " AND e.Product_Type IN (".$ptype.")";
+        }
+
+        if ($request->form_WorkOrder_ID != null) {
+            $workorders = "";
+            if (strpos($request->form_WorkOrder_ID, '|') !== false) {
+                $wos = [];
+                $wos = explode("|",$request->form_WorkOrder_ID);
+
+                foreach($wos as $wo) {
+                    $workorders .= ($workorders == "" ? "" : ",") . "'" . $wo . "'";
+                }
+            } else {
+                $workorders = "'" . $request->form_WorkOrder_ID . "'";
+            }
+
+            $filtercond .= " AND a.WorkOrder_ID IN (".$workorders.")";
+        }
+
+        $ftd = DB::connection("trina")->select("SELECT IFNULL(g.Judgement,'-') as Judgement, a.WorkOrder_ID, a.Module_ID, h.Grade_of_Cell_Power, h.Cell_Power, h.Cell_Color, i.EFF, h.Module_Grade, h.EL_Grade, CASE WHEN h.Module_Grade = 'Q1' AND h.EL_Grade = 'Q1' THEN e.Q1_ID ELSE e.Q2_ID END Product_ID, REPLACE(e.Product_Type,'***', IFNULL(IFNULL(f.PGrade,IFNULL(k.POWER_GRADE, b.LOWERPOWER)),'***') ) AS Product_Type, IFNULL(f.Carton_No,'') as Carton_no, (DATE_ADD(Packing_Date, INTERVAL CASE WHEN f.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR)) as Packing_Date, IFNULL(f.Container_No,'') AS Container_No, a.TEST_DATETIME, a.TITLE, IFNULL(IFNULL(f.PGrade,IFNULL(k.POWER_GRADE, b.LOWERPOWER)),'Out of Range') as Grade, a.PMAX, a.FF, a.VOC, a.ISC, a.VPM, a.IPM, a.RS, a.RSH, a.EnvTemp, a.SurfTemp, IFNULL(CONCAT('ftp://192.168.128.25/',SUBSTR(a.Module_ID,1,10),'/',MAX(c.FILEPATH)),'') AS FILEPATH FROM omes.rt_mid_flash a inner join omes.df_wo_mat d on a.WorkOrder_ID = d.WorkOrder_ID inner join omes.rt_wo_mid h on a.Module_ID = h.Module_ID inner join omes.df_pid_type_mapping e on d.Product_ID = e.Q1_ID left join omes.df_module_powersetting b on a.WorkOrder_ID = b.WorkOrder_id and CASE WHEN h.Module_Grade = 'Q1' AND h.EL_Grade = 'Q1' THEN e.Q1_ID ELSE e.Q2_ID END = b.Product_ID and (a.PMAX >= b.LOWERPOWER and a.PMAX < b.UPPERPOWER) LEFT JOIN omes.rt_modulepelresults c on a.Module_ID = c.MODULEID left join omes.rt_mid_packing f on a.Module_ID = f.Module_ID and f.State = 'Packed' left join solarph.oba g on a.Module_ID = g.Module_ID and f.Carton_No = g.Carton_no inner join omes.df_module_cell_power i on d.Cell_Suppliers = i.factory and h.Grade_of_Cell_Power = i.Code and h.Cell_Power = i.power left join omes.v_rt_nameplate_history j on a.Module_ID = j.Module_id left join omes.df_module_powerinfo k on d.Product_ID = k.Product_ID and (a.PMAX >= k.LOWERPOWER and a.PMAX < k.UPPERPOWER) and k.WorkOrder_id = '*' where a.Module_ID like 'S98%' AND ".$dfield." BETWEEN ? AND ? ".$cond.$scond.$filtercond." GROUP BY g.Judgement, a.WorkOrder_ID, a.Module_ID, h.Grade_of_Cell_Power, h.Cell_Power, h.Cell_Color, i.EFF, d.Product_ID, e.Product_Type, f.Carton_No, f.Packing_Date, f.Container_No, a.TEST_DATETIME, a.TITLE, j.Grade, k.POWER_GRADE, b.LOWERPOWER, a.PMAX, a.FF, a.VOC, a.ISC, a.VPM, a.IPM, a.RS, a.RSH, a.EnvTemp, a.SurfTemp ORDER BY ".$sort,[$start,$end]);
 
         return Datatables::of($ftd)->make(true);
     }
 
     function modInfo() {
-        return view('mes.trina.modinfo');
+        $data = [];
+
+        $data['product_types'] = DB::connection('trina')->select("SELECT DISTINCT Product_Type FROM df_pid_type_mapping A WHERE EXISTS (SELECT Product_ID FROM df_wo_mat WHERE WorkOrder_ID LIKE 'S%' AND Product_ID = A.Q1_ID) ORDER BY Product_Type");
+
+        $data['work_orders'] = DB::connection('trina')->select("SELECT A.WorkOrder_ID, B.Product_Type FROM df_wo_mat A INNER JOIN df_pid_type_mapping B ON A.Product_ID = B.Q1_ID WHERE A.WorkOrder_ID LIKE 'S%' ORDER BY A.WorkOrder_ID");
+
+        return view('mes.trina.modinfo', $data);
     }
 
-    function moduleInfo($sdate = null, $edate = null) {
+    function moduleInfo(Request $request, $sdate = null, $edate = null) {
         $start = ($sdate == null ? date('Y-m-d') : date('Y-m-d',strtotime($sdate)))  . " 06:00:00";
         $end = date('Y-m-d',strtotime("+1 days",strtotime(($edate == null ? "Today" : $edate)))) . " 05:59:59";
         
-        $modInfo = DB::connection("trina")->select("SELECT A.Module_ID, B.OrderID, A.WorkOrder_ID, A.WorkOrder_vertion, B.Product_ID, C.Product_Type, A.Module_Grade, A.EL_Grade, A.Status, L.Carton_No, O.Title, O.TEST_DATETIME, DATE_ADD(L.Packing_Date,INTERVAL CASE WHEN L.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) as Packing_Date, L.State as 'PackingState', M.Container_no, DATE_ADD(M.buildcabtime,INTERVAL CASE WHEN M.buildcabtime < '2019-04-26' THEN 15 ELSE 0 END HOUR) as 'ContainerDate' FROM omes.rt_wo_mid A INNER JOIN omes.df_wo_mat B ON A.WorkOrder_ID = B.WorkOrder_ID INNER JOIN omes.df_pid_type_mapping C ON B.Product_ID = C.Q1_ID left join omes.rt_mid_packing L on A.Module_ID = L.Module_ID AND L.State IN ('Packed','Wait') left join omes.rt_mid_buildcontainer M on L.Carton_No = M.Carton_no left join omes.rt_mid_flash O on A.Module_ID = O.Module_ID left join omes.rt_module_elresult P on A.Module_ID = P.MODULEID WHERE A.Module_ID LIKE 'S98%' AND A.WorkOrder_ID LIKE 'S19%' AND DATE_ADD(A.Create_Date,INTERVAL CASE WHEN A.Create_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) BETWEEN ? AND ? ORDER BY A.WorkOrder_ID, A.Module_ID",[$start,$end]);
+        $cond = ($request->form_PackStatus == "All" ? "" : "AND L.Module_ID IS".($request->form_PackStatus == "Packed" ? " NOT" : "")." NULL");
+
+        $scond = ($request->form_ShipStatus == "All" ? "" : " AND".($request->form_ShipStatus == "Not Shipped" ? " NOT" : "")." EXISTS (SELECT container_no FROM solarph.shipped_container WHERE container_no = M.Container_No)");
+
+        $filtercond =  $request->form_ModuleGrade == "All" ? "" : " AND CASE WHEN A.Module_Grade = A.EL_Grade AND A.Module_Grade = 'Q1' THEN 'Q1' ELSE 'Q2' END = '" . $request->form_ModuleGrade . "'";
+
+        if ($request->form_Product_Type != null) {
+            $ptype = "";
+            if (strpos($request->form_Product_Type, '|') !== false) {
+                $ptypes = [];
+                $ptypes = explode("|",$request->form_Product_Type);
+
+                foreach($ptypes as $pt) {
+                    $ptype .= ($ptype == "" ? "" : ",") . "'" . $pt . "'";
+                }
+            } else {
+                $ptype = "'" . $request->form_Product_Type . "'";
+            }
+
+            $filtercond .= " AND C.Product_Type IN (".$ptype.")";
+        }
+
+        if ($request->form_WorkOrder_ID != null) {
+            $workorders = "";
+            if (strpos($request->form_WorkOrder_ID, '|') !== false) {
+                $wos = [];
+                $wos = explode("|",$request->form_WorkOrder_ID);
+
+                foreach($wos as $wo) {
+                    $workorders .= ($workorders == "" ? "" : ",") . "'" . $wo . "'";
+                }
+            } else {
+                $workorders = "'" . $request->form_WorkOrder_ID . "'";
+            }
+
+            $filtercond .= " AND A.WorkOrder_ID IN (".$workorders.")";
+        }
+
+        $modInfo = DB::connection("trina")->select("SELECT A.Module_ID, B.OrderID, A.WorkOrder_ID, A.WorkOrder_vertion, B.Product_ID, C.Product_Type, A.Module_Grade, A.EL_Grade, A.Status, L.Carton_No, O.Title, O.TEST_DATETIME, DATE_ADD(L.Packing_Date,INTERVAL CASE WHEN L.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) as Packing_Date, L.State as 'PackingState', M.Container_no, DATE_ADD(M.buildcabtime,INTERVAL CASE WHEN M.buildcabtime < '2019-04-26' THEN 15 ELSE 0 END HOUR) as 'ContainerDate' FROM omes.rt_wo_mid A INNER JOIN omes.df_wo_mat B ON A.WorkOrder_ID = B.WorkOrder_ID INNER JOIN omes.df_pid_type_mapping C ON B.Product_ID = C.Q1_ID left join omes.rt_mid_packing L on A.Module_ID = L.Module_ID AND L.State IN ('Packed','Wait') left join omes.rt_mid_buildcontainer M on L.Carton_No = M.Carton_no left join omes.rt_mid_flash O on A.Module_ID = O.Module_ID left join omes.rt_module_elresult P on A.Module_ID = P.MODULEID WHERE A.Module_ID LIKE 'S98%' AND A.WorkOrder_ID LIKE 'S19%' AND DATE_ADD(A.Create_Date,INTERVAL CASE WHEN A.Create_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) BETWEEN ? AND ? ".$cond.$scond.$filtercond." ORDER BY A.WorkOrder_ID, A.Module_ID",[$start,$end]);
 
         return Datatables::of($modInfo)->make(true);
     }
@@ -69,15 +153,55 @@ class ReportsController extends Controller
     }
 
     function containerReport() {
-        return view('mes.trina.container');
+        $data = [];
+
+        $data['product_types'] = DB::connection('trina')->select("SELECT DISTINCT Product_Type FROM df_pid_type_mapping A WHERE EXISTS (SELECT Product_ID FROM df_wo_mat WHERE WorkOrder_ID LIKE 'S%' AND Product_ID = A.Q1_ID) ORDER BY Product_Type");
+
+        $data['work_orders'] = DB::connection('trina')->select("SELECT A.WorkOrder_ID, B.Product_Type FROM df_wo_mat A INNER JOIN df_pid_type_mapping B ON A.Product_ID = B.Q1_ID WHERE A.WorkOrder_ID LIKE 'S%' ORDER BY A.WorkOrder_ID");
+
+        return view('mes.trina.container', $data);
     }
 
-    function containerInfo($sdate = null, $edate = null, $shipped = null) {
+    function containerInfo(Request $request, $sdate = null, $edate = null, $shipped = null) {
         $start = ($sdate == null ? date('Y-m-d') : date('Y-m-d',strtotime($sdate)))  . " 06:00:00";
         $end = date('Y-m-d',strtotime("+1 days",strtotime(($edate == null ? "Today" : $edate)))) . " 05:59:59";
-        $cond = ($shipped == null || $shipped == "false" ? "" : " AND NOT EXISTS (SELECT container_no FROM solarph.shipped_container WHERE container_no = a.Container_No)");
-        
-        $container = DB::connection("trina")->select("SELECT '' as `Contract no`, a.Container_No as `Batch No`, a.Carton_No as 'Carton No', a.WorkOrder_ID as 'Workorder ID', a.Module_ID as 'Module ID', a.Product_ID as 'Product ID', a.Product_Type as 'Product Type', '' as 'Purchase Order', '' as 'Country Of Original', b.Cell_Suppliers as 'Cell Suppliers', '' as 'CONTAINER No', '' as 'SEAL', '' as 'BOL', '' as 'Ship destination', b.Layout_QTY_of_Cell as 'Cells Per Panel', DATE_ADD(c.Create_Date,INTERVAL CASE WHEN c.Create_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) as 'Production Date', b.Cell_MID as 'cell No', a.Module_Grade as 'MODULE GRADE' FROM omes.rt_mid_packing a inner join omes.df_wo_mat b on a.WorkOrder_ID = b.WorkOrder_ID inner join omes.rt_wo_mid c on a.Module_ID = c.Module_ID where a.Module_ID like 'S98%' AND a.State = 'Packed' AND DATE_ADD(a.Packing_Date,INTERVAL CASE WHEN a.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) BETWEEN ? AND ?" . $cond . " ORDER BY a.Carton_No, a.Packing_Date",[$start,$end]);
+        $cond = ($request->form_ShipStatus == "All" ? "" : " AND".($request->form_ShipStatus == "Not Shipped" ? " NOT" : "")." EXISTS (SELECT container_no FROM solarph.shipped_container WHERE container_no = a.Container_No)");
+
+        $filtercond =  $request->form_ModuleGrade == "All" ? "" : " AND CASE WHEN c.Module_Grade = c.EL_Grade AND c.Module_Grade = 'Q1' THEN 'Q1' ELSE 'Q2' END = '" . $request->form_ModuleGrade . "'";
+
+        if ($request->form_Product_Type != null) {
+            $ptype = "";
+            if (strpos($request->form_Product_Type, '|') !== false) {
+                $ptypes = [];
+                $ptypes = explode("|",$request->form_Product_Type);
+
+                foreach($ptypes as $pt) {
+                    $ptype .= ($ptype == "" ? "" : ",") . "'" . $pt . "'";
+                }
+            } else {
+                $ptype = "'" . $request->form_Product_Type . "'";
+            }
+
+            $filtercond .= " AND d.Product_Type IN (".$ptype.")";
+        }
+
+        if ($request->form_WorkOrder_ID != null) {
+            $workorders = "";
+            if (strpos($request->form_WorkOrder_ID, '|') !== false) {
+                $wos = [];
+                $wos = explode("|",$request->form_WorkOrder_ID);
+
+                foreach($wos as $wo) {
+                    $workorders .= ($workorders == "" ? "" : ",") . "'" . $wo . "'";
+                }
+            } else {
+                $workorders = "'" . $request->form_WorkOrder_ID . "'";
+            }
+
+            $filtercond .= " AND a.WorkOrder_ID IN (".$workorders.")";
+        }
+
+        $container = DB::connection("trina")->select("SELECT '' as `Contract no`, a.Container_No as `Batch No`, a.Carton_No as 'Carton No', a.WorkOrder_ID as 'Workorder ID', a.Module_ID as 'Module ID', a.Product_ID as 'Product ID', a.Product_Type as 'Product Type', '' as 'Purchase Order', '' as 'Country Of Original', b.Cell_Suppliers as 'Cell Suppliers', '' as 'CONTAINER No', '' as 'SEAL', '' as 'BOL', '' as 'Ship destination', b.Layout_QTY_of_Cell as 'Cells Per Panel', DATE_ADD(c.Create_Date,INTERVAL CASE WHEN c.Create_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) as 'Production Date', b.Cell_MID as 'cell No', a.Module_Grade as 'MODULE GRADE' FROM omes.rt_mid_packing a inner join omes.df_wo_mat b on a.WorkOrder_ID = b.WorkOrder_ID inner join omes.rt_wo_mid c on a.Module_ID = c.Module_ID INNER JOIN omes.df_pid_type_mapping d ON b.Product_ID = d.Q1_ID where a.Module_ID like 'S98%' AND a.State = 'Packed' AND DATE_ADD(a.Packing_Date,INTERVAL CASE WHEN a.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) BETWEEN ? AND ?" . $cond . $filtercond . " ORDER BY a.Carton_No, a.Packing_Date",[$start,$end]);
 
         return Datatables::of($container)->make(true);
     }
