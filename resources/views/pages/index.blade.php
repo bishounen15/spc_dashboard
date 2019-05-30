@@ -4,7 +4,7 @@
         <div class="jumbotron text-center">
         <strong><h1>Welcome to Solar Philippines!</h1></strong>
         <hr>
-        <h3>Solar Philippines Module <br> Manufaturing Corporation</h3>
+        <h3>Module Manufacturing Corporation</h3>
         <p>
                 @guest
                 <br>
