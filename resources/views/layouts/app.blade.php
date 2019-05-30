@@ -64,7 +64,7 @@
                             @if(Auth::user()->osi_access == 1 || Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Office Supplies
+                                <i class="fas fa-pencil-ruler"></i> <small><strong>Office Supplies</strong></small>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @if(Auth::user()->osi_role == "CUST" || Auth::user()->sysadmin == 1)
@@ -82,7 +82,7 @@
                             @if(Auth::user()->yield_access == 1 || Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Yield Dashboard
+                                <i class="fas fa-tachometer-alt"></i> <small><strong>Yield Dashboard</strong></small>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @if(Auth::user()->yield_role == "ADMIN" || Auth::user()->sysadmin == 1)
@@ -99,7 +99,7 @@
                             @if(Auth::user()->mes_access == 1 || Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                MFG Transactions
+                                <i class="fas fa-solar-panel"></i> <small><strong>MFG Transactions</strong></small>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @if(Auth::user()->mes_role == 'ADMIN' || Auth::user()->sysadmin == 1)
@@ -149,7 +149,7 @@
 
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                TRINA Solar
+                                <img height="25px" src="/storage/Images/Trina-Solar.png">
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <h6 class="dropdown-header">Reports</h6>
@@ -167,7 +167,7 @@
                             @if(Auth::user()->proddt_access == 1 || Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Downtime Monitoring
+                                <i class="fas fa-ban"></i> <small><strong>Downtime Monitoring</strong></small>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @if(Auth::user()->proddt_role == "SUPV" || Auth::user()->proddt_role == "ADMIN" || Auth::user()->sysadmin == 1)
@@ -189,7 +189,7 @@
                             @if(Auth::user()->assets_access == 1 || Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                IT Management
+                                <i class="fas fa-laptop"></i> <small><strong>IT Management</strong></small>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <h6 class="dropdown-header">Assets</h6>
@@ -205,7 +205,7 @@
                             @if(Auth::user()->sysadmin == 1)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                System Setup
+                                <i class="fas fa-user-cog"></i> <small><strong>System Setup</strong></small>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <h6 class="dropdown-header">General Setup</h6>
@@ -228,7 +228,7 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    <small>{{ Auth::user()->name }}</small> <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
