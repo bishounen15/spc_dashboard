@@ -249,8 +249,15 @@
 
         function customClassCheck() {
             if (custom_class != "") {
-                console.log($("#modclass").val());
                 if ($("#modclass").val() != custom_class) {
+                    $("#warn-msg").html(warning_msg);
+                    $(".jumbotron").show();
+                } else {
+                    $("#warn-msg").html("");
+                    $(".jumbotron").hide();
+                }
+            } else {
+                if (warning_msg != "") {
                     $("#warn-msg").html(warning_msg);
                     $(".jumbotron").show();
                 } else {

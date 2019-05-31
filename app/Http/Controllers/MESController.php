@@ -286,15 +286,19 @@ class MESController extends Controller
         ])->first();
 
         $custom_error = false;
+        $trx_count = 0;
 
         if ($cond != null) {
-            $check = DB::connection($cond->CONN)->select("SELECT COUNT(*) AS TRX FROM ".$cond->TABLE_NAME." WHERE ".$cond->FIELD_NAME." = ?",[$last_mes->SERIALNO]);
-
+            $check = DB::connection($cond->CONN)->select("SELECT COUNT(*) AS TRX FROM ".$cond->TABLE_NAME." WHERE ".$cond->FIELD_NAME." = ?" . $cond->ADDCOND,[$last_mes->SERIALNO]);
+            $trx_count = $check[0]->TRX;
+            // dd($trx_count);
             if ($check[0]->TRX == 0 && $last_mes->MODCLASS <> 'Q1') {
                 eval($cond->ERR_MSG);
-                $data['errors'] = ['error_msg' => $e_msg];
 
-                $custom_error = true;
+                if ($e_msg <> "") {
+                    $data['errors'] = ['error_msg' => $e_msg];
+                    $custom_error = true;
+                }
             }
         }
 
@@ -352,6 +356,16 @@ class MESController extends Controller
                     '4' => $classes->where('MODSTATUS',0),
                 ];
 
+                $warn = "";
+
+                if ($cond != null) {
+                    if ($cond->CLASS_ALLOW == "" && $trx_count == 0) {
+                        $warn = $cond->WARNING_MSG;
+                    } else if ($cond->CLASS_ALLOW != "") {
+                        $warn = $cond->WARNING_MSG;
+                    }
+                }
+
                 $data['serial'] = [
                     'serialno' => $serialInfo->SERIALNO,
                     'customer' => $serialInfo->CUSTOMER,
@@ -364,7 +378,7 @@ class MESController extends Controller
                     'remarks' => $mes == null ? '' : $assignment->ALLOWCLS == '' ? $mes->REMARKS : "Endorsed to " . $assignment->stationInfo->STNDESC,
                     'allowcls' => $assignment->ALLOWCLS,
                     'custclass' => $cond != null ? $cond->CLASS_ALLOW : "",
-                    'warning' => $cond != null ? $cond->WARNING_MSG : "",
+                    'warning' => $warn,
                 ];
             }
         }
