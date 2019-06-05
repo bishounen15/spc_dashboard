@@ -194,6 +194,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
         Route::get('/trina/containerinfo', 'TRINA\ReportsController@containerReport')->name('trina_cont_report');
         Route::get('/trina/container/{start}/{end}/{shipped?}', 'TRINA\ReportsController@containerInfo')->name('trina_cont');
+
+        Route::get('/trina/moduleupdate', 'TRINA\ModuleController@ModuleUpdate')->name('trina_modupd');
+        Route::post('/trina/listmodules', 'TRINA\ModuleController@ListModules')->name('trina_listmods');
+        Route::post('/trina/moduleupdate', 'TRINA\ModuleController@UpdateModules')->name('trina_updmod');
         
         Route::post('/modules/inquire','ModulesController@inquire')->name('module_inquiry');
         Route::get('/modules/ftd/{serial}','ModulesController@ftd')->name('ftd_data');
