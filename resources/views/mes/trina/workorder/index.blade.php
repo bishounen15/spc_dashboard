@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid">
-    <h3>TRINA Work Order</h3>
+    <h3><i class="fas fa-tasks"></i> TRINA Work Order</h3>
     <table class="table table-condensed table-striped table-sm" id="wo-list" style="width: 100%;">
         <thead class="thead-dark">
             <th>Work Order ID</th>

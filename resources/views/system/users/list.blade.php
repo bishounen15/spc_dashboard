@@ -78,6 +78,7 @@
     $(document).ready(function() {
         var table = $('#user-list').DataTable({
             "scrollX": true,
+            "stateSave": true,
             "order": [],
             ajax: '{!! route('user_data') !!}',
             dom: 'Blfrtip',

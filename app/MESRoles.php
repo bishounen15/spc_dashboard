@@ -25,6 +25,10 @@ class MESRoles extends ReadOnlyBase
             "description" => "Planner",
         ],
         [
+            "code" => "SHIP",
+            "description" => "Shipping",
+        ],
+        [
             "code" => "VIEW",
             "description" => "Viewer",
         ],

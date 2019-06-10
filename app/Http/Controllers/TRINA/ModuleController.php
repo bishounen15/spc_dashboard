@@ -159,7 +159,8 @@ class ModuleController extends Controller
                 $update['requestor'] = $request->input('requestor');
                 $update['reason'] = $request->input('reason');
 
-                $logs = DB::table('solarph.admin_update_logs')
+                $logs = DB::connection('trina')
+                                ->table('solarph.admin_update_logs')
                                 ->insert($update);
             }
         } else {

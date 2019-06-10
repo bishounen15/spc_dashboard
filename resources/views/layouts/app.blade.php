@@ -165,6 +165,11 @@
                                 <a class="dropdown-item" href="/trina/moduleinfo">&nbsp;&nbsp;&nbsp;&nbsp;Module Information</a>
                                 <a class="dropdown-item" href="/trina/ftdreport">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
                                 <a class="dropdown-item" href="/trina/containerinfo">&nbsp;&nbsp;&nbsp;&nbsp;Container Information</a>
+                                
+                                @if(Auth::user()->mes_role == 'SHIP' || Auth::user()->sysadmin == 1)
+                                <h6 class="dropdown-header">Transactions</h6>
+                                <a class="dropdown-item" href="/trina/shipment">&nbsp;&nbsp;&nbsp;&nbsp;Shipment Details</a>
+                                @endif
                                 </div>
                             </li>
                             @endif
