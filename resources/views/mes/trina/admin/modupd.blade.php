@@ -72,6 +72,7 @@
                         <th>Module Grade</th>
                         <th>EL Grade</th>
                         <th>Status</th>
+                        <th>Power Grade</th>
                     </thead>
                     <tbody style="font-size: 0.7em;">
 
@@ -336,7 +337,7 @@
                                 {
                                     extend:     'csv',
                                     exportOptions: {
-                                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
+                                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
                                     },
                                     text:       'Download CSV',
                                     filename: "modules_csv"
@@ -357,6 +358,7 @@
                                 { data: 'Module_Grade' },
                                 { data: 'EL_Grade' },
                                 { data: 'Status' },
+                                { data: 'POWER_GRADE' },
                             ],
                             createdRow: function (row, data, index) {
                                 // console.log(data.Module_ID + " [" + data.Module_Grade + " - " + data.EL_Grade + "]");
@@ -390,7 +392,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
                     },
                     text:       'Download CSV',
                     filename: "modules_csv"
@@ -411,6 +413,7 @@
                 { data: 'Module_Grade' },
                 { data: 'EL_Grade' },
                 { data: 'Status' },
+                { data: 'POWER_GRADE' },
             ],
         });
     });

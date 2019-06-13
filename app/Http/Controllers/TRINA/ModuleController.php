@@ -68,7 +68,7 @@ class ModuleController extends Controller
             $cond = "A.Module_ID BETWEEN '".$start."' AND '".$end."'";
         }
 
-        $sql = "SELECT A.WorkOrder_ID, A.WorkOrder_vertion, A.Module_ID, D.Product_Type, B.Module_Colour, B.Cell_Suppliers, A.Grade_of_Cell_Power, A.Cell_Power, A.Cell_Color, C.EFF, A.Module_Grade, A.EL_Grade, A.Status FROM rt_wo_mid A INNER JOIN df_wo_mat B ON A.WorkOrder_ID = B.WorkOrder_ID AND A.WorkOrder_vertion = B.WorkOrder_vertion INNER JOIN df_module_cell_power C ON B.Cell_Suppliers = C.factory AND A.Grade_of_Cell_Power = C.Code AND A.Cell_Power = C.power INNER JOIN df_pid_type_mapping D ON B.Product_ID = D.Q1_ID WHERE " . $cond;
+        $sql = "SELECT A.WorkOrder_ID, A.WorkOrder_vertion, A.Module_ID, D.Product_Type, B.Module_Colour, B.Cell_Suppliers, A.Grade_of_Cell_Power, A.Cell_Power, A.Cell_Color, C.EFF, A.Module_Grade, A.EL_Grade, A.Status, E.POWER_GRADE  FROM rt_wo_mid A INNER JOIN df_wo_mat B ON A.WorkOrder_ID = B.WorkOrder_ID AND A.WorkOrder_vertion = B.WorkOrder_vertion INNER JOIN df_module_cell_power C ON B.Cell_Suppliers = C.factory AND A.Grade_of_Cell_Power = C.Code AND A.Cell_Power = C.power INNER JOIN df_pid_type_mapping D ON B.Product_ID = D.Q1_ID LEFT JOIN rt_mid_flash F ON A.Module_ID = F.Module_ID LEFT JOIN df_module_powerinfo E ON CASE WHEN A.Module_Grade = A.EL_Grade AND A.Module_Grade = 'Q1' THEN D.Q1_ID ELSE D.Q2_ID END = E.Product_ID AND E.GRADE_TYPE = 'NOIMPGRADE' AND (F.PMAX >= E.LOWERPOWER AND F.PMAX < E.UPPERPOWER) WHERE " . $cond;
 
         $mods = DB::connection('trina')
                             ->select($sql);
