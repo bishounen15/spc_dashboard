@@ -192,6 +192,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/trina/ship/load', 'TRINA\ShipmentController@load')->name('trina_ship_load');
         Route::post('/trina/markshipment/{shipment_date}/{cipl_no}/{pl_no}', 'TRINA\ShipmentController@markShipment')->name('trina_mark_ship');
 
+        Route::get('/trina/jbox/register', 'TRINA\JBOXCodeController@index')->name('trina_jbox_reg');
+        Route::post('/trina/jbox/verify', 'TRINA\JBOXCodeController@verify')->name('trina_jbox_verify');
+        Route::post('/trina/jbox/register', 'TRINA\JBOXCodeController@register')->name('trina_jbox_register');
+
         Route::get('/trina/flashtest', 'TRINA\FlashTestController@index')->name('trina_flash_test');
         Route::post('/trina/loadtest/{ModuleID}', 'TRINA\FlashTestController@load')->name('trina_ft_load');
         Route::get('/trina/testresults/{ModuleID}', 'TRINA\FlashTestController@testResults')->name('trina_test_results');

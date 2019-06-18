@@ -156,6 +156,7 @@
                                 @if(Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Admin Functions</h6>
                                 <a class="dropdown-item" href="/trina/moduleupdate">&nbsp;&nbsp;&nbsp;&nbsp;Module Update</a>
+                                <a class="dropdown-item" href="/trina/jbox/register">&nbsp;&nbsp;&nbsp;&nbsp;JBOX Registration</a>
                                 @endif
                                 <h6 class="dropdown-header">Reports</h6>
                                 <a class="dropdown-item" href="/trina/inquiry">&nbsp;&nbsp;&nbsp;&nbsp;Module Inquiry</a>
