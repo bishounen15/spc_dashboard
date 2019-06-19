@@ -73,6 +73,8 @@
                         <th>EL Grade</th>
                         <th>Status</th>
                         <th>Power Grade</th>
+                        <th>Nameplate Type</th>
+                        <th>Operation</th>
                     </thead>
                     <tbody style="font-size: 0.7em;">
 
@@ -337,7 +339,7 @@
                                 {
                                     extend:     'csv',
                                     exportOptions: {
-                                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+                                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
                                     },
                                     text:       'Download CSV',
                                     filename: "modules_csv"
@@ -359,6 +361,8 @@
                                 { data: 'EL_Grade' },
                                 { data: 'Status' },
                                 { data: 'POWER_GRADE' },
+                                { data: 'NAMEPLATE_Type' },
+                                { data: 'Operation' },
                             ],
                             createdRow: function (row, data, index) {
                                 // console.log(data.Module_ID + " [" + data.Module_Grade + " - " + data.EL_Grade + "]");
@@ -392,7 +396,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
                     },
                     text:       'Download CSV',
                     filename: "modules_csv"
@@ -414,6 +418,8 @@
                 { data: 'EL_Grade' },
                 { data: 'Status' },
                 { data: 'POWER_GRADE' },
+                { data: 'NAMEPLATE_Type' },
+                { data: 'Operation' },
             ],
         });
     });
