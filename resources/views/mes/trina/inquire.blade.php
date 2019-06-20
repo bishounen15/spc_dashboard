@@ -254,7 +254,7 @@
 
                             <div class="form-row mb-1">
                                 <div class="col-sm-4">
-                                    <label for="JBOX_lot">JBOX Lot Number</label>
+                                    <label for="JBOX_lot">JBOX Code</label>
                                 </div>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control form-control-sm" name="JBOX_lot" id="JBOX_lot" readonly>
