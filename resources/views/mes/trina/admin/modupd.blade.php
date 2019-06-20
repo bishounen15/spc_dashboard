@@ -126,7 +126,7 @@
                             <option value="-"></option>
                             <option value="Pass">Pass</option>
                             <option value="Hold">Hold</option>
-                            <option value="Hold">Release</option>
+                            <option value="Release">Release</option>
                         </select>
                     </div>
                 </div>
