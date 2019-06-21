@@ -2,23 +2,12 @@
 @section('content')
 <div class="container-fluid">
     <h3><i class="fas fa-shipping-fast"></i> TRINA Container Information</h3>
-    {{-- <a href="#" role="button" class="btn btn-primary">Create Log Entry</a> --}}
-    {{-- <br><br> --}}
-    <div class="card">
-        <div class="card-body">
-            
-                <div class="form-inline">
-                    <label class="my-1 mr-2" for="start">Start Date</label>
-                    <input type="date" class="form-control form-control-sm my-1 mr-sm-2" name="start" id="start" value="{{ date('Y-m-d') }}">
-                    
-                    <label class="my-1 mr-2" for="end">End Date</label>
-                    <input type="date" class="form-control form-control-sm my-1 mr-sm-2" name="end" id="end" value="{{ date('Y-m-d') }}">        
-                    
-                    <button type="submit" class="btn btn-info my-1" id="FilterButton"><i class="fas fa-filter"></i> Filter Options</button>&nbsp;&nbsp;&nbsp;
-                    <button type="submit" class="btn btn-primary my-1" id="RefreshButton"><i class="fas fa-sync"></i> Refresh Dashboard</button>
-            </div>
-        </div>
+    
+    <div class="form-inline mb-3">
+        <button type="submit" class="btn btn-info my-1" id="FilterButton"><i class="fas fa-filter"></i> Filter Results</button>&nbsp;&nbsp;&nbsp;
+        <button type="submit" class="btn btn-primary my-1" id="RefreshButton" style="display: none;"><i class="fas fa-sync"></i> Refresh Dashboard</button>
     </div>
+    
     <table class="table table-condensed table-striped table-sm" id="cont-list" style="width: 100%;">
         <thead class="thead-dark" style="font-size: 0.7em;">
             <th>Contract no</th>
@@ -58,6 +47,23 @@
                 <form id="FilterParam">
                     <div class="form-row">
                         <div class="col-sm-4">
+                            <strong>Date Range</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-inline">
+                                <label class="my-1 mr-2" for="start">From</label>
+                                <input type="date" class="form-control form-control-sm my-1 mr-sm-2" name="start" id="start" value="{{ date('Y-m-d') }}">
+                                
+                                <label class="my-1 mr-2" for="end">To</label>
+                                <input type="date" class="form-control form-control-sm my-1 mr-sm-2" name="end" id="end" value="{{ date('Y-m-d') }}">        
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-row">
+                        <div class="col-sm-4">
                             <strong>Product Type</strong>
                         </div>
                         <div class="col-sm-8">
@@ -67,7 +73,7 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="{{$prodtype->Product_Type}}" name="Product_Type">
                                         <label class="form-check-label" for="Product_Type">
-                                            {{$prodtype->Product_Type}}
+                                            <small>{{$prodtype->Product_Type}}</small>
                                         </label>
                                     </div>
                                 </div>
@@ -94,6 +100,20 @@
                                     </div>
                                 </div>
                                 @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-row">
+                        <div class="col-sm-4">
+                            <strong>Container Number</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <textarea class="form-control form-control-sm" name="Container_no" id="Container_no" rows="3"></textarea>
+                                <small class="text-muted">For multiple container numbers, separate by comma (,)</small>
                             </div>
                         </div>
                     </div>
