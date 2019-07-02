@@ -186,6 +186,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/trina/workorder', 'TRINA\WorkOrderController@index')->name('trina_wo');
         Route::get('/trina/workorder/{id}/{version}', 'TRINA\WorkOrderController@show');
         Route::get('/trina/wo/load', 'TRINA\WorkOrderController@load')->name('trina_wo_load');
+        Route::post('/trina/wo/toggle/{id}/{version}', 'TRINA\WorkOrderController@toggle')->name('trina_wo_toggle');
 
         Route::get('/trina/shipment', 'TRINA\ShipmentController@index')->name('trina_shipment');
         Route::get('/trina/shipment/{container_no}', 'TRINA\ShipmentController@show');

@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\TRINA\WorkOrder;
+use Illuminate\Support\Facades\Auth;
 
 use DataTables;
 use DB;
+use Response;
 
 class WorkOrderController extends Controller
 {
@@ -50,5 +52,33 @@ class WorkOrderController extends Controller
         // BuildWOinfo.Module_Colour
 
         return view('mes.trina.workorder.form', $data);
+    }
+
+    public function toggle(Request $request, $id, $version) {
+        $wo = WorkOrder::where([
+            ["WorkOrder_ID",$id],
+            ["WorkOrder_vertion",$version]
+        ])->first();
+
+        $old_state = $wo->State;
+
+        $wo->State = ($wo->State == "Open" ? "Close" : "Open");
+        
+        if ($wo->save()) {
+            $new_state = $wo->State;
+            $update['Workorder_ID'] = $id;
+            $update['user_id'] = Auth::user()->user_id;
+            $update['Workorder_vertion'] = $version;
+            $update['old_state'] = $old_state;
+            $update['new_state'] = $new_state;
+            $update['remarks'] = $request->input('remarks');
+            $update['created_at'] = DB::raw('CURRENT_TIMESTAMP');
+
+            $logs = DB::connection('trina')
+                            ->table('solarph.wo_state_logs')
+                            ->insert($update);
+        }
+
+        return Response::json($wo);
     }
 }
