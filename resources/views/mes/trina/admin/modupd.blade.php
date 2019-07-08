@@ -167,7 +167,7 @@
                         <select name="OPNO" id="OPNO" class="form-control form-control-sm update-fields">
                             <option readonly selected value> -- select an option -- </option>
                             @foreach($operations as $operation)
-                            <option value="{{ $operation->opno }}">{{ $operation->opno . ' - ' . $operation->opname }}</option>
+                            <option value="{{ $operation->opno }}">{{ $operation->opno . ' - ' . $operation->opname . ' (' . $operation->ch_name . ')' }}</option>
                             @endforeach
                         </select>
                     </div>

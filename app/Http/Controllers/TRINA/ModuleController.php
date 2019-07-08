@@ -44,8 +44,9 @@ class ModuleController extends Controller
 
     public function ModuleUpdate() {
         $ops = DB::connection('trina')
-                    ->table('z_operations')
-                    ->select('opno','opname')
+                    ->table('z_operations as a')
+                    ->join('df_tblopbasis as b','a.opno','b.opno')
+                    ->select('a.opno','a.opname','b.opname as ch_name')
                     ->get();
 
         return view('mes.trina.admin.modupd', ["operations" => $ops]);
