@@ -43,7 +43,12 @@ class ModuleController extends Controller
     }
 
     public function ModuleUpdate() {
-        return view('mes.trina.admin.modupd');
+        $ops = DB::connection('trina')
+                    ->table('z_operations')
+                    ->select('opno','opname')
+                    ->get();
+
+        return view('mes.trina.admin.modupd', ["operations" => $ops]);
     }
 
     public function ListModules(Request $request) {
@@ -95,6 +100,7 @@ class ModuleController extends Controller
 
     public function UpdateModules(Request $request) {
         $update = [];
+        $op_update = [];
 
         $serials = [];
         $affected = "";
@@ -114,6 +120,10 @@ class ModuleController extends Controller
             $modules = DB::connection('trina')
                                 ->table('omes.rt_wo_mid')
                                 ->whereIn('Module_ID',$serials);
+
+            $cops = DB::connection('trina')
+                                ->table('omes.rt_tblwiplotstate')
+                                ->whereIn('Module_ID',$serials);
         } else {
             array_push($serials, $request->input('start'));
             array_push($serials, $request->input('end'));
@@ -122,6 +132,10 @@ class ModuleController extends Controller
 
             $modules = DB::connection('trina')
                                 ->table('omes.rt_wo_mid')
+                                ->whereBetween('Module_ID',$serials);
+
+            $cops = DB::connection('trina')
+                                ->table('omes.rt_tblwiplotstate')
                                 ->whereBetween('Module_ID',$serials);
         }
 
@@ -150,10 +164,33 @@ class ModuleController extends Controller
             $update['EL_Grade'] = str_replace("-","", $request->input('EL_Grade'));
         }
 
-        if (count($update) > 0) {
-            $results = $modules->update($update);
+        if ($request->input('OPNO') != null) {
+            $op = str_replace("-","", $request->input('OPNO'));
+            $optn = DB::connection('trina')
+                            ->table('omes.df_tblopbasis')
+                            ->select('opno','opname')
+                            ->where('opno',$op)
+                            ->first();
 
-            if ($results > 0) {
+            $op_update['OPNO'] = $optn->opno;
+            $op_update['AREANO'] = $optn->opname;
+        }
+
+        if (count($update) > 0 || count($op_update) > 0) {
+            if (count($update) > 0) {
+                $results = $modules->update($update);
+            } else {
+                $results = -1;
+            }
+
+            if (count($op_update) > 0) {
+                $op_results = $cops->update($op_update);
+                $update['OPNO'] = $op_update['OPNO'];
+            } else {
+                $op_results = -1;
+            }
+
+            if ($results > 0 || $op_results > 0) {
                 $update['affected_serials'] = $affected;
                 $update['user_id'] = Auth::user()->user_id;
                 $update['requestor'] = $request->input('requestor');
@@ -165,8 +202,12 @@ class ModuleController extends Controller
             }
         } else {
             $results = -1;
+            $op_results = -1;
         }
 
-        return Response::json($results);
+        return Response::json([
+            "main_result" => $results,
+            "optn_result" => $op_results,
+        ]);
     }
 }

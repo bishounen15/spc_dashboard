@@ -159,6 +159,20 @@
                     </div>
                 </div>
 
+                <div class="form-row mb-3">
+                    <div class="col-sm-5 text-right">
+                        <strong>Change Current Operation</strong>
+                    </div>
+                    <div class="col-sm-5">
+                        <select name="OPNO" id="OPNO" class="form-control form-control-sm update-fields">
+                            <option readonly selected value> -- select an option -- </option>
+                            @foreach($operations as $operation)
+                            <option value="{{ $operation->opno }}">{{ $operation->opno . ' - ' . $operation->opname }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 <hr>
 
                 <div class="form-row mb-3">
@@ -243,6 +257,7 @@
                 formData.append('Status', $("#Status").val());
                 formData.append('Module_Grade', $("#Module_Grade").val());
                 formData.append('EL_Grade', $("#EL_Grade").val());
+                formData.append('OPNO', $("#OPNO").val());
 
                 formData.append('requestor', $("#requestor").val());
                 formData.append('reason', $("#reason").val());
@@ -258,8 +273,11 @@
                         'X-CSRF-TOKEN': token.val()
                     },
                     success: function (dt) {
-                        if (dt >= 0) {
-                            alert(dt + " row/s affected by the update.");
+                        if (dt.main_result >= 0 || dt.optn_result >= 0) {
+                            mr = (dt.main_result >= 0 ? dt.main_result + " row/s updated for Module Information" : "");
+                            or = (dt.optn_result >= 0 ? dt.optn_result + " row/s updated for Current Operation" : "");
+                            sp = (dt.main_result >= 0 && dt.optn_result >= 0 ? " and " : "")
+                            alert(mr + sp + or + ".");
                             $("#UpdateModal").modal('toggle');
                         } else {
                             alert("You have not selected any field to update.");
