@@ -122,7 +122,7 @@
                     </div>
                     <div class="col-sm-5">
                         <select name="Status" id="Status" class="form-control form-control-sm update-fields">
-                            <option readonly selected value disabled> -- select an option -- </option>
+                            <option readonly selected value> -- select an option -- </option>
                             <option value="-"></option>
                             <option value="Pass">Pass</option>
                             <option value="Hold">Hold</option>
@@ -137,7 +137,7 @@
                     </div>
                     <div class="col-sm-5">
                         <select name="Module_Grade" id="Module_Grade" class="form-control form-control-sm update-fields">
-                            <option readonly selected value disabled> -- select an option -- </option>
+                            <option readonly selected value> -- select an option -- </option>
                             <option value="-"></option>
                             <option value="Q1">Q1</option>
                             <option value="Q2">Q2</option>
@@ -151,7 +151,7 @@
                     </div>
                     <div class="col-sm-5">
                         <select name="EL_Grade" id="EL_Grade" class="form-control form-control-sm update-fields">
-                            <option readonly selected value disabled> -- select an option -- </option>
+                            <option readonly selected value> -- select an option -- </option>
                             <option value="-"></option>
                             <option value="Q1">Q1</option>
                             <option value="Q2">Q2</option>
@@ -165,7 +165,7 @@
                     </div>
                     <div class="col-sm-5">
                         <select name="OPNO" id="OPNO" class="form-control form-control-sm update-fields">
-                            <option readonly selected value disabled> -- select an option -- </option>
+                            <option readonly selected value> -- select an option -- </option>
                             @foreach($operations as $operation)
                             <option value="{{ $operation->opno }}">{{ $operation->opno . ' - ' . $operation->opname . ' (' . $operation->ch_name . ')' }}</option>
                             @endforeach
@@ -231,6 +231,7 @@
 
         $("#UpdateButton").click(function () {
             $(".update-fields").val("");
+            $(".jumbotron").hide();
 
             $("#UpdateModal").modal("toggle");
         });
@@ -328,7 +329,7 @@
                         if (dt.mods.length > 0) {
                             $('#UpdateButton').attr('disabled',false);
                             
-                            eff_list = "<option readonly selected value disabled> -- select an option -- </option>";
+                            eff_list = "<option readonly selected value> -- select an option -- </option>";
                             $.each(dt.eff, function(i, obj){
                                 eff_list += '<option value="'+obj.CODE+'">'+obj.DESCR+'</option>';
                             });
