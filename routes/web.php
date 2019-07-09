@@ -228,6 +228,14 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::post('/mes/packaging/validate', 'Packaging\PackingListController@serialValidation')->name('packaging_validate');
         Route::get('/mes/packaging/export/{id}', 'Packaging\PackingListController@export')->name('packaging_export');
         Route::resource('mes/packaging','Packaging\PackingListController');
+
+        Route::get('/trina/module/color', function() {
+            return view('mes.trina.admin.modcolor');
+        });
+
+        Route::get('/trina/module/power', function() {
+            return view('mes.trina.admin.modpower');
+        });
     });
 // }); 
 

@@ -53,3 +53,8 @@ Route::post('asset/apps', 'AssetsController@saveApps');
 Route::post('asset/delete/network', 'AssetsController@deleteNetwork');
 Route::post('asset/delete/disks', 'AssetsController@deleteDisks');
 Route::post('asset/delete/apps', 'AssetsController@deleteApps');
+
+// Vue Routes
+Route::post('dataset/list','TRINA\DatasetController@getList');
+Route::post('dataset','TRINA\DatasetController@store');
+Route::delete('dataset','TRINA\DatasetController@destroy');
