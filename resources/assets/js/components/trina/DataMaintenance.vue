@@ -46,6 +46,7 @@
 
                             <div class="col-sm text-right">
                                 <button class="btn btn-success" data-toggle="modal" data-target="#AddModal"><i class="fa fa-plus"></i> Add Record</button>
+                                <button class="btn btn-secondary" data-toggle="modal" data-target="#ImportModal"  v-if="xl_import"><i class="fas fa-file-excel"></i> Import from Excel</button>
                             </div>
                         </div>
                     </div>
@@ -113,6 +114,33 @@
                 </div>
             </div>
         </form>
+
+        <div class="modal fade" id="ImportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Import from Excel</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <button class="btn btn-info btn-block">Click here to download template</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="import-file">Select template for uploading</label>
+                        <input type="file" class="form-control-file" id="import-file">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary pull-right"><i class="fas fa-upload"></i> Import Data</button>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -141,7 +169,8 @@
             route: String,
             columns: Array,
             source: String,
-            user_id: String
+            user_id: String,
+            xl_import: Boolean
         },
         methods: {
             initList() {

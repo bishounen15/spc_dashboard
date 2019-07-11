@@ -236,6 +236,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/trina/module/power', function() {
             return view('mes.trina.admin.modpower');
         });
+
+        Route::get('/trina/po', function() {
+            return view('mes.trina.admin.podata');
+        });
     });
 // }); 
 
