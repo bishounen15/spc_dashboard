@@ -6,7 +6,7 @@
         icon="fas fa-pallet" 
         source="solarph.po_data"
         user_id="{{ Auth::user()->user_id }}"
-        xl_import="true"
+        v-bind:xl_import="true"
         v-bind:columns="[
             {
                 name: 'po_number', 

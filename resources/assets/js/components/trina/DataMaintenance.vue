@@ -126,17 +126,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <button class="btn btn-info btn-block">Click here to download template</button>
+                        <button class="btn btn-info btn-block" @click="downloadTemplate()">Click here to download template</button>
                     </div>
 
                     <div class="form-group">
-                        <label for="import-file">Select template for uploading</label>
-                        <input type="file" class="form-control-file" id="import-file">
+                        <label for="file">Select template for uploading</label>
+                        <input type="file" class="form-control-file" id="file" v-on:change="handleFileUpload()">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary pull-right"><i class="fas fa-upload"></i> Import Data</button>
+                    <button type="button" class="btn btn-primary pull-right" @click="uploadFile()"><i class="fas fa-upload"></i> Import Data</button>
                 </div>
                 </div>
             </div>
@@ -157,7 +157,8 @@
                 inquire_data: {},
                 main_data: {},
                 pagination: {},
-                loading: false
+                loading: false,
+                file: ''
             }
         },
         created() {
@@ -305,6 +306,51 @@
                         })
                         .catch(err => console.log(err));
                 }
+            },
+            downloadTemplate() {
+                let cols = {};
+                cols['name'] = this.title;
+                cols['columns'] = this.columns;
+                
+                axios({
+                    url: '/api/dataset/template',
+                    method: 'post',
+                    data: JSON.stringify(cols),
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    responseType: 'blob', // important
+                    }).then((response) => {
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', this.title + ' Template.xls'); //or any other extension
+                        document.body.appendChild(link);
+                        link.click();
+                    });
+            },
+            handleFileUpload() {
+                this.file = $("#file")[0].files[0];
+            },
+            uploadFile() {
+                let formData = new FormData();
+                formData.append('file', this.file);
+                formData.append('table', this.source);
+                formData.append('columns', JSON.stringify(this.columns));
+
+                axios.post( '/api/dataset/upload',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                    ).then(function(response){
+                        console.log(response);
+                    })
+                    .catch(function(err){
+                        console.log(err);
+                    });
             }
         }
     }

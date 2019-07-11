@@ -47661,7 +47661,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             inquire_data: {},
             main_data: {},
             pagination: {},
-            loading: false
+            loading: false,
+            file: ''
         };
     },
     created: function created() {
@@ -47819,6 +47820,49 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     return console.log(err);
                 });
             }
+        },
+        downloadTemplate: function downloadTemplate() {
+            var _this4 = this;
+
+            var cols = {};
+            cols['name'] = this.title;
+            cols['columns'] = this.columns;
+
+            axios({
+                url: '/api/dataset/template',
+                method: 'post',
+                data: JSON.stringify(cols),
+                headers: {
+                    'content-type': 'application/json'
+                },
+                responseType: 'blob' // important
+            }).then(function (response) {
+                var url = window.URL.createObjectURL(new Blob([response.data]));
+                var link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', _this4.title + ' Template.xls'); //or any other extension
+                document.body.appendChild(link);
+                link.click();
+            });
+        },
+        handleFileUpload: function handleFileUpload() {
+            this.file = $("#file")[0].files[0];
+        },
+        uploadFile: function uploadFile() {
+            var formData = new FormData();
+            formData.append('file', this.file);
+            formData.append('table', this.source);
+            formData.append('columns', JSON.stringify(this.columns));
+
+            axios.post('/api/dataset/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(function (response) {
+                console.log(response);
+            }).catch(function (err) {
+                console.log(err);
+            });
         }
     }
 });
@@ -48342,7 +48386,91 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _vm._m(6)
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "ImportModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(6),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-block",
+                      on: {
+                        click: function($event) {
+                          _vm.downloadTemplate()
+                        }
+                      }
+                    },
+                    [_vm._v("Click here to download template")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "file" } }, [
+                    _vm._v("Select template for uploading")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "form-control-file",
+                    attrs: { type: "file", id: "file" },
+                    on: {
+                      change: function($event) {
+                        _vm.handleFileUpload()
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary pull-right",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        _vm.uploadFile()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-upload" }),
+                    _vm._v(" Import Data")
+                  ]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -48436,98 +48564,26 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "modal fade",
-        attrs: {
-          id: "ImportModal",
-          tabindex: "-1",
-          role: "dialog",
-          "aria-labelledby": "exampleModalLabel",
-          "aria-hidden": "true"
-        }
-      },
-      [
-        _c(
-          "div",
-          { staticClass: "modal-dialog", attrs: { role: "document" } },
-          [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c(
-                  "h5",
-                  {
-                    staticClass: "modal-title",
-                    attrs: { id: "exampleModalLabel" }
-                  },
-                  [_vm._v("Import from Excel")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "close",
-                    attrs: {
-                      type: "button",
-                      "data-dismiss": "modal",
-                      "aria-label": "Close"
-                    }
-                  },
-                  [
-                    _c("span", { attrs: { "aria-hidden": "true" } }, [
-                      _vm._v("×")
-                    ])
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-body" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("button", { staticClass: "btn btn-info btn-block" }, [
-                    _vm._v("Click here to download template")
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "import-file" } }, [
-                    _vm._v("Select template for uploading")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    staticClass: "form-control-file",
-                    attrs: { type: "file", id: "import-file" }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-footer" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-secondary",
-                    attrs: { type: "button", "data-dismiss": "modal" }
-                  },
-                  [_vm._v("Close")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary pull-right",
-                    attrs: { type: "button" }
-                  },
-                  [
-                    _c("i", { staticClass: "fas fa-upload" }),
-                    _vm._v(" Import Data")
-                  ]
-                )
-              ])
-            ])
-          ]
-        )
-      ]
-    )
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Import from Excel")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
   }
 ]
 render._withStripped = true

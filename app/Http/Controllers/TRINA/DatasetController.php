@@ -7,6 +7,13 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
 
+use Symfony\Component\HttpFoundation\StreamedResponse;
+// use Symfony\Component\Routing\Annotation\Route;
+// use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+
 use DB;
 use Response;
 use Validator;
@@ -164,5 +171,74 @@ class DatasetController extends Controller
         } finally {
             return $err_msg;
         }
+    }
+
+    public function downloadTemplate(Request $request) {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $c = "A";
+
+        $sheet->setCellValue($c.'1', "DO NOT MODIFY THIS TEMPLATE. JUST ADD THE DATA NEEDED STARTING AT ROW 3.");
+        foreach($request->columns as $columns) {
+            $sheet->setCellValue($c.'2', $columns['display_name']);
+            $c++;
+        }
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="'.$request->name.' Template.xls"');
+        $writer = new Xls($spreadsheet);
+        $writer->save("php://output");
+    }
+
+    public function upload(Request $request) {
+        if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
+            // $data = $_FILES['file']['tmp_name'];
+            $table = $request->input('table');
+            $columns = json_decode($request->input('columns'));
+            $cols = [];
+            foreach($columns as $column) {
+                array_push($cols,$column->name."|".$column->type);
+            }
+
+            $inputFileType = 'Xls'; // Xlsx - Xml - Ods - Slk - Gnumeric - Csv
+            $inputFileName = $_FILES['file']['tmp_name'];
+
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $spreadsheet = $reader->load($inputFileName);
+
+            $sheet = $spreadsheet->getActiveSheet();
+            $i = 3;
+
+            while($sheet->getCell('A'.$i)->getValue() != "") {
+                $insert = [];
+                $ci = "A";
+
+                foreach($cols as $k => $v) {
+                    $cdata = [];
+                    $cdata = explode("|",$v);
+
+                    if ($cdata[1] == "date") {
+                        $val = date("Y-m-d",strtotime($sheet->getCell($ci.$i)->getFormattedValue()));
+                    } else {
+                        $val = $sheet->getCell($ci.$i)->getValue();
+                    }
+
+                    $insert[$cdata[0]] = $val;
+                    $ci++;
+                }
+
+                $results = DB::connection('trina')
+                                ->table($table)
+                                ->insert($insert);
+
+                $i++;
+            }
+
+            $data = "SUCCESS";
+        } else {
+            $data = "NO FILE SELECTED.";
+        }
+        return Response::json($data);
     }
 }

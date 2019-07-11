@@ -58,3 +58,8 @@ Route::post('asset/delete/apps', 'AssetsController@deleteApps');
 Route::post('dataset/list','TRINA\DatasetController@getList');
 Route::post('dataset','TRINA\DatasetController@store');
 Route::delete('dataset','TRINA\DatasetController@destroy');
+Route::post('dataset/template',[
+    'as' => 'spreadsheet.download', 
+    'uses' => 'TRINA\DatasetController@downloadTemplate'
+ ]);
+ Route::post('dataset/upload','TRINA\DatasetController@upload');
