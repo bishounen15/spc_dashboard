@@ -129,14 +129,17 @@
                         <button class="btn btn-info btn-block" @click="downloadTemplate()">Click here to download template</button>
                     </div>
 
-                    <div class="form-group">
-                        <label for="file">Select template for uploading</label>
-                        <input type="file" class="form-control-file" id="file" v-on:change="handleFileUpload()">
-                    </div>
+                    <form id="formup">
+                        <div class="form-group">
+                            <label for="file">Select template for uploading</label>
+                            <input type="file" class="form-control-file" id="file" v-on:change="handleFileUpload()">
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary pull-right" @click="uploadFile()"><i class="fas fa-upload"></i> Import Data</button>
+                    <button type="button" class="btn btn-secondary pull-right" disabled v-if="uploading">Uploading File. Please Wait.</button>
+                    <button type="button" class="btn btn-primary pull-right" @click="uploadFile()" v-else><i class="fas fa-upload"></i> Import Data</button>
                 </div>
                 </div>
             </div>
@@ -158,6 +161,7 @@
                 main_data: {},
                 pagination: {},
                 loading: false,
+                uploading: false,
                 file: ''
             }
         },
@@ -333,11 +337,20 @@
                 this.file = $("#file")[0].files[0];
             },
             uploadFile() {
+                if ($('#file').get(0).files.length === 0) {
+                    alert("No template selected. Please select an upload temaplte first.");
+                } else {
+                let vm = this;
+                vm.uploading = true;
+
+                let mytitle = this.title;
                 let formData = new FormData();
                 formData.append('file', this.file);
                 formData.append('table', this.source);
                 formData.append('columns', JSON.stringify(this.columns));
-
+                formData.append('user_id', this.user_id);
+                formData.append('name', mytitle);
+                
                 axios.post( '/api/dataset/upload',
                     formData,
                     {
@@ -346,11 +359,23 @@
                         }
                     }
                     ).then(function(response){
-                        console.log(response);
+                        console.log(response.data);
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', mytitle + ' - Upload Results.csv'); //or any other extension
+                        document.body.appendChild(link);
+                        link.click();
+
+                        $("#file").val('');
+                        vm.uploading = false;
                     })
                     .catch(function(err){
                         console.log(err);
+
+                        vm.uploading = false;
                     });
+                }
             }
         }
     }

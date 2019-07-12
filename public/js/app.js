@@ -47648,6 +47648,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -47662,6 +47665,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             main_data: {},
             pagination: {},
             loading: false,
+            uploading: false,
             file: ''
         };
     },
@@ -47849,20 +47853,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.file = $("#file")[0].files[0];
         },
         uploadFile: function uploadFile() {
-            var formData = new FormData();
-            formData.append('file', this.file);
-            formData.append('table', this.source);
-            formData.append('columns', JSON.stringify(this.columns));
+            if ($('#file').get(0).files.length === 0) {
+                alert("No template selected. Please select an upload temaplte first.");
+            } else {
+                var vm = this;
+                vm.uploading = true;
 
-            axios.post('/api/dataset/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(function (response) {
-                console.log(response);
-            }).catch(function (err) {
-                console.log(err);
-            });
+                var mytitle = this.title;
+                var formData = new FormData();
+                formData.append('file', this.file);
+                formData.append('table', this.source);
+                formData.append('columns', JSON.stringify(this.columns));
+                formData.append('user_id', this.user_id);
+                formData.append('name', mytitle);
+
+                axios.post('/api/dataset/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(function (response) {
+                    console.log(response.data);
+                    var url = window.URL.createObjectURL(new Blob([response.data]));
+                    var link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', mytitle + ' - Upload Results.csv'); //or any other extension
+                    document.body.appendChild(link);
+                    link.click();
+
+                    $("#file").val('');
+                    vm.uploading = false;
+                }).catch(function (err) {
+                    console.log(err);
+
+                    vm.uploading = false;
+                });
+            }
         }
     }
 });
@@ -48422,20 +48447,22 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "file" } }, [
-                    _vm._v("Select template for uploading")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    staticClass: "form-control-file",
-                    attrs: { type: "file", id: "file" },
-                    on: {
-                      change: function($event) {
-                        _vm.handleFileUpload()
+                _c("form", { attrs: { id: "formup" } }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "file" } }, [
+                      _vm._v("Select template for uploading")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control-file",
+                      attrs: { type: "file", id: "file" },
+                      on: {
+                        change: function($event) {
+                          _vm.handleFileUpload()
+                        }
                       }
-                    }
-                  })
+                    })
+                  ])
                 ])
               ]),
               _vm._v(" "),
@@ -48449,22 +48476,31 @@ var render = function() {
                   [_vm._v("Close")]
                 ),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary pull-right",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        _vm.uploadFile()
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "fas fa-upload" }),
-                    _vm._v(" Import Data")
-                  ]
-                )
+                _vm.uploading
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-secondary pull-right",
+                        attrs: { type: "button", disabled: "" }
+                      },
+                      [_vm._v("Uploading File. Please Wait.")]
+                    )
+                  : _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary pull-right",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            _vm.uploadFile()
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "fas fa-upload" }),
+                        _vm._v(" Import Data")
+                      ]
+                    )
               ])
             ])
           ]

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 use DB;
 use Response;
@@ -196,6 +197,9 @@ class DatasetController extends Controller
             // $data = $_FILES['file']['tmp_name'];
             $table = $request->input('table');
             $columns = json_decode($request->input('columns'));
+            $user_id = $request->input('user_id');
+            $title = $request->input('name');
+
             $cols = [];
             foreach($columns as $column) {
                 array_push($cols,$column->name."|".$column->type);
@@ -208,7 +212,10 @@ class DatasetController extends Controller
             $spreadsheet = $reader->load($inputFileName);
 
             $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setTitle('Results');
+
             $i = 3;
+            $ci = "";
 
             while($sheet->getCell('A'.$i)->getValue() != "") {
                 $insert = [];
@@ -228,17 +235,47 @@ class DatasetController extends Controller
                     $ci++;
                 }
 
-                $results = DB::connection('trina')
+                $err_msg = "Success";
+
+                try {
+                    $results = DB::connection('trina')
                                 ->table($table)
                                 ->insert($insert);
+                    
+                    $req = [];
+                    $req['table'] = $table;
+                    $req['data'] = $insert;
+                    $req['type'] = "INSERT";
+                    $req['user_id'] = $user_id;
+                    
+                    $res = $this->auditTrail($req);
+                    $err_msg = $res == "" ? "Success" : $res;
+                } catch (\Throwable $th) {
+                    $results = $th;
+        
+                    try {
+                        $err_msg = $this->error_codes[$results->errorInfo[1]];
+                    } catch (\Throwable $th) {
+                        $err_msg = $results->errorInfo[2];
+                    }
+                }                
+
+                $sheet->setCellValue($ci.$i, $err_msg);
 
                 $i++;
             }
+
+            $sheet->setCellValue($ci."2", "Upload Remarks");
+
+            $writer = new Csv($spreadsheet);
+            $writer->save("php://output");
+
+            $spreadsheet->disconnectWorksheets();
+            unset($spreadsheet);
 
             $data = "SUCCESS";
         } else {
             $data = "NO FILE SELECTED.";
         }
-        return Response::json($data);
     }
 }
