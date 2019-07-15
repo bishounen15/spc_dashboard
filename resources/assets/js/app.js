@@ -17,6 +17,7 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('data-maintenance', require('./components/trina/DataMaintenance.vue'));
+Vue.component('portal-maintenance', require('./components/portal/DataMaintenance.vue'));
 
 const app = new Vue({
     el: '#app'

@@ -74,6 +74,20 @@ class ModulesController extends Controller
         return Datatables::of($mes)->make(true);
     }
 
+    public function trinaLookup(Request $request) {
+        $module_id = DB::connection('trina')
+                        ->select("SELECT COUNT(*) AS isExisting FROM omes.rt_wo_mid WHERE Module_ID = ?",[$request->lookup_value]);
+        
+        if ($module_id[0]->isExisting > 0) {
+            $result = DB::connection('web_portal')
+                        ->select("SELECT LBLCNO, LBLTYPE, PRODTYPE, CELLCOUNT, CELLCOLOR, CUSTOMER, ORDERNO, PRODLINE, COLOR FROM lbl02 WHERE SERIALNO < ? ORDER BY SERIALNO DESC LIMIT 1",[$request->lookup_value]);
+        } else {
+            $result = [];
+        }
+
+        return Response::json($result);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

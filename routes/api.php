@@ -62,4 +62,15 @@ Route::post('dataset/template',[
     'as' => 'spreadsheet.download', 
     'uses' => 'TRINA\DatasetController@downloadTemplate'
  ]);
- Route::post('dataset/upload','TRINA\DatasetController@upload');
+Route::post('dataset/upload','TRINA\DatasetController@upload');
+
+Route::post('portal/dataset/list','WebPortal\DatasetController@getList');
+Route::post('portal/dataset','WebPortal\DatasetController@store');
+Route::delete('portal/dataset','WebPortal\DatasetController@destroy');
+Route::post('portal/dataset/template',[
+    'as' => 'spreadsheet.download', 
+    'uses' => 'WebPortal\DatasetController@downloadTemplate'
+ ]);
+ Route::post('portal/dataset/upload','WebPortal\DatasetController@upload');
+
+ Route::post('trina/module/lookup','ModulesController@trinaLookup');
