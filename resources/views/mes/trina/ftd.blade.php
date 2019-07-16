@@ -361,7 +361,6 @@
                     });
                 },
             }, 
-            "paging": false,
             "deferRender": true,
             dom: 'Blfrtip',
             buttons: [
