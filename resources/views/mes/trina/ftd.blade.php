@@ -48,6 +48,7 @@
             <th>RSH</th>
             <th>Env Temp</th>
             <th>Surf Temp</th>
+            <th>Nameplate Type</th>
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
             
@@ -365,7 +366,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ]
+                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ]
                     },
                     text:       'Excel',
                     filename: "TRINA_ftd_excel"
@@ -373,7 +374,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ]
+                        columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ]
                     },
                     text:       'CSV',
                     filename: "TRINA_ftd_csv"
@@ -445,6 +446,7 @@
                 { data: 'RSH' },
                 { data: 'EnvTemp' },
                 { data: 'SurfTemp' },
+                { data: 'NAMEPLATE_Type' },
             ],
         });
     });
