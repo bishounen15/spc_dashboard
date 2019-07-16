@@ -32,7 +32,7 @@ class ReportsController extends Controller
         $end = date('Y-m-d',strtotime("+1 days",strtotime(($edate == null ? "Today" : $edate)))) . " 05:59:59";
         $cond = ($request->form_PackStatus == "All" ? "" : "AND K.Module_ID IS".($request->form_PackStatus == "Packed" ? " NOT" : "")." NULL");
         $sort = ($request->form_PackStatus == "All" || $request->form_PackStatus == "Not Packed" ? "F.TEST_DATETIME" : "K.Packing_Date");
-        $dfield = ($request->form_PackStatus != "Packed" ? "TEST_DATETIME" : "DATE_ADD(Packing_Date, INTERVAL CASE WHEN f.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR)");
+        $dfield = ($request->form_PackStatus != "Packed" ? "TEST_DATETIME" : "DATE_ADD(Packing_Date, INTERVAL CASE WHEN K.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR)");
         $scond = ($request->form_ShipStatus == "All" ? "" : " AND".($request->form_ShipStatus == "Not Shipped" ? " NOT" : "")." EXISTS (SELECT container_no FROM solarph.shipped_container WHERE container_no = K.Container_No)");
         
         $filtercond =  $request->form_ModuleGrade == "All" ? "" : " AND CASE WHEN A.Module_Grade = A.EL_Grade AND A.Module_Grade = 'Q1' THEN 'Q1' ELSE 'Q2' END = '" . $request->form_ModuleGrade . "'";
