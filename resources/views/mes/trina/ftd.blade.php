@@ -339,6 +339,7 @@
             "scrollX": true,
             processing: true,
             "order": [],
+            "serverSide": true,
             "ajax": {
                 "url": '/trina/ftd/' + $('#start').val() + '/' + $('#end').val(),
                 "type": "GET",
