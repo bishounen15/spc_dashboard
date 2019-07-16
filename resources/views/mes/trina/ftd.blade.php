@@ -360,6 +360,7 @@
                     });
                 },
             }, 
+            "deferRender": true,
             dom: 'Blfrtip',
             buttons: [
                 "print",
