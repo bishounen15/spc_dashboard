@@ -72,5 +72,9 @@ Route::post('portal/dataset/template',[
     'uses' => 'WebPortal\DatasetController@downloadTemplate'
  ]);
  Route::post('portal/dataset/upload','WebPortal\DatasetController@upload');
-
+ 
  Route::post('trina/module/lookup','ModulesController@trinaLookup');
+
+ Route::post('prodtype/lookup','WebPortal\ProductTypesController@selectValues');
+
+ Route::post('portal/wo/generate/{date?}','WebPortal\WorkOrdersController@generateControl');

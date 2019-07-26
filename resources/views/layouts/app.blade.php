@@ -120,6 +120,9 @@
                                 <a class="dropdown-item" href="/mes/ftd">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
                                 
                                 <h6 class="dropdown-header">Planning</h6>
+                                @if(Auth::user()->mes_role == 'PLAN' || Auth::user()->sysadmin == 1)
+                                <a class="dropdown-item" href="/planning/wo">&nbsp;&nbsp;&nbsp;&nbsp;Work Order Information</a>
+                                @endif
                                 <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>
                                 
                                 @if(Auth::user()->mes_role == 'OPRT' || Auth::user()->sysadmin == 1)

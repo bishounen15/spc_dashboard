@@ -80,7 +80,7 @@
                         </tr>
                         <tr>
                             @foreach($lines as $line)
-                            <th width="10%">Line {{$line->LINCODE}}</th>
+                            <th width="10%">{{$line->LINDESC}}</th>
                             @endforeach
                         </tr>
                     </thead>

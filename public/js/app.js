@@ -48840,6 +48840,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -48860,6 +48869,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     created: function created() {
         // this.inquire();
+        this.populateLists();
     },
 
     props: {
@@ -48902,7 +48912,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $.each(this.columns, function () {
                 f.push(this.name);
                 if (this.inquire) {
-                    if ($("#" + this.name).val() != "") {
+                    if ($("#" + this.name).val() != "" && $("#" + this.name).val() != null) {
                         if (this.inquire_type) {
                             p.push([this.name, this.inquire_type, $("#" + this.name).val() + '%']);
                         } else {
@@ -48949,8 +48959,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.pagination = pagination;
         },
+        populateLists: function populateLists() {
+            var cols = this.columns;
+            var vm = this;
+
+            $.each(cols, function (i) {
+                var _this2 = this;
+
+                if (this.type == "select") {
+                    if (this.list_route) {
+                        fetch('/api/' + this.list_route, {
+                            method: 'post'
+                        }).then(function (res) {
+                            return res.json();
+                        }).then(function (data) {
+                            var list = [];
+                            $.each(data.data, function (i) {
+                                list.push(this);
+                            });
+                            vm.droplists[_this2.name] = list;
+                        }).catch(function (err) {
+                            return console.log(err);
+                        });
+                    } else if (this.static_list) {
+                        vm.droplists[this.name] = this.static_list;
+                    }
+                }
+            });
+        },
         saveRecord: function saveRecord() {
-            var _this2 = this;
+            var _this3 = this;
 
             var data = {};
             data = $("#input-form").serializeArray();
@@ -48975,8 +49013,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (data != "") {
                     alert(data);
                 } else {
-                    _this2.inquire();
-                    _this2.clearInput();
+                    _this3.inquire();
+                    _this3.clearInput();
                     $("#AddModal").modal('toggle');
                 }
                 // }
@@ -48985,7 +49023,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         deleteRecord: function deleteRecord(row) {
-            var _this3 = this;
+            var _this4 = this;
 
             if (confirm('Are You Sure?')) {
                 var params = {};
@@ -49008,7 +49046,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     if (data != "") {
                         alert(data);
                     } else {
-                        _this3.inquire();
+                        _this4.inquire();
                     }
                     // }
                 }).catch(function (err) {
@@ -49017,7 +49055,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         downloadTemplate: function downloadTemplate() {
-            var _this4 = this;
+            var _this5 = this;
 
             var cols = {};
             cols['name'] = this.title;
@@ -49035,7 +49073,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var url = window.URL.createObjectURL(new Blob([response.data]));
                 var link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', _this4.title + ' Template.xls'); //or any other extension
+                link.setAttribute('download', _this5.title + ' Template.xls'); //or any other extension
                 document.body.appendChild(link);
                 link.click();
             });
@@ -49114,6 +49152,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         clearInput: function clearInput() {
             $('.input-field').val("");
+        },
+
+        generateSeries: function generateSeries(event) {
+            var cols = this.columns;
+            var vm = this;
+            // console.log(event ? event.target.name : event);
+            // console.log(event ? event.target.value : event);
+
+            // let d = {};
+
+            // $.each(cols,function(i) {
+            //     if (this.generate_series) {
+            //         console.log($('#input-form').find('input[name='+this.name+']').val());
+            //         d[this.name] = $('#input-form').find('input[name='+this.name+']').val();
+            //     }
+            // });
+
+            // console.log(JSON.stringify(d));
+
+            $.each(cols, function (i) {
+                var c = this;
+                var url = this.system_generated;
+
+                if (event) {
+                    url += "/" + event.target.value;
+                }
+
+                if (this.system_generated) {
+                    fetch('/api/' + url, {
+                        method: 'post'
+                    }).then(function (res) {
+                        return res.json();
+                    }).then(function (data) {
+                        $('#input-form').find('input[name=' + c.name + ']').val(data);
+                    }).catch(function (err) {
+                        return console.log(err);
+                    });
+                }
+            });
         }
     }
 });
@@ -49162,11 +49239,16 @@ var render = function() {
                                   attrs: {
                                     readonly: "",
                                     selected: "",
-                                    value: "",
-                                    disabled: ""
+                                    value: ""
                                   }
                                 },
-                                [_vm._v(" -- select an option -- ")]
+                                [
+                                  _vm._v(
+                                    " -- List all " +
+                                      _vm._s(column.display_name) +
+                                      " -- "
+                                  )
+                                ]
                               ),
                               _vm._v(" "),
                               _vm._l(_vm.droplists[column.name], function(
@@ -49458,7 +49540,25 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-sm text-right" }, [
-                _vm._m(3),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success",
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#AddModal"
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.generateSeries()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-plus" }),
+                    _vm._v(" Add Record")
+                  ]
+                ),
                 _vm._v(" "),
                 _vm.xl_import
                   ? _c(
@@ -49637,7 +49737,7 @@ var render = function() {
               { staticClass: "modal-dialog", attrs: { role: "document" } },
               [
                 _c("div", { staticClass: "modal-content" }, [
-                  _vm._m(4),
+                  _vm._m(3),
                   _vm._v(" "),
                   _c(
                     "div",
@@ -49648,7 +49748,55 @@ var render = function() {
                           _vm._v(_vm._s(column.display_name))
                         ]),
                         _vm._v(" "),
-                        column.lookup_source
+                        column.type == "select"
+                          ? _c(
+                              "select",
+                              {
+                                staticClass: "form-control input-field",
+                                attrs: { name: column.name }
+                              },
+                              [
+                                _c(
+                                  "option",
+                                  {
+                                    attrs: {
+                                      readonly: "",
+                                      selected: "",
+                                      value: "",
+                                      disabled: ""
+                                    }
+                                  },
+                                  [_vm._v(" -- select an option -- ")]
+                                ),
+                                _vm._v(" "),
+                                _vm._l(_vm.droplists[column.name], function(
+                                  option,
+                                  i
+                                ) {
+                                  return _c(
+                                    "option",
+                                    {
+                                      key: i,
+                                      domProps: { value: option.value }
+                                    },
+                                    [_vm._v(_vm._s(option.caption))]
+                                  )
+                                })
+                              ],
+                              2
+                            )
+                          : column.default_value
+                          ? _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: column.type,
+                                name: column.name,
+                                placeholder: column.placeholder,
+                                readonly: ""
+                              },
+                              domProps: { value: column.default_value }
+                            })
+                          : column.lookup_source
                           ? _c("input", {
                               staticClass: "form-control input-field",
                               attrs: {
@@ -49659,6 +49807,20 @@ var render = function() {
                               },
                               on: { keypress: _vm.lookup }
                             })
+                          : column.generate_series
+                          ? _c("input", {
+                              staticClass: "form-control input-field",
+                              class: { lookup: column.lookup_values },
+                              attrs: {
+                                type: column.type,
+                                name: column.name,
+                                placeholder: column.placeholder,
+                                readonly:
+                                  column.lookup_values ||
+                                  column.system_generated
+                              },
+                              on: { change: _vm.generateSeries }
+                            })
                           : _c("input", {
                               staticClass: "form-control input-field",
                               class: { lookup: column.lookup_values },
@@ -49666,7 +49828,9 @@ var render = function() {
                                 type: column.type,
                                 name: column.name,
                                 placeholder: column.placeholder,
-                                readonly: column.lookup_values
+                                readonly:
+                                  column.lookup_values ||
+                                  column.system_generated
                               }
                             })
                       ])
@@ -49688,7 +49852,7 @@ var render = function() {
                       [_vm._v("Close")]
                     ),
                     _vm._v(" "),
-                    _vm._m(5)
+                    _vm._m(4)
                   ])
                 ])
               ]
@@ -49716,7 +49880,7 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(6),
+              _vm._m(5),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "form-group" }, [
@@ -49820,19 +49984,6 @@ var staticRenderFns = [
     return _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
       _c("i", { staticClass: "fas fa-backward" })
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn btn-success",
-        attrs: { "data-toggle": "modal", "data-target": "#AddModal" }
-      },
-      [_c("i", { staticClass: "fa fa-plus" }), _vm._v(" Add Record")]
-    )
   },
   function() {
     var _vm = this

@@ -11,7 +11,7 @@
                                 <label v-bind:for="column.name">{{column.display_name}}</label>
 
                                 <select v-bind:name="column.name" v-bind:id="column.name" class="form-control form-control-sm" v-if="column.type=='select'">
-                                    <option readonly selected value disabled> -- select an option -- </option>
+                                    <option readonly selected value> -- List all {{column.display_name}} -- </option>
                                     <option v-for="(option, i) in droplists[column.name]" v-bind:key="i" v-bind:value="option.value">{{option.caption}}</option>
                                 </select>
                                 
@@ -49,7 +49,7 @@
                             </div>
 
                             <div class="col-sm text-right">
-                                <button class="btn btn-success" data-toggle="modal" data-target="#AddModal"><i class="fa fa-plus"></i> Add Record</button>
+                                <button class="btn btn-success" data-toggle="modal" data-target="#AddModal" @click="generateSeries()"><i class="fa fa-plus"></i> Add Record</button>
                                 <button class="btn btn-secondary" data-toggle="modal" data-target="#ImportModal"  v-if="xl_import"><i class="fas fa-file-excel"></i> Import from Excel</button>
                             </div>
                         </div>
@@ -108,9 +108,18 @@
                         <div class="form-group" v-for="(column,i) in columns" v-bind:key="i">
                             <label v-bind:for="column.name">{{column.display_name}}</label>
 
-                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:placeholder="column.placeholder" @keypress="lookup" v-bind:data-route="column.lookup_route" v-if="column.lookup_source">
+                            <select v-bind:name="column.name" class="form-control input-field" v-if="column.type=='select'">
+                                <option readonly selected value disabled> -- select an option -- </option>
+                                <option v-for="(option, i) in droplists[column.name]" v-bind:key="i" v-bind:value="option.value">{{option.caption}}</option>
+                            </select>
 
-                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:class="{ lookup: column.lookup_values }" v-bind:placeholder="column.placeholder" :readonly="column.lookup_values" v-else>
+                            <input v-bind:type="column.type" class="form-control" v-bind:name="column.name" v-bind:placeholder="column.placeholder" v-bind:value="column.default_value" readonly v-else-if="column.default_value">
+
+                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:placeholder="column.placeholder" @keypress="lookup" v-bind:data-route="column.lookup_route" v-else-if="column.lookup_source">
+                            
+                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:class="{ lookup: column.lookup_values }" v-bind:placeholder="column.placeholder" :readonly="column.lookup_values || column.system_generated" @change="generateSeries" v-else-if="column.generate_series">
+
+                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:class="{ lookup: column.lookup_values }" v-bind:placeholder="column.placeholder" :readonly="column.lookup_values || column.system_generated" v-else>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -174,6 +183,7 @@
         },
         created() {
             // this.inquire();
+            this.populateLists();
         },
         props: {
             title: String,
@@ -213,7 +223,7 @@
                 $.each(this.columns, function() {
                     f.push(this.name);
                     if (this.inquire) {
-                        if ($("#"+this.name).val() != "") {
+                        if ($("#"+this.name).val() != "" && $("#"+this.name).val() != null) {
                             if (this.inquire_type) {
                                 p.push([this.name, this.inquire_type, $("#"+this.name).val() + '%']);
                             } else {
@@ -258,6 +268,31 @@
                 }
 
                 this.pagination = pagination;
+            },
+            populateLists() {
+                let cols = this.columns;
+                let vm = this;
+
+                $.each(cols, function(i) {
+                    if (this.type == "select") {
+                        if (this.list_route) {
+                            fetch('/api/'+this.list_route, {
+                                method: 'post',
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    let list = [];
+                                    $.each(data.data, function(i) {
+                                        list.push(this);
+                                    });
+                                    vm.droplists[this.name] = list;
+                                })
+                                .catch(err => console.log(err));
+                        } else if (this.static_list) {
+                            vm.droplists[this.name] = this.static_list;
+                        }
+                    }
+                });
             },
             saveRecord() {
                 let data = {};
@@ -418,6 +453,43 @@
             },
             clearInput() {
                 $('.input-field').val("");
+            },
+            generateSeries: function(event) {
+                let cols = this.columns;
+                let vm = this;
+                // console.log(event ? event.target.name : event);
+                // console.log(event ? event.target.value : event);
+
+                // let d = {};
+
+                // $.each(cols,function(i) {
+                //     if (this.generate_series) {
+                //         console.log($('#input-form').find('input[name='+this.name+']').val());
+                //         d[this.name] = $('#input-form').find('input[name='+this.name+']').val();
+                //     }
+                // });
+
+                // console.log(JSON.stringify(d));
+
+                $.each(cols, function(i) {
+                    let c = this;
+                    let url = this.system_generated;
+
+                    if (event) {
+                        url += "/"+event.target.value;
+                    }
+                    
+                    if (this.system_generated) {
+                        fetch('/api/'+url, {
+                            method: 'post',
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                $('#input-form').find('input[name='+c.name+']').val(data);
+                            })
+                            .catch(err => console.log(err));
+                    }                     
+                });
             }
         }
     }

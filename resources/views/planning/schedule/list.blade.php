@@ -14,7 +14,7 @@
             <th></th>
             <th>Qty</th>
             @foreach($lines as $line)
-            <th>Line {{$line->LINCODE}}</th>
+            <th>{{$line->LINDESC}}</th>
             @endforeach
             <th>Activity</th>
             <th>Cell</th>

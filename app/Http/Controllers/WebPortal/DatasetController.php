@@ -8,8 +8,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
-// use Symfony\Component\Routing\Annotation\Route;
-// use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
@@ -60,47 +58,33 @@ class DatasetController extends Controller
             $data[$kvp[0]] = $kvp[1];
         }
         
-        //
-        // $validator = null;
-
-        // $validator = Validator::make($request->all(), [
-        //     'description' => 'required|unique:sites,description,'.$request->input('id').',id,parent_id,'.$request->input('parent_id'),
-        //     'parent_id' => 'required|integer',
-        // ], [
-        //     'description.required' => 'The site field is required',
-        //     'description.unique' => 'This site already exists',
-        // ]);
         
-        // if ($validator->fails()) {
-        //     return Response::json(['Errors' => $validator->errors()]);
-        // } else {
-            $err_msg = "";
+        $err_msg = "";
+
+        try {
+            $results = DB::connection('web_portal')
+                        ->table($request->table)
+                        ->insert($data);
+
+            $req = [];
+            $req['table'] = $request->table;
+            $req['data'] = $data;
+            $req['type'] = "INSERT";
+            $req['user_id'] = $request->user_id;
+            
+            $res = $this->auditTrail($req);
+            $err_msg = $res;
+        } catch (\Throwable $th) {
+            $results = $th;
 
             try {
-                $results = DB::connection('web_portal')
-                            ->table($request->table)
-                            ->insert($data);
-
-                $req = [];
-                $req['table'] = $request->table;
-                $req['data'] = $data;
-                $req['type'] = "INSERT";
-                $req['user_id'] = $request->user_id;
-                
-                $res = $this->auditTrail($req);
-                $err_msg = $res;
+                $err_msg = $this->error_codes[$results->errorInfo[1]];
             } catch (\Throwable $th) {
-                $results = $th;
-
-                try {
-                    $err_msg = $this->error_codes[$results->errorInfo[1]];
-                } catch (\Throwable $th) {
-                    $err_msg = $results->errorInfo[2];
-                }
-            } finally {
-                return Response::json($err_msg);
+                $err_msg = $results->errorInfo[2];
             }
-    //     }
+        } finally {
+            return Response::json($err_msg);
+        }
     }
 
     /**

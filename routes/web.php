@@ -244,6 +244,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/trina/module/sync', function() {
             return view('mes.trina.admin.sync');
         });
+
+        Route::get('/planning/wo', function() {
+            return view('planning.workorder.index');
+        });
     });
 // }); 
 
