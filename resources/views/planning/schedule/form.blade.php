@@ -5,7 +5,7 @@
     <input type="hidden" name="_method" value="put" />
     @endif
     @csrf 
-    {{-- <div class="container"> --}}
+    <div class="container-fluid">
         <h3>Scheduled {{ $modify == 1 ? 'Update' : 'Creation' }}</h3>
         <div class="card">
             <div class="card-header">Schedule Information</div>
@@ -224,7 +224,7 @@
                 </div>
             </div>
         </div>
-    {{-- </div>  --}}
+    </div> 
 </form>
 @endsection
 

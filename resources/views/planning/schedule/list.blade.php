@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-{{-- <div class="container"> --}}
+<div class="container-fluid">
     <h3>Production Schedule Master</h3>
     @if(Auth::user()->mes_role == 'PLAN' || Auth::user()->sysadmin == 1)
     <a href="/planning/schedule/create" role="button" class="btn btn-primary">Create Schedule</a>
@@ -28,7 +28,7 @@
             
         </tbody>
     </table>
-{{-- </div> --}}
+</div>
 @endsection
 
 @include('layouts.modal')

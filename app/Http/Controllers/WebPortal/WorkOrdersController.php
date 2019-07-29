@@ -17,10 +17,10 @@ class WorkOrdersController extends Controller
                             ->first();
 
         if ($wo == null) {
-            $series = sprintf("%05d",1);
+            $series = sprintf("%04d",1);
         } else {
             $woid = $wo->WOID;
-            $series = sprintf("%05d",substr($woid,5,5) + 1);
+            $series = sprintf("%04d",substr($woid,5,4) + 1);
         }
 
         return $dt . $series;
