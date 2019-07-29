@@ -229,6 +229,8 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/mes/packaging/export/{id}', 'Packaging\PackingListController@export')->name('packaging_export');
         Route::resource('mes/packaging','Packaging\PackingListController');
 
+        Route::post('/planning/wo/getprod','WebPortal\WorkOrdersController@getProduct')->name('get_wo_prodtype');
+
         Route::get('/trina/module/color', function() {
             return view('mes.trina.admin.modcolor');
         });

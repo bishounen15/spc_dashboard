@@ -10,6 +10,7 @@ use App\Models\Planning\ProductionScheduleProduct;
 use App\Models\Planning\ProductionScheduleShift;
 use App\Models\Planning\Shift;
 
+use App\Models\WebPortal\WorkOrder;
 use App\Models\WebPortal\ProductionLine;
 use App\Models\WebPortal\ProductType;
 
@@ -67,6 +68,7 @@ class ProductionSchedulesController extends Controller
         $data['shifts'] = Shift::all();
         $data['lines'] = ProductionLine::all();
         $data['types'] = ProductType::where("ACTIVE",1)->get();
+        $data['wos'] = WorkOrder::where("WOSTATUS","OPEN")->orderByRaw("SUBSTRING(WOID,1,4) ASC,SUBSTRING(WOID,6,3) ASC")->get();
         $data['products'] = ProductionScheduleProduct::find(-1);
         $data['selected_sched'] = 0;
 
@@ -161,6 +163,7 @@ class ProductionSchedulesController extends Controller
                 }
 
                 if (!empty($request->input('product-type'))) {
+                    $wos = $request->input('work-order');
                     $product_types = $request->input('product-type');
                     $cells = $request->input('cell');
                     $backsheets = $request->input('backsheet');
@@ -172,6 +175,7 @@ class ProductionSchedulesController extends Controller
                                 if (!empty($request->input("line-".$line->LINCODE)[$key]) && $request->input("line-".$line->LINCODE)[$key] > 0) {
                                     ProductionScheduleProduct::create([
                                         "schedule_id" => $sched_id,
+                                        "work_order" => $wos[$key],
                                         "model_name" => $n,
                                         "production_line" => $line->LINCODE,
                                         "qty" => $request->input("line-".$line->LINCODE)[$key],
@@ -227,13 +231,14 @@ class ProductionSchedulesController extends Controller
         $data['shifts'] = Shift::all();
         $data['lines'] = $lines;
         $data['types'] = ProductType::where("ACTIVE",1)->get();
+        $data['wos'] = WorkOrder::where("WOSTATUS","OPEN")->orderByRaw("SUBSTRING(WOID,1,4) ASC,SUBSTRING(WOID,6,3) ASC")->get();
 
         $lineqry = "";
         foreach($lines as $line) {
             $lineqry .=  ", sum(case production_line when ".$line->LINCODE." then  qty else 0 end) as line_".$line->LINCODE;
         }
 
-        $products = ProductionScheduleProduct::selectRaw("model_name".$lineqry.", cell, backsheet")->where("schedule_id",$id)->groupBy("model_name","cell","backsheet")->get();
+        $products = ProductionScheduleProduct::selectRaw("work_order, model_name".$lineqry.", cell, backsheet")->where("schedule_id",$id)->groupBy("work_order","model_name","cell","backsheet")->get();
 
         $data['products'] = $products;
 
@@ -346,6 +351,7 @@ class ProductionSchedulesController extends Controller
                 }
 
                 if (!empty($request->input('product-type'))) {
+                    $wos = $request->input('work-order');
                     $product_types = $request->input('product-type');
                     $cells = $request->input('cell');
                     $backsheets = $request->input('backsheet');
@@ -357,6 +363,7 @@ class ProductionSchedulesController extends Controller
                                 if (!empty($request->input("line-".$line->LINCODE)[$key]) && $request->input("line-".$line->LINCODE)[$key] > 0) {
                                     ProductionScheduleProduct::create([
                                         "schedule_id" => $id,
+                                        "work_order" => $wos[$key],
                                         "model_name" => $n,
                                         "production_line" => $line->LINCODE,
                                         "qty" => $request->input("line-".$line->LINCODE)[$key],

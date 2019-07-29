@@ -27,4 +27,9 @@ class WorkOrdersController extends Controller
 
         return Response::json($dt . ($category == null ? "-" : substr($category,0,1)) . $series);
     }
+
+    public function getProduct(Request $request) {
+        $wo = WorkOrder::where("WOID",$request->input("WOID"))->first();
+        return Response::json(["PRODTYPE" => $wo->PRODTYPE, "CATEGORY" => $wo->WOCATEGORY]);
+    }
 }

@@ -72,15 +72,15 @@
                         </tr>
                         <tr>
                             <th width="5%" rowspan="2">#</th>
-                            <th width="{{100 - (($lines->count() * 10) + 45)}}%" rowspan="2">Product Type</th>
+                            <th width="{{(100 - (($lines->count() * 8) + 45)) / 2}}%" rowspan="2">Work Order</th>
+                            <th width="{{(100 - (($lines->count() * 8) + 45)) / 2}}%" rowspan="2">Product Type</th>
                             <th colspan="{{$lines->count()}}" class="text-center">Plan Quantity</th>
                             <th width="15%" rowspan="2">Cell</th>
                             <th width="15%" rowspan="2">Backsheet</th>
-                            {{-- <th width="5%" rowspan="2">Default</th> --}}
                         </tr>
                         <tr>
                             @foreach($lines as $line)
-                            <th width="10%">{{$line->LINDESC}}</th>
+                            <th width="8%">{{$line->LINDESC . " [" . $line->LINCAT . "]"}}</th>
                             @endforeach
                         </tr>
                     </thead>
@@ -99,26 +99,45 @@
                                             </div>
                                         </div>
                                     </td>
-
+                                    
                                     <td>
+                                        @php
+                                            $wocat = '';
+                                        @endphp
                                         <div class="form-group">
-                                            <select name="product-type[]" class="form-control">
+                                            <select name="work-order[]" class="form-control">
                                                 <option disabled selected value> -- select an option -- </option>
-                                                @foreach($types as $type)
-                                                <option value="{{$type->PRODTYPE}}"
-                                                @if($type->PRODTYPE == $product->model_name)
+                                                @foreach($wos as $wo)
+                                                @if($wo->WOID == $product->work_order)
+                                                @php
+                                                    $wocat = $wo->WOCATEGORY;
+                                                @endphp
+                                                @endif
+                                                <option value="{{$wo->WOID}}"
+                                                @if($wo->WOID == $product->work_order)
                                                 selected="selected"
                                                 @endif
-                                                >{{$type->PRODTYPE}}</option>
+                                                >{{$wo->WOID}}</option> 
                                                 @endforeach
                                             </select>
+                                            <span class="form-text text-danger" id="err_work_order[]"></span>
+                                        </div>
+                                    </td>
+                                    
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" name="product-type[]" class="form-control" value="{{$product->model_name}}" placeholder="Based on WO Selected" readonly>
                                             <span class="form-text text-danger" id="err_product_type[]"></span>
                                         </div>
                                     </td>
 
                                     @foreach($lines as $line)
                                         <td>
-                                            <input type="number" name="line-{{$line->LINCODE}}[]" class="form-control" value="{{$product["line_".$line->LINCODE]}}">
+                                            <input type="number" name="line-{{$line->LINCODE}}[]" data-category="{{$line->LINCAT}}"
+                                            @if ($wocat != $line->LINCAT)
+                                                readonly
+                                            @endif
+                                             class="form-control" value="{{$product["line_".$line->LINCODE]}}">
                                         </td>
                                     @endforeach
 
@@ -145,15 +164,6 @@
                                             <span class="form-text text-danger" id="err_backsheet[]"></span>
                                         </div>
                                     </td>
-
-                                    {{-- <td class="text-right">
-                                        <div class="form-group">
-                                            <div class="default-check">
-                                                <input class="form-check-input" type="checkbox" name="is-default[]" value="1" id="defaultCheck1">
-                                            </div>
-                                        </div>
-                                    </td> --}}
-
                                 </tr>
                             @endforeach
                         @else
@@ -168,19 +178,26 @@
 
                                 <td>
                                     <div class="form-group">
-                                        <select name="product-type[]" class="form-control">
+                                        <select name="work-order[]" class="form-control">
                                             <option disabled selected value> -- select an option -- </option>
-                                            @foreach($types as $type)
-                                            <option value="{{$type->PRODTYPE}}">{{$type->PRODTYPE}}</option>
+                                            @foreach($wos as $wo)
+                                            <option value="{{$wo->WOID}}">{{$wo->WOID}}</option> 
                                             @endforeach
                                         </select>
+                                        <span class="form-text text-danger" id="err_work_order[]"></span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" name="product-type[]" class="form-control" placeholder="Based on WO Selected" readonly>
                                         <span class="form-text text-danger" id="err_product_type[]"></span>
                                     </div>
                                 </td>
 
                                 @foreach($lines as $line)
                                     <td>
-                                        <input type="number" name="line-{{$line->LINCODE}}[]" class="form-control" value="0">
+                                        <input type="number" name="line-{{$line->LINCODE}}[]" data-category="{{$line->LINCAT}}" class="form-control" value="0">
                                     </td>
                                 @endforeach
 
@@ -199,15 +216,6 @@
                                         <span class="form-text text-danger" id="err_backsheet[]"></span>
                                     </div>
                                 </td>
-
-                                {{-- <td class="text-right">
-                                    <div class="form-group">
-                                        <div class="default-check">
-                                            <input class="form-check-input" type="checkbox" name="is-default[]" value="1" id="defaultCheck1">
-                                        </div>
-                                    </div>
-                                </td> --}}
-
                             </tr>
                         @endif
                     </tbody>
@@ -253,16 +261,50 @@
                 }
             });
 
+            $(document).on('change', 'select[name="work-order[]"]', function(index) {
+                i = $('select[name="work-order[]"]').index(this);
+                
+                var token = $('input[name=_token]');
+                var formData = new FormData();
+                formData.append('WOID', $(this).val());
+
+                $.ajax({
+                    url: "{{route('get_wo_prodtype')}}",
+                    method: 'POST',
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': token.val()
+                    },
+                    success: function (wo) {
+                        $('input[name="product-type[]"]').eq(i).val(wo.PRODTYPE);
+
+                        @foreach($lines as $line)
+                        if ($('input[name="line-{{$line->LINCODE}}[]"]').eq(i).data("category") != wo.CATEGORY) {
+                            $('input[name="line-{{$line->LINCODE}}[]"]').eq(i).attr("readonly",true);
+                        } else {
+                            $('input[name="line-{{$line->LINCODE}}[]"]').eq(i).attr("readonly",false);
+                        }
+                        @endforeach
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        alert (errorThrown);
+                    }	
+                });
+            });
+
             $("#save-trx").click(function () {
                 var validated = true;
                 var exists = [];
 
                 if ($("input[name='selected_shifts[]']:checked").length > 0) {
-                    $('select[name^="product-type"]').each( function() {
-                        i = $('select[name="product-type[]"]').index(this);
+                    $('select[name^="work-order"]').each( function() {
+                        i = $('select[name="work-order[]"]').index(this);
                         
                         if ($(this).val() == "" || $(this).val() == null) {
-                            $('span[id="err_product_type[]"]').eq(i).html("You have not selected a product type.");
+                            $('span[id="err_work_order[]"]').eq(i).html("You have not selected a work order.");
                             validated = false;
                         } else {
                             var qty = 0;
@@ -273,14 +315,14 @@
                             @endforeach
 
                             if (qty == 0) {
-                                $('span[id="err_product_type[]"]').eq(i).html("Plan quantity is not set for this product type.");
+                                $('span[id="err_work_order[]"]').eq(i).html("Plan quantity is not set for this work order.");
                                 validated = false;
                             } else {
                                 if (exists.indexOf($(this).val()) >= 0) {
-                                    $('span[id="err_product_type[]"]').eq(i).html("This product type has already been selected.");
+                                    $('span[id="err_work_order[]"]').eq(i).html("This work order has already been selected.");
                                     validated = false;
                                 } else {
-                                    $('span[id="err_product_type[]"]').eq(i).html("");
+                                    $('span[id="err_work_order[]"]').eq(i).html("");
                                     exists.push($(this).val());
                                     console.log(exists);
                                 }

@@ -12,6 +12,7 @@ class ProductionScheduleProduct extends Model implements Auditable
     protected $table = 'production_schedule_products';
 
     protected $fillable = [
+        'work_order',
         'schedule_id',
         'model_name',
         'production_line',
@@ -22,6 +23,7 @@ class ProductionScheduleProduct extends Model implements Auditable
 
     use \OwenIt\Auditing\Auditable;
     protected $auditInclude = [
+        'work_order',
         'schedule_id',
         'model_name',
         'production_line',
