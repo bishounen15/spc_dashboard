@@ -18,7 +18,7 @@
 
     <div class="row">
         @php
-            $prodline = 0;
+            $prodline = "";
             $shift = "";
             $model = "";
             $rw = 0;
@@ -35,7 +35,7 @@
                     @if($key == "PRODLINE" && $prodline != $value)
                         <tr>
                             <th class="text-center table-dark" colspan="{{count($ar) - 3}}">
-                                Line {{$value}}
+                                {{$value}}
                             </th>
                         </tr>
                         @php
@@ -70,7 +70,7 @@
                         @php
                             $shift = $value;
                             $model = "";
-                            $prodline = 0;
+                            $prodline = "";
                             $rw = 0;
                         @endphp
                     @elseif($key == "PRODTYPE" && $model != $value)

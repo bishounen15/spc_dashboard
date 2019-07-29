@@ -7,6 +7,8 @@ use App\SerialInfo;
 use App\ftdData;
 use App\mesData;
 
+use App\Models\WebPortal\ProductionLine;
+
 use DB;
 use DataTables;
 use Response;
@@ -43,7 +45,7 @@ class ModulesController extends Controller
             $data['COLOR'] = $mod->COLOR;
             $data['MODCLASS'] = $mod->MODCLASS;
             $data['STATUS'] = $mod->mes->count() > 0 ? $mes->moduleStatus() : '';
-            $data['PRODLINE'] = "Line " . $mod->PRODLINE;
+            $data['PRODLINE'] = ProductionLine::where("LINCODE",$mod->PRODLINE)->first()->LINDESC;
             $data['PALLETNO'] = $mod->palletInfo != null ? $mod->palletInfo->PALLETNO : '';
             $data['CONTAINER'] = '';
         }
@@ -62,9 +64,10 @@ class ModulesController extends Controller
 
     public function mes($serial)
     {
-        $mes = mesData::selectRaw("mes01.ROWID, mes01.SERIALNO, CONCAT('Line ',IFNULL(mes01.PRODLINE,lbl02.PRODLINE)) AS PRODLINE, mes01.LOCNCODE, mes01.TRXDATE, CASE mes01.SNOSTAT WHEN 0 THEN 'Good' WHEN 1 THEN 'MRB' WHEN 2 THEN 'Scrap' ELSE '-' END AS STATUS, mes01.MODCLASS, mes01.REMARKS, sys01.USERNAME AS TRXUSER")
+        $mes = mesData::selectRaw("mes01.ROWID, mes01.SERIALNO, lin01.LINDESC AS PRODLINE, mes01.LOCNCODE, mes01.TRXDATE, CASE mes01.SNOSTAT WHEN 0 THEN 'Good' WHEN 1 THEN 'MRB' WHEN 2 THEN 'Scrap' ELSE '-' END AS STATUS, mes01.MODCLASS, mes01.REMARKS, sys01.USERNAME AS TRXUSER")
                         ->join("sys01","mes01.TRXUID","=","sys01.USERID")
                         ->join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
+                        ->join("lin01",DB::raw("IFNULL(mes01.PRODLINE,lbl02.PRODLINE)"),"=","lin01.LINCODE")
                         ->where([
                             ['mes01.SERIALNO','=',$serial],
                             ['lbl02.LBLTYPE','=',1],
