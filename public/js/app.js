@@ -49160,35 +49160,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // console.log(event ? event.target.name : event);
             // console.log(event ? event.target.value : event);
 
-            // let d = {};
+            var d = {};
+            var params = '';
 
-            // $.each(cols,function(i) {
-            //     if (this.generate_series) {
-            //         console.log($('#input-form').find('input[name='+this.name+']').val());
-            //         d[this.name] = $('#input-form').find('input[name='+this.name+']').val();
-            //     }
-            // });
+            $.each(cols, function (i) {
+                if (this.generate_series) {
+                    if ($('#input-form').find((this.type == "select" ? 'select' : 'input') + '[name=' + this.name + ']').val() != undefined) {
+                        params += "/" + $('#input-form').find((this.type == "select" ? 'select' : 'input') + '[name=' + this.name + ']').val();
+                    }
+                }
+            });
 
             // console.log(JSON.stringify(d));
 
             $.each(cols, function (i) {
-                var c = this;
-                var url = this.system_generated;
-
-                if (event) {
-                    url += "/" + event.target.value;
-                }
-
                 if (this.system_generated) {
-                    fetch('/api/' + url, {
-                        method: 'post'
-                    }).then(function (res) {
-                        return res.json();
-                    }).then(function (data) {
-                        $('#input-form').find('input[name=' + c.name + ']').val(data);
-                    }).catch(function (err) {
-                        return console.log(err);
-                    });
+                    var c = this;
+                    var url = this.system_generated + params;
+
+                    if (this.system_generated) {
+                        fetch('/api/' + url, {
+                            method: 'post'
+                        }).then(function (res) {
+                            return res.json();
+                        }).then(function (data) {
+                            $('#input-form').find('input[name=' + c.name + ']').val(data);
+                        }).catch(function (err) {
+                            return console.log(err);
+                        });
+                    }
                 }
             });
         }
@@ -49753,7 +49753,8 @@ var render = function() {
                               "select",
                               {
                                 staticClass: "form-control input-field",
-                                attrs: { name: column.name }
+                                attrs: { name: column.name },
+                                on: { change: _vm.generateSeries }
                               },
                               [
                                 _c(

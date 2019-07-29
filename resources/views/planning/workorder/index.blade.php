@@ -69,7 +69,8 @@
                         caption: 'BOI'
                     }
                 ],
-                inquire: true
+                inquire: true,
+                generate_series: true
             }, 
             {
                 name: 'WOSTATUS', 

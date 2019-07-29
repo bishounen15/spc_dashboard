@@ -6,23 +6,25 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\WebPortal\WorkOrder;
 
+use Response;
+
 class WorkOrdersController extends Controller
 {
     //
-    public function generateControl($date = null) {
+    public function generateControl($date = null, $category = null) {
         $dt = $date ? date_format(date_create($date),"ym") : date("ym");
 
-        $wo = WorkOrder::orderBy("WOID","DESC")
+        $wo = WorkOrder::orderBy("id","DESC")
                             ->where("WOID","LIKE", $dt . "%")
                             ->first();
 
         if ($wo == null) {
-            $series = sprintf("%04d",1);
+            $series = sprintf("%03d",1);
         } else {
             $woid = $wo->WOID;
-            $series = sprintf("%04d",substr($woid,5,4) + 1);
+            $series = sprintf("%03d",substr($woid,6,3) + 1);
         }
 
-        return $dt . $series;
+        return Response::json($dt . ($category == null ? "-" : substr($category,0,1)) . $series);
     }
 }

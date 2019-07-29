@@ -77,4 +77,4 @@ Route::post('portal/dataset/template',[
 
  Route::post('prodtype/lookup','WebPortal\ProductTypesController@selectValues');
 
- Route::post('portal/wo/generate/{date?}','WebPortal\WorkOrdersController@generateControl');
+ Route::post('portal/wo/generate/{date?}/{category?}','WebPortal\WorkOrdersController@generateControl');
