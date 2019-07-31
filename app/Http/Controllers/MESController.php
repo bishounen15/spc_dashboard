@@ -283,11 +283,13 @@ class MESController extends Controller
         $last_mes = mesData::where($params)
                                 ->orderBy('TRXDATE','DESC')
                                 ->first();
-
-        $cond = OEMCondition::where([
-            ["CUSTOMER", $last_mes->serial->first()->CUSTOMER],
-            ["STATION", $station],
-        ])->first();
+        $cond = null;
+        if ($last_mes != null) {
+            $cond = OEMCondition::where([
+                ["CUSTOMER", $last_mes->serial->first()->CUSTOMER],
+                ["STATION", $station],
+            ])->first();
+        }
 
         $custom_error = false;
         $trx_count = 0;
@@ -370,16 +372,22 @@ class MESController extends Controller
                     }
                 }
 
+                $init_class = DB::connection('web_portal')
+                                    ->table('cls01')
+                                    ->select("MCLCODE AS class")
+                                    ->where("CUSTOMER",$serialInfo->CUSTOMER)
+                                    ->first()->class;
+
                 $data['serial'] = [
                     'serialno' => $serialInfo->SERIALNO,
                     'customer' => $serialInfo->CUSTOMER,
                     'model' => $serialInfo->modelName(),
-                    'class' => $serialInfo->MODCLASS == '' && $mes == null ? 'A' : $serialInfo->MODCLASS,
+                    'class' => $serialInfo->MODCLASS == '' && $mes == null ? $init_class : $serialInfo->MODCLASS,
                     'class_list' => $class,
                     'station' => $recent_loc,
                     'statusCode' => $mes == null ? 0 : $mes->SNOSTAT,
                     'status' => $mes == null ? 'GOOD' : strtoupper($mes->moduleStatus()),
-                    'remarks' => $mes == null ? '' : $assignment->ALLOWCLS == '' ? $mes->REMARKS : "Endorsed to " . $assignment->stationInfo->STNDESC,
+                    'remarks' => $mes == null ? 'GOOD' : ($assignment->ALLOWCLS == '' ? $mes->REMARKS : "Endorsed to " . $assignment->stationInfo->STNDESC),
                     'allowcls' => $assignment->ALLOWCLS,
                     'custclass' => $cond != null ? $cond->CLASS_ALLOW : "",
                     'warning' => $warn,

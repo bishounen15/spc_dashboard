@@ -164,6 +164,9 @@
                 var formData = new FormData();
                 formData.append('serial', serialno);
                 formData.append('station', '{!!$station->STNCODE!!}');
+
+                $("#sno").attr("disabled",true);
+                $("#err_sno").html('Validating Serial Number. Please Wait...');
                 
                 $.ajax({
                     url: '/mes/validate{{ ($prodline == null ? "" : "/" . $prodline) }}',
@@ -176,7 +179,7 @@
                         'X-CSRF-TOKEN': token.val()
                     },
                     success: function (dt) {
-                        console.log(dt);
+                        $("#sno").attr("disabled",false);
                         if (dt.serial.serialno != undefined) {
                             $("#err_sno").html('');
 
@@ -220,6 +223,7 @@
                             // table.ajax.url( '/modules/ftd/' + serialno ).load();
                         } else {
                             $("#err_sno").html(dt.errors.error_msg);
+                            $("#sno").focus();
                         }
                     },
                     error: function(xhr, textStatus, errorThrown){

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Models\Planning\ProductionSchedule;
 use App\Models\Planning\ProductionScheduleProduct;
+use App\Models\WebPortal\ProductionLine;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,20 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('prodtypes/{date}/{line}', function($date, $line) {
-    $sched_id = ProductionSchedule::where("production_date",$date)->first()->id;
-    $products = ProductionScheduleProduct::select("model_name")->where([
-        ["schedule_id",$sched_id],
-        ["production_line",$line],
-    ])->get();
-
-    $prod = "";
-    foreach($products as $product) {
-        $prod .= ($prod == "" ? "" : "|") . $product->model_name;
-    }
-
-    return $prod;
-});
+Route::get('prodtypes/{date}/{line}', "WebPortal\ProductTypesController@listProducts");
 
 Route::get('prodlines/{date}', function($date) {
     $sched_id = ProductionSchedule::where("production_date",$date)->first()->id;
@@ -40,7 +28,7 @@ Route::get('prodlines/{date}', function($date) {
 
     $prodline = "";
     foreach($lines as $line) {
-        $prodline .= ($prodline == "" ? "" : "|") . "Line " . $line->production_line;
+        $prodline .= ($prodline == "" ? "" : "|") . ProductionLine::where("LINCODE",$line->production_line)->first()->LINDESC;
     }
 
     return $prodline;
@@ -67,10 +55,12 @@ Route::post('dataset/upload','TRINA\DatasetController@upload');
 Route::post('portal/dataset/list','WebPortal\DatasetController@getList');
 Route::post('portal/dataset','WebPortal\DatasetController@store');
 Route::delete('portal/dataset','WebPortal\DatasetController@destroy');
+
 Route::post('portal/dataset/template',[
     'as' => 'spreadsheet.download', 
     'uses' => 'WebPortal\DatasetController@downloadTemplate'
  ]);
+
  Route::post('portal/dataset/upload','WebPortal\DatasetController@upload');
  
  Route::post('trina/module/lookup','ModulesController@trinaLookup');
