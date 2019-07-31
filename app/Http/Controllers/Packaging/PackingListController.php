@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Packaging\PackingLists;
 use App\Models\Packaging\PackingListItems;
+use App\Models\WebPortal\ProductionLine;
 use App\SerialInfo;
 use App\Pallets;
 use App\mesData;
@@ -123,12 +124,21 @@ class PackingListController extends Controller
             $data['MODCLASS'] = $serialInfo->MODCLASS;
             $data['MAXPALLET'] = $serialInfo->customerInfo->MAXPALLET;
             $data['BIN'] = $serialInfo->ftd->last()->Bin;
+            
+            if ($serialInfo->workOrder() == null) {
+                $reg = ProductionLine::where("LINCODE",$serialInfo->PRODLINE)->first()->LINCAT;
+            } else {
+                $reg = $serialInfo->workOrder()->WOCATEGORY;
+            }
+            
+            $data['REGISTRATION'] = $reg;
 
             $pno = $serialInfo->customerInfo->PALLETFORMAT;
 
             $pno = str_replace('[YY]',date('y',strtotime($trxDate)),$pno);
             $pno = str_replace('[MM]',date('m',strtotime($trxDate)),$pno);
             $pno = str_replace('[DD]',date('d',strtotime($trxDate)),$pno);
+            $pno = str_replace('[G]',substr($data['REGISTRATION'],0,1),$pno);
 
             $data['PALLETFORMAT'] = $pno;
         }

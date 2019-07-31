@@ -68,3 +68,5 @@ Route::post('portal/dataset/template',[
  Route::post('prodtype/lookup','WebPortal\ProductTypesController@selectValues');
 
  Route::post('portal/wo/generate/{date?}/{category?}','WebPortal\WorkOrdersController@generateControl');
+
+ Route::get('myip','PagesController@myip');

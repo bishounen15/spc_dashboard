@@ -12,67 +12,89 @@
                             <strong>Packaging Details</strong>
                         </div>
                         <div class="card-body">
-                            <table class="table table-condensed table-sm" style="font-size: 0.8em;">
-                                <tr>
-                                    <th>Pallet No.</th>
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-sm" name="PALLETNO" id="PALLETNO" placeholder="Generated upon saving" value="{{ old('PALLETNO') ? old('PALLETNO') : $PALLETNO }}" readonly>
-                                            <small class="form-text text-danger">{{ $errors->first('PALLETNO') }}</small>
-                                        </div>
-                                    </td>
-                                </tr>
-                                            
-                                <tr>
-                                    <th>Date</th>
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-sm" name="TRXDATE" id="TRXDATE" value="{{ old('TRXDATE') ? old('TRXDATE') : $TRXDATE }}" readonly>
-                                            <small class="form-text text-danger">{{ $errors->first('TRXDATE') }}</small>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <div class="form-row">
+                                <div class="col-sm-4">
+                                    Pallet No.
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-sm" name="PALLETNO" id="PALLETNO" placeholder="Generated upon saving" value="{{ old('PALLETNO') ? old('PALLETNO') : $PALLETNO }}" readonly>
+                                        <small class="form-text text-danger">{{ $errors->first('PALLETNO') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="col-sm-4">
+                                    Date
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-sm" name="TRXDATE" id="TRXDATE" value="{{ old('TRXDATE') ? old('TRXDATE') : $TRXDATE }}" readonly>
+                                        <small class="form-text text-danger">{{ $errors->first('TRXDATE') }}</small>
+                                    </div>
+                                </div>
+                            </div>
 
-                                <tr>
-                                    <th>Product No.</th>
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-sm" name="PRODUCTNO" id="PRODUCTNO" placeholder="Generated from 1st Scan" value="{{ old('PRODUCTNO') ? old('PRODUCTNO') : $PRODUCTNO }}" readonly>
-                                            <small class="form-text text-danger">{{ $errors->first('PRODUCTNO') }}</small>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <th>Model Name</th>
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-sm" name="MODELNAME" id="MODELNAME" placeholder="Generated from 1st Scan" value="{{ old('MODELNAME') ? old('MODELNAME') : $MODELNAME }}" readonly>
-                                            <small class="form-text text-danger">{{ $errors->first('MODELNAME') }}</small>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <div class="form-row">
+                                <div class="col-sm-4">
+                                    Product No.
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-sm" name="PRODUCTNO" id="PRODUCTNO" placeholder="Generated from 1st Scan" value="{{ old('PRODUCTNO') ? old('PRODUCTNO') : $PRODUCTNO }}" readonly>
+                                        <small class="form-text text-danger">{{ $errors->first('PRODUCTNO') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="col-sm-4">
+                                    Model Name
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-sm" name="MODELNAME" id="MODELNAME" placeholder="Generated from 1st Scan" value="{{ old('MODELNAME') ? old('MODELNAME') : $MODELNAME }}" readonly>
+                                        <small class="form-text text-danger">{{ $errors->first('MODELNAME') }}</small>
+                                    </div>
+                                </div>
+                            </div>
 
-                                <tr>
-                                    <th>Module Class</th>
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-sm" name="MODCLASS" id="MODCLASS" placeholder="Generated from 1st Scan" value="{{ old('MODCLASS') ? old('MODCLASS') : $MODCLASS }}" readonly>
-                                            <small class="form-text text-danger">{{ $errors->first('MODCLASS') }}</small>
-                                        </div>
-                                    </td>
-                                </tr>
-            
-                                <tr>
-                                    <th>Customer</th>
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-sm" name="CUSTOMER" id="CUSTOMER" placeholder="Generated from 1st Scan" value="{{ old('CUSTOMER') ? old('CUSTOMER') : $CUSTOMER }}" readonly>
-                                            <small class="form-text text-danger">{{ $errors->first('CUSTOMER') }}</small>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="form-row">
+                                <div class="col-sm-4">
+                                    Module Class
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-sm" name="MODCLASS" id="MODCLASS" placeholder="Generated from 1st Scan" value="{{ old('MODCLASS') ? old('MODCLASS') : $MODCLASS }}" readonly>
+                                        <small class="form-text text-danger">{{ $errors->first('MODCLASS') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="form-row">
+                                <div class="col-sm-4">
+                                    Customer
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-sm" name="CUSTOMER" id="CUSTOMER" placeholder="Generated from 1st Scan" value="{{ old('CUSTOMER') ? old('CUSTOMER') : $CUSTOMER }}" readonly>
+                                        <small class="form-text text-danger">{{ $errors->first('CUSTOMER') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-sm-4">
+                                    Registration
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-sm" name="REGISTRATION" id="REGISTRATION" placeholder="Generated from 1st Scan" readonly>
+                                        <small class="form-text text-danger">{{ $errors->first('REGISTRATION') }}</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>        
                 </div>
             </div>
@@ -115,7 +137,7 @@
                                     <h2 id="last-model">-</h2>
                                 </div>
                                 <div>
-                                    <h2 id="last-class">-</h2>
+                                    <h2 id="last-class">-</h2> <h2 id="last-registration">-</h2>
                                 </div>
                             </div>
 
@@ -317,32 +339,31 @@
                         success: function (dt) {
                             if (dt.errors != undefined) {
                                 $("#err_sno").html(dt.errors.error_msg);
-
                                 if (dt.errors.error_msg == '') {
-                                    serials.push(serialno.toUpperCase());
+                                    if ($("#REGISTRATION").val() == dt.REGISTRATION || $("#REGISTRATION").val() == "") {
+                                        serials.push(serialno.toUpperCase());
                                     
-                                    $("#last-sn").html(serialno.toUpperCase()); 
-                                    $("#last-model").html(dt.MODELNAME);
-                                    $("#last-class").html("Class " + dt.MODCLASS);
-                                    $("#module-count").html(($("#serial-list > tr").length+1) + " / " + dt.MAXPALLET);
+                                        $("#last-sn").html(serialno.toUpperCase()); 
+                                        $("#last-model").html(dt.MODELNAME);
+                                        $("#last-class").html("Class " + dt.MODCLASS);
+                                        $("#last-registration").html(dt.REGISTRATION);
+                                        $("#module-count").html(($("#serial-list > tr").length+1) + " / " + dt.MAXPALLET);
 
-                                    myRow = '<tr><td>'+($("#serial-list > tr").length+1)+'</td><td class="serial-column">'+serialno.toUpperCase()+'</td><td>'+dt.MODELNAME+'</td><td>'+dt.MODCLASS+'</td><td>'+dt.BIN+'</td><td><a href="#" role="button" class="btn btn-danger btn-sm remove-item">Remove</a></td></tr>';
+                                        myRow = '<tr><td>'+($("#serial-list > tr").length+1)+'</td><td class="serial-column">'+serialno.toUpperCase()+'</td><td>'+dt.MODELNAME+'</td><td>'+dt.MODCLASS+'</td><td>'+dt.BIN+'</td><td><a href="#" role="button" class="btn btn-danger btn-sm remove-item">Remove</a></td></tr>';
 
-                                    if ($("#serial-list > tr").length == 0) {
-                                        $("#PALLETNO").val(dt.PALLETFORMAT);
-                                        $("#CUSTOMER").val(dt.CUSTOMER);
-                                        $("#MODCLASS").val(dt.MODCLASS);
-                                        $("#MODELNAME").val(dt.MODELNAME);
-                                        $("#PRODUCTNO").val(dt.PRODUCTNO);
+                                        if ($("#serial-list > tr").length == 0) {
+                                            $("#PALLETNO").val(dt.PALLETFORMAT);
+                                            $("#CUSTOMER").val(dt.CUSTOMER);
+                                            $("#MODCLASS").val(dt.MODCLASS);
+                                            $("#MODELNAME").val(dt.MODELNAME);
+                                            $("#PRODUCTNO").val(dt.PRODUCTNO);
+                                            $("#REGISTRATION").val(dt.REGISTRATION);
+                                        }
 
-                                        // $("#serial-list").append(myRow);
+                                        $("#serial-list").append(myRow);
                                     } else {
-                                        // $('#serial-list > tr:first').before(myRow);
+                                        $("#err_sno").html('Serial No. [' + serialno + '] is under ' + dt.REGISTRATION + ' registration');
                                     }
-
-                                    $("#serial-list").append(myRow);
-                                    
-                                    // $("#err_sno").html("");
                                 }
                             } 
                         },

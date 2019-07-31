@@ -17,7 +17,7 @@ class SerialInfo extends Model
 
         $model = $first->productType() == null ?  ($this->template() == null ? $this->customerInfo->PRODCODE : $this->template()->MODELNAME) : $first->productType()->PRODCODE;
         $model = str_replace('[C]',$this->CELLCOUNT,$model);
-        $model = str_replace('[R]',$this->CUSTOMER == 'GEN1' && $this->CELLCOLOR == 'E' ? 'M' : $this->CELLCOLOR,$model);
+        $model = str_replace('[R]',($this->CUSTOMER == 'GEN1' && $this->CELLCOLOR == 'E') ? 'M' : $this->CELLCOLOR,$model);
         $model = str_replace('[P]',$this->ftd->count() > 0 ? $this->ftd->last()->Bin : 'XXX',$model);
         $model = str_replace('[T]',$this->CTYPE != null ? $this->CTYPE : $first->CTYPE,$model);
         return $model;
@@ -64,5 +64,9 @@ class SerialInfo extends Model
 
     public function productType() {
         return $this->hasOne('App\Models\WebPortal\ProductType', 'PRODTYPE', 'PRODTYPE')->first();
+    }
+
+    public function workOrder() {
+        return $this->hasOne('App\Models\WebPortal\WorkOrder', 'WOID', 'ORDERNO')->first();
     }
 }

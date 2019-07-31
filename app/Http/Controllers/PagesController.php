@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Request;
 
 class PagesController extends Controller
 {
@@ -31,5 +31,9 @@ class PagesController extends Controller
     }
     public function pulltestdata(){
         return view ('pages.pulltestdata');
+    }
+
+    public function myip() {
+        return Request::ip();
     }
 }
