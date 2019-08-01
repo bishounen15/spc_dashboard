@@ -2,7 +2,7 @@
 @section('content')
 <div class="container-fluid">
     <h3>Line Transactions [{{$station->STNDESC}}]</h3>
-    <h4>{{$date}} - Shift {{ $shift . ($prodline == null ? "" : " - " . $linedesc) }}</h4>
+    <h4>{{$date}} - Shift {{ $shift . ($prodline == null ? "" : " - " . $linedesc . " [" . $registration . "]") }}</h4>
     {{-- <a href="#" role="button" class="btn btn-primary">Create Log Entry</a> --}}
     {{-- <br><br> --}}
     <div class="card">

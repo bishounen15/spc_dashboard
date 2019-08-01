@@ -21,8 +21,9 @@
     <table class="table table-condensed table-striped table-sm" id="pack-list" style="width: 100%;">
         <thead class="thead-dark" style="font-size: 0.7em;">
             {{-- <th>#</th> --}}
-            <th width="20%">Pallet No.</th>
-            <th width="15%">Customer</th>
+            <th width="15%">Pallet No.</th>
+            <th width="10%">Registration</th>
+            <th width="10%">Customer</th>
             <th width="15%">Product No.</th>
             <th width="15%">Model Name</th>
             <th width="10%">Total Modules</th>
@@ -135,7 +136,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
+                        columns: [ 0, 1, 2, 3, 4, 5 ]
                     },
                     text:       'Excel',
                     filename: "packaging_excel"
@@ -143,7 +144,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
+                        columns: [ 0, 1, 2, 3, 4, 5 ]
                     },
                     text:       'CSV',
                     filename: "packaging_csv"
@@ -160,6 +161,7 @@
                 { sortable: true, "render": function ( data, type, full, meta ) {
                     return '<a href="#" id="'+full.ROWID+'" class="view-details">'+full.PALLETNO+'</a>';
                 }},
+                { data: 'REGISTRATION' },
                 { data: 'CUSTOMER' },
                 { data: 'PRODUCTNO' },
                 { data: 'MODELNAME' },

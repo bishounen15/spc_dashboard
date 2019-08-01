@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Request as Req;
 
 use App\ftdData;
 use App\mesData;
@@ -12,6 +13,7 @@ use App\SerialInfo;
 use App\Models\Planning\ProductionSchedule;
 use App\Models\WebPortal\OEMCondition;
 use App\Models\WebPortal\ProductionLine;
+use App\Models\WebPortal\IPAssign;
 use Illuminate\Support\Facades\Auth;
 
 use DB;
@@ -235,7 +237,11 @@ class MESController extends Controller
 
         $data['station'] = mesStation::where('STNID',$station)->first();
         $data['prodline'] = $line;
-        $data['linedesc'] = $line == null ? "" : ProductionLine::where("LINCODE",$line)->first()->LINDESC;
+
+        $line_info = ProductionLine::where("LINCODE",$line)->first();
+
+        $data['registration'] = $line == null ? "" : $line_info->LINCAT;
+        $data['linedesc'] = $line == null ? "" : $line_info->LINDESC;
 
         $time = date('H:i');
 
@@ -264,6 +270,13 @@ class MESController extends Controller
     public function serialValidation(Request $request, $line = null) {
         $serial = $request->input('serial');
         $station = $request->input('station');
+
+        $line_assign = IPAssign::where("IPADDRESS",Req::ip())->first();
+        if ($line_assign != null) {
+            $registration = $line_assign->prodLine()->LINCAT;
+        } else {
+            $registration = null;
+        }
 
         $assignment = Auth::user()->portalUser->mesUser->assignment->where('STNCODE',$station)->first();
 
@@ -341,6 +354,23 @@ class MESController extends Controller
                                 }
                             } else {
                                 $fill_serial = true;
+                            }
+                        }
+                        
+                        if ($fill_serial == true) {
+                            if ($registration != null) {
+                                if ($serialInfo->workOrder() != null) {
+                                    $reg = $serialInfo->workOrder()->WOCATEGORY;
+                                } else {
+                                    $reg = ProductionLine::where("LINCODE",$serialInfo->PRODLINE)->first()->LINCAT;
+                                }
+    
+                                if ($registration != $reg) {
+                                    $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is under ' . $reg . ' registration.'];
+                                    $fill_serial = false;
+                                } else {
+                                    $fill_serial = true;
+                                }
                             }
                         }
                     }
