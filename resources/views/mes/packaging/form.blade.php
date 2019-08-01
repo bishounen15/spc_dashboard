@@ -2,7 +2,7 @@
 @section('content')
 <form method="POST" action="/mes/packaging" id="TrxForm"> 
     @csrf 
-    {{-- <div class="container"> --}}
+    <div class="container-fluid">
         <h3>Create Packaging Transaction</h3>
 
         <div class="row">
@@ -223,8 +223,8 @@
             </div>
             </div>
         </div>
-{{-- </div> --}}
-</form>
+</div>
+</-fluidform>
 @endsection
 
 @push('jscript')
@@ -245,47 +245,53 @@
 
     function SaveTransaction() {
         if ($('#serial-list tr').length > 0) {
-            var token = $('input[name=_token]');
-            var formData = new FormData();
-            formData.append('PALLETNO', $("#PALLETNO").val());
-            formData.append('TRXDATE', $("#TRXDATE").val());
-            formData.append('CUSTOMER', $("#CUSTOMER").val());
-            formData.append('PRODUCTNO', $("#PRODUCTNO").val());
-            formData.append('MODELNAME', $("#MODELNAME").val());
+            palletsno = prompt("Enter Pallet Serial Number");
+            
+            if (palletsno != null) {
+                var token = $('input[name=_token]');
+                var formData = new FormData();
+                formData.append('PALLETNO', $("#PALLETNO").val());
+                formData.append('PALLETSNO', palletsno);
+                formData.append('TRXDATE', $("#TRXDATE").val());
+                formData.append('CUSTOMER', $("#CUSTOMER").val());
+                formData.append('PRODUCTNO', $("#PRODUCTNO").val());
+                formData.append('MODELNAME', $("#MODELNAME").val());
+                formData.append('REGISTRATION', $("#REGISTRATION").val());
 
-            plserials = [];
+                plserials = [];
 
-            $('#serial-list tr').each(function(e){
-                plserials.push($(this).children('td').slice(1, 2).html());
-            });
+                $('#serial-list tr').each(function(e){
+                    plserials.push($(this).children('td').slice(1, 2).html());
+                });
 
-            formData.append('SERIALNO[]', plserials);
+                formData.append('SERIALNO[]', plserials);
 
-            $.ajax({
-                url: '/mes/packaging',
-                method: 'POST',
-                contentType: false,
-                processData: false,
-                data: formData,
-                dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': token.val()
-                },
-                success: function (dt) {
-                    if (dt.errors.length > 0) {
-                        $('#error-list').html('');
-                        $.each(dt.errors, function(index, value) {
-                            $('#error-list').append('<li>'+ value +'</li>');
-                        });
-                        $('#errors-modal').modal('toggle');
-                    } else {
-                        window.location.href="/mes/packaging";
-                    }
-                },
-                error: function(xhr, textStatus, errorThrown){
-                    alert (errorThrown);
-                }	
-            });
+                $.ajax({
+                    url: '/mes/packaging',
+                    method: 'POST',
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': token.val()
+                    },
+                    success: function (dt) {
+                        if (dt.errors.length > 0) {
+                            $('#error-list').html('');
+                            $.each(dt.errors, function(index, value) {
+                                $('#error-list').append('<li>'+ value +'</li>');
+                            });
+                            $('#errors-modal').modal('toggle');
+                        } else {
+                            window.location.href="/mes/packaging";
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        alert (errorThrown);
+                    }	
+                });
+            }
         } else {
             $('#error-list').html('');
             $('#error-list').append('<li>No serial scanned.</li>');
@@ -300,6 +306,10 @@
         });
 
         $('#SerialDetails').on('hidden.bs.modal', function () {
+            $("#sno").focus();
+        });
+
+        $('#errors-modal').on('hidden.bs.modal', function () {
             $("#sno").focus();
         });
 

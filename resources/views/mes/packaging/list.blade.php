@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-{{-- <div class="container"> --}}
+<div class="container-fluid">
     <h3>Packaging Transactions</h3>
     <a href="/mes/packaging/create" role="button" class="btn btn-primary">Create Packing List</a>
     <br><br>
@@ -70,7 +70,7 @@
           </div>
         </div>
     </div>
-{{-- </div> --}}
+</div>
 @endsection
 
 @include('layouts.modal')

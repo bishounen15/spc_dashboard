@@ -201,11 +201,13 @@ class PackingListController extends Controller
 
         $phead = [];
         $phead['PALLETNO'] = $pallet;
+        $phead['PALLETSNO'] = $request->input('PALLETSNO');
         $phead['CARTONNO'] = 'N/A';
         $phead['CUSTOMER'] = $request->input('CUSTOMER');
         $phead['TRXDATE'] = $request->input('TRXDATE');
         $phead['PRODUCTNO'] = $request->input('PRODUCTNO');
         $phead['MODELNAME'] = $request->input('MODELNAME');
+        $phead['REGISTRATION'] = $request->input('REGISTRATION');
         $phead['UIDCREATE'] = Auth::user()->user_id;
         $phead['PALLETSTAT'] = 0;
         $SERIALNO = $request->input('SERIALNO');
@@ -214,12 +216,17 @@ class PackingListController extends Controller
 
         $validator = Validator::make($request->all(), [
             'PALLETNO' => 'required|unique:web_portal.epl01',
+            'PALLETSNO' => 'required',
+        ], [
+            'PALLETNO.unique' => 'Pallet Number ['.$pallet.'] already exists.',
+            'PALLETSNO.required' => 'Pallet Serial Number field is required.',
         ]);
 
         $serr = [];
 
         if ($validator->fails()) {
-            array_push($serr, $pallet." already exists.");
+            array_push($serr, $validator->messages()->first());
+            // array_push($serr, $pallet." already exists.");
             // array_push($serr, $request->input('PALLETNO')." already exists.");
         } else {
             foreach($snos as $sno) {
@@ -251,7 +258,7 @@ class PackingListController extends Controller
 
                 PackingListItems::create($pdetails);
 
-                $info = SerialInfo::selectRaw("(SELECT CONCAT(DATE_FORMAT(now(),'%Y%m'),LPAD(SUBSTR(MAX(MESCNO),7,6) + 1,6,0)) AS MESCNO FROM spmmc00.mes01 WHERE MESCNO LIKE CONCAT(DATE_FORMAT(now(),'%Y%m'),'%')) AS CNO, lbl02.MODCLASS, cls01.MODSTATUS")
+                $info = SerialInfo::selectRaw("(SELECT CONCAT(DATE_FORMAT(now(),'%Y%m'),LPAD(IFNULL(SUBSTR(MAX(MESCNO),7,6),'000000') + 1,6,0)) AS MESCNO FROM spmmc00.mes01 WHERE MESCNO LIKE CONCAT(DATE_FORMAT(now(),'%Y%m'),'%')) AS CNO, lbl02.MODCLASS, cls01.MODSTATUS")
                             ->join("cls01", function ($join) {
                                 $join->on("lbl02.MODCLASS","=","cls01.MCLCODE"); 
                                 $join->on("lbl02.CUSTOMER","=","cls01.CUSTOMER");

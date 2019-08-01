@@ -17,6 +17,7 @@ class PackingLists extends Model implements Auditable
 
     protected $fillable = [
         'PALLETNO',
+        'PALLETSNO',
         'CARTONNO',
         'PRODUCTNO',
         'CUSTOMER',
@@ -24,11 +25,13 @@ class PackingLists extends Model implements Auditable
         'TRXDATE',
         'PALLETSTAT',
         'UIDCREATE',
+        'REGISTRATION',
     ];
 
     use \OwenIt\Auditing\Auditable;
     protected $auditInclude = [
         'PALLETNO',
+        'PALLETSNO',
         'CARTONNO',
         'PRODUCTNO',
         'CUSTOMER',
@@ -36,6 +39,7 @@ class PackingLists extends Model implements Auditable
         'TRXDATE',
         'PALLETSTAT',
         'UIDCREATE',
+        'REGISTRATION',
     ];
 
     public function details() {

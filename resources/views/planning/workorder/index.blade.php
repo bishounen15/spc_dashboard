@@ -55,7 +55,7 @@
             }, 
             {
                 name: 'WOCATEGORY', 
-                display_name: 'Category',
+                display_name: 'Government Registration',
                 placeholder: 'Enter Category', 
                 width: '10%',
                 type: 'select',
