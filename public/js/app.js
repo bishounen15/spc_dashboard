@@ -49662,7 +49662,11 @@ var render = function() {
                                 return _c("td", { key: x }, [
                                   _vm._v(
                                     "\n                                    " +
-                                      _vm._s(row[column.name]) +
+                                      _vm._s(
+                                        column.percentage
+                                          ? row[column.name] * 100 + "%"
+                                          : row[column.name]
+                                      ) +
                                       "\n                                "
                                   )
                                 ])

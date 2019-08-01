@@ -76,7 +76,7 @@
                                 <tr v-for="(row,i) in table_rows" v-bind:key="i" v-else>
                                     <td>{{ pagination.first_rec + i }}</td>
                                     <td v-for="(column,x) in table_columns" v-bind:key="x">
-                                        {{row[column.name]}}
+                                        {{ (column.percentage ? (row[column.name] * 100) + '%' : row[column.name]) }}
                                     </td>
                                     <td class="text-center">
                                         <button class="btn btn-sm btn-danger" @click="deleteRecord(row)"  v-if="allow_delete"><i class="far fa-trash-alt"></i></button>

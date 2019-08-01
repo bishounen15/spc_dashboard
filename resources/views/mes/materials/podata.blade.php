@@ -76,6 +76,7 @@
                 name: 'SPEC01', 
                 display_name: 'Efficiency',
                 placeholder: 'Enter Efficiency', 
+                percentage: true,
                 type: 'text'
             }, 
             {
