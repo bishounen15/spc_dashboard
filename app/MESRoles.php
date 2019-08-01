@@ -8,10 +8,6 @@ class MESRoles extends ReadOnlyBase
 {
     //
     protected $object_array = [
-        // [
-        //     "code" => "VIEW",
-        //     "description" => "Viewer",
-        // ],
         [
             "code" => "OPRT",
             "description" => "Operator",
@@ -27,6 +23,10 @@ class MESRoles extends ReadOnlyBase
         [
             "code" => "SHIP",
             "description" => "Shipping",
+        ],
+        [
+            "code" => "WHSE",
+            "description" => "Warehouse",
         ],
         [
             "code" => "VIEW",
