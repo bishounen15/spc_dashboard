@@ -57,12 +57,12 @@
 
                     <div style="overflow: auto;">
                         <table class="table table-condensed table-striped table-hover table-sm">
-                            <thead class="thead-dark">
+                            <thead class="thead-dark" style="font-size: 0.85em;">
                                 <th width="5%">#</th>
                                 <th v-for="(column, i) in table_columns" v-bind:key="i" v-bind:width="column.width">{{column.display_name}}</th>
                                 <th width="10%" class="text-center">Actions</th>
                             </thead>
-                            <tbody>
+                            <tbody style="font-size: 0.85em;">
                                 <tr v-if="loading">
                                     <td v-bind:colspan="columns.length+2" class="text-center table-warning">
                                         <h4>Loading Data. Please Wait...</h4>

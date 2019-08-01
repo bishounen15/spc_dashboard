@@ -49599,7 +49599,10 @@ var render = function() {
               [
                 _c(
                   "thead",
-                  { staticClass: "thead-dark" },
+                  {
+                    staticClass: "thead-dark",
+                    staticStyle: { "font-size": "0.85em" }
+                  },
                   [
                     _c("th", { attrs: { width: "5%" } }, [_vm._v("#")]),
                     _vm._v(" "),
@@ -49622,6 +49625,7 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "tbody",
+                  { staticStyle: { "font-size": "0.85em" } },
                   [
                     _vm.loading
                       ? _c("tr", [
