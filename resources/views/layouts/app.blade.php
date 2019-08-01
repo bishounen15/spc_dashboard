@@ -125,8 +125,8 @@
                                 @endif
                                 <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>
                                 
-                                <h6 class="dropdown-header">Warehouse</h6>
                                 @if(Auth::user()->mes_role == 'WHSE' || Auth::user()->sysadmin == 1)
+                                <h6 class="dropdown-header">Warehouse</h6>
                                 <a class="dropdown-item" href="/mes/materials">&nbsp;&nbsp;&nbsp;&nbsp;Cells Received</a>
                                 @endif
 
