@@ -55,34 +55,37 @@
                         </div>
                     </div>
 
-                    <table class="table table-condensed table-striped table-hover table-sm">
-                        <thead class="thead-dark">
-                            <th width="5%">#</th>
-                            <th v-for="(column, i) in columns" v-bind:key="i" v-bind:width="column.width">{{column.display_name}}</th>
-                            <th width="10%" class="text-center">Actions</th>
-                        </thead>
-                        <tbody>
-                            <tr v-if="loading">
-                                <td v-bind:colspan="columns.length+2" class="text-center table-warning">
-                                    <h4>Loading Data. Please Wait...</h4>
-                                </td>
-                            </tr>
-                            <tr v-else-if="!pagination.total_rec">
-                                <td v-bind:colspan="columns.length+2" class="text-center">
-                                    No Record Found
-                                </td>
-                            </tr>
-                            <tr v-for="(row,i) in table_rows" v-bind:key="i" v-else>
-                                <td>{{ pagination.first_rec + i }}</td>
-                                <td v-for="(column,x) in columns" v-bind:key="x">
-                                    {{row[column.name]}}
-                                </td>
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-danger" @click="deleteRecord(row)"  v-if="allow_delete"><i class="far fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div style="overflow: auto;">
+                        <table class="table table-condensed table-striped table-hover table-sm">
+                            <thead class="thead-dark">
+                                <th width="5%">#</th>
+                                <th v-for="(column, i) in table_columns" v-bind:key="i" v-bind:width="column.width">{{column.display_name}}</th>
+                                <th width="10%" class="text-center">Actions</th>
+                            </thead>
+                            <tbody>
+                                <tr v-if="loading">
+                                    <td v-bind:colspan="columns.length+2" class="text-center table-warning">
+                                        <h4>Loading Data. Please Wait...</h4>
+                                    </td>
+                                </tr>
+                                <tr v-else-if="!pagination.total_rec">
+                                    <td v-bind:colspan="columns.length+2" class="text-center">
+                                        No Record Found
+                                    </td>
+                                </tr>
+                                <tr v-for="(row,i) in table_rows" v-bind:key="i" v-else>
+                                    <td>{{ pagination.first_rec + i }}</td>
+                                    <td v-for="(column,x) in table_columns" v-bind:key="x">
+                                        {{row[column.name]}}
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-danger" @click="deleteRecord(row)"  v-if="allow_delete"><i class="far fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
                     <div class="row p-2">
                         <div class="col-sm">
                             <p class="text-center">
@@ -172,6 +175,7 @@
         data() {
             return {
                 droplists: {},
+                table_columns: [],
                 table_rows: [],
                 inquire_data: {},
                 main_data: {},
@@ -199,11 +203,16 @@
             initList() {
                 let params = [];
                 let fields = [];
+                let cols = this.table_columns;
                 let vm = this;
 
                 $.each(this.columns,function() {
                     if (this.inquire) {
                         params[this.name] = '';
+                    }
+
+                    if (!this.hide_column) {
+                        cols.push(this);
                     }
 
                     fields[this.name] = '';

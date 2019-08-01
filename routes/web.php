@@ -250,6 +250,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/planning/wo', function() {
             return view('planning.workorder.index');
         });
+
+        Route::get('/mes/materials', function() {
+            return view('mes.materials.podata');
+        });
     });
 // }); 
 

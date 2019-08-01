@@ -48849,6 +48849,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -48858,6 +48861,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             droplists: {},
+            table_columns: [],
             table_rows: [],
             inquire_data: {},
             main_data: {},
@@ -48886,11 +48890,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         initList: function initList() {
             var params = [];
             var fields = [];
+            var cols = this.table_columns;
             var vm = this;
 
             $.each(this.columns, function () {
                 if (this.inquire) {
                     params[this.name] = '';
+                }
+
+                if (!this.hide_column) {
+                    cols.push(this);
                 }
 
                 fields[this.name] = '';
@@ -49580,113 +49589,115 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c(
-            "table",
-            {
-              staticClass:
-                "table table-condensed table-striped table-hover table-sm"
-            },
-            [
-              _c(
-                "thead",
-                { staticClass: "thead-dark" },
-                [
-                  _c("th", { attrs: { width: "5%" } }, [_vm._v("#")]),
-                  _vm._v(" "),
-                  _vm._l(_vm.columns, function(column, i) {
-                    return _c(
+          _c("div", { staticStyle: { overflow: "auto" } }, [
+            _c(
+              "table",
+              {
+                staticClass:
+                  "table table-condensed table-striped table-hover table-sm"
+              },
+              [
+                _c(
+                  "thead",
+                  { staticClass: "thead-dark" },
+                  [
+                    _c("th", { attrs: { width: "5%" } }, [_vm._v("#")]),
+                    _vm._v(" "),
+                    _vm._l(_vm.table_columns, function(column, i) {
+                      return _c(
+                        "th",
+                        { key: i, attrs: { width: column.width } },
+                        [_vm._v(_vm._s(column.display_name))]
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c(
                       "th",
-                      { key: i, attrs: { width: column.width } },
-                      [_vm._v(_vm._s(column.display_name))]
+                      { staticClass: "text-center", attrs: { width: "10%" } },
+                      [_vm._v("Actions")]
                     )
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "th",
-                    { staticClass: "text-center", attrs: { width: "10%" } },
-                    [_vm._v("Actions")]
-                  )
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _c(
-                "tbody",
-                [
-                  _vm.loading
-                    ? _c("tr", [
-                        _c(
-                          "td",
-                          {
-                            staticClass: "text-center table-warning",
-                            attrs: { colspan: _vm.columns.length + 2 }
-                          },
-                          [_c("h4", [_vm._v("Loading Data. Please Wait...")])]
-                        )
-                      ])
-                    : !_vm.pagination.total_rec
-                    ? _c("tr", [
-                        _c(
-                          "td",
-                          {
-                            staticClass: "text-center",
-                            attrs: { colspan: _vm.columns.length + 2 }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                No Record Found\n                            "
-                            )
-                          ]
-                        )
-                      ])
-                    : _vm._l(_vm.table_rows, function(row, i) {
-                        return _c(
-                          "tr",
-                          { key: i },
-                          [
-                            _c("td", [
-                              _vm._v(_vm._s(_vm.pagination.first_rec + i))
-                            ]),
-                            _vm._v(" "),
-                            _vm._l(_vm.columns, function(column, x) {
-                              return _c("td", { key: x }, [
-                                _vm._v(
-                                  "\n                                " +
-                                    _vm._s(row[column.name]) +
-                                    "\n                            "
-                                )
-                              ])
-                            }),
-                            _vm._v(" "),
-                            _c("td", { staticClass: "text-center" }, [
-                              _vm.allow_delete
-                                ? _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-sm btn-danger",
-                                      on: {
-                                        click: function($event) {
-                                          _vm.deleteRecord(row)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "far fa-trash-alt"
-                                      })
-                                    ]
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  [
+                    _vm.loading
+                      ? _c("tr", [
+                          _c(
+                            "td",
+                            {
+                              staticClass: "text-center table-warning",
+                              attrs: { colspan: _vm.columns.length + 2 }
+                            },
+                            [_c("h4", [_vm._v("Loading Data. Please Wait...")])]
+                          )
+                        ])
+                      : !_vm.pagination.total_rec
+                      ? _c("tr", [
+                          _c(
+                            "td",
+                            {
+                              staticClass: "text-center",
+                              attrs: { colspan: _vm.columns.length + 2 }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                    No Record Found\n                                "
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._l(_vm.table_rows, function(row, i) {
+                          return _c(
+                            "tr",
+                            { key: i },
+                            [
+                              _c("td", [
+                                _vm._v(_vm._s(_vm.pagination.first_rec + i))
+                              ]),
+                              _vm._v(" "),
+                              _vm._l(_vm.table_columns, function(column, x) {
+                                return _c("td", { key: x }, [
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(row[column.name]) +
+                                      "\n                                "
                                   )
-                                : _vm._e()
-                            ])
-                          ],
-                          2
-                        )
-                      })
-                ],
-                2
-              )
-            ]
-          ),
+                                ])
+                              }),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-center" }, [
+                                _vm.allow_delete
+                                  ? _c(
+                                      "button",
+                                      {
+                                        staticClass: "btn btn-sm btn-danger",
+                                        on: {
+                                          click: function($event) {
+                                            _vm.deleteRecord(row)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "far fa-trash-alt"
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e()
+                              ])
+                            ],
+                            2
+                          )
+                        })
+                  ],
+                  2
+                )
+              ]
+            )
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "row p-2" }, [
             _c("div", { staticClass: "col-sm" }, [
