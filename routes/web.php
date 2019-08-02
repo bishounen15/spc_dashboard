@@ -254,6 +254,8 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/mes/materials', function() {
             return view('mes.materials.podata');
         });
+
+        Route::get('/mes/lot', 'WebPortal\LotRecordsController@index');
     });
 // }); 
 

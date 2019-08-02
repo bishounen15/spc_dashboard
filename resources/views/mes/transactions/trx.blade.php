@@ -307,11 +307,12 @@
                         'X-CSRF-TOKEN': token.val()
                     },
                     success: function (dt) {
-                        console.log(dt);
                         table.ajax.reload();
 
                         if (($("#MESCreate").data('bs.modal') || {})._isShown != undefined) {
                             $("#MESCreate").modal('toggle');
+                        } else {
+                            $("#sno").focus();
                         }
                     },
                     error: function(xhr, textStatus, errorThrown){

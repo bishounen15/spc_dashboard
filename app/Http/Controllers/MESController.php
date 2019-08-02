@@ -333,14 +333,56 @@ class MESController extends Controller
 
             // $recent_loc = $mes == null ? 'Not yet scanned' : $mes->LOCNCODE;
             $recent_loc = $mes == null ? 'Not yet scanned' : $serialInfo->CURRENTLOC;
+            
+            if ($serialInfo != null) {
+                $rou = DB::connection('web_portal')
+                            ->table("rou01")
+                            ->where([
+                                ["STNID",$stationInfo->STNID],
+                                ["CUSTSKIP","LIKE","%".$serialInfo->CUSTOMER."%"],
+                            ]);
+                $scode = $rou->count() > 0 ? $rou->first()->SRCLOC : "";
+                $skip = $rou->count();
+
+                $stn = null;
+
+                while ($skip > 0) {
+                    $stn = DB::connection('web_portal')
+                                ->table("lts02")
+                                ->where([
+                                    ["STNCODE",$scode]
+                                ])->first();
+
+                    unset($rou);
+                    $rou = DB::connection('web_portal')
+                            ->table("rou01")
+                            ->where([
+                                ["STNID",$stn->STNID],
+                                ["CUSTSKIP","LIKE","%".$serialInfo->CUSTOMER."%"],
+                            ]);
+                    
+                    if ($rou->count() > 0) {
+                        $scode = $rou->first()->SRCLOC;
+                        $skip = $rou->count();
+                    } else {
+                        $skip = 0;
+                    }
+                }
+
+                $rou = DB::connection('web_portal')
+                            ->table("rou01")
+                            ->where("STNID",$stn == null ? $stationInfo->STNID : $stn->STNID)
+                            ->first();
+            }
 
             if ($serialInfo != null) {
                 if ($assignment->UNISNO == 1) {
                     if ($recent_loc == $station) {
                         $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] already within the current location.'];
                     } else {
+                        // 
                         if ($stationInfo->routing->where('SRCLOC',$recent_loc)->first() == null) {
-                            if ($stationInfo->INITLOC == 0 || ($stationInfo->INITLOC == 1 && $recent_loc != 'Not yet scanned')) {
+                            if ($rou !== null || ($rou == null && $recent_loc != 'Not yet scanned')) {
                                 $data['errors'] = ['error_msg' => 'You cannot transact this serial number ['.$serial.'] in this location. (Current Location: '.$recent_loc.')'];
                             } else {
                                 $fill_serial = true;    
@@ -421,6 +463,7 @@ class MESController extends Controller
                     'allowcls' => $assignment->ALLOWCLS,
                     'custclass' => $cond != null ? $cond->CLASS_ALLOW : "",
                     'warning' => $warn,
+                    'source_station' => $rou != null ? $rou->SRCLOC : "",
                 ];
             }
         }
