@@ -24,10 +24,11 @@ class CabinetsController extends Controller
     //
     public function index() {
         $assignment = IPAssign::where("IPADDRESS",Req::ip())->first();
+        
         $data = [];
         
-        $prodline = ProductionLine::where("LINCODE",$assignment->PRODLINE)->first();
-        $data['prodline'] = $prodline;
+        // $prodline = ProductionLine::where("LINCODE",$assignment->PRODLINE)->first();
+        // $data['prodline'] = $prodline;
 
         return view('mes.transactions.cabinet', $data);
     }
