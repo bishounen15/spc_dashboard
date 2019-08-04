@@ -14056,6 +14056,7 @@ Vue.component('example-component', __webpack_require__(40));
 Vue.component('data-maintenance', __webpack_require__(43));
 Vue.component('portal-maintenance', __webpack_require__(46));
 Vue.component('lot-record', __webpack_require__(49));
+Vue.component('cab-record', __webpack_require__(57));
 
 var app = new Vue({
   el: '#app'
@@ -50157,6 +50158,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -50204,7 +50212,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         save: function save(event) {
             if (this.no_lot > 0) {
-                $("#err_" + event.target.name).html("All lot number fields are required. (" + this.no_lot + " blank lot number/s)");
+                $("#err_" + event.target.name).html("All lot number fields are required. (" + this.no_lot + " empty lot number/s)");
             } else {
                 if (event.target.value == "") {
                     $("#err_" + event.target.name).html("Please scan a serial number.");
@@ -50250,35 +50258,40 @@ var render = function() {
             "div",
             { staticClass: "col-sm-6 p-3" },
             _vm._l(_vm.materials, function(column, i) {
-              return _c("div", { key: i, staticClass: "form-group" }, [
-                _c("label", { attrs: { for: column.field } }, [
-                  _vm._v(_vm._s(column.caption) + " Lot Number")
+              return _c("div", { key: i, staticClass: "form-row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("small", [_vm._v(_vm._s(column.caption) + " Lot Number")])
                 ]),
                 _vm._v(" "),
-                _c("input", {
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    name: column.field,
-                    id: column.field,
-                    "data-index": column.index,
-                    autofocus: column.index == 1
-                  },
-                  on: {
-                    keyup: function($event) {
-                      if (!("button" in $event) && $event.keyCode !== 13) {
-                        return null
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("input", {
+                      staticClass: "form-control form-control-sm",
+                      attrs: {
+                        type: "text",
+                        name: column.field,
+                        id: column.field,
+                        "data-index": column.index,
+                        autofocus: column.index == 1,
+                        placeholder: "Scan Lot Number Here"
+                      },
+                      on: {
+                        keyup: function($event) {
+                          if (!("button" in $event) && $event.keyCode !== 13) {
+                            return null
+                          }
+                          return _vm.pushEnter($event)
+                        },
+                        focusout: _vm.pushEnter
                       }
-                      return _vm.pushEnter($event)
-                    },
-                    focusout: _vm.pushEnter
-                  }
-                }),
-                _vm._v(" "),
-                _c("div", {
-                  staticClass: "invalid-feedback",
-                  attrs: { id: "err_" + column.field }
-                })
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "invalid-feedback",
+                      attrs: { id: "err_" + column.field }
+                    })
+                  ])
+                ])
               ])
             })
           ),
@@ -50286,12 +50299,17 @@ var render = function() {
           _c("div", { staticClass: "col-sm-6 p-3" }, [
             _c("div", { staticClass: "form-group" }, [
               _c("label", { attrs: { for: "SERIALNO" } }, [
-                _vm._v("Serial Number")
+                _vm._v("Module Serial Number")
               ]),
               _vm._v(" "),
               _c("input", {
                 staticClass: "form-control",
-                attrs: { type: "text", name: "SERIALNO", id: "SERIALNO" },
+                attrs: {
+                  type: "text",
+                  name: "SERIALNO",
+                  id: "SERIALNO",
+                  placeholder: "Scan Serial Number here"
+                },
                 on: {
                   keyup: function($event) {
                     if (!("button" in $event) && $event.keyCode !== 13) {
@@ -50328,6 +50346,740 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(58)
+/* template */
+var __vue_template__ = __webpack_require__(59)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/portal/CabinetInfo.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-c5697a8c", Component.options)
+  } else {
+    hotAPI.reload("data-v-c5697a8c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this.listCabinets();
+        $(".invalid-feedback").show();
+    },
+    data: function data() {
+        return {
+            cabinets: [],
+            pallets: [],
+            pallet_nos: [],
+            pallet_info: {
+                pallet_no: '',
+                cabinet_no: '',
+                customer: '',
+                registration: '',
+                modules: 0
+            },
+            create: false,
+            max_pallets: 16
+        };
+    },
+    created: function created() {},
+
+    props: {
+        title: String,
+        production_line: Number,
+        line_desc: String,
+        registration: String,
+        user_id: String
+    },
+    methods: {
+        createCabinet: function createCabinet() {
+            this.create = !this.create;
+
+            if (this.create) {
+                $("PALLETNO").focus();
+            } else {
+                $(".cabinet-details").val("");
+                $(".invalid-feedback").html("");
+                this.pallets = [];
+                this.pallet_nos = [];
+            }
+        },
+        listCabinets: function listCabinets() {
+            var _this = this;
+
+            fetch('/api/mes/cabinet/list', {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                _this.cabinets = data.data;
+                console.log(_this.cabinets);
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+
+        checkPallet: function checkPallet(event) {
+            var pallets = this.pallets;
+            var pallet_nos = this.pallet_nos;
+            var pallet_no = event.target.value;
+
+            fetch('/api/mes/cabinet/pallet/check/' + pallet_no, {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                if (data.pallet_no == undefined) {
+                    $(".invalid-feedback").html("Pallet Number [" + pallet_no + "] does not exists.");
+                } else {
+                    if (data.cabinet_no != "") {
+                        $(".invalid-feedback").html("Pallet Number [" + pallet_no + "] is already assigned to Cabinet Number [" + data.cabinet_no + "].");
+                    } else {
+                        if (data.registration != $("#REGISTRATION").val() && $("#REGISTRATION").val() != "") {
+                            $(".invalid-feedback").html("Pallet Number [" + pallet_no + "] is under " + data.registration + " Registration.");
+                        } else {
+                            if (pallet_nos.includes(data.pallet_no)) {
+                                $(".invalid-feedback").html("Pallet Number [" + pallet_no + "] is already scanned.");
+                            } else {
+                                $(".invalid-feedback").html("");
+
+                                pallets.push(data);
+                                pallet_nos.push(data.pallet_no);
+
+                                if ($("#REGISTRATION").val() == "") {
+                                    $("#REGISTRATION").val(data.registration);
+                                }
+                            }
+                        }
+                    }
+                }
+            }).catch(function (err) {
+                return console.log(err);
+            });
+            event.target.value = "";
+        },
+        saveCabinet: function saveCabinet() {
+            var _this2 = this;
+
+            var data = {};
+            data['cabinet'] = $("#input-form").serializeArray();
+            data['pallets'] = this.pallets;
+            data['user_id'] = this.user_id;
+
+            fetch('/api/mes/cabinet/save', {
+                method: 'post',
+                body: JSON.stringify(data),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                if (data != "Success") {
+                    alert(data);
+                } else {
+                    alert("Cabinet created.");
+                    _this2.listCabinets();
+                    _this2.createCabinet();
+                }
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("h3", { staticClass: "mb-4" }, [
+      _c("i", { staticClass: "fas fa-tasks" }),
+      _vm._v(" " + _vm._s(_vm.title))
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "card",
+        style: [{ display: this.create == true ? "none" : "block" }],
+        attrs: { id: "record-list" }
+      },
+      [
+        _c("div", { staticClass: "card-header bg-warning text-white" }, [
+          _vm._v("\n            " + _vm._s(_vm.title) + " List\n        ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body pt-1 pb-1 pr-3 pl-3" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-sm pt-0 pb-2 pl-3 pr-1" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-info",
+                  attrs: { id: "AddRecord" },
+                  on: {
+                    click: function($event) {
+                      _vm.createCabinet()
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        Add Record\n                    "
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row pt-0 pb-2 pl-3 pr-3" }, [
+            _c(
+              "table",
+              { staticClass: "table table-sm table-condensed table-striped" },
+              [
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.cabinets, function(cabinet, i) {
+                    return _c("tr", { key: i }, [
+                      _c("td", [_vm._v(_vm._s(i + 1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(cabinet.CABINETNO))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(cabinet.TRXDATE))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(cabinet.REGISTRATION))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(cabinet.PALLETS))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(cabinet.MODULES))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(cabinet.SHIPDATE))])
+                    ])
+                  })
+                )
+              ]
+            )
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "card",
+        style: [{ display: this.create == false ? "none" : "block" }],
+        attrs: { id: "create-cabinet" }
+      },
+      [
+        _c("div", { staticClass: "card-header bg-info text-white" }, [
+          _vm._v("\n            Create " + _vm._s(_vm.title) + "\n        ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body p-2" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-sm-4" }, [
+              _c("div", { staticClass: "card" }, [
+                _c("div", { staticClass: "card-header" }, [
+                  _vm._v(
+                    "\n                            Cabinet Details\n                        "
+                  )
+                ]),
+                _vm._v(" "),
+                _vm._m(2),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-footer p-1" }, [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-sm-6" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success btn-block",
+                          attrs: {
+                            id: "SaveButton",
+                            disabled: _vm.pallets.length < _vm.max_pallets
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.saveCabinet()
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                                        Save Cabinet\n                                    "
+                          )
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-6 text-right" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger btn-block",
+                          attrs: { id: "CancelButton" },
+                          on: {
+                            click: function($event) {
+                              _vm.createCabinet()
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                                        Cancel\n                                    "
+                          )
+                        ]
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-8" }, [
+              _c("div", { staticClass: "card" }, [
+                _c(
+                  "div",
+                  { staticClass: "card-header bg-warning text-white" },
+                  [
+                    _vm._v(
+                      "\n                            Pallet Details\n                        "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-body" }, [
+                  _c("div", { staticClass: "form-row pb-2" }, [
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _vm._v(
+                        "\n                                    Scan Pallet Number\n                                "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-8" }, [
+                      _c("input", {
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "PALLETNO",
+                          id: "PALLETNO",
+                          disabled: _vm.pallets.length == _vm.max_pallets,
+                          autofocus: ""
+                        },
+                        on: {
+                          keyup: function($event) {
+                            if (
+                              !("button" in $event) &&
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
+                              )
+                            ) {
+                              return null
+                            }
+                            return _vm.checkPallet($event)
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "invalid-feedback" })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "table table-sm table-condensed table-striped"
+                      },
+                      [
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.pallets, function(pallet, i) {
+                            return _c("tr", { key: i }, [
+                              _c("td", [_vm._v(_vm._s(i + 1))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(pallet.pallet_no))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(pallet.customer))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(pallet.registration))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(pallet.modules))])
+                            ])
+                          })
+                        )
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm pt-0 pb-2 pl-1 pr-3 text-right" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-success pull-right",
+          attrs: { id: "ShipCabinet" }
+        },
+        [
+          _vm._v(
+            "\n                        Marked as Shipped\n                    "
+          )
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-dark" }, [
+      _c("th", [_vm._v("#")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Cabinet Number")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Date")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Registration")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("No. of Pallets")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Number of Modules")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Date Shipped")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-body" }, [
+      _c("form", { attrs: { id: "input-form" } }, [
+        _c("div", { staticClass: "form-row" }, [
+          _c("div", { staticClass: "col-sm-4" }, [
+            _vm._v(
+              "\n                                        Cabinet Number\n                                    "
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-8" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                staticClass: "form-control cabinet-details",
+                attrs: {
+                  type: "text",
+                  name: "CABINETNO",
+                  id: "CABINETNO",
+                  placeholder: "System-Generated Number",
+                  readonly: ""
+                }
+              })
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-row" }, [
+          _c("div", { staticClass: "col-sm-4" }, [
+            _vm._v(
+              "\n                                        Date\n                                    "
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-8" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                staticClass: "form-control cabinet-details",
+                attrs: {
+                  type: "text",
+                  name: "TRXDATE",
+                  id: "TRXDATE",
+                  placeholder: "Date of Transaction",
+                  readonly: ""
+                }
+              })
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-row" }, [
+          _c("div", { staticClass: "col-sm-4" }, [
+            _vm._v(
+              "\n                                        Registration\n                                    "
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-8" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                staticClass: "form-control cabinet-details",
+                attrs: {
+                  type: "text",
+                  name: "REGISTRATION",
+                  id: "REGISTRATION",
+                  placeholder: "Government Registration",
+                  readonly: ""
+                }
+              })
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-dark" }, [
+      _c("th", [_vm._v("#")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Pallet Number")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Customer")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Registration")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Number of Modules")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-c5697a8c", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

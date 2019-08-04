@@ -130,6 +130,11 @@
                                 <a class="dropdown-item" href="/mes/materials">&nbsp;&nbsp;&nbsp;&nbsp;Cells Received</a>
                                 @endif
 
+                                @if(Auth::user()->mes_role == 'SHIP' || Auth::user()->sysadmin == 1)
+                                <h6 class="dropdown-header">Shipping</h6>
+                                <a class="dropdown-item" href="/mes/cabinet">&nbsp;&nbsp;&nbsp;&nbsp;Cabinet Information</a>
+                                @endif
+
                                 @if(Auth::user()->mes_role == 'OPRT' || Auth::user()->sysadmin == 1)
                                 <h6 class="dropdown-header">Line Transactions</h6>
                                 @foreach(Auth::user()->portalUser->mesUser->assignment as $assign)

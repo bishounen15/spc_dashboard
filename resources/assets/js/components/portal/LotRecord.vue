@@ -6,17 +6,24 @@
             <div class="card-body pt-0 pb-0 pl-1 pr-1">
                 <div class="form-row">
                     <div class="col-sm-6 p-3">
-                        <div class="form-group" v-for="(column,i) in materials" v-bind:key="i">
-                            <label v-bind:for="column.field">{{column.caption}} Lot Number</label>
-                            <input type="text" v-bind:name="column.field" v-bind:id="column.field" class="form-control" v-bind:data-index="column.index" :autofocus="column.index==1" v-on:keyup.13="pushEnter" v-on:focusout="pushEnter">
-                            <div :id="'err_'+column.field" class="invalid-feedback"></div>
+                        <div class="form-row" v-for="(column,i) in materials" v-bind:key="i">
+                            <div class="col-sm-6">
+                                <small>{{column.caption}} Lot Number</small>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" v-bind:name="column.field" v-bind:id="column.field" class="form-control form-control-sm" v-bind:data-index="column.index" :autofocus="column.index==1" v-on:keyup.13="pushEnter" v-on:focusout="pushEnter" placeholder="Scan Lot Number Here">
+                                    <div :id="'err_'+column.field" class="invalid-feedback"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-sm-6 p-3">
                         <div class="form-group">
-                            <label for="SERIALNO">Serial Number</label>
-                            <input type="text" name="SERIALNO" id="SERIALNO" class="form-control" v-on:keyup.13="save">
+                            <label for="SERIALNO">Module Serial Number</label>
+                            <input type="text" name="SERIALNO" id="SERIALNO" class="form-control" v-on:keyup.13="save" placeholder="Scan Serial Number here">
                             <div id="err_SERIALNO" class="invalid-feedback"></div>
                         </div>
                     </div>
@@ -74,7 +81,7 @@ export default {
         },
         save: function(event) {
             if (this.no_lot > 0) {
-                $("#err_" + event.target.name).html("All lot number fields are required. (" + this.no_lot + " blank lot number/s)");
+                $("#err_" + event.target.name).html("All lot number fields are required. (" + this.no_lot + " empty lot number/s)");
             } else {
                 if (event.target.value == "") {
                     $("#err_" + event.target.name).html("Please scan a serial number.");

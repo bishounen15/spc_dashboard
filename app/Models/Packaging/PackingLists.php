@@ -49,4 +49,8 @@ class PackingLists extends Model implements Auditable
     public function customer() {
         return $this->hasOne('App\portalCustomer', 'CUSCODE', 'CUSTOMER');
     }
+
+    public function cabinet() {
+        return $this->hasOne('App\Models\WebPortal\CabinetPallet', 'PALLETNO', 'PALLETNO');
+    }
 }
