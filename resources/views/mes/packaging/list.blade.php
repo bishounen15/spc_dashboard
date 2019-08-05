@@ -24,9 +24,10 @@
             <th width="15%">Pallet No.</th>
             <th width="10%">Registration</th>
             <th width="10%">Customer</th>
-            <th width="15%">Product No.</th>
-            <th width="15%">Model Name</th>
+            <th width="10%">Product No.</th>
+            <th width="10%">Model Name</th>
             <th width="10%">Total Modules</th>
+            <th width="10%">Cabinet No.</th>
             <th width="25%">Actions</th>
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
@@ -136,7 +137,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
                     },
                     text:       'Excel',
                     filename: "packaging_excel"
@@ -144,7 +145,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
                     },
                     text:       'CSV',
                     filename: "packaging_csv"
@@ -166,8 +167,15 @@
                 { data: 'PRODUCTNO' },
                 { data: 'MODELNAME' },
                 { data: 'TOTALMODS' },
+                { data: 'CABINETNO' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
-                    return '<div class="row"><div class="col-sm-6"><a href="/mes/packaging/export/'+full.ROWID+'" role="button" class="btn btn-sm btn-success" style="width: 100%;">Download</a></div><div class="col-sm-6"><a href="#" data-href="/mes/packaging/'+full.ROWID+'" role="button" class="btn btn-sm btn-danger{{ Auth::user()->sysadmin != 1 ? " disabled" : "" }}" data-toggle="modal" data-target="#confirm-delete" id="'+full.PALLETNO+'" style="width: 100%;">Release</a></div></div>';
+                    disabled = '{{ Auth::user()->sysadmin != 1 ? " disabled" : "" }}';
+
+                    if (disabled == "" &&  full.CABINETNO != null) {
+                        disabled = " disabled";
+                    }
+
+                    return '<div class="row"><div class="col-sm-6"><a href="/mes/packaging/export/'+full.ROWID+'" role="button" class="btn btn-sm btn-success" style="width: 100%;">Download</a></div><div class="col-sm-6"><a href="#" data-href="/mes/packaging/'+full.ROWID+'" role="button" class="btn btn-sm btn-danger'+disabled+'" data-toggle="modal" data-target="#confirm-delete" id="'+full.PALLETNO+'" style="width: 100%;">Release</a></div></div>';
                 }},
             ],
         });
