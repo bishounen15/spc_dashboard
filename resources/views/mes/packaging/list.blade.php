@@ -26,8 +26,9 @@
             <th width="10%">Customer</th>
             <th width="10%">Product No.</th>
             <th width="10%">Model Name</th>
-            <th width="10%">Total Modules</th>
+            <th width="5%">Total Modules</th>
             <th width="10%">Cabinet No.</th>
+            <th width="5%">Serial No.</th>
             <th width="25%">Actions</th>
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
@@ -137,7 +138,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
                     },
                     text:       'Excel',
                     filename: "packaging_excel"
@@ -145,7 +146,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
                     },
                     text:       'CSV',
                     filename: "packaging_csv"
@@ -168,6 +169,7 @@
                 { data: 'MODELNAME' },
                 { data: 'TOTALMODS' },
                 { data: 'CABINETNO' },
+                { data: 'PALLETSNO' },
                 { sortable: false, "render": function ( data, type, full, meta ) {
                     disabled = '{{ Auth::user()->sysadmin != 1 ? " disabled" : "" }}';
 
