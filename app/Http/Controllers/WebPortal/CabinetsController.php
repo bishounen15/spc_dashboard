@@ -126,4 +126,19 @@ class CabinetsController extends Controller
 
         return Response::json($msg);
     }
+
+    public function shipCabinet(Request $request) {
+        $ship_details = [];
+
+        foreach($request->ship_details as $info) {
+            $ship_details[$info['name']] = $info['value'];
+        }
+
+        $updated = DB::connection('web_portal')
+                        ->table('cab01')
+                        ->whereIn('CABINETNO',$request->cabinets_selected)
+                        ->update($ship_details);
+
+        return Response::json($updated);
+    }
 }

@@ -74,3 +74,4 @@ Route::post('portal/dataset/template',[
  Route::post('mes/cabinet/pallet/check/{pallet_no}','WebPortal\CabinetsController@checkPallet');
  Route::post('mes/cabinet/list','WebPortal\CabinetsController@listCabinets');
  Route::post('mes/cabinet/save','WebPortal\CabinetsController@saveCabinet');
+ Route::put('mes/cabinet/ship','WebPortal\CabinetsController@shipCabinet');

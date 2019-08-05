@@ -14028,7 +14028,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(52);
+module.exports = __webpack_require__(55);
 
 
 /***/ }),
@@ -14056,7 +14056,7 @@ Vue.component('example-component', __webpack_require__(40));
 Vue.component('data-maintenance', __webpack_require__(43));
 Vue.component('portal-maintenance', __webpack_require__(46));
 Vue.component('lot-record', __webpack_require__(49));
-Vue.component('cab-record', __webpack_require__(57));
+Vue.component('cab-record', __webpack_require__(52));
 
 var app = new Vue({
   el: '#app'
@@ -50343,24 +50343,14 @@ if (false) {
 
 /***/ }),
 /* 52 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(2)
 /* script */
-var __vue_script__ = __webpack_require__(58)
+var __vue_script__ = __webpack_require__(53)
 /* template */
-var __vue_template__ = __webpack_require__(59)
+var __vue_template__ = __webpack_require__(54)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -50399,11 +50389,56 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 58 */
+/* 53 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -50569,6 +50604,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             cabinets: [],
+            cabinets_selected: [],
             pallets: [],
             pallet_nos: [],
             pallet_info: {
@@ -50613,7 +50649,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return res.json();
             }).then(function (data) {
                 _this.cabinets = data.data;
-                console.log(_this.cabinets);
             }).catch(function (err) {
                 return console.log(err);
             });
@@ -50685,12 +50720,71 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (err) {
                 return console.log(err);
             });
+        },
+
+        selectCabinet: function selectCabinet(event) {
+            if (this.cabinets_selected != undefined) {
+                if (this.cabinets_selected.includes(event.target.value)) {
+                    this.cabinets_selected.pop(event.target.value);
+                } else {
+                    this.cabinets_selected.push(event.target.value);
+                }
+            } else {
+                this.cabinets_selected.push(event.target.value);
+            }
+        },
+        shipCabinets: function shipCabinets() {
+            var _this3 = this;
+
+            var ship_details = $("#ship-details").serializeArray();
+            var vm = this;
+            var error = "";
+
+            $.each(ship_details, function (i) {
+                if (this.value == "") {
+                    error = "This field is required.";
+                    $("#" + this.name).addClass("is-invalid").removeClass("is-valid");
+                    $("#err_" + this.name).html(error);
+                    return false;
+                } else {
+                    $("#" + this.name).removeClass("is-invalid").addClass("is-valid");
+                    $("#err_" + this.name).html("");
+                }
+            });
+
+            if (error == "") {
+                var data = {};
+
+                data['ship_details'] = ship_details;
+                data['cabinets_selected'] = vm.cabinets_selected;
+
+                fetch('/api/mes/cabinet/ship', {
+                    method: 'put',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    if (data > 0) {
+                        vm.cabinets_selected = [];
+                        alert("Selected Cabinet/s as marked as shipped.");
+                        _this3.listCabinets();
+                        $("#ShipModal").modal('toggle');
+                    } else {
+                        alert("No record was updated.");
+                    }
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
         }
     }
 });
 
 /***/ }),
-/* 59 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -50737,7 +50831,29 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _c(
+              "div",
+              { staticClass: "col-sm pt-0 pb-2 pl-1 pr-3 text-right" },
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success pull-right",
+                    attrs: {
+                      id: "ShipCabinet",
+                      disabled: this.cabinets_selected.length == 0,
+                      "data-toggle": "modal",
+                      "data-target": "#ShipModal"
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Marked as Shipped\n                    "
+                    )
+                  ]
+                )
+              ]
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row pt-0 pb-2 pl-3 pr-3" }, [
@@ -50745,13 +50861,26 @@ var render = function() {
               "table",
               { staticClass: "table table-sm table-condensed table-striped" },
               [
-                _vm._m(1),
+                _vm._m(0),
                 _vm._v(" "),
                 _c(
                   "tbody",
                   _vm._l(_vm.cabinets, function(cabinet, i) {
                     return _c("tr", { key: i }, [
-                      _c("td", [_vm._v(_vm._s(i + 1))]),
+                      _c("td", [
+                        _c("div", { staticClass: "form-check" }, [
+                          _c("input", {
+                            staticClass: "form-check-input",
+                            attrs: {
+                              type: "checkbox",
+                              name: "selectedContainer[]",
+                              disabled: cabinet.SHIPDATE != null
+                            },
+                            domProps: { value: cabinet.CABINETNO },
+                            on: { change: _vm.selectCabinet }
+                          })
+                        ])
+                      ]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(cabinet.CABINETNO))]),
                       _vm._v(" "),
@@ -50796,7 +50925,7 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _vm._m(2),
+                _vm._m(1),
                 _vm._v(" "),
                 _c("div", { staticClass: "card-footer p-1" }, [
                   _c("div", { staticClass: "row" }, [
@@ -50908,7 +51037,7 @@ var render = function() {
                           "table table-sm table-condensed table-striped"
                       },
                       [
-                        _vm._m(3),
+                        _vm._m(2),
                         _vm._v(" "),
                         _c(
                           "tbody",
@@ -50935,29 +51064,56 @@ var render = function() {
           ])
         ])
       ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { id: "ShipModal", tabindex: "-1", role: "dialog" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog modal-md", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(3),
+              _vm._v(" "),
+              _vm._m(4),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success",
+                    attrs: { id: "ShipButton" },
+                    on: {
+                      click: function($event) {
+                        _vm.shipCabinets()
+                      }
+                    }
+                  },
+                  [_vm._v("Yes")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("No")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
     )
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-sm pt-0 pb-2 pl-1 pr-3 text-right" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-success pull-right",
-          attrs: { id: "ShipCabinet" }
-        },
-        [
-          _vm._v(
-            "\n                        Marked as Shipped\n                    "
-          )
-        ]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -51070,6 +51226,86 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("th", [_vm._v("Number of Modules")])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header bg-warning" }, [
+      _c("h5", { staticClass: "modal-title text-white" }, [
+        _c("strong", [_vm._v("Mark as Shipped")])
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-body" }, [
+      _c("p", [
+        _vm._v(
+          "\n                    Do you really want to tag the marked containers as "
+        ),
+        _c("strong", [_vm._v("SHIPPED")]),
+        _vm._v("?\n                ")
+      ]),
+      _vm._v(" "),
+      _c("form", { attrs: { id: "ship-details" } }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "SHIPDATE" } }, [
+            _vm._v("Shipment Date")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control form-control-sm",
+            attrs: { type: "date", name: "SHIPDATE", id: "SHIPDATE", value: "" }
+          }),
+          _vm._v(" "),
+          _c("span", {
+            staticClass: "text-danger",
+            attrs: { id: "err_SHIPDATE" }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "CIPLNO" } }, [_vm._v("CIPL No.")]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control form-control-sm",
+            attrs: { type: "text", name: "CIPLNO", id: "CIPLNO" }
+          }),
+          _vm._v(" "),
+          _c("span", {
+            staticClass: "text-danger",
+            attrs: { id: "err_CIPLNO" }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "PINO" } }, [_vm._v("PL No.")]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control form-control-sm",
+            attrs: { type: "text", name: "PINO", id: "PINO" }
+          }),
+          _vm._v(" "),
+          _c("span", { staticClass: "text-danger", attrs: { id: "err_PINO" } })
+        ])
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -51080,6 +51316,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-c5697a8c", module.exports)
   }
 }
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

@@ -13,7 +13,7 @@
                         </button>
                     </div>
                     <div class="col-sm pt-0 pb-2 pl-1 pr-3 text-right">
-                        <button id="ShipCabinet" class="btn btn-success pull-right">
+                        <button id="ShipCabinet" class="btn btn-success pull-right" :disabled="this.cabinets_selected.length==0" data-toggle="modal" data-target="#ShipModal">
                             Marked as Shipped
                         </button>
                     </div>
@@ -32,7 +32,11 @@
                         </thead>
                         <tbody>
                             <tr v-for="(cabinet,i) in cabinets" v-bind:key="i">
-                                <td>{{i+1}}</td>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" name="selectedContainer[]" v-bind:value="cabinet.CABINETNO" :disabled="cabinet.SHIPDATE != null" @change="selectCabinet">
+                                    </div>
+                                </td>
                                 <td>{{cabinet.CABINETNO}}</td>
                                 <td>{{cabinet.TRXDATE}}</td>
                                 <td>{{cabinet.REGISTRATION}}</td>
@@ -151,6 +155,47 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="ShipModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title text-white"><strong>Mark as Shipped</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Do you really want to tag the marked containers as <strong>SHIPPED</strong>?
+                    </p>
+                    <form id="ship-details">
+                        <div class="form-group">
+                            <label for="SHIPDATE">Shipment Date</label>
+                            <input type="date" class="form-control form-control-sm" name="SHIPDATE" id="SHIPDATE" value="">
+                            <span class="text-danger" id="err_SHIPDATE"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="CIPLNO">CIPL No.</label>
+                            <input type="text" class="form-control form-control-sm" name="CIPLNO" id="CIPLNO">
+                            <span class="text-danger" id="err_CIPLNO"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="PINO">PL No.</label>
+                            <input type="text" class="form-control form-control-sm" name="PINO" id="PINO">
+                            <span class="text-danger" id="err_PINO"></span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" id="ShipButton" @click="shipCabinets()">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -163,6 +208,7 @@ export default {
     data() {
         return {
             cabinets: [],
+            cabinets_selected: [],
             pallets: [],
             pallet_nos: [],
             pallet_info: {
@@ -206,7 +252,6 @@ export default {
                 .then(res => res.json())
                 .then(data => {
                     this.cabinets = data.data;
-                    console.log(this.cabinets);
                 })
                 .catch(err => console.log(err));
         },
@@ -272,6 +317,61 @@ export default {
                     }
                 })
                 .catch(err => console.log(err));
+        },
+        selectCabinet: function(event) {
+            if (this.cabinets_selected != undefined) {
+                if (this.cabinets_selected.includes(event.target.value)) {
+                    this.cabinets_selected.pop(event.target.value);
+                } else {
+                    this.cabinets_selected.push(event.target.value);
+                }
+            } else {
+                this.cabinets_selected.push(event.target.value);
+            }
+        },
+        shipCabinets() {
+            let ship_details = $("#ship-details").serializeArray();
+            let vm = this;
+            let error = "";
+
+            $.each(ship_details, function(i) {
+                if (this.value == "") {
+                    error = "This field is required."
+                    $("#"+this.name).addClass("is-invalid").removeClass("is-valid");
+                    $("#err_"+this.name).html(error);
+                    return false;
+                } else {
+                    $("#"+this.name).removeClass("is-invalid").addClass("is-valid");
+                    $("#err_"+this.name).html("");
+                }
+            });
+
+            if (error == "") {
+                let data = {};
+
+                data['ship_details'] = ship_details;
+                data['cabinets_selected'] = vm.cabinets_selected;
+
+                fetch('/api/mes/cabinet/ship', {
+                    method: 'put',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data > 0) {
+                            vm.cabinets_selected = [];
+                            alert("Selected Cabinet/s as marked as shipped.");
+                            this.listCabinets();
+                            $("#ShipModal").modal('toggle');
+                        } else {
+                            alert("No record was updated.");
+                        }
+                    })
+                    .catch(err => console.log(err));
+            }
         }
     }
 }
