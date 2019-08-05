@@ -95,7 +95,7 @@
                         <th>Imp</th>
                         <th>Rsh</th>
                         <th>FF</th>
-                        <th>Container No.</th>
+                        <th>Cabinet No.</th>
                     </thead>
                     <tbody style="font-size: 0.7em;">
 
