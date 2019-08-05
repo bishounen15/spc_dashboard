@@ -95,6 +95,7 @@
                         <th>Imp</th>
                         <th>Rsh</th>
                         <th>FF</th>
+                        <th>Pallet Serial No.</th>
                         <th>Cabinet No.</th>
                     </thead>
                     <tbody style="font-size: 0.7em;">
@@ -199,6 +200,7 @@
                                 { data: 'Imp' },
                                 { data: 'Rsh' },
                                 { data: 'FF' },
+                                { data: 'PALLETSNO' },
                                 { data: 'ContainerNo' },
                             ],
                         });
@@ -247,6 +249,7 @@
                 { data: 'Imp' },
                 { data: 'Rsh' },
                 { data: 'FF' },
+                { data: 'PALLETSNO' },
                 { data: 'Container No.' },
             ],
         });
