@@ -182,11 +182,11 @@
                             <span class="text-danger" id="err_CIPLNO"></span>
                         </div>
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="PINO">PL No.</label>
                             <input type="text" class="form-control form-control-sm" name="PINO" id="PINO">
                             <span class="text-danger" id="err_PINO"></span>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
                 <div class="modal-footer">

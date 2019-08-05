@@ -51292,17 +51292,6 @@ var staticRenderFns = [
             staticClass: "text-danger",
             attrs: { id: "err_CIPLNO" }
           })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "PINO" } }, [_vm._v("PL No.")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control form-control-sm",
-            attrs: { type: "text", name: "PINO", id: "PINO" }
-          }),
-          _vm._v(" "),
-          _c("span", { staticClass: "text-danger", attrs: { id: "err_PINO" } })
         ])
       ])
     ])
