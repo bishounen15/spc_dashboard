@@ -47,7 +47,7 @@ class ProductionSchedulesController extends Controller
         $scheds = ProductionSchedule::selectRaw("production_schedules.id, production_schedules.production_date, production_schedules.work_week, production_schedules.weekday, SUM(production_schedule_products.qty) AS qty".$prod_lines.", production_schedules.activity, production_schedules.cells as cell, production_schedules.backsheets as backsheet, production_schedules.shifts")
                         ->leftJoin("production_schedule_products","production_schedules.id","production_schedule_products.schedule_id")
                         ->groupBy("production_schedules.id","production_schedules.production_date", "production_schedules.work_week", "production_schedules.weekday", "production_schedules.activity", "production_schedules.cells", "production_schedules.backsheets", "production_schedules.shifts")
-                        ->orderByRaw("production_schedules.production_date ASC");
+                        ->orderByRaw("production_schedules.production_date DESC");
 
         return Datatables::of($scheds)->make(true);
     }
