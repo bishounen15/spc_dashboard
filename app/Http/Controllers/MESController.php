@@ -172,7 +172,15 @@ class MESController extends Controller
     }
 
     public function ftd() {
-        return view('mes.reports.ftd');
+        $customers = DB::connection('web_portal')
+                            ->table('cus01')
+                            ->select('CUSCODE AS CODE','CUSDESC AS DESC')
+                            ->get();
+
+        $data = [];
+        $data['customers'] = $customers;
+
+        return view('mes.reports.ftd',$data);
     }
 
     public function ftdReport(Request $request) {
@@ -194,18 +202,22 @@ class MESController extends Controller
             $start = $request->input('start');
             $end = $request->input('end');
 
-            $cond = "A.TRXDATE BETWEEN '".$start."' AND '".$end."'";
+            $start = ($start == null ? date('Y-m-d') : date('Y-m-d',strtotime($start)))  . " 06:00:00";
+            $end = date('Y-m-d',strtotime("+1 days",strtotime(($end == null ? "Today" : $end)))) . " 05:59:59";
+
+            $cond = "IFNULL(DATE_ADD(X.TRXDATE, INTERVAL 6 HOUR),Y.InspectionTime) BETWEEN '".$start."' AND '".$end."'";
+            $cond .= " AND W.CUSTOMER = '".$request->input('customer')."'";
 
             $type = $request->input('type');
 
             if ($type == 'standard') {
-                $cond .= " AND A.PALLETNO NOT LIKE 'MRB%'";
+                $cond .= " AND X.PALLETNO NOT LIKE 'MRB%'";
             } else if ($type == 'mrb') {
-                $cond .= " AND A.PALLETNO LIKE 'MRB%'";
+                $cond .= " AND X.PALLETNO LIKE 'MRB%'";
             }
         }
 
-        $sql = "SELECT X.PALLETNO AS 'PalletNo', X.CARTONNO AS 'CartonNo', DATE_FORMAT(TRXDATE,'%Y-%m-%d') AS 'Date', PRODUCTNO AS 'ProductNo', MODELNAME AS 'ModelName', SEQNO AS 'SeqNo', X.SERIALNO AS 'SerialNo', CASE IFNULL(W.MODCLASS,'') WHEN '' THEN 'A' ELSE W.MODCLASS END AS 'ModuleClass', IFNULL(GENDESC, CASE X.CUSTOMER WHEN 'ASTRO' THEN CASE WHEN IFNULL(Y.Impp,0) >= X.LOWRATE AND IFNULL(Y.Impp,0) < X.MIDRATE THEN 'L' ELSE 'H' END WHEN 'JA ' THEN CASE WHEN IFNULL(Y.Impp,0) < X.LOWRATE THEN 'L' WHEN IFNULL(Y.Impp,0) > X.HIGHRATE THEN 'H' ELSE 'M' END ELSE '-' END) AS 'Remarks', Y.InspectionTime AS 'TestDate', IFNULL(Y.Bin,0) AS 'Bin', IFNULL(Y.Pmpp,0) AS 'Power', IFNULL(Y.Uoc,0) AS 'Voc', IFNULL(Y.Isc,0) AS 'Isc', IFNULL(Y.Umpp,0) AS 'Vmp', IFNULL(Y.Impp,0) AS 'Imp', IFNULL(Y.ShuntResistance,0) AS 'Rsh', IFNULL(Y.FF,0)AS 'FF', X.PALLETSNO, Z.CABINETNO AS 'ContainerNo' FROM (SELECT CASE A.PALLETNO WHEN @PALLETNO THEN CASE A.CARTONNO WHEN @CARTONNO THEN @curRow := @curRow + 1 ELSE @curRow := 1 END ELSE @curRow :=1 END AS SEQNO, B.SERIALNO, @PALLETNO := A.PALLETNO AS PALLETNO, @CARTONNO := A.CARTONNO AS CARTONNO, A.PRODUCTNO, A.MODELNAME, C.GENDESC, A.TRXDATE, IFNULL(D.LOWRATE,0) AS LOWRATE, IFNULL(D.MIDRATE,0) AS MIDRATE, IFNULL(D.HIGHRATE,0) AS HIGHRATE, A.CUSTOMER, A.ROWID, A.PALLETSNO FROM epl01 A INNER JOIN epl02 B ON A.PALLETNO = B.PALLETNO AND A.CARTONNO = B.CARTONNO LEFT JOIN itm01 C ON A.PRODUCTNO = C.ITMCODE LEFT JOIN fdd01 D ON A.MODELNAME LIKE D.MODCODE AND CASE A.CUSTOMER WHEN 'ASTRO' THEN RIGHT(A.MODELNAME,3) WHEN 'JA' THEN SUBSTRING(A.MODELNAME,12,3) ELSE 0 END = D.POWRATE JOIN (SELECT @curRow := 0, @PALLETNO := '', @CARTONNO := '') r WHERE ".$cond.") X LEFT JOIN ftd_upd Y ON X.SERIALNO = Y.ModuleID LEFT JOIN cab02 Z ON X.PALLETNO = Z.PALLETNO LEFT JOIN lbl02 W ON X.SERIALNO = W.SERIALNO AND W.LBLTYPE = 1 ORDER BY X.CUSTOMER, Z.CABINETNO, X.ROWID, X.PALLETNO, X.CARTONNO, X.SEQNO";
+        $sql = "SELECT X.PALLETNO AS 'PalletNo', X.CARTONNO AS 'CartonNo', DATE_FORMAT(TRXDATE,'%Y-%m-%d') AS 'Date', PRODUCTNO AS 'ProductNo', MODELNAME AS 'ModelName', SEQNO AS 'SeqNo', Y.ModuleID AS 'SerialNo', CASE IFNULL(W.MODCLASS,'') WHEN '' THEN 'A' ELSE W.MODCLASS END AS 'ModuleClass', IFNULL(GENDESC, CASE X.CUSTOMER WHEN 'ASTRO' THEN CASE WHEN IFNULL(Y.Impp,0) >= X.LOWRATE AND IFNULL(Y.Impp,0) < X.MIDRATE THEN 'L' ELSE 'H' END WHEN 'JA ' THEN CASE WHEN IFNULL(Y.Impp,0) < X.LOWRATE THEN 'L' WHEN IFNULL(Y.Impp,0) > X.HIGHRATE THEN 'H' ELSE 'M' END ELSE '-' END) AS 'Remarks', Y.InspectionTime AS 'TestDate', IFNULL(Y.Bin,0) AS 'Bin', IFNULL(Y.Pmpp,0) AS 'Power', IFNULL(Y.Uoc,0) AS 'Voc', IFNULL(Y.Isc,0) AS 'Isc', IFNULL(Y.Umpp,0) AS 'Vmp', IFNULL(Y.Impp,0) AS 'Imp', IFNULL(Y.ShuntResistance,0) AS 'Rsh', IFNULL(Y.FF,0)AS 'FF', X.PALLETSNO, Z.CABINETNO AS 'ContainerNo' FROM (SELECT CASE A.PALLETNO WHEN @PALLETNO THEN CASE A.CARTONNO WHEN @CARTONNO THEN @curRow := @curRow + 1 ELSE @curRow := 1 END ELSE @curRow :=1 END AS SEQNO, B.SERIALNO, @PALLETNO := A.PALLETNO AS PALLETNO, @CARTONNO := A.CARTONNO AS CARTONNO, A.PRODUCTNO, A.MODELNAME, C.GENDESC, A.TRXDATE, IFNULL(D.LOWRATE,0) AS LOWRATE, IFNULL(D.MIDRATE,0) AS MIDRATE, IFNULL(D.HIGHRATE,0) AS HIGHRATE, A.CUSTOMER, A.ROWID, A.PALLETSNO FROM epl01 A INNER JOIN epl02 B ON A.PALLETNO = B.PALLETNO AND A.CARTONNO = B.CARTONNO LEFT JOIN itm01 C ON A.PRODUCTNO = C.ITMCODE LEFT JOIN fdd01 D ON A.MODELNAME LIKE D.MODCODE AND CASE A.CUSTOMER WHEN 'ASTRO' THEN RIGHT(A.MODELNAME,3) WHEN 'JA' THEN SUBSTRING(A.MODELNAME,12,3) ELSE 0 END = D.POWRATE JOIN (SELECT @curRow := 0, @PALLETNO := '', @CARTONNO := '') r) X RIGHT JOIN ftd_upd Y ON X.SERIALNO = Y.ModuleID LEFT JOIN cab02 Z ON X.PALLETNO = Z.PALLETNO INNER JOIN lbl02 W ON Y.ModuleID = W.SERIALNO AND W.LBLTYPE = 1 WHERE ".$cond." ORDER BY W.CUSTOMER, Z.CABINETNO, X.ROWID, X.PALLETNO, X.CARTONNO, X.SEQNO, Y.InspectionTime";
 
         $ftd = DB::connection('web_portal')
                             ->select($sql);

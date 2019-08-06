@@ -42,12 +42,21 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="my-1 mr-2" for="customer">Customer</label>
+                            <select class="form-control form-control-sm" name="customer" id="customer">
+                            @foreach ($customers as $customer)
+                                <option value="{{$customer->CODE}}">{{$customer->DESC}}</option>
+                            @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label class="my-1 mr-2">Type</label>
 
                             <div class="form-group">
                                 <div class="form-check form-check-inline">
                                     <input type="radio" class="form-check-input" name="packtype" id="both" value="both" checked>
-                                    <label for="both" class="form-check-label">Both</label>
+                                    <label for="both" class="form-check-label">All (Including Not Packed)</label>
                                 </div>
         
                                 <div class="form-check form-check-inline">
@@ -144,6 +153,7 @@
                 formData.append('palletno', $("#palletno").val());
                 formData.append('start', $("#start").val());
                 formData.append('end', $("#end").val());
+                formData.append('customer', $('#customer').val());
                 formData.append('type', $('input[name="packtype"]:checked').val());
                 formData.append('param', $('input[name="param-input"]:checked').val());
                 
