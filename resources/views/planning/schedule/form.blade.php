@@ -142,7 +142,7 @@
                                     @endforeach
 
                                     <td>
-                                        <input type="text" name="cell[]" class="form-control" value="{{$product->cell}}">
+                                        <input type="text" name="cell[]" class="form-control" value="{{$product->cell}}" autocomplete="false" placeholder="Enter Efficiency">
                                         <span class="form-text text-danger" id="err_cell[]"></span>
                                     </td>
 
@@ -202,7 +202,7 @@
                                 @endforeach
 
                                 <td>
-                                    <input type="text" name="cell[]" class="form-control">
+                                    <input type="text" name="cell[]" class="form-control" autocomplete="false" placeholder="Enter Efficiency">
                                     <span class="form-text text-danger" id="err_cell[]"></span>
                                 </td>
 

@@ -140,11 +140,11 @@ return [
 
         'planning' => [
             'driver' => 'mysql',
-            'host' => '192.168.128.9',
+            'host' => '192.168.128.7',
             'port' => '3306',
             'database' => 'sp_planning',
-            'username' => 'laravel_user',
-            'password' => 'password@1',
+            'username' => 'laravel_admin',
+            'password' => '$0l@rd0m@1n',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
