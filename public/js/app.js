@@ -50988,7 +50988,7 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   !!_vm.pagination.prev_page &&
-                                    _vm.inquire(_vm.pagination.prev_page)
+                                    _vm.listCabinets(_vm.pagination.prev_page)
                                 }
                               }
                             },
@@ -51039,7 +51039,9 @@ var render = function() {
                                   on: {
                                     click: function($event) {
                                       !!_vm.pagination.next_page &&
-                                        _vm.inquire(_vm.pagination.next_page)
+                                        _vm.listCabinets(
+                                          _vm.pagination.next_page
+                                        )
                                     }
                                   }
                                 },
