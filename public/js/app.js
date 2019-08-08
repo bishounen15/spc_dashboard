@@ -50595,6 +50595,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -50615,7 +50635,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 modules: 0
             },
             create: false,
-            max_pallets: 16
+            max_pallets: 16,
+            pagination: {}
         };
     },
     created: function created() {},
@@ -50640,18 +50661,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.pallet_nos = [];
             }
         },
-        listCabinets: function listCabinets() {
+        listCabinets: function listCabinets(page_url) {
             var _this = this;
 
-            fetch('/api/mes/cabinet/list', {
+            var vm = this;
+
+            fetch(page_url || '/api/mes/cabinet/list', {
                 method: 'post'
             }).then(function (res) {
                 return res.json();
-            }).then(function (data) {
-                _this.cabinets = data.data;
+            }).then(function (res) {
+                _this.cabinets = res.data;
+                vm.makePagination(res.next_page_url, res.prev_page_url, res.current_page, res.last_page, res.from, res.to, res.total);
             }).catch(function (err) {
                 return console.log(err);
             });
+        },
+        makePagination: function makePagination(next_page_url, prev_page_url, current_page, last_page, from, to, total) {
+            var msg = total > 0 ? 'Showing ' + from + ' of ' + to + ' of ' + total + ' entries' : 'No records to show';
+
+            var pagination = {
+                next_page: next_page_url,
+                prev_page: prev_page_url,
+                curr_page: current_page,
+                last_page: last_page,
+                first_rec: from,
+                last_rec: to,
+                total_rec: total,
+                message: msg
+            };
+
+            this.pagination = pagination;
         },
 
         checkPallet: function checkPallet(event) {
@@ -50813,20 +50853,72 @@ var render = function() {
           _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-sm pt-0 pb-2 pl-3 pr-1" }, [
               _c(
-                "button",
-                {
-                  staticClass: "btn btn-info",
-                  attrs: { id: "AddRecord" },
-                  on: {
-                    click: function($event) {
-                      _vm.createCabinet()
-                    }
-                  }
-                },
+                "nav",
+                { attrs: { "aria-label": "Page navigation example" } },
                 [
-                  _vm._v(
-                    "\n                        Add Record\n                    "
-                  )
+                  _c("ul", { staticClass: "pagination" }, [
+                    _c(
+                      "li",
+                      {
+                        staticClass: "page-item",
+                        class: [{ disabled: !_vm.pagination.prev_page }],
+                        on: {
+                          click: function($event) {
+                            !!_vm.pagination.prev_page &&
+                              _vm.inquire(_vm.pagination.prev_page)
+                          }
+                        }
+                      },
+                      [_vm._m(0)]
+                    ),
+                    _vm._v(" "),
+                    _vm.pagination.total_rec
+                      ? _c("li", { staticClass: "page-item disabled" }, [
+                          _c(
+                            "a",
+                            { staticClass: "page-link", attrs: { href: "#" } },
+                            [
+                              _vm._v(
+                                "Page " +
+                                  _vm._s(_vm.pagination.curr_page) +
+                                  " of " +
+                                  _vm._s(_vm.pagination.last_page)
+                              )
+                            ]
+                          )
+                        ])
+                      : _c("li", { staticClass: "page-item disabled" }, [
+                          _c(
+                            "a",
+                            { staticClass: "page-link", attrs: { href: "#" } },
+                            [_vm._v("No Record Found")]
+                          )
+                        ]),
+                    _vm._v(" "),
+                    _c(
+                      "li",
+                      {
+                        staticClass: "page-item",
+                        class: [{ disabled: !_vm.pagination.next_page }]
+                      },
+                      [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "page-link",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                !!_vm.pagination.next_page &&
+                                  _vm.inquire(_vm.pagination.next_page)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-forward" })]
+                        )
+                      ]
+                    )
+                  ])
                 ]
               )
             ]),
@@ -50835,6 +50927,23 @@ var render = function() {
               "div",
               { staticClass: "col-sm pt-0 pb-2 pl-1 pr-3 text-right" },
               [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-info",
+                    attrs: { id: "AddRecord" },
+                    on: {
+                      click: function($event) {
+                        _vm.createCabinet()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-plus-circle" }),
+                    _vm._v(" Add Record\n                    ")
+                  ]
+                ),
+                _vm._v(" "),
                 _c(
                   "button",
                   {
@@ -50847,9 +50956,8 @@ var render = function() {
                     }
                   },
                   [
-                    _vm._v(
-                      "\n                        Marked as Shipped\n                    "
-                    )
+                    _c("i", { staticClass: "far fa-check-square" }),
+                    _vm._v(" Marked as Shipped\n                    ")
                   ]
                 )
               ]
@@ -50861,7 +50969,7 @@ var render = function() {
               "table",
               { staticClass: "table table-sm table-condensed table-striped" },
               [
-                _vm._m(0),
+                _vm._m(1),
                 _vm._v(" "),
                 _c(
                   "tbody",
@@ -50898,6 +51006,22 @@ var render = function() {
                 )
               ]
             )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row p-2" }, [
+            _c("div", { staticClass: "col-sm" }, [
+              _c("p", { staticClass: "text-center" }, [
+                _vm._v(
+                  "\n                        Showing record " +
+                    _vm._s(_vm.pagination.first_rec) +
+                    " to " +
+                    _vm._s(_vm.pagination.last_rec) +
+                    " (Total Records: " +
+                    _vm._s(_vm.pagination.total_rec) +
+                    ")\n                    "
+                )
+              ])
+            ])
           ])
         ])
       ]
@@ -50925,7 +51049,7 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _vm._m(1),
+                _vm._m(2),
                 _vm._v(" "),
                 _c("div", { staticClass: "card-footer p-1" }, [
                   _c("div", { staticClass: "row" }, [
@@ -51037,7 +51161,7 @@ var render = function() {
                           "table table-sm table-condensed table-striped"
                       },
                       [
-                        _vm._m(2),
+                        _vm._m(3),
                         _vm._v(" "),
                         _c(
                           "tbody",
@@ -51078,9 +51202,9 @@ var render = function() {
           { staticClass: "modal-dialog modal-md", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(3),
-              _vm._v(" "),
               _vm._m(4),
+              _vm._v(" "),
+              _vm._m(5),
               _vm._v(" "),
               _c("div", { staticClass: "modal-footer" }, [
                 _c(
@@ -51114,6 +51238,14 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+      _c("i", { staticClass: "fas fa-backward" })
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

@@ -8,13 +8,25 @@
             <div class="card-body pt-1 pb-1 pr-3 pl-3">
                 <div class="row">
                     <div class="col-sm pt-0 pb-2 pl-3 pr-1">
-                        <button id="AddRecord" class="btn btn-info" @click="createCabinet()">
-                            Add Record
-                        </button>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li class="page-item" v-bind:class="[{ disabled: !pagination.prev_page }]" @click="!!pagination.prev_page && inquire(pagination.prev_page)"><a class="page-link" href="#"><i class="fas fa-backward"></i></a></li>
+
+                                <li class="page-item disabled" v-if="pagination.total_rec"><a class="page-link" href="#" >Page {{pagination.curr_page}} of {{pagination.last_page}}</a></li>
+
+                                <li class="page-item disabled" v-else><a class="page-link" href="#">No Record Found</a></li>
+                                
+                                <li class="page-item" v-bind:class="[{ disabled: !pagination.next_page }]"><a class="page-link" href="#" @click="!!pagination.next_page && inquire(pagination.next_page)"><i class="fas fa-forward"></i></a></li>
+                            </ul>
+                        </nav>
                     </div>
                     <div class="col-sm pt-0 pb-2 pl-1 pr-3 text-right">
+                        <button id="AddRecord" class="btn btn-info" @click="createCabinet()">
+                            <i class="fas fa-plus-circle"></i> Add Record
+                        </button>
+
                         <button id="ShipCabinet" class="btn btn-success pull-right" :disabled="this.cabinets_selected.length==0" data-toggle="modal" data-target="#ShipModal">
-                            Marked as Shipped
+                            <i class="far fa-check-square"></i> Marked as Shipped
                         </button>
                     </div>
                 </div>
@@ -46,6 +58,14 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div class="row p-2">
+                    <div class="col-sm">
+                        <p class="text-center">
+                            Showing record {{pagination.first_rec}} to {{pagination.last_rec}} (Total Records: {{pagination.total_rec}})
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -219,7 +239,8 @@ export default {
                 modules: 0
             },
             create: false,
-            max_pallets: 16
+            max_pallets: 16,
+            pagination: {}
         }
     },
     created() {
@@ -245,15 +266,34 @@ export default {
                 this.pallet_nos = [];
             }
         }, 
-        listCabinets() {
-            fetch('/api/mes/cabinet/list', {
+        listCabinets(page_url) {
+            let vm = this;
+
+            fetch(page_url || '/api/mes/cabinet/list', {
                 method: 'post',
                 })
                 .then(res => res.json())
-                .then(data => {
-                    this.cabinets = data.data;
+                .then(res => {
+                    this.cabinets = res.data;
+                    vm.makePagination(res.next_page_url, res.prev_page_url, res.current_page, res.last_page, res.from, res.to, res.total);
                 })
                 .catch(err => console.log(err));
+        },
+        makePagination(next_page_url, prev_page_url, current_page, last_page, from, to, total) {
+            let msg = total > 0 ? 'Showing ' + from + ' of ' + to + ' of ' + total + ' entries' : 'No records to show';
+
+            let pagination = {
+                next_page: next_page_url,
+                prev_page: prev_page_url,
+                curr_page: current_page,
+                last_page: last_page,
+                first_rec: from,
+                last_rec: to,
+                total_rec: total,
+                message: msg
+            }
+
+            this.pagination = pagination;
         },
         checkPallet: function(event) {
             let pallets = this.pallets;

@@ -41,7 +41,7 @@ class CabinetsController extends Controller
                             ->selectRaw('A.CABINETNO, A.TRXDATE, A.REGISTRATION, COUNT(DISTINCT B.PALLETNO) AS PALLETS, COUNT(C.SERIALNO) AS MODULES, A.SHIPDATE')
                             ->groupBy("A.CABINETNO", "A.TRXDATE", "A.REGISTRATION", "A.SHIPDATE")
                             ->orderByRaw('A.CABINETNO DESC')
-                            ->paginate(1000);
+                            ->paginate(10);
         
         return Response::json($cabinets);
     }
