@@ -1,79 +1,163 @@
 <template>
     <div>
-        <h3 class="mb-4"><i class="fas fa-tasks"></i> {{title}}</h3>
+        <h3 class="mb-3"><i class="fas fa-tasks"></i> {{title}}</h3>
         <div id="record-list" class="card" v-bind:style="[{ display: (this.create == true ? 'none' : 'block') }]">
-            <div class="card-header bg-warning text-white">
-                {{title}} List
-            </div>
-            <div class="card-body pt-1 pb-1 pr-3 pl-3">
-                <div class="row">
-                    <div class="col-sm pt-0 pb-2 pl-3 pr-1">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li class="page-item" v-bind:class="[{ disabled: !pagination.prev_page }]" @click="!!pagination.prev_page && inquire(pagination.prev_page)"><a class="page-link" href="#"><i class="fas fa-backward"></i></a></li>
-
-                                <li class="page-item disabled" v-if="pagination.total_rec"><a class="page-link" href="#" >Page {{pagination.curr_page}} of {{pagination.last_page}}</a></li>
-
-                                <li class="page-item disabled" v-else><a class="page-link" href="#">No Record Found</a></li>
-                                
-                                <li class="page-item" v-bind:class="[{ disabled: !pagination.next_page }]"><a class="page-link" href="#" @click="!!pagination.next_page && inquire(pagination.next_page)"><i class="fas fa-forward"></i></a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="col-sm pt-0 pb-2 pl-1 pr-3 text-right">
-                        <button id="AddRecord" class="btn btn-info" @click="createCabinet()">
-                            <i class="fas fa-plus-circle"></i> Add Record
-                        </button>
-
-                        <button id="ShipCabinet" class="btn btn-success pull-right" :disabled="this.cabinets_selected.length==0" data-toggle="modal" data-target="#ShipModal">
-                            <i class="far fa-check-square"></i> Mark as Shipped
-                        </button>
-                    </div>
-                </div>
-
-                <div class="row pt-0 pb-2 pl-3 pr-3">
-                    <table class="table table-sm table-condensed table-striped">
-                        <thead class="thead-dark">
-                            <th>#</th>
-                            <th>Cabinet Number</th>
-                            <th>Date</th>
-                            <th>Registration</th>
-                            <th>No. of Pallets</th>
-                            <th>Number of Modules</th>
-                            <th>Date Shipped</th>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(cabinet,i) in cabinets" v-bind:key="i">
-                                <td>
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="selectedContainer[]" v-bind:value="cabinet.CABINETNO" :disabled="cabinet.SHIPDATE != null" @change="selectCabinet">
+            <div class="row">
+                <div class="col-sm-3 pr-0">
+                    <div class="card">
+                        <div class="card-header bg-warning text-white">
+                            <strong>Cabinet Inquiry</strong>
+                        </div>
+                        <div class="cadr-body p-2">
+                            <form id="inquiry">
+                                <div class="form-group">
+                                    <label>
+                                        <strong>Transaction Date</strong>
+                                    </label>
+                                    <div class="form-row pb-2">
+                                        <div class="col-sm-4">
+                                            <small>Start Date</small>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <input type="date" name="start" id="start" class="form-control form-control-sm">
+                                        </div>
                                     </div>
-                                </td>
-                                <td>{{cabinet.CABINETNO}}</td>
-                                <td>{{cabinet.TRXDATE}}</td>
-                                <td>{{cabinet.REGISTRATION}}</td>
-                                <td>{{cabinet.PALLETS}}</td>
-                                <td>{{cabinet.MODULES}}</td>
-                                <td>{{cabinet.SHIPDATE}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
 
-                <div class="row p-2">
-                    <div class="col-sm">
-                        <p class="text-center">
-                            Showing record {{pagination.first_rec}} to {{pagination.last_rec}} (Total Records: {{pagination.total_rec}})
-                        </p>
+                                    <div class="form-row">
+                                        <div class="col-sm-4">
+                                            <small>End Date</small>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <input type="date" name="end" id="end" class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <strong>Government Registration</strong>
+                                    </label>
+                                    <div class="form-row">
+                                        <div class="col-sm-4">
+                                            <div class="form-check text-center">
+                                                <input class="form-check-input" type="radio" name="govreg" value="All" checked>
+                                                <label class="form-check-label" for="govreg">
+                                                    <small>All</small>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <div class="form-check text-center">
+                                                <input class="form-check-input" type="radio" name="govreg" value="PEZA">
+                                                <label class="form-check-label" for="govreg">
+                                                    <small>PEZA</small>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <div class="form-check text-center">
+                                                <input class="form-check-input" type="radio" name="govreg" value="BOI">
+                                                <label class="form-check-label" for="govreg">
+                                                    <small>BOI</small>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <strong>CIPL No.</strong>
+                                    </label>
+                                    <input type="text" name="cipl" id="cipl" class="form-control form-control-sm" placeholder="Enter CIPL No.">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer p-2">
+                            <button id="inquire" class="btn btn-block btn-info" @click="listCabinets()"><i class="fas fa-search"></i> Inquire</button>
+                        </div>
                     </div>
+                </div>
+                <div class="col-sm-9 pl-0">
+                    <div class="card">
+                        <div class="card-body pt-2 pb-2 pr-3 pl-3">
+                            <div class="row">
+                                <div class="col-sm pt-0 pb-2 pl-3 pr-1">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <li class="page-item" v-bind:class="[{ disabled: !pagination.prev_page }]" @click="!!pagination.prev_page && inquire(pagination.prev_page)"><a class="page-link" href="#"><i class="fas fa-backward"></i></a></li>
+
+                                            <li class="page-item disabled" v-if="pagination.total_rec"><a class="page-link" href="#" >Page {{pagination.curr_page}} of {{pagination.last_page}}</a></li>
+
+                                            <li class="page-item disabled" v-else><a class="page-link" href="#">No Record Found</a></li>
+                                            
+                                            <li class="page-item" v-bind:class="[{ disabled: !pagination.next_page }]"><a class="page-link" href="#" @click="!!pagination.next_page && inquire(pagination.next_page)"><i class="fas fa-forward"></i></a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="col-sm pt-0 pb-2 pl-1 pr-3 text-right">
+                                    <button id="AddRecord" class="btn btn-info" @click="createCabinet()">
+                                        <i class="fas fa-plus-circle"></i> Add Record
+                                    </button>
+
+                                    <button id="ShipCabinet" class="btn btn-success pull-right" :disabled="this.cabinets_selected.length==0" data-toggle="modal" data-target="#ShipModal">
+                                        <i class="far fa-check-square"></i> Mark as Shipped
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row pt-0 pb-2 pl-3 pr-3">
+                                <table class="table table-sm table-condensed table-striped">
+                                    <thead class="thead-dark">
+                                        <th>#</th>
+                                        <th>Cabinet Number</th>
+                                        <th>Date</th>
+                                        <th>Registration</th>
+                                        <th>No. of Pallets</th>
+                                        <th>No. of Modules</th>
+                                        <th>Date Shipped</th>
+                                        <th>CIPL No.</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-if="loading">
+                                            <td colspan="8" class="text-center table-warning">
+                                                <h4>Loading Data. Please Wait...</h4>
+                                            </td>
+                                        </tr>
+                                        <tr v-for="(cabinet,i) in cabinets" v-bind:key="i" v-else>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" name="selectedContainer[]" v-bind:value="cabinet.CABINETNO" :disabled="cabinet.SHIPDATE != null" @change="selectCabinet">
+                                                </div>
+                                            </td>
+                                            <td>{{cabinet.CABINETNO}}</td>
+                                            <td>{{cabinet.TRXDATE}}</td>
+                                            <td>{{cabinet.REGISTRATION}}</td>
+                                            <td>{{cabinet.PALLETS}}</td>
+                                            <td>{{cabinet.MODULES}}</td>
+                                            <td>{{cabinet.SHIPDATE}}</td>
+                                            <td>{{cabinet.CIPLNO}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row p-2">
+                                <div class="col-sm">
+                                    <p class="text-center">
+                                        Showing record {{pagination.first_rec}} to {{pagination.last_rec}} (Total Records: {{pagination.total_rec}})
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
                 </div>
             </div>
         </div>
 
         <div id="create-cabinet" class="card"  v-bind:style="[{ display: (this.create == false ? 'none' : 'block') }]">
-            <div class="card-header bg-info text-white">
-                Create {{title}}
-            </div>
             <div class="card-body p-2">
                 <div class="row">
                     <div class="col-sm-4">
@@ -240,7 +324,8 @@ export default {
             },
             create: false,
             max_pallets: 16,
-            pagination: {}
+            pagination: {},
+            loading: false
         }
     },
     created() {
@@ -268,14 +353,26 @@ export default {
         }, 
         listCabinets(page_url) {
             let vm = this;
+            let data = {};
+
+            $.each($("#inquiry").serializeArray(), function(i) {
+                data[this.name] = this.value;
+            });
+            
+            vm.loading = true;
 
             fetch(page_url || '/api/mes/cabinet/list', {
                 method: 'post',
+                body: JSON.stringify(data),
+                headers: {
+                    'content-type': 'application/json'
+                }
                 })
                 .then(res => res.json())
                 .then(res => {
                     this.cabinets = res.data;
                     vm.makePagination(res.next_page_url, res.prev_page_url, res.current_page, res.last_page, res.from, res.to, res.total);
+                    vm.loading = false;
                 })
                 .catch(err => console.log(err));
         },

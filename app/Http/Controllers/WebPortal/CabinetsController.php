@@ -33,13 +33,35 @@ class CabinetsController extends Controller
         return view('mes.transactions.cabinet', $data);
     }
 
-    public function listCabinets() {
+    public function listCabinets(Request $request) {
+        $dt = [];
+        $cond = [];
+
+        if ($request->start != "" || $request->end != "") {
+            $start = $request->start == "" ? $request->end : $request->start;
+            $end = $request->end == "" ? $request->start : $request->end;
+
+            array_push($dt,[$start,$end]);
+        } else {
+            array_push($dt,["2019-01-01",date('Y-m-d')]);
+        }
+
+        if ($request->govreg != "All" && $request->govreg != "") {
+            array_push($cond,[DB::raw("A.REGISTRATION"),$request->govreg]);
+        }
+
+        if ($request->cipl != "All" && $request->cipl != "") {
+            array_push($cond,[DB::raw("A.CIPLNO"),$request->cipl]);
+        }
+
         $cabinets = DB::connection('web_portal')
                             ->table('cab01 AS A')
                             ->join('cab02 AS B','A.CABINETNO','=','B.CABINETNO')
                             ->join('epl02 AS C','B.PALLETNO','=','C.PALLETNO')
-                            ->selectRaw('A.CABINETNO, A.TRXDATE, A.REGISTRATION, COUNT(DISTINCT B.PALLETNO) AS PALLETS, COUNT(C.SERIALNO) AS MODULES, A.SHIPDATE')
-                            ->groupBy("A.CABINETNO", "A.TRXDATE", "A.REGISTRATION", "A.SHIPDATE")
+                            ->selectRaw('A.CABINETNO, A.TRXDATE, A.REGISTRATION, COUNT(DISTINCT B.PALLETNO) AS PALLETS, COUNT(C.SERIALNO) AS MODULES, A.SHIPDATE, A.CIPLNO')
+                            ->whereBetween(DB::raw('IFNULL(A.SHIPDATE,A.TRXDATE)'),$dt)
+                            ->where($cond)
+                            ->groupBy("A.CABINETNO", "A.TRXDATE", "A.REGISTRATION", "A.SHIPDATE", "A.CIPLNO")
                             ->orderByRaw('A.CABINETNO DESC')
                             ->paginate(10);
         

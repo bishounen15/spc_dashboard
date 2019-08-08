@@ -50615,6 +50615,90 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -50636,7 +50720,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             create: false,
             max_pallets: 16,
-            pagination: {}
+            pagination: {},
+            loading: false
         };
     },
     created: function created() {},
@@ -50665,14 +50750,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             var vm = this;
+            var data = {};
+
+            $.each($("#inquiry").serializeArray(), function (i) {
+                data[this.name] = this.value;
+            });
+
+            vm.loading = true;
 
             fetch(page_url || '/api/mes/cabinet/list', {
-                method: 'post'
+                method: 'post',
+                body: JSON.stringify(data),
+                headers: {
+                    'content-type': 'application/json'
+                }
             }).then(function (res) {
                 return res.json();
             }).then(function (res) {
                 _this.cabinets = res.data;
                 vm.makePagination(res.next_page_url, res.prev_page_url, res.current_page, res.last_page, res.from, res.to, res.total);
+                vm.loading = false;
             }).catch(function (err) {
                 return console.log(err);
             });
@@ -50832,7 +50929,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h3", { staticClass: "mb-4" }, [
+    _c("h3", { staticClass: "mb-3" }, [
       _c("i", { staticClass: "fas fa-tasks" }),
       _vm._v(" " + _vm._s(_vm.title))
     ]),
@@ -50845,181 +50942,232 @@ var render = function() {
         attrs: { id: "record-list" }
       },
       [
-        _c("div", { staticClass: "card-header bg-warning text-white" }, [
-          _vm._v("\n            " + _vm._s(_vm.title) + " List\n        ")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body pt-1 pb-1 pr-3 pl-3" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-sm pt-0 pb-2 pl-3 pr-1" }, [
-              _c(
-                "nav",
-                { attrs: { "aria-label": "Page navigation example" } },
-                [
-                  _c("ul", { staticClass: "pagination" }, [
-                    _c(
-                      "li",
-                      {
-                        staticClass: "page-item",
-                        class: [{ disabled: !_vm.pagination.prev_page }],
-                        on: {
-                          click: function($event) {
-                            !!_vm.pagination.prev_page &&
-                              _vm.inquire(_vm.pagination.prev_page)
-                          }
-                        }
-                      },
-                      [_vm._m(0)]
-                    ),
-                    _vm._v(" "),
-                    _vm.pagination.total_rec
-                      ? _c("li", { staticClass: "page-item disabled" }, [
-                          _c(
-                            "a",
-                            { staticClass: "page-link", attrs: { href: "#" } },
-                            [
-                              _vm._v(
-                                "Page " +
-                                  _vm._s(_vm.pagination.curr_page) +
-                                  " of " +
-                                  _vm._s(_vm.pagination.last_page)
-                              )
-                            ]
-                          )
-                        ])
-                      : _c("li", { staticClass: "page-item disabled" }, [
-                          _c(
-                            "a",
-                            { staticClass: "page-link", attrs: { href: "#" } },
-                            [_vm._v("No Record Found")]
-                          )
-                        ]),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      {
-                        staticClass: "page-item",
-                        class: [{ disabled: !_vm.pagination.next_page }]
-                      },
-                      [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "page-link",
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                !!_vm.pagination.next_page &&
-                                  _vm.inquire(_vm.pagination.next_page)
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fas fa-forward" })]
-                        )
-                      ]
-                    )
-                  ])
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "col-sm pt-0 pb-2 pl-1 pr-3 text-right" },
-              [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-sm-3 pr-0" }, [
+            _c("div", { staticClass: "card" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _vm._m(1),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-footer p-2" }, [
                 _c(
                   "button",
                   {
-                    staticClass: "btn btn-info",
-                    attrs: { id: "AddRecord" },
+                    staticClass: "btn btn-block btn-info",
+                    attrs: { id: "inquire" },
                     on: {
                       click: function($event) {
-                        _vm.createCabinet()
+                        _vm.listCabinets()
                       }
                     }
                   },
                   [
-                    _c("i", { staticClass: "fas fa-plus-circle" }),
-                    _vm._v(" Add Record\n                    ")
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-success pull-right",
-                    attrs: {
-                      id: "ShipCabinet",
-                      disabled: this.cabinets_selected.length == 0,
-                      "data-toggle": "modal",
-                      "data-target": "#ShipModal"
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "far fa-check-square" }),
-                    _vm._v(" Mark as Shipped\n                    ")
+                    _c("i", { staticClass: "fas fa-search" }),
+                    _vm._v(" Inquire")
                   ]
                 )
-              ]
-            )
+              ])
+            ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "row pt-0 pb-2 pl-3 pr-3" }, [
-            _c(
-              "table",
-              { staticClass: "table table-sm table-condensed table-striped" },
-              [
-                _vm._m(1),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.cabinets, function(cabinet, i) {
-                    return _c("tr", { key: i }, [
-                      _c("td", [
-                        _c("div", { staticClass: "form-check" }, [
-                          _c("input", {
-                            staticClass: "form-check-input",
-                            attrs: {
-                              type: "checkbox",
-                              name: "selectedContainer[]",
-                              disabled: cabinet.SHIPDATE != null
+          _c("div", { staticClass: "col-sm-9 pl-0" }, [
+            _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-body pt-2 pb-2 pr-3 pl-3" }, [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-sm pt-0 pb-2 pl-3 pr-1" }, [
+                    _c(
+                      "nav",
+                      { attrs: { "aria-label": "Page navigation example" } },
+                      [
+                        _c("ul", { staticClass: "pagination" }, [
+                          _c(
+                            "li",
+                            {
+                              staticClass: "page-item",
+                              class: [{ disabled: !_vm.pagination.prev_page }],
+                              on: {
+                                click: function($event) {
+                                  !!_vm.pagination.prev_page &&
+                                    _vm.inquire(_vm.pagination.prev_page)
+                                }
+                              }
                             },
-                            domProps: { value: cabinet.CABINETNO },
-                            on: { change: _vm.selectCabinet }
-                          })
+                            [_vm._m(2)]
+                          ),
+                          _vm._v(" "),
+                          _vm.pagination.total_rec
+                            ? _c("li", { staticClass: "page-item disabled" }, [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "page-link",
+                                    attrs: { href: "#" }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "Page " +
+                                        _vm._s(_vm.pagination.curr_page) +
+                                        " of " +
+                                        _vm._s(_vm.pagination.last_page)
+                                    )
+                                  ]
+                                )
+                              ])
+                            : _c("li", { staticClass: "page-item disabled" }, [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "page-link",
+                                    attrs: { href: "#" }
+                                  },
+                                  [_vm._v("No Record Found")]
+                                )
+                              ]),
+                          _vm._v(" "),
+                          _c(
+                            "li",
+                            {
+                              staticClass: "page-item",
+                              class: [{ disabled: !_vm.pagination.next_page }]
+                            },
+                            [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "page-link",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      !!_vm.pagination.next_page &&
+                                        _vm.inquire(_vm.pagination.next_page)
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fas fa-forward" })]
+                              )
+                            ]
+                          )
                         ])
-                      ]),
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "col-sm pt-0 pb-2 pl-1 pr-3 text-right" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-info",
+                          attrs: { id: "AddRecord" },
+                          on: {
+                            click: function($event) {
+                              _vm.createCabinet()
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fas fa-plus-circle" }),
+                          _vm._v(
+                            " Add Record\n                                "
+                          )
+                        ]
+                      ),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(cabinet.CABINETNO))]),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success pull-right",
+                          attrs: {
+                            id: "ShipCabinet",
+                            disabled: this.cabinets_selected.length == 0,
+                            "data-toggle": "modal",
+                            "data-target": "#ShipModal"
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "far fa-check-square" }),
+                          _vm._v(
+                            " Mark as Shipped\n                                "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row pt-0 pb-2 pl-3 pr-3" }, [
+                  _c(
+                    "table",
+                    {
+                      staticClass:
+                        "table table-sm table-condensed table-striped"
+                    },
+                    [
+                      _vm._m(3),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(cabinet.TRXDATE))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(cabinet.REGISTRATION))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(cabinet.PALLETS))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(cabinet.MODULES))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(cabinet.SHIPDATE))])
+                      _c(
+                        "tbody",
+                        [
+                          _vm.loading
+                            ? _c("tr", [_vm._m(4)])
+                            : _vm._l(_vm.cabinets, function(cabinet, i) {
+                                return _c("tr", { key: i }, [
+                                  _c("td", [
+                                    _c("div", { staticClass: "form-check" }, [
+                                      _c("input", {
+                                        staticClass: "form-check-input",
+                                        attrs: {
+                                          type: "checkbox",
+                                          name: "selectedContainer[]",
+                                          disabled: cabinet.SHIPDATE != null
+                                        },
+                                        domProps: { value: cabinet.CABINETNO },
+                                        on: { change: _vm.selectCabinet }
+                                      })
+                                    ])
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(cabinet.CABINETNO))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(cabinet.TRXDATE))]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(_vm._s(cabinet.REGISTRATION))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(cabinet.PALLETS))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(cabinet.MODULES))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(cabinet.SHIPDATE))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(cabinet.CIPLNO))])
+                                ])
+                              })
+                        ],
+                        2
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row p-2" }, [
+                  _c("div", { staticClass: "col-sm" }, [
+                    _c("p", { staticClass: "text-center" }, [
+                      _vm._v(
+                        "\n                                    Showing record " +
+                          _vm._s(_vm.pagination.first_rec) +
+                          " to " +
+                          _vm._s(_vm.pagination.last_rec) +
+                          " (Total Records: " +
+                          _vm._s(_vm.pagination.total_rec) +
+                          ")\n                                "
+                      )
                     ])
-                  })
-                )
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row p-2" }, [
-            _c("div", { staticClass: "col-sm" }, [
-              _c("p", { staticClass: "text-center" }, [
-                _vm._v(
-                  "\n                        Showing record " +
-                    _vm._s(_vm.pagination.first_rec) +
-                    " to " +
-                    _vm._s(_vm.pagination.last_rec) +
-                    " (Total Records: " +
-                    _vm._s(_vm.pagination.total_rec) +
-                    ")\n                    "
-                )
+                  ])
+                ])
               ])
             ])
           ])
@@ -51035,10 +51183,6 @@ var render = function() {
         attrs: { id: "create-cabinet" }
       },
       [
-        _c("div", { staticClass: "card-header bg-info text-white" }, [
-          _vm._v("\n            Create " + _vm._s(_vm.title) + "\n        ")
-        ]),
-        _vm._v(" "),
         _c("div", { staticClass: "card-body p-2" }, [
           _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-sm-4" }, [
@@ -51049,7 +51193,7 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _vm._m(2),
+                _vm._m(5),
                 _vm._v(" "),
                 _c("div", { staticClass: "card-footer p-1" }, [
                   _c("div", { staticClass: "row" }, [
@@ -51161,7 +51305,7 @@ var render = function() {
                           "table table-sm table-condensed table-striped"
                       },
                       [
-                        _vm._m(3),
+                        _vm._m(6),
                         _vm._v(" "),
                         _c(
                           "tbody",
@@ -51202,9 +51346,9 @@ var render = function() {
           { staticClass: "modal-dialog modal-md", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(4),
+              _vm._m(7),
               _vm._v(" "),
-              _vm._m(5),
+              _vm._m(8),
               _vm._v(" "),
               _c("div", { staticClass: "modal-footer" }, [
                 _c(
@@ -51242,6 +51386,122 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header bg-warning text-white" }, [
+      _c("strong", [_vm._v("Cabinet Inquiry")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "cadr-body p-2" }, [
+      _c("form", { attrs: { id: "inquiry" } }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", [_c("strong", [_vm._v("Transaction Date")])]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-row pb-2" }, [
+            _c("div", { staticClass: "col-sm-4" }, [
+              _c("small", [_vm._v("Start Date")])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-8" }, [
+              _c("input", {
+                staticClass: "form-control form-control-sm",
+                attrs: { type: "date", name: "start", id: "start" }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-row" }, [
+            _c("div", { staticClass: "col-sm-4" }, [
+              _c("small", [_vm._v("End Date")])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-8" }, [
+              _c("input", {
+                staticClass: "form-control form-control-sm",
+                attrs: { type: "date", name: "end", id: "end" }
+              })
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", [_c("strong", [_vm._v("Government Registration")])]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-row" }, [
+            _c("div", { staticClass: "col-sm-4" }, [
+              _c("div", { staticClass: "form-check text-center" }, [
+                _c("input", {
+                  staticClass: "form-check-input",
+                  attrs: {
+                    type: "radio",
+                    name: "govreg",
+                    value: "All",
+                    checked: ""
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  { staticClass: "form-check-label", attrs: { for: "govreg" } },
+                  [_c("small", [_vm._v("All")])]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-4" }, [
+              _c("div", { staticClass: "form-check text-center" }, [
+                _c("input", {
+                  staticClass: "form-check-input",
+                  attrs: { type: "radio", name: "govreg", value: "PEZA" }
+                }),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  { staticClass: "form-check-label", attrs: { for: "govreg" } },
+                  [_c("small", [_vm._v("PEZA")])]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-4" }, [
+              _c("div", { staticClass: "form-check text-center" }, [
+                _c("input", {
+                  staticClass: "form-check-input",
+                  attrs: { type: "radio", name: "govreg", value: "BOI" }
+                }),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  { staticClass: "form-check-label", attrs: { for: "govreg" } },
+                  [_c("small", [_vm._v("BOI")])]
+                )
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", [_c("strong", [_vm._v("CIPL No.")])]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control form-control-sm",
+            attrs: {
+              type: "text",
+              name: "cipl",
+              id: "cipl",
+              placeholder: "Enter CIPL No."
+            }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
       _c("i", { staticClass: "fas fa-backward" })
     ])
@@ -51261,10 +51521,22 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("th", [_vm._v("No. of Pallets")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Number of Modules")]),
+      _c("th", [_vm._v("No. of Modules")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Date Shipped")])
+      _c("th", [_vm._v("Date Shipped")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("CIPL No.")])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "td",
+      { staticClass: "text-center table-warning", attrs: { colspan: "8" } },
+      [_c("h4", [_vm._v("Loading Data. Please Wait...")])]
+    )
   },
   function() {
     var _vm = this
