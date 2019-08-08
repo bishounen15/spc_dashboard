@@ -26,7 +26,7 @@
                         </button>
 
                         <button id="ShipCabinet" class="btn btn-success pull-right" :disabled="this.cabinets_selected.length==0" data-toggle="modal" data-target="#ShipModal">
-                            <i class="far fa-check-square"></i> Marked as Shipped
+                            <i class="far fa-check-square"></i> Mark as Shipped
                         </button>
                     </div>
                 </div>

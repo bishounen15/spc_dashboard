@@ -50957,7 +50957,7 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "far fa-check-square" }),
-                    _vm._v(" Marked as Shipped\n                    ")
+                    _vm._v(" Mark as Shipped\n                    ")
                   ]
                 )
               ]
