@@ -100,11 +100,11 @@ class CabinetsController extends Controller
         
         if ($time < "06:00") {
             $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
-        }
+        } 
 
         $last_cabinet = Cabinet::where(
                             [
-                                ["TRXDATE",$date],
+                                [DB::raw("YEAR(TRXDATE)"),date("Y",strtotime($date))],
                                 ["REGISTRATION",$registration],
                             ]
                         )->orderBy("CABINETNO",'DESC')
