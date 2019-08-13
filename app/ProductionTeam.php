@@ -9,16 +9,32 @@ class ProductionTeam extends ReadOnlyBase
     //
     protected $object_array = [
         [
-            "code" => "MARIE",
-            "description" => "Team MARIE",
+            "code" => "KAP",
+            "description" => "Team KAP",
         ],
         [
-            "code" => "EDCOR",
-            "description" => "Team EDCOR",
+            "code" => "LANIE",
+            "description" => "Team LANIE",
         ],
         [
-            "code" => "MANNY",
-            "description" => "Team MANNY",
+            "code" => "BHE",
+            "description" => "Team BHE",
+        ],
+        [
+            "code" => "VERGIE",
+            "description" => "Team VERGIE",
+        ],
+        [
+            "code" => "ACE",
+            "description" => "Team ACE",
+        ],
+        [
+            "code" => "MAUI",
+            "description" => "Team MAUI",
+        ],
+        [
+            "code" => "TIN",
+            "description" => "Team TIN",
         ],
     ];
 }
