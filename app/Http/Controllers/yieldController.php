@@ -50,7 +50,7 @@ class yieldController extends Controller
         }
     }
 
-    private function processLastYield(&$last_yield, &$date, &$shift, &$time) {
+    private function processLastYield(&$last_yield, &$date, &$shift, &$time, &$schedshift) {
         if ($last_yield != null) {
             if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
                 $date = $last_yield->date;
@@ -185,7 +185,7 @@ class yieldController extends Controller
             $this->processShift($sched, $schedshift, $date);
 
             $last_yield = YieldData::where("date",$date)->orderBy("id","desc")->first();
-            $dt = $this->processLastYield($last_yield, $date, $shift, $time);
+            $dt = $this->processLastYield($last_yield, $date, $shift, $time, $schedshift);
 
             $last_trx = YieldData::where([
                 ["date", $date],
