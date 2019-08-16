@@ -158,6 +158,11 @@
                                     @endif
                                 @endforeach
                                 @endif
+
+                                @if(Auth::user()->mes_role == 'QUAL')
+                                <h6 class="dropdown-header">QA Transactions</h6>
+                                <a class="dropdown-item" href="/mes/packaging">&nbsp;&nbsp;&nbsp;&nbsp;<small>MRB Packaging</small></a>
+                                @endif
                                 </div>
                             </li>
 

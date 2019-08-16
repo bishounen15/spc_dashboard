@@ -3,7 +3,7 @@
 <form method="POST" action="/mes/packaging" id="TrxForm"> 
     @csrf 
     <div class="container-fluid">
-        <h3>Create Packaging Transaction</h3>
+        <h3>Create {{ $mrb ? "MRB" : "" }} Packaging Transaction</h3>
 
         <div class="row">
             <div class="col-sm-4">

@@ -82,6 +82,12 @@ class PackingListController extends Controller
     }
 
     public function serialValidation(Request $request) {
+        if (Auth::user()->mes_role == 'QUAL') {
+            $mrb = true; 
+        } else {
+            $mrb = false;
+        }
+
         $serial = $request->input('serial');
         $currModel = $request->input('model');
         $currClass = $request->input('class');
@@ -94,13 +100,13 @@ class PackingListController extends Controller
         $data['errors'] = ['error_msg' => ''];
 
         if ($serialInfo != null) {
-            if ($serialInfo->mes->whereNotIn('LOCNCODE', DB::connection('web_portal')->table('lts02')->where("EXEMPTROUTE",1)->pluck('STNCODE'))->last()->LOCNCODE != 'FG-PROD') {
+            if ($serialInfo->mes->whereNotIn('LOCNCODE', DB::connection('web_portal')->table('lts02')->where("EXEMPTROUTE",1)->pluck('STNCODE'))->last()->LOCNCODE != 'FG-PROD' && $mrb == false) {
                 $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is not yet scanned in FG-PROD.<br>Current Location is at ['.$serialInfo->mes->last()->LOCNCODE.']'];
             } else {
                 if ($serialInfo->palletInfo != null) {
                     $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is already scanned in Pallet No. ['.$serialInfo->palletInfo->PALLETNO.']'];
                 } else {
-                    if ($serialInfo->mrb->first() != null) {
+                    if ($serialInfo->mrb->first() != null && $mrb == false) {
                         $data['errors'] = ['error_msg' => 'The serial number ['.$serial.'] is currently in MRB Status.<br>Date inserted to MRB: ['.$serialInfo->mrb->first()->DTINSRT.']'];
                     } else {
                         if ($modelInfo->modelName() != $currModel && $currModel != "") {
@@ -108,7 +114,11 @@ class PackingListController extends Controller
                         } else {
                             if ($serialInfo->MODCLASS != $currClass && $currClass != "") {
                                 $data['errors'] = ['error_msg' => 'Module Class Mismatach.<br>The serial number\'s ['.$serial.'] Module Class ['.$serialInfo->MODCLASS.'] does not match with the current transaction ['.$currClass.'].'];
-                            } 
+                            } else {
+                                if ($mrb && $serialInfo->MODCLASS == "A") {
+                                    $data['errors'] = ['error_msg' => 'Module Serial Number ['.$serial.'] is of Class A Status.'];
+                                }
+                            }
                         }
                     }
                 }
@@ -119,11 +129,11 @@ class PackingListController extends Controller
 
         if ($data['errors']['error_msg'] == '') {
             $data['CUSTOMER'] = $serialInfo->CUSTOMER;
-            $data['PRODUCTNO'] = $modelInfo->itemDetails()->ITMCODE;
+            $data['PRODUCTNO'] = $modelInfo->itemDetails() != null ? $modelInfo->itemDetails()->ITMCODE : "-";
             $data['MODELNAME'] = $modelInfo->modelName();
             $data['MODCLASS'] = $serialInfo->MODCLASS;
             $data['MAXPALLET'] = $serialInfo->customerInfo->MAXPALLET;
-            $data['BIN'] = $serialInfo->ftd->last()->Bin;
+            $data['BIN'] = $serialInfo->ftd->count() > 0 ? $serialInfo->ftd->last()->Bin : "XXX";
             
             if ($serialInfo->workOrder() == null) {
                 $reg = ProductionLine::where("LINCODE",$serialInfo->PRODLINE)->first()->LINCAT;
@@ -140,7 +150,7 @@ class PackingListController extends Controller
             $pno = str_replace('[DD]',date('d',strtotime($trxDate)),$pno);
             $pno = str_replace('[G]',substr($data['REGISTRATION'],0,1),$pno);
 
-            $data['PALLETFORMAT'] = $pno;
+            $data['PALLETFORMAT'] = ($mrb ? "MRB" : "") . $pno;
         }
 
         return Response::json($data);
@@ -155,6 +165,12 @@ class PackingListController extends Controller
     {
         //
         $data = [];
+
+        if (Auth::user()->mes_role == 'QUAL') {
+            $data['mrb'] = true; 
+        } else {
+            $data['mrb'] = false;
+        }
 
         $data['PALLETNO'] = "";
         
@@ -288,8 +304,14 @@ class PackingListController extends Controller
     public function export($id) {
         $pallet = PackingLists::find($id);
         
+        if (Auth::user()->mes_role == 'QUAL') {
+            $mrb = true;
+        } else {
+            $mrb = false;
+        }
+
         $inputFileType = 'Xls'; // Xlsx - Xml - Ods - Slk - Gnumeric - Csv
-        $inputFileName = 'storage/Templates/' . ($pallet->customer->TEMPLATE == null ? "Packing List.xls" : $pallet->customer->TEMPLATE);
+        $inputFileName = 'storage/Templates/' . ($pallet->customer->TEMPLATE == null ? "Packing List" . ($mrb ? " - MRB" : "") . ".xls" : $pallet->customer->TEMPLATE);
 
         // dd($inputFileName);
 
@@ -321,6 +343,17 @@ class PackingListController extends Controller
             if ($pallet->customer->TEMPLATE == null) {
                 $sheet->setCellValue($col.($i-1), '="*"&'.$col.$i.'&"*"');
                 $sheet->setCellValue($col.$i, '="'.$detail->SERIALNO.'"');
+
+                if ($mrb) {
+                    if ($detail->serialInfo->first()->ftd()->count() == 0) {
+                        $pwr = 0;
+                    } else {
+                        $pwr = $detail->serialInfo->first()->ftd()->orderBy("InspectionTime","DESC")->first()->Bin;
+                    }
+
+                    $sheet->setCellValue($this->increment($col).$i, '="'.$pwr.'"');
+                }
+
                 $i+=2;
                 $sc++;
 
@@ -356,6 +389,15 @@ class PackingListController extends Controller
 
         $spreadsheet->disconnectWorksheets();
         unset($spreadsheet);
+    }
+
+    private function increment($val, $increment = 3)
+    {
+        for ($i = 1; $i <= $increment; $i++) {
+            $val++;
+        }
+
+        return $val;
     }
 
     /**
