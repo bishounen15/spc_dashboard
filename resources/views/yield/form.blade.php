@@ -64,6 +64,7 @@
                                             <option value="{{$line->LINCODE}}" {{$production_line != null && $production_line == $line->LINCODE ? "selected" : ""}}>{{$line->LINDESC}}</option>
                                             @endforeach
                                         </select>
+                                        <small class="form-text text-danger" id="err_production_line"></small>
                                     </div>
 
                                     <div class="col-sm-4">
@@ -440,6 +441,13 @@
                 err++;
             } else {
                 $("#err_product_size").html("");
+            }
+
+            if ($("#production_line").val() == null || $("#production_line").val() == "") {
+                $("#err_production_line").html("Production Line is a required field.");
+                err++;
+            } else {
+                $("#err_production_line").html("");
             }
 
             if ($("#build").val() == null || $("#build").val() == "") {
