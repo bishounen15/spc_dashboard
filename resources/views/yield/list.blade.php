@@ -18,6 +18,7 @@
                 <th id="summ-wk">-</th>
                 <th>-</th>
                 <th>-</th>
+                <th>-</th>
 
                 <th id="summ-py"></th>
                 <th id="summ-ey"></th>
@@ -67,6 +68,7 @@
                 <td class="table-primary"><strong>WW</strong></td>
                 <td class="table-primary"><strong>WWD</strong></td>
                 <td class="table-primary"><strong>Date</strong></td>
+                <td class="table-primary"><strong>Line</strong></td>
 
                 <td class="table-default"><strong>PY</strong></td>
                 <td class="table-default"><strong>EY</strong></td>
@@ -121,7 +123,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">Yield Details for <span id="yield-date"></span></h5>
+            <h5 class="modal-title">Yield Details for <span id="yield-date"></span> <span id="prod-line"></span></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -224,6 +226,7 @@
                 { data: 'wk' },
                 { data: 'wkd' },
                 { data: 'date' },
+                { data: 'production_line' },
                 { data: 'py' },
                 { data: 'ey' },
                 { data: 'srr' },
@@ -394,12 +397,15 @@
 
         $('#yield-list tbody').on( 'click', 'tr', function () {
             var myDate = this.cells[4].innerHTML;
+            var prodLine = this.cells[5].innerHTML;
             var d = new Date(myDate);
             $("#yield-date").html(d.toString().substring(0,15));
+            $("#prod-line").html();
 
             var token = $('input[name=_token]');
             var formData = new FormData();
             formData.append('date', myDate);
+            formData.append('prodline', prodLine);
             $.ajax({
                 url: "{{route('yield_per_date')}}",
                 method: 'POST',

@@ -394,7 +394,7 @@ class MESController extends Controller
                     } else {
                         // 
                         if ($stationInfo->routing->where('SRCLOC',$recent_loc)->first() == null) {
-                            if ($rou !== null || ($rou == null && $recent_loc != 'Not yet scanned')) {
+                            if (($rou !== null && $rou->SRCLOC != $recent_loc) || ($rou == null && $recent_loc != 'Not yet scanned')) {
                                 $data['errors'] = ['error_msg' => 'You cannot transact this serial number ['.$serial.'] in this location. (Current Location: '.$recent_loc.')'];
                             } else {
                                 $fill_serial = true;    

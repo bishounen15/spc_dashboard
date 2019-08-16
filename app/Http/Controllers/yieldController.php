@@ -10,6 +10,8 @@ use App\ProductTypes;
 use App\User as User;
 use App\YieldEmail;
 use App\Models\Planning\ProductionSchedule;
+use App\Models\WebPortal\ProductionLine;
+
 use Illuminate\Support\Facades\Auth;
 
 use DB;
@@ -32,12 +34,99 @@ class yieldController extends Controller
         return view('yield.list');
     }
 
+    private function processShift(&$shift, &$schedshift, &$date) {
+        if ($shift == $schedshift->first()->details->descr) {
+            $fval = $this->getStart($date,$shift,$schedshift) . ":00";
+            $tval = date("Y-m-d",strtotime($date)) . " " . $time . ":00";
+
+            $to = Carbon::createFromFormat('Y-m-d H:i:s', $tval);
+            $from = Carbon::createFromFormat('Y-m-d H:i:s', $fval);
+            
+            $diff_in_minutes = $to->diffInMinutes($from);
+            
+            if ($diff_in_minutes < 30) {
+                $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
+            }
+        }
+    }
+
+    private function processLastYield(&$last_yield, &$date, &$shift, &$time) {
+        if ($last_yield != null) {
+            if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
+                $date = $last_yield->date;
+                $shift = $last_yield->shift;
+                
+                $dt = $this->getEnd($date,$last_yield->shift) . ":00";
+                $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
+                
+                $to = Carbon::createFromFormat('Y-m-d H:i:s', $cdt);
+                $from = Carbon::createFromFormat('Y-m-d H:i:s', $dt);
+                
+                $diff_in_minutes = $to->diffInMinutes($from);
+                
+                if ($diff_in_minutes >= 30) {
+                    $shift = $this->getShift($time,$schedshift);
+                    $last_trx = $this->getStart($date,$shift,$schedshift);
+                    $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+                }
+            } else {
+                $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+            }
+        } else {
+            $shifts = ProductionSchedule::whereBetween("production_date",[
+                    date("Y-m-d",strtotime("-1 days",strtotime($date))),
+                    $date
+                ])->orderBy("production_date","DESC")->get();
+            
+            $found = false;
+            $got = false;
+            
+            foreach($shifts as $sc) {
+                foreach($sc->selectedShifts()->orderBy("shift_id","DESC")->get() as $sd) {
+                    if ($sd->details->descr == $shift) {
+                        $found = true;
+                        continue;
+                    }
+
+                    if ($found == true) {
+                        $shift = $sd->details->descr;
+                        $got = true;
+                        break;
+                    }
+                }
+
+                if ($got == true) { break; }
+            }
+
+            $dt = $this->getEnd($date,$shift) . ":00";
+            // $cdt = date("Y-m-d",strtotime("+1 days",strtotime("Today"))) . " " . $time . ":00";
+            $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
+
+            $to = Carbon::createFromFormat('Y-m-d H:i:s', $cdt);
+            $from = Carbon::createFromFormat('Y-m-d H:i:s', $dt);
+            
+            $diff_in_minutes = $to->diffInMinutes($from);
+            
+            if ($diff_in_minutes >= 30) {
+                $shift = $this->getShift($time,$schedshift);
+                $last_trx = $this->getStart($date,$shift,$schedshift);
+                $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
+            } else {
+                $dt = $this->getEnd($date,$shift);
+            }
+        }
+
+        return $dt;
+    }
+
     public function create($id = null) {
         
         $data = [];
 
         $data['id'] = $id;
-        $data['prod_types'] = ProductTypes::all(); 
+        $data['prod_types'] = ProductTypes::all();
+        $data['prod_lines'] = ProductionLine::all();
+        $data['production_line'] = null;
         $data['team'] = null;
         $data['product_size'] = null;
         $data['input_cell'] = 0;
@@ -93,87 +182,10 @@ class yieldController extends Controller
             $data['schedshift'] = $schedshift;
 
             $shift = $this->getShift($time, $schedshift);
-            
-            if ($shift == $schedshift->first()->details->descr) {
-                $fval = $this->getStart($date,$shift,$schedshift) . ":00";
-                $tval = date("Y-m-d",strtotime($date)) . " " . $time . ":00";
-
-                $to = Carbon::createFromFormat('Y-m-d H:i:s', $tval);
-                $from = Carbon::createFromFormat('Y-m-d H:i:s', $fval);
-                
-                $diff_in_minutes = $to->diffInMinutes($from);
-                
-                if ($diff_in_minutes < 30) {
-                    $date = date("Y-m-d",strtotime("-1 days",strtotime($date)));
-                }
-            }
+            $this->processShift($sched, $schedshift, $date);
 
             $last_yield = YieldData::where("date",$date)->orderBy("id","desc")->first();
-            
-            if ($last_yield != null) {
-                if (($date != $last_yield->date || $shift != $last_yield->shift) && $this->getEnd($date,$last_yield->shift) != $last_yield->to ) {
-                    $date = $last_yield->date;
-                    $shift = $last_yield->shift;
-                    
-                    $dt = $this->getEnd($date,$last_yield->shift) . ":00";
-                    $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
-                    
-                    $to = Carbon::createFromFormat('Y-m-d H:i:s', $cdt);
-                    $from = Carbon::createFromFormat('Y-m-d H:i:s', $dt);
-                    
-                    $diff_in_minutes = $to->diffInMinutes($from);
-                    
-                    if ($diff_in_minutes >= 30) {
-                        $shift = $this->getShift($time,$schedshift);
-                        $last_trx = $this->getStart($date,$shift,$schedshift);
-                        $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
-                    }
-                } else {
-                    $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
-                }
-            } else {
-                $shifts = ProductionSchedule::whereBetween("production_date",[
-                        date("Y-m-d",strtotime("-1 days",strtotime($date))),
-                        $date
-                    ])->orderBy("production_date","DESC")->get();
-                
-                $found = false;
-                $got = false;
-                
-                foreach($shifts as $sc) {
-                    foreach($sc->selectedShifts()->orderBy("shift_id","DESC")->get() as $sd) {
-                        if ($sd->details->descr == $shift) {
-                            $found = true;
-                            continue;
-                        }
-    
-                        if ($found == true) {
-                            $shift = $sd->details->descr;
-                            $got = true;
-                            break;
-                        }
-                    }
-
-                    if ($got == true) { break; }
-                }
-
-                $dt = $this->getEnd($date,$shift) . ":00";
-                // $cdt = date("Y-m-d",strtotime("+1 days",strtotime("Today"))) . " " . $time . ":00";
-                $cdt = date("Y-m-d",strtotime("Today")) . " " . $time . ":00";
-
-                $to = Carbon::createFromFormat('Y-m-d H:i:s', $cdt);
-                $from = Carbon::createFromFormat('Y-m-d H:i:s', $dt);
-                
-                $diff_in_minutes = $to->diffInMinutes($from);
-                
-                if ($diff_in_minutes >= 30) {
-                    $shift = $this->getShift($time,$schedshift);
-                    $last_trx = $this->getStart($date,$shift,$schedshift);
-                    $dt = date("Y-m-d",strtotime("Today")) . " " . $time;
-                } else {
-                    $dt = $this->getEnd($date,$shift);
-                }
-            }
+            $dt = $this->processLastYield($last_yield, $date, $shift, $time);
 
             $last_trx = YieldData::where([
                 ["date", $date],
@@ -196,6 +208,7 @@ class yieldController extends Controller
 
             $data['team'] = $yield_data->team;
             $data['product_size'] = $yield_data->product_size;
+            $data['production_line'] = $yield_data->production_line;
             $data['input_cell'] = $yield_data->input_cell;
 
             $data['build'] = $yield_data->build;
@@ -230,13 +243,15 @@ class yieldController extends Controller
             ["TRXDATE",">=",$last_trx],
             ["TRXDATE","<",$dt],
             ["LOCNCODE","=","PRELAM"],
+            ["PRODLINE","=",$data['production_line']],
         ])->count("SERIALNO");
 
         $be_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
                         ->where([ 
                             ["mes01.TRXDATE",">=",$last_trx], 
                             ["mes01.TRXDATE","<",$dt], 
-                            ["mes01.LOCNCODE","=","VI1"], 
+                            ["mes01.LOCNCODE","=","VI1"],
+                            ["mes01.PRODLINE","=",$data['production_line']], 
                             ["lbl02.MODCLASS","=","B"], 
                             ["lbl02.LBLTYPE","=","1"], 
                             ])->count("mes01.SERIALNO");
@@ -245,7 +260,8 @@ class yieldController extends Controller
                         ->where([ 
                             ["mes01.TRXDATE",">=",$last_trx], 
                             ["mes01.TRXDATE","<",$dt], 
-                            ["mes01.LOCNCODE","=","VI1"], 
+                            ["mes01.LOCNCODE","=","VI1"],
+                            ["mes01.PRODLINE","=",$data['production_line']], 
                             ["lbl02.MODCLASS","=","C"], 
                             ["lbl02.LBLTYPE","=","1"], 
                             ])->count("mes01.SERIALNO");
@@ -255,6 +271,7 @@ class yieldController extends Controller
             ["mes01.TRXDATE",">=",$last_trx],
             ["mes01.TRXDATE","<",$dt],
             ["mes01.LOCNCODE","=","TEST-EL"],
+            ["mes01.PRODLINE","=",$data['production_line']],
             ["lbl02.MODCLASS","=","A"],
         ])->count("mes01.SERIALNO");
 
@@ -268,6 +285,7 @@ class yieldController extends Controller
                 ["mes01.TRXDATE",">=",$last_trx],
                 ["mes01.TRXDATE","<",$dt],
                 ["mes01.LOCNCODE","=","TEST-EL"],
+                ["mes01.PRODLINE","=",$data['production_line']],
                 ["lbl02.MODCLASS","=","B"],
                 [DB::raw("CASE WHEN vi1.SNOSTAT = 1 AND vi1.MODCLASS = '' THEN (SELECT MCLCODE FROM cls01 WHERE CUSTOMER = lbl02.CUSTOMER AND MODSTATUS = 0 ORDER BY MCLCODE DESC LIMIT 1) ELSE vi1.MODCLASS END"),"<>","B"],
             ])->count("mes01.SERIALNO");
@@ -282,6 +300,7 @@ class yieldController extends Controller
                 ["mes01.TRXDATE",">=",$last_trx],
                 ["mes01.TRXDATE","<",$dt],
                 ["mes01.LOCNCODE","=","TEST-EL"],
+                ["mes01.PRODLINE","=",$data['production_line']],
                 ["lbl02.MODCLASS","=","C"],
                 ["vi1.MODCLASS","<>","C"],
             ])->count("mes01.SERIALNO");
@@ -310,6 +329,7 @@ class yieldController extends Controller
         $data['team'] = $request->input('team');
         $data['date'] = $request->input('date');
         $data['shift'] = $request->input('shift');
+        $data['production_line'] = $request->input('production_line');
         $data['from'] = $request->input('from');
         $data['to'] = $request->input('to');
         $data['build'] = $request->input('build');
@@ -500,9 +520,9 @@ class yieldController extends Controller
 
     public function load()
     {
-        $yield = YieldData::selectRaw("YEAR(date) as yr, CONCAT('Q',QUARTER(date)) as qtr, CONCAT('W',WEEK(date,1)) as wk, CONCAT('W',WEEK(date,1),'.',WEEKDAY(date) + 1) as wkd, date, sum(input_cell) as input_cell, sum(input_mod) as input_mod, sum(inprocess_cell) as inprocess_cell, sum(ccd_cell) as ccd_cell, sum(visualdefect_cell) as visualdefect_cell, sum(cell_defect) as cell_defect, sum(cell_class_b) as cell_class_b, sum(cell_class_c) as cell_class_c, product_size as product_size, sum(str_produced) as str_produced, sum(str_defect) as str_defect, sum(el1_inspected) as el1_inspected, sum(el1_defect) as el1_defect, sum(be_inspected) as be_inspected, sum(be_defect) as be_defect, sum(be_class_b) as be_class_b, sum(be_class_c) as be_class_c, sum(man) as man, sum(mac) as mac, sum(mat) as mat, sum(met) as met, sum(env) as env, sum(el2_class_a) as el2_class_a, sum(el2_defect) as el2_defect, sum(el2_class_b) as el2_class_b, sum(el2_class_c) as el2_class_c, sum(el2_low_power) as el2_low_power, build, target, IFNULL(ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_defect))) / SUM(input_cell)) * 100 , 2),0) as py, IFNULL(ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_class_c))) / SUM(input_cell)) * 100 , 2),0) as ey, IFNULL(ROUND((SUM(str_defect) / SUM(str_produced)) * 100,2),0) as srr, IFNULL(ROUND((SUM(el1_defect) / SUM(el1_inspected)) * 100,2),0) as mrr")
+        $yield = YieldData::selectRaw("YEAR(date) as yr, CONCAT('Q',QUARTER(date)) as qtr, CONCAT('W',WEEK(date,1)) as wk, CONCAT('W',WEEK(date,1),'.',WEEKDAY(date) + 1) as wkd, date, production_line, sum(input_cell) as input_cell, sum(input_mod) as input_mod, sum(inprocess_cell) as inprocess_cell, sum(ccd_cell) as ccd_cell, sum(visualdefect_cell) as visualdefect_cell, sum(cell_defect) as cell_defect, sum(cell_class_b) as cell_class_b, sum(cell_class_c) as cell_class_c, product_size as product_size, sum(str_produced) as str_produced, sum(str_defect) as str_defect, sum(el1_inspected) as el1_inspected, sum(el1_defect) as el1_defect, sum(be_inspected) as be_inspected, sum(be_defect) as be_defect, sum(be_class_b) as be_class_b, sum(be_class_c) as be_class_c, sum(man) as man, sum(mac) as mac, sum(mat) as mat, sum(met) as met, sum(env) as env, sum(el2_class_a) as el2_class_a, sum(el2_defect) as el2_defect, sum(el2_class_b) as el2_class_b, sum(el2_class_c) as el2_class_c, sum(el2_low_power) as el2_low_power, build, target, IFNULL(ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_defect))) / SUM(input_cell)) * 100 , 2),0) as py, IFNULL(ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_class_c))) / SUM(input_cell)) * 100 , 2),0) as ey, IFNULL(ROUND((SUM(str_defect) / SUM(str_produced)) * 100,2),0) as srr, IFNULL(ROUND((SUM(el1_defect) / SUM(el1_inspected)) * 100,2),0) as mrr")
         ->orderByRaw("date DESC")
-        ->groupBy("date","build","target", "product_size");
+        ->groupBy("date", "production_line","build","target", "product_size");
 
         return Datatables::of($yield)->make(true);
     }
@@ -510,7 +530,10 @@ class yieldController extends Controller
     public function GetYieldPerDate(Request $request) {
         $trx_info = [];
         $data = [];
-        $trx = YieldData::where("date",$request->input("date"))->get();
+        $trx = YieldData::where([
+            ["date",$request->input("date")],
+            ["production_line",$request->input("prodline")],
+        ])->get();
         
         foreach($trx as $detail) {
             $t = YieldData::find($detail->id);
@@ -569,12 +592,25 @@ class yieldController extends Controller
 
     public function getShiftOutput(Request $request) {
         // return Response::json($request);
+        $date = $request->input('date');
+        $shift = $request->input('shift');
         $build = $request->input('build');
+        $prodline = $request->input('production_line');
 
         $schedshift = ProductionSchedule::where("production_date",$request->input('date'))->first()->selectedShifts()->get();
 
         if ($request->input('current') == "true") {
-            $start = $request->input('from');
+            $last_trx = YieldData::where([
+                ["date", $date],
+                ["shift", $shift],
+                ["production_line", $prodline],
+            ])->max("to");
+
+            if ($last_trx == null) {
+                $last_trx = $this->getStart($date,$shift,$schedshift);
+            }
+
+            $start =  $last_trx; //$request->input('from');
             $end = $request->input('to');
         } else {
             $start = $this->getStart($request->input('date'),$request->input('shift'),$schedshift);
@@ -594,6 +630,7 @@ class yieldController extends Controller
             ["TRXDATE",">=",$last_trx],
             ["TRXDATE","<",$dt],
             ["LOCNCODE","=","PRELAM"],
+            ["PRODLINE","=",$prodline],
         ])->count("SERIALNO");
 
         $be_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
@@ -601,6 +638,7 @@ class yieldController extends Controller
                             ["mes01.TRXDATE",">=",$last_trx], 
                             ["mes01.TRXDATE","<",$dt], 
                             ["mes01.LOCNCODE","=","VI1"], 
+                            ["mes01.PRODLINE","=",$prodline],
                             ["lbl02.MODCLASS","=","B"], 
                             ["lbl02.LBLTYPE","=","1"], 
                             ])->count("mes01.SERIALNO");
@@ -614,6 +652,7 @@ class yieldController extends Controller
                             ["mes01.TRXDATE",">=",$last_trx], 
                             ["mes01.TRXDATE","<",$dt], 
                             ["mes01.LOCNCODE","=","VI1"], 
+                            ["mes01.PRODLINE","=",$prodline],
                             ["lbl02.MODCLASS","=", ($build == "GT" ? "C" : "") ], 
                             ["lbl02.LBLTYPE","=","1"],
                             ["test.MODCLASS","<>",($build == "GT" ? "C" : "")], 
@@ -624,6 +663,7 @@ class yieldController extends Controller
             ["mes01.TRXDATE",">=",$last_trx],
             ["mes01.TRXDATE","<",$dt],
             ["mes01.LOCNCODE","=","TEST-EL"],
+            ["mes01.PRODLINE","=",$prodline],
         ])->whereIn('lbl02.MODCLASS', ["A","A+"])->count("mes01.SERIALNO");
 
         $el2_class_b = mesData::join("lbl02","mes01.SERIALNO","=","lbl02.SERIALNO")
@@ -636,6 +676,7 @@ class yieldController extends Controller
                 ["mes01.TRXDATE",">=",$last_trx],
                 ["mes01.TRXDATE","<",$dt],
                 ["mes01.LOCNCODE","=","TEST-EL"],
+                ["mes01.PRODLINE","=",$prodline],
                 ["lbl02.MODCLASS","=","B"],
                 [DB::raw("CASE WHEN vi1.SNOSTAT = 1 AND vi1.MODCLASS = '' THEN (SELECT MCLCODE FROM cls01 WHERE CUSTOMER = lbl02.CUSTOMER AND MODSTATUS = 0 ORDER BY MCLCODE DESC LIMIT 1) ELSE vi1.MODCLASS END"),"<>","B"],
             ])->count("mes01.SERIALNO");
@@ -650,6 +691,7 @@ class yieldController extends Controller
                 ["mes01.TRXDATE",">=",$last_trx],
                 ["mes01.TRXDATE","<",$dt],
                 ["mes01.LOCNCODE","=","TEST-EL"],
+                ["mes01.PRODLINE","=",$prodline],
                 ["lbl02.MODCLASS","=",($build == "GT" ? "C" : "")],
                 ["vi1.MODCLASS","<>",($build == "GT" ? "C" : "")],
             ])->count("mes01.SERIALNO");

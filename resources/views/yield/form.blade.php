@@ -2,7 +2,7 @@
 @section('content')
 <form method="POST" action="{{$id == null ? route('store_yield') : route('modify_yield',[$id])}}" id="YieldForm"> 
     @csrf 
-    <div class="container">
+    <div class="container-fluid">
         <h3>Yield Data Entry Form (<span id="range-date">{{$from}} - {{$to}}</span>)</h3>
             <div class="card">
                 <div class="card-header">
@@ -15,8 +15,8 @@
                                 <div class="form-row">
                                     <input type="hidden" name="from" id="from" value="{{$from}}">
                                     <input type="hidden" name="to" id="to" value="{{$to}}">
-                                    <div class="col-sm-3 text-right">Team Selection</div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-4">
+                                        <label for="team">Team Selection</label>
                                         <select class="form-control form-control-sm" name="team" id="team">
                                             <option readonly selected value> -- select an option -- </option>
                                             @foreach($teams as $pteam)
@@ -29,38 +29,45 @@
                                         </select>
                                         <small class="form-text text-danger" id="err_team"></small>
                                     </div>
+
+                                    <div class="col-sm-4">
+                                        <label for="date">Transaction Date</label>
+                                        @if(Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
+                                            <input type="date" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" onchange="changeShift()">
+                                        @else
+                                            <input type="text" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" readonly>
+                                        @endif
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label for="shift">Shift</label>
+                                        @if(Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
+                                            <select class="form-control form-control-sm" name="shift" id="shift" onchange="changeShift()">
+                                                <option readonly selected value> -- select an option -- </option>
+                                                @foreach($schedshift as $sched)
+                                                <option value="{{$sched->details->descr}}" {{$shift == $sched->details->descr ? "selected" : ""}}>{{$sched->details->descr}}</option>
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            <input type="text" class="form-control form-control-sm" name="shift" id="shift" value="{{old('shift', $shift)}}" readonly>
+                                        @endif
+                                    </div>
                                 </div> 
                             </div>
                             <div class="form-group">
                                 <div class="form-row">
-                                    <div class="col-sm-3 text-right">Transaction Date</div>
                                     <div class="col-sm-4">
-                                    @if(Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
-                                        <input type="date" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" onchange="changeShift()">
-                                    @else
-                                        <input type="text" class="form-control form-control-sm" name="date" id="date" value="{{old('date', $trxdate)}}" readonly>
-                                    @endif
-                                    </div>
-                                    <div class="col-sm-2 text-right">Shift</div>
-                                    <div class="col-sm-3">
-                                    @if(Auth::user()->yield_role == 'ADMIN' || Auth::user()->sysadmin == 1)
-                                        <select class="form-control form-control-sm" name="shift" id="shift" onchange="changeShift()">
+                                        <label for="production_line">Production Line</label>
+                                        <select name="production_line" id="production_line" class="form-control form-control-sm" onchange="changeShift(true)">
                                             <option readonly selected value> -- select an option -- </option>
-                                            @foreach($schedshift as $sched)
-                                            <option value="{{$sched->details->descr}}" {{$shift == $sched->details->descr ? "selected" : ""}}>{{$sched->details->descr}}</option>
+                                            @foreach($prod_lines as $line)
+                                            <option value="{{$line->LINCODE}}" {{$production_line != null && $production_line == $line->LINCODE ? "selected" : ""}}>{{$line->LINDESC}}</option>
                                             @endforeach
                                         </select>
-                                    @else
-                                        <input type="text" class="form-control form-control-sm" name="shift" id="shift" value="{{old('shift', $shift)}}" readonly>
-                                    @endif
                                     </div>
-                                </div> 
-                            </div>
-                            <div class="form-group">
-                                <div class="form-row">
-                                    <div class="col-sm-3 text-right">Build</div>
+
                                     <div class="col-sm-4">
-                                        {{-- <input type="text" class="form-control form-control-sm" name="build" id="build" value="GT" readonly> --}}
+                                        <label for="build">Build</label>
                                         <select class="form-control form-control-sm" name="build" id="build" onchange="changeBuild()">
                                             <option disabled selected value> -- select an option -- </option>
                                             @foreach ($prod_types as $type)
@@ -69,18 +76,19 @@
                                         </select>
                                         <small class="form-text text-danger" id="err_build"></small>
                                     </div>
-                                    <div class="col-sm-2 text-right">Target (%)</div>
-                                    <div class="col-sm-3">
+
+                                    <div class="col-sm-4">
+                                        <label for="target">Target (%)</label>
                                         <input type="text" class="form-control form-control-sm" name="target" id="target" value="{{$prod_types->count() == 1 ? number_format($prod_types->first()->target,2) : $target}}" readonly>
                                     </div>
                                 </div> 
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4 offset-md-2">
                             <div class="form-group">
                                 <div class="form-row">
-                                    <div class="col-sm-6 text-right">Product Size</div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm">
+                                        <label for="product_size">Product Size</label>
                                         <select class="form-control form-control-sm" name="product_size" id="product_size" onchange="inputCELL()">
                                             <option readonly selected value> -- select an option -- </option>
                                             <option value="72" {{$product_size == 72 ? "selected" : ""}}>72-Cell</option>
@@ -89,22 +97,18 @@
                                         <small class="form-text text-danger" id="err_product_size"></small>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
+
                                 <div class="form-row">
-                                    <div class="col-sm-6 text-right">Input (CELL)</div>
                                     <div class="col-sm-6">
+                                        <label for="input_cell">Input (CELL)</label>
                                         <input type="text" class="form-control form-control-sm" name="input_cell" id="input_cell" value="{{$input_cell ? $input_cell : ""}}" readonly>
                                     </div>
-                                </div> 
-                            </div>
-                            <div class="form-group">
-                                <div class="form-row">
-                                    <div class="col-sm-6 text-right">Input (MODULE)</div>
+
                                     <div class="col-sm-6">
+                                        <label for="input_mod">Input (MODULE)</label>
                                         <input type="text" class="form-control form-control-sm" name="input_mod" id="input_mod" value="{{$input_mod}}" readonly>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -487,6 +491,7 @@
             formData.append('date', $("#date").val());
             formData.append('shift', $("#shift").val());
             formData.append('build', $("#build").val());
+            formData.append('production_line', $("#production_line").val());
             formData.append('current', $use_current);
             formData.append('from', $("#from").val());
             formData.append('to', $("#to").val());
