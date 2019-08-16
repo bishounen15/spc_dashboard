@@ -34,7 +34,15 @@ class PackingListController extends Controller
     public function index()
     {
         //
-        return view("mes.packaging.list");
+        $data = [];
+
+        if (Auth::user()->mes_role == 'QUAL') {
+            $data['mrb'] = true; 
+        } else {
+            $data['mrb'] = false;
+        }
+
+        return view("mes.packaging.list",$data);
     }
 
     public function load($start = '', $end = '')

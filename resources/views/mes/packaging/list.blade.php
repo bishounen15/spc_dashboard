@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid">
-    <h3>Packaging Transactions</h3>
+    <h3>{{$mrb ? "MRB " : ""}}Packaging Transactions</h3>
     <a href="/mes/packaging/create" role="button" class="btn btn-primary">Create Packing List</a>
     <br><br>
     <div class="card">
