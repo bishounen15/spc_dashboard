@@ -536,12 +536,20 @@ class yieldController extends Controller
     }
 
     public function GetYieldPerDate(Request $request) {
+        $lines = ProductionLine::all();
+        $lsrc = "";
+
+        foreach($lines as $line) {
+            $lsrc .= ($lsrc == "" ? "" : " UNION ALL ") . "SELECT " . $line->LINCODE . " AS LINCODE, '" . $line->LINDESC . "' AS LINDESC";
+        }
+
         $trx_info = [];
         $data = [];
-        $trx = YieldData::where([
-            ["date",$request->input("date")],
-            ["production_line",$request->input("prodline")],
-        ])->get();
+        $trx = YieldData::leftJoin(DB::raw("(".$lsrc.") AS lin01"),"yield_datas.production_line","lin01.LINCODE")
+                          ->where([
+                                ["date",$request->input("date")],
+                                ["lin01.LINDESC",$request->input("prodline")],
+                            ])->get();
         
         foreach($trx as $detail) {
             $t = YieldData::find($detail->id);
