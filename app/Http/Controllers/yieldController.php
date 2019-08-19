@@ -520,9 +520,17 @@ class yieldController extends Controller
 
     public function load()
     {
-        $yield = YieldData::selectRaw("YEAR(date) as yr, CONCAT('Q',QUARTER(date)) as qtr, CONCAT('W',WEEK(date,1)) as wk, CONCAT('W',WEEK(date,1),'.',WEEKDAY(date) + 1) as wkd, date, production_line, sum(input_cell) as input_cell, sum(input_mod) as input_mod, sum(inprocess_cell) as inprocess_cell, sum(ccd_cell) as ccd_cell, sum(visualdefect_cell) as visualdefect_cell, sum(cell_defect) as cell_defect, sum(cell_class_b) as cell_class_b, sum(cell_class_c) as cell_class_c, product_size as product_size, sum(str_produced) as str_produced, sum(str_defect) as str_defect, sum(el1_inspected) as el1_inspected, sum(el1_defect) as el1_defect, sum(be_inspected) as be_inspected, sum(be_defect) as be_defect, sum(be_class_b) as be_class_b, sum(be_class_c) as be_class_c, sum(man) as man, sum(mac) as mac, sum(mat) as mat, sum(met) as met, sum(env) as env, sum(el2_class_a) as el2_class_a, sum(el2_defect) as el2_defect, sum(el2_class_b) as el2_class_b, sum(el2_class_c) as el2_class_c, sum(el2_low_power) as el2_low_power, build, target, IFNULL(ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_defect))) / SUM(input_cell)) * 100 , 2),0) as py, IFNULL(ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_class_c))) / SUM(input_cell)) * 100 , 2),0) as ey, IFNULL(ROUND((SUM(str_defect) / SUM(str_produced)) * 100,2),0) as srr, IFNULL(ROUND((SUM(el1_defect) / SUM(el1_inspected)) * 100,2),0) as mrr")
+        $lines = ProductionLine::all();
+        $lsrc = "";
+
+        foreach($lines as $line) {
+            $lsrc .= ($lsrc == "" ? "" : " UNION ALL ") . "SELECT " . $line->LINCODE . " AS LINCODE, '" . $line->LINDESC . "' AS LINDESC";
+        }
+
+        $yield = YieldData::selectRaw("YEAR(date) as yr, CONCAT('Q',QUARTER(date)) as qtr, CONCAT('W',WEEK(date,1)) as wk, CONCAT('W',WEEK(date,1),'.',WEEKDAY(date) + 1) as wkd, date, lin01.LINDESC AS production_line, sum(input_cell) as input_cell, sum(input_mod) as input_mod, sum(inprocess_cell) as inprocess_cell, sum(ccd_cell) as ccd_cell, sum(visualdefect_cell) as visualdefect_cell, sum(cell_defect) as cell_defect, sum(cell_class_b) as cell_class_b, sum(cell_class_c) as cell_class_c, product_size as product_size, sum(str_produced) as str_produced, sum(str_defect) as str_defect, sum(el1_inspected) as el1_inspected, sum(el1_defect) as el1_defect, sum(be_inspected) as be_inspected, sum(be_defect) as be_defect, sum(be_class_b) as be_class_b, sum(be_class_c) as be_class_c, sum(man) as man, sum(mac) as mac, sum(mat) as mat, sum(met) as met, sum(env) as env, sum(el2_class_a) as el2_class_a, sum(el2_defect) as el2_defect, sum(el2_class_b) as el2_class_b, sum(el2_class_c) as el2_class_c, sum(el2_low_power) as el2_low_power, build, target, IFNULL(ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_defect))) / SUM(input_cell)) * 100 , 2),0) as py, IFNULL(ROUND(((SUM(input_cell) - (SUM(inprocess_cell) + SUM(ccd_cell) + SUM(visualdefect_cell) + SUM(cell_class_c))) / SUM(input_cell)) * 100 , 2),0) as ey, IFNULL(ROUND((SUM(str_defect) / SUM(str_produced)) * 100,2),0) as srr, IFNULL(ROUND((SUM(el1_defect) / SUM(el1_inspected)) * 100,2),0) as mrr")
+        ->leftJoin(DB::raw("(".$lsrc.") AS lin01"),"yield_datas.production_line","lin01.LINCODE")
         ->orderByRaw("date DESC")
-        ->groupBy("date", "production_line","build","target", "product_size");
+        ->groupBy("date", "lin01.LINDESC","build","target", "product_size");
 
         return Datatables::of($yield)->make(true);
     }
