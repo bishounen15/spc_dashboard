@@ -251,12 +251,16 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
             return view('planning.workorder.index');
         });
 
+        Route::get('/planning/item', 'Planning\ItemsController@index');
+        Route::get('/planning/bom', 'Planning\BOMController@index');
+
         Route::get('/mes/materials', function() {
             return view('mes.materials.podata');
         });
 
         Route::get('/mes/lot', 'WebPortal\LotRecordsController@index');
         Route::get('/mes/cabinet', 'WebPortal\CabinetsController@index');
+        Route::get('/planning/item', 'Planning\ItemsController@index');
     });
 // }); 
 

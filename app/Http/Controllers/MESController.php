@@ -191,10 +191,10 @@ class MESController extends Controller
             $pallets = $request->input('palletno');
             $pnos = explode(",",$pallets . ",");
             
-            $cond = "A.PALLETNO IN (";
+            $cond = "X.PALLETNO IN (";
 
             foreach($pnos as $pno) {
-                $cond .= ($pno !="" ? ($cond == 'A.PALLETNO IN (' ? '' : ',') . "'" . $pno . "'" : "");
+                $cond .= ($pno !="" ? ($cond == 'X.PALLETNO IN (' ? '' : ',') . "'" . $pno . "'" : "");
             }
 
             $cond .= ")";

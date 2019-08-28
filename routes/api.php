@@ -66,6 +66,7 @@ Route::post('portal/dataset/template',[
  Route::post('trina/module/lookup','ModulesController@trinaLookup');
 
  Route::post('prodtype/lookup','WebPortal\ProductTypesController@selectValues');
+ Route::post('itemclass/lookup','WebPortal\ItemClassesController@selectValues');
 
  Route::post('portal/wo/generate/{date?}/{category?}','WebPortal\WorkOrdersController@generateControl');
 

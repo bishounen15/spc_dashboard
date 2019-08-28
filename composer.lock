@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fdcd22e6f7de077d8e01d077f6108af5",
+    "content-hash": "2112f42e4914e6be43a29a8f642b858f",
     "packages": [
         {
             "name": "balping/json-raw-encoder",
@@ -2772,6 +2772,56 @@
                 "uuid"
             ],
             "time": "2018-01-20T00:28:24+00:00"
+        },
+        {
+            "name": "snapappointments/bootstrap-select",
+            "version": "v1.13.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/snapappointments/bootstrap-select.git",
+                "reference": "b6135994a96269c7920169ae18d42852c62a6c1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/snapappointments/bootstrap-select/zipball/b6135994a96269c7920169ae18d42852c62a6c1b",
+                "reference": "b6135994a96269c7920169ae18d42852c62a6c1b",
+                "shasum": ""
+            },
+            "suggest": {
+                "components/jquery": "1.9.1 - 3",
+                "twbs/bootstrap": ">=3.0.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Silvio Moreto",
+                    "homepage": "https://github.com/silviomoreto"
+                },
+                {
+                    "name": "Casey Holzer",
+                    "homepage": "https://github.com/caseyjhol"
+                },
+                {
+                    "name": "SnapAppointments, LLC",
+                    "homepage": "https://snapappointments.com"
+                }
+            ],
+            "description": "The jQuery plugin that brings select elements into the 21st century with intuitive multiselection, searching, and much more. Now with Bootstrap 4 support.",
+            "homepage": "https://developer.snapappointments.com/bootstrap-select",
+            "keywords": [
+                "bootstrap",
+                "dropdown",
+                "form",
+                "javascript",
+                "jquery",
+                "replacement",
+                "select"
+            ],
+            "time": "2019-04-19T15:54:51+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
