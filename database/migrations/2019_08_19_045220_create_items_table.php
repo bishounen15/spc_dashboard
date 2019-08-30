@@ -33,6 +33,8 @@ class CreateItemsTable extends Migration
             $table->string('uofm_rcvd')->nullable();
             $table->string('uofm_issue')->nullable();
 
+            $table->unique('item_code');
+
             $table->timestamps();
         });
     }

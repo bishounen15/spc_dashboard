@@ -80,10 +80,10 @@
                 { data: 'shifts' },
                 @if(Auth::user()->mes_role == 'PLAN' || Auth::user()->sysadmin == 1)
                 { sortable: false, "render": function ( data, type, full, meta ) {
+                    var admin = {{Auth::user()->sysadmin}};
                     var d = "{{date('Y-m-d')}}";
                     
-                    if (d > full.production_date) {
-                        
+                    if (d > full.production_date && admin != 1) {
                         editable = " disabled";
                     } else {
                         editable = "";

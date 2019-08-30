@@ -31,6 +31,12 @@
                     type: 'select',
                     list_route: 'itemclass/lookup',
                     inquire: true
+                }, 
+                {
+                    name: 'uofm_base', 
+                    display_name: 'UOFM',
+                    placeholder: 'Enter UOFM', 
+                    type: 'text'
                 }
         ]"></portal-maintenance>
     </div>
