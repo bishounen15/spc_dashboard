@@ -377,33 +377,6 @@ module.exports = {
 /* 1 */
 /***/ (function(module, exports) {
 
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file.
@@ -507,6 +480,33 @@ module.exports = function normalizeComponent (
     options: options
   }
 }
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
 
 
 /***/ }),
@@ -3192,7 +3192,7 @@ Popper.Defaults = Defaults;
 /* harmony default export */ __webpack_exports__["default"] = (Popper);
 //# sourceMappingURL=popper.js.map
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
 /* 5 */
@@ -14028,7 +14028,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(55);
+module.exports = __webpack_require__(63);
 
 
 /***/ }),
@@ -14057,6 +14057,7 @@ Vue.component('data-maintenance', __webpack_require__(43));
 Vue.component('portal-maintenance', __webpack_require__(46));
 Vue.component('lot-record', __webpack_require__(49));
 Vue.component('cab-record', __webpack_require__(52));
+Vue.component('bom-maintenance', __webpack_require__(55));
 
 var app = new Vue({
   el: '#app'
@@ -31236,7 +31237,7 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(16)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(16)(module)))
 
 /***/ }),
 /* 16 */
@@ -47068,7 +47069,7 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(38).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(38).setImmediate))
 
 /***/ }),
 /* 38 */
@@ -47138,7 +47139,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 39 */
@@ -47331,14 +47332,14 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(7)))
 
 /***/ }),
 /* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(41)
 /* template */
@@ -47457,7 +47458,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(44)
 /* template */
@@ -48638,7 +48639,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(47)
 /* template */
@@ -50082,7 +50083,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(50)
 /* template */
@@ -50346,7 +50347,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(53)
 /* template */
@@ -51714,6 +51715,1722 @@ if (false) {
 
 /***/ }),
 /* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(56)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(61)
+/* template */
+var __vue_template__ = __webpack_require__(62)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/portal/ProductType/BOM.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6f2aeeee", Component.options)
+  } else {
+    hotAPI.reload("data-v-6f2aeeee", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(57);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(59)("4e10c152", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6f2aeeee\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./BOM.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6f2aeeee\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./BOM.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(58)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.tab-visible {\n    display: block;\n}\n.tab-hidden {\n    display: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(60)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+var options = null
+var ssrIdKey = 'data-vue-ssr-id'
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction, _options) {
+  isProduction = _isProduction
+
+  options = _options || {}
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+  if (options.ssrId) {
+    styleElement.setAttribute(ssrIdKey, obj.id)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports) {
+
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+module.exports = function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this.getProductTypes();
+    },
+    data: function data() {
+        return {
+            active_tab: "rawmat",
+            product_types: [],
+            item_classes: [],
+            items: [],
+            product_type: {},
+            bom: {
+                product_type: '',
+                category: '',
+                raw_materials: [],
+                packaging_materials: {
+                    box_packaging: {
+                        max_modules: 0,
+                        components: []
+                    },
+                    horizontal_packaging: {
+                        max_modules: 0,
+                        components: []
+                    }
+                }
+            }
+        };
+    },
+    created: function created() {},
+
+    methods: {
+        changeTab: function changeTab(event) {
+            this.active_tab = event.target.id;
+        },
+        getProductTypes: function getProductTypes() {
+            var vm = this;
+
+            fetch('/api/prodtype/lookup', {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                var list = [];
+                $.each(data.data, function (i) {
+                    list.push(this);
+                });
+                vm.product_types = list;
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+
+        setProductType: function setProductType(event) {
+            var _this = this;
+
+            var vm = this;
+
+            fetch('/api/prodtype/details/' + event.target.value, {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                vm.product_type = data.data;
+                vm.bom.product_type = event.target.value;
+                _this.getBOM(event.target.value);
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        getBOM: function getBOM(product_type) {
+            var vm = this;
+
+            fetch('/api/planning/bom/details/' + product_type, {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                vm.bom.raw_materials = data.rm;
+                vm.bom.packaging_materials.box_packaging.components = data.pk;
+                vm.bom.packaging_materials.horizontal_packaging.components = data.hr;
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+
+        addComponent: function addComponent(event) {
+            var vm = this;
+
+            fetch('/api/itemclass/lookup/' + vm.active_tab, {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                vm.bom.category = event.target.name;
+                vm.item_classes = data.data;
+                $("#AddModal").modal("toggle");
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        changeItemClass: function changeItemClass(event) {
+            var vm = this;
+
+            fetch('/api/item/lookup/' + event.target.value, {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                vm.unmarkItems();
+                vm.items = data.data;
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        filterItems: function filterItems(event) {
+            if (event.which == 13) {
+                event.preventDefault();
+                var vm = this;
+
+                fetch('/api/item/lookup/' + $('#item_class').val() + '/' + event.target.value, {
+                    method: 'post'
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    vm.unmarkItems();
+                    vm.items = data.data;
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
+        },
+        clearModal: function clearModal() {
+            $('.input-field').val("");
+            this.items = [];
+            this.unmarkItems();
+        },
+
+        toggleMark: function toggleMark(event) {
+            var value = $("#" + event.target.id).prop('checked');
+            $(".item-list").prop('checked', value);
+        },
+        unmarkItems: function unmarkItems() {
+            $("#mark-all").prop('checked', false);
+            $(".item-list").prop('checked', false);
+        },
+        saveRecord: function saveRecord() {
+            var _this2 = this;
+
+            var vm = this;
+            var data = {};
+            data = $("#input-form").serializeArray();
+
+            var params = {};
+
+            params['data'] = data;
+            params['user_id'] = '-';
+
+            fetch('/api/planning/bom/add', {
+                method: 'post',
+                body: JSON.stringify(params),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                console.log(data);
+                if (data != "") {
+                    alert(data);
+                } else {
+                    _this2.getBOM(vm.bom.product_type);
+                    _this2.clearModal();
+                    $("#AddModal").modal('toggle');
+                }
+            }).catch(function (err) {
+                return console.log(err);
+            });
+
+            // alert('Saved');
+            // $("#AddModal").modal('toggle');
+        }
+    }
+});
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-3" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v(
+              "\n                    Product Type Selection\n                "
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "PRODTYPE" } }, [
+                _vm._v("Product Type")
+              ]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  staticClass: "form-control",
+                  attrs: { name: "PRODTYPE", id: "PRODTYPE" },
+                  on: { change: _vm.setProductType }
+                },
+                [
+                  _c(
+                    "option",
+                    { attrs: { readonly: "", selected: "", value: "" } },
+                    [_vm._v(" -- Select a product type -- ")]
+                  ),
+                  _vm._v(" "),
+                  _vm._l(_vm.product_types, function(option, i) {
+                    return _c(
+                      "option",
+                      { key: i, domProps: { value: option.value } },
+                      [_vm._v(_vm._s(option.caption))]
+                    )
+                  })
+                ],
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "CUSTOMER" } }, [_vm._v("Supplier")]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "CUSTOMER",
+                  id: "CUSTOMER",
+                  readonly: ""
+                },
+                domProps: { value: _vm.product_type.CUSTOMER }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "CELLCOUNT" } }, [
+                _vm._v("Cell Count")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "CELLCOUNT",
+                  id: "CELLCOUNT",
+                  readonly: ""
+                },
+                domProps: { value: _vm.product_type.CELLCOUNT }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "CELLCOLOR" } }, [
+                _vm._v("Cell Type")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "CELLCOLOR",
+                  id: "CELLCOLOR",
+                  readonly: ""
+                },
+                domProps: { value: _vm.product_type.CELLCOLOR }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "SERIALFORMAT" } }, [
+                _vm._v("Serial Number Format")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "SERIALFORMAT",
+                  id: "SERIALFORMAT",
+                  readonly: ""
+                },
+                domProps: { value: _vm.product_type.SERIALFORMAT }
+              })
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-9" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("\n                    Components\n                ")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("ul", { staticClass: "nav nav-tabs" }, [
+              _c("li", { staticClass: "nav-item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    class: _vm.active_tab == "rawmat" ? "active" : "",
+                    attrs: { href: "#", id: "rawmat" },
+                    on: { click: _vm.changeTab }
+                  },
+                  [_vm._v("Raw Materials")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    class: _vm.active_tab == "packaging" ? "active" : "",
+                    attrs: { href: "#", id: "packaging" },
+                    on: { click: _vm.changeTab }
+                  },
+                  [_vm._v("Packaging Materials")]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "card",
+                class:
+                  _vm.active_tab == "rawmat" ? "tab-visible" : "tab-hidden",
+                attrs: { id: "rawmats" }
+              },
+              [
+                _c("div", { staticClass: "card-body" }, [
+                  _c("div", { staticClass: "row mb-2" }, [
+                    _c("div", { staticClass: "col" }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm text-right" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-sm btn-success",
+                          attrs: {
+                            name: "rawmat",
+                            disabled: !_vm.bom.product_type
+                          },
+                          on: { click: _vm.addComponent }
+                        },
+                        [
+                          _c("i", { staticClass: "fas fa-plus" }),
+                          _vm._v(" Add Component")
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "table",
+                    {
+                      staticClass:
+                        "table table-sm table-condensed table-bordered",
+                      attrs: { id: "rawmat-table" }
+                    },
+                    [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        { staticStyle: { "font-size": "0.7em" } },
+                        [
+                          _vm.bom.raw_materials.length == 0
+                            ? _c("tr", [
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass: "text-center",
+                                    attrs: { colspan: "6" }
+                                  },
+                                  [_vm._v("No Raw Material Components")]
+                                )
+                              ])
+                            : _vm._l(_vm.bom.raw_materials, function(row, i) {
+                                return _c("tr", { key: i }, [
+                                  (!i
+                                  ? true
+                                  : _vm.bom.raw_materials[i - 1].bom_index ==
+                                    _vm.bom.raw_materials[i].bom_index
+                                  ? ""
+                                  : true)
+                                    ? _c(
+                                        "td",
+                                        {
+                                          staticClass: "align-middle",
+                                          attrs: { rowspan: row.rowspan }
+                                        },
+                                        [_vm._v(_vm._s(row.item_class))]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(row.item_code))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(row.item_desc))]),
+                                  _vm._v(" "),
+                                  (!i
+                                  ? true
+                                  : _vm.bom.raw_materials[i - 1].bom_index ==
+                                    _vm.bom.raw_materials[i].bom_index
+                                  ? ""
+                                  : true)
+                                    ? _c(
+                                        "td",
+                                        {
+                                          staticClass: "align-middle",
+                                          attrs: { rowspan: row.rowspan }
+                                        },
+                                        [_vm._v(_vm._s(row.bom_qty))]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  (!i
+                                  ? true
+                                  : _vm.bom.raw_materials[i - 1].bom_index ==
+                                    _vm.bom.raw_materials[i].bom_index
+                                  ? ""
+                                  : true)
+                                    ? _c(
+                                        "td",
+                                        {
+                                          staticClass: "align-middle",
+                                          attrs: { rowspan: row.rowspan }
+                                        },
+                                        [_vm._v(_vm._s(row.uofm_base))]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(row.supplier))])
+                                ])
+                              })
+                        ],
+                        2
+                      )
+                    ]
+                  )
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "card",
+                class:
+                  _vm.active_tab == "packaging" ? "tab-visible" : "tab-hidden",
+                attrs: { id: "packaging" }
+              },
+              [
+                _c("div", { staticClass: "card-body" }, [
+                  _c("div", { staticClass: "row mb-2" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm text-right" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-sm btn-success",
+                          attrs: {
+                            name: "box packaging",
+                            disabled: !_vm.bom.product_type
+                          },
+                          on: { click: _vm.addComponent }
+                        },
+                        [
+                          _c("i", { staticClass: "fas fa-plus" }),
+                          _vm._v(" Add Component")
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "table",
+                    {
+                      staticClass: "table table-sm table-condensed mb-3",
+                      attrs: { id: "box-table" }
+                    },
+                    [
+                      _vm._m(3),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        { staticStyle: { "font-size": "0.7em" } },
+                        [
+                          _vm.bom.packaging_materials.box_packaging.components
+                            .length == 0
+                            ? _c("tr", [
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass: "text-center",
+                                    attrs: { colspan: "6" }
+                                  },
+                                  [_vm._v("No Box Packaging Components")]
+                                )
+                              ])
+                            : _vm._l(
+                                _vm.bom.packaging_materials.box_packaging
+                                  .components,
+                                function(row, i) {
+                                  return _c("tr", { key: i }, [
+                                    _c("td", [_vm._v(_vm._s(row.item_class))]),
+                                    _vm._v(" "),
+                                    _c("td", [_vm._v(_vm._s(row.item_code))]),
+                                    _vm._v(" "),
+                                    _c("td", [_vm._v(_vm._s(row.item_desc))]),
+                                    _vm._v(" "),
+                                    _c("td", [_vm._v(_vm._s(row.bom_qty))]),
+                                    _vm._v(" "),
+                                    _c("td", [_vm._v(_vm._s(row.uofm_base))]),
+                                    _vm._v(" "),
+                                    _c("td", [_vm._v(_vm._s(row.supplier))])
+                                  ])
+                                }
+                              )
+                        ],
+                        2
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row mb-2" }, [
+                    _vm._m(4),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm text-right" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-sm btn-success",
+                          attrs: {
+                            name: "horizontal packaging",
+                            disabled: !_vm.bom.product_type
+                          },
+                          on: { click: _vm.addComponent }
+                        },
+                        [
+                          _c("i", { staticClass: "fas fa-plus" }),
+                          _vm._v(" Add Component")
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "table",
+                    {
+                      staticClass: "table table-sm table-condensed mb-3",
+                      attrs: { id: "horizontal-table" }
+                    },
+                    [
+                      _vm._m(5),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        { staticStyle: { "font-size": "0.7em" } },
+                        [
+                          _vm.bom.packaging_materials.horizontal_packaging
+                            .components.length == 0
+                            ? _c("tr", [
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass: "text-center",
+                                    attrs: { colspan: "6" }
+                                  },
+                                  [_vm._v("No Horizontal Packaging Components")]
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm._l(
+                            _vm.bom.packaging_materials.horizontal_packaging
+                              .components,
+                            function(row, i) {
+                              return _c("tr", { key: i }, [
+                                _c("td", [_vm._v(_vm._s(row.item_class))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(row.item_code))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(row.item_desc))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(row.bom_qty))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(row.uofm_base))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(row.supplier))])
+                              ])
+                            }
+                          )
+                        ],
+                        2
+                      )
+                    ]
+                  )
+                ])
+              ]
+            )
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "form",
+      {
+        attrs: { id: "input-form" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            _vm.saveRecord()
+          }
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal fade",
+            attrs: {
+              id: "AddModal",
+              tabindex: "-1",
+              role: "dialog",
+              "aria-labelledby": "exampleModalLabel",
+              "aria-hidden": "true"
+            }
+          },
+          [
+            _c(
+              "div",
+              {
+                staticClass: "modal-dialog modal-lg",
+                attrs: { role: "document" }
+              },
+              [
+                _c("div", { staticClass: "modal-content" }, [
+                  _c("div", { staticClass: "modal-header" }, [
+                    _c(
+                      "h5",
+                      {
+                        staticClass: "modal-title",
+                        attrs: { id: "exampleModalLabel" }
+                      },
+                      [
+                        _vm._v(
+                          "Add Component : " +
+                            _vm._s(
+                              _vm.active_tab == "rawmat" ? "Raw" : "Packaging"
+                            ) +
+                            " Materials"
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm._m(6)
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-sm-4" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "item_class" } }, [
+                            _vm._v("Item Class")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            attrs: { type: "hidden", name: "product_type" },
+                            domProps: { value: _vm.bom.product_type }
+                          }),
+                          _vm._v(" "),
+                          _c("input", {
+                            attrs: { type: "hidden", name: "category" },
+                            domProps: { value: _vm.bom.category }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "select",
+                            {
+                              staticClass:
+                                "form-control form-control-sm input-field",
+                              attrs: { name: "item_class", id: "item_class" },
+                              on: { change: _vm.changeItemClass }
+                            },
+                            [
+                              _c(
+                                "option",
+                                {
+                                  attrs: {
+                                    readonly: "",
+                                    selected: "",
+                                    value: ""
+                                  }
+                                },
+                                [_vm._v(" -- Select an item class -- ")]
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.item_classes, function(option, i) {
+                                return _c(
+                                  "option",
+                                  { key: i, domProps: { value: option.value } },
+                                  [_vm._v(_vm._s(option.caption))]
+                                )
+                              })
+                            ],
+                            2
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "filter_item" } }, [
+                            _vm._v("Filter Items")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            staticClass:
+                              "form-control form-control-sm input-field",
+                            attrs: {
+                              type: "text",
+                              name: "filter_item",
+                              id: "filter_item"
+                            },
+                            on: { keypress: _vm.filterItems }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(7)
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-8 bg-light" }, [
+                        _c("div", { staticClass: "row" }, [
+                          _vm._m(8),
+                          _vm._v(" "),
+                          _vm.items.length > 0
+                            ? _c("div", { staticClass: "col-sm text-right" }, [
+                                _c("div", { staticClass: "form-check" }, [
+                                  _c("input", {
+                                    staticClass: "form-check-input",
+                                    attrs: {
+                                      type: "checkbox",
+                                      name: "mark-all",
+                                      id: "mark-all",
+                                      disabled: _vm.items.length < 2
+                                    },
+                                    on: { change: _vm.toggleMark }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "label",
+                                    {
+                                      staticClass: "form-check-label",
+                                      attrs: { for: "defaultCheck1" }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                            Mark All\n                                        "
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "row" },
+                          [
+                            _vm.items.length == 0
+                              ? _c(
+                                  "div",
+                                  { staticClass: "col-sm-12 text-center" },
+                                  [_c("h5", [_vm._v("No Item Found")])]
+                                )
+                              : _vm._l(_vm.items, function(option, i) {
+                                  return _c(
+                                    "div",
+                                    {
+                                      key: i,
+                                      staticClass: "col-sm-6",
+                                      attrs: { value: option.value }
+                                    },
+                                    [
+                                      _c("div", { staticClass: "form-check" }, [
+                                        _c("input", {
+                                          staticClass:
+                                            "form-check-input item-list",
+                                          attrs: {
+                                            type: "checkbox",
+                                            name: "selected_items[]"
+                                          },
+                                          domProps: { value: option.value }
+                                        }),
+                                        _vm._v(" "),
+                                        _c(
+                                          "label",
+                                          {
+                                            staticClass: "form-check-label",
+                                            attrs: { for: "defaultCheck1" }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(option.value) +
+                                                " "
+                                            ),
+                                            _c("br"),
+                                            _vm._v(" "),
+                                            _c("small", [
+                                              _vm._v(_vm._s(option.caption))
+                                            ])
+                                          ]
+                                        )
+                                      ])
+                                    ]
+                                  )
+                                })
+                          ],
+                          2
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-secondary",
+                        attrs: { type: "button", "data-dismiss": "modal" },
+                        on: {
+                          click: function($event) {
+                            _vm.clearModal()
+                          }
+                        }
+                      },
+                      [_vm._v("Close")]
+                    ),
+                    _vm._v(" "),
+                    _vm._m(9)
+                  ])
+                ])
+              ]
+            )
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h3", { staticClass: "mb-3" }, [
+      _c("i", { staticClass: "fas fa-tasks" }),
+      _vm._v(" BOM Maintenance")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "thead",
+      { staticClass: "thead-dark", staticStyle: { "font-size": "0.7em" } },
+      [
+        _c("th", [_vm._v("Item Category")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Item Number")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Item Description")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Usage")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("UOFM")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Supplier")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("h5", [_c("strong", [_vm._v("Box Packaging")])])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "thead",
+      { staticClass: "thead-dark", staticStyle: { "font-size": "0.7em" } },
+      [
+        _c("th", [_vm._v("Item Category")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Item Number")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Item Description")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Usage")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("UOFM")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Supplier")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("h5", [_c("strong", [_vm._v("Horizontal Packaging")])])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "thead",
+      { staticClass: "thead-dark", staticStyle: { "font-size": "0.7em" } },
+      [
+        _c("th", [_vm._v("Item Category")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Item Number")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Item Description")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Usage")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("UOFM")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Supplier")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "bom_qty" } }, [_vm._v("Usage")]),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "form-control form-control-sm input-field",
+        attrs: {
+          type: "number",
+          name: "bom_qty",
+          id: "bom_qty",
+          step: ".00001"
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Item List")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      { staticClass: "btn btn-success pull-right", attrs: { type: "submit" } },
+      [_c("i", { staticClass: "fa fa-save" }), _vm._v(" Save changes")]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6f2aeeee", module.exports)
+  }
+}
+
+/***/ }),
+/* 63 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

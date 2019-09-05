@@ -66,7 +66,10 @@ Route::post('portal/dataset/template',[
  Route::post('trina/module/lookup','ModulesController@trinaLookup');
 
  Route::post('prodtype/lookup','WebPortal\ProductTypesController@selectValues');
- Route::post('itemclass/lookup','WebPortal\ItemClassesController@selectValues');
+ Route::post('prodtype/details/{prodtype}','WebPortal\ProductTypesController@getDetails');
+
+ Route::post('itemclass/lookup/{category?}','WebPortal\ItemClassesController@selectValues');
+ Route::post('item/lookup/{category}/{filter?}','Planning\ItemsController@getItemList');
 
  Route::post('portal/wo/generate/{date?}/{category?}','WebPortal\WorkOrdersController@generateControl');
 
@@ -76,3 +79,6 @@ Route::post('portal/dataset/template',[
  Route::post('mes/cabinet/list','WebPortal\CabinetsController@listCabinets');
  Route::post('mes/cabinet/save','WebPortal\CabinetsController@saveCabinet');
  Route::put('mes/cabinet/ship','WebPortal\CabinetsController@shipCabinet');
+
+ Route::post('planning/bom/details/{prodtype}','Planning\BOMController@getBOM');
+ Route::post('planning/bom/add','Planning\BOMController@store');

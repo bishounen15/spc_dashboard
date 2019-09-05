@@ -17,9 +17,19 @@ class CreateBOMsTable extends Migration
             $table->increments('id');
 
             $table->string('product_type');
-            $table->integer('revision_no')->default(0);
+            $table->string('category');
+            $table->string('item_class');
+            $table->float('bom_qty');
+            $table->integer('bom_index');
+
+            $table->timestamps();
+        });
+
+        Schema::connection('web_portal')->create('bm02', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('bom_id');
             $table->string('item_code');
-            $table->string('bom_qty');
 
             $table->timestamps();
         });
@@ -33,5 +43,6 @@ class CreateBOMsTable extends Migration
     public function down()
     {
         Schema::connection('web_portal')->dropIfExists('bm01');
+        Schema::connection('web_portal')->dropIfExists('bm02');
     }
 }

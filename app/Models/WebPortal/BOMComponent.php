@@ -4,17 +4,14 @@ namespace App\Models\WebPortal;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BOM extends Model
+class BOMComponent extends Model
 {
     //
     protected $connection = 'web_portal';
-    protected $table = 'bm01';
-
+    protected $table = 'bm02';
+    
     protected $fillable = [
-        'product_type',
-        'category',
-        'item_class',
-        'bom_qty',
-        'bom_index',
+        'bom_id',
+        'item_code',
     ];
 }

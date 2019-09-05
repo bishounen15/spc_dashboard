@@ -19,6 +19,7 @@ class CreateItemsTable extends Migration
             $table->string('item_code');
             $table->string('item_desc');
             $table->string('item_class');
+            $table->string('item_category');
             $table->string('specs_01')->nullable();
             $table->string('specs_02')->nullable();
             $table->string('specs_03')->nullable();
@@ -32,6 +33,7 @@ class CreateItemsTable extends Migration
             $table->string('uofm_base')->nullable();
             $table->string('uofm_rcvd')->nullable();
             $table->string('uofm_issue')->nullable();
+            $table->string('supplier');
 
             $table->unique('item_code');
 

@@ -37,6 +37,30 @@
                     display_name: 'UOFM',
                     placeholder: 'Enter UOFM', 
                     type: 'text'
+                },
+                {
+                    name: 'item_category', 
+                    display_name: 'Item Category',
+                    placeholder: 'Enter Item Category', 
+                    type: 'select',
+                    static_list: [
+                        {
+                            value: 'rawmat',
+                            caption: 'Raw Materials'
+                        },
+                        {
+                            value: 'packaging',
+                            caption: 'Packaging Materials'
+                        }
+                    ],
+                    inquire: true,
+                }, 
+                {
+                    name: 'supplier', 
+                    display_name: 'Supplier',
+                    placeholder: 'Enter Supplier', 
+                    type: 'text',
+                    inquire: true,
                 }
         ]"></portal-maintenance>
     </div>

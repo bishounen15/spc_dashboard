@@ -14,6 +14,12 @@ use Response;
 class ProductTypesController extends Controller
 {
     //
+    public function getDetails($prodtype) {
+        $details = ProductType::where("PRODTYPE",$prodtype)
+                                        ->first();
+        return Response::json(["data" => $details]);                       
+    }
+
     public function selectValues() {
         $prodtypes = ProductType::select("PRODTYPE AS value","PRODTYPE AS caption")
                                     ->where("CUSTOMER","<>","TRINA")
