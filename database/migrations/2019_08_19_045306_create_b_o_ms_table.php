@@ -19,7 +19,7 @@ class CreateBOMsTable extends Migration
             $table->string('product_type');
             $table->string('category');
             $table->string('item_class');
-            $table->float('bom_qty');
+            $table->float('bom_qty', 8, 5);
             $table->integer('bom_index');
 
             $table->timestamps();

@@ -69,7 +69,7 @@ Route::post('portal/dataset/template',[
  Route::post('prodtype/details/{prodtype}','WebPortal\ProductTypesController@getDetails');
 
  Route::post('itemclass/lookup/{category?}','WebPortal\ItemClassesController@selectValues');
- Route::post('item/lookup/{category}/{filter?}','Planning\ItemsController@getItemList');
+ Route::post('item/lookup/{item_class}/{category}/{prodtype?}/{filter?}','Planning\ItemsController@getItemList');
 
  Route::post('portal/wo/generate/{date?}/{category?}','WebPortal\WorkOrdersController@generateControl');
 

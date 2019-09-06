@@ -342,8 +342,7 @@ export default {
         },
         changeItemClass: function(event) {
             let vm = this;
-            
-            fetch('/api/item/lookup/' + event.target.value, {
+            fetch('/api/item/lookup/' + event.target.value + '/' + vm.bom.category + '/' + vm.bom.product_type, {
                     method: 'post',
                     })
                     .then(res => res.json())
@@ -357,8 +356,7 @@ export default {
             if (event.which == 13) {
                 event.preventDefault();
                 let vm = this;
-            
-                fetch('/api/item/lookup/' + $('#item_class').val() + '/' + event.target.value, {
+                fetch('/api/item/lookup/' + $('#item_class').val() + '/' + vm.bom.category + '/' + vm.bom.product_type + '/' + event.target.value, {
                         method: 'post',
                         })
                         .then(res => res.json())
@@ -401,7 +399,6 @@ export default {
                     })
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data);
                         if (data != "") {
                             alert(data);
                         } else {

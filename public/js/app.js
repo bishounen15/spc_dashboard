@@ -52504,8 +52504,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         changeItemClass: function changeItemClass(event) {
             var vm = this;
-
-            fetch('/api/item/lookup/' + event.target.value, {
+            fetch('/api/item/lookup/' + event.target.value + '/' + vm.bom.category + '/' + vm.bom.product_type, {
                 method: 'post'
             }).then(function (res) {
                 return res.json();
@@ -52520,8 +52519,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (event.which == 13) {
                 event.preventDefault();
                 var vm = this;
-
-                fetch('/api/item/lookup/' + $('#item_class').val() + '/' + event.target.value, {
+                fetch('/api/item/lookup/' + $('#item_class').val() + '/' + vm.bom.category + '/' + vm.bom.product_type + '/' + event.target.value, {
                     method: 'post'
                 }).then(function (res) {
                     return res.json();
@@ -52568,7 +52566,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (res) {
                 return res.json();
             }).then(function (data) {
-                console.log(data);
                 if (data != "") {
                     alert(data);
                 } else {
