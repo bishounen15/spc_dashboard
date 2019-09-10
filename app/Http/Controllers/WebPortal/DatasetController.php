@@ -88,6 +88,88 @@ class DatasetController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Request $request)
+    {
+        $err_msg = "";
+        $data = [];
+
+        try {
+            $results = DB::connection('web_portal')
+                            ->table($request->table)
+                            ->where($request->data)
+                            ->first();
+            
+            $data['data'] = $results;
+        } catch (\Throwable $th) {
+            $results = $th;
+
+            try {
+                $err_msg = $this->error_codes[$results->errorInfo[1]];
+            } catch (\Throwable $th) {
+                $err_msg = $results->errorInfo[2];
+            }
+        } finally {
+            $data['error'] = $err_msg;
+            return Response::json($data);
+        }
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        $data = [];
+
+        foreach($request->data as $d) {
+            $kvp = [];
+
+            foreach($d as $k => $v) {
+                array_push($kvp,$v);
+            }
+
+            $data[$kvp[0]] = $kvp[1];
+        }
+
+        $err_msg = "";
+
+        try {
+            $results = DB::connection('web_portal')
+                            ->table($request->table)
+                            ->where($request->id_field,$request->id_value)
+                            ->update($data);
+            
+            $req = [];
+            $req['table'] = $request->table;
+            $req['data'] = $data;
+            $req['type'] = "UPDATE";
+            $req['user_id'] = $request->user_id;
+            
+            $res = $this->auditTrail($req);
+            $err_msg = $res;
+        } catch (\Throwable $th) {
+            $results = $th;
+
+            try {
+                $err_msg = $this->error_codes[$results->errorInfo[1]];
+            } catch (\Throwable $th) {
+                $err_msg = $results->errorInfo[2];
+            }
+        } finally {
+            return Response::json($err_msg);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

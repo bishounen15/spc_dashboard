@@ -48855,11 +48855,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
         this.initList();
         this.inquire();
+        $("#AddModal").on("hidden.bs.modal", this.clearInput);
     },
     data: function data() {
         return {
@@ -48868,7 +48874,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             table_rows: [],
             inquire_data: {},
             main_data: {},
+            edit_data: {},
             pagination: {},
+            edit: false,
             loading: false,
             uploading: false,
             file: ''
@@ -48887,7 +48895,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         source: String,
         user_id: String,
         xl_import: Boolean,
-        allow_delete: false
+        allow_delete: false,
+        allow_edit: false,
+        id_field: String
     },
     methods: {
         initList: function initList() {
@@ -49005,14 +49015,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var data = {};
             data = $("#input-form").serializeArray();
 
+            var mymethod = this.edit == true ? "put" : "post";
+
             var params = {};
 
             params['table'] = this.source;
             params['data'] = data;
             params['user_id'] = this.user_id;
 
+            if (this.edit == true) {
+                params["id_field"] = this.id_field;
+                params["id_value"] = $("#recid").val();
+            }
+
             fetch('/api/portal/dataset', {
-                method: 'post',
+                method: mymethod,
                 body: JSON.stringify(params),
                 headers: {
                     'content-type': 'application/json'
@@ -49065,6 +49082,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     return console.log(err);
                 });
             }
+        },
+        editRecord: function editRecord(row) {
+            // if (confirm('Are You Sure?')) {
+            var vm = this;
+            var params = {};
+
+            params['table'] = this.source;
+            params['data'] = row;
+            params['user_id'] = this.user_id;
+
+            fetch('/api/portal/dataset/edit', {
+                method: 'post',
+                body: JSON.stringify(params),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                if (data.error != "") {
+                    alert(data.error);
+                } else {
+                    vm.edit_data = data.data;
+                    $("#recid").val(data.data[vm.id_field]);
+                    console.log($("#recid").val());
+                    vm.edit = true;
+                    $("#AddModal").modal('toggle');
+                }
+            }).catch(function (err) {
+                return console.log(err);
+            });
+            // }
         },
         downloadTemplate: function downloadTemplate() {
             var _this5 = this;
@@ -49164,6 +49213,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         clearInput: function clearInput() {
             $('.input-field').val("");
+            if (this.edit == true) {
+                this.edit = false;
+                this.edit_data = {};
+            }
         },
 
         generateSeries: function generateSeries(event) {
@@ -49680,6 +49733,21 @@ var render = function() {
                               }),
                               _vm._v(" "),
                               _c("td", { staticClass: "text-center" }, [
+                                _vm.allow_edit
+                                  ? _c(
+                                      "button",
+                                      {
+                                        staticClass: "btn btn-sm btn-success",
+                                        on: {
+                                          click: function($event) {
+                                            _vm.editRecord(row)
+                                          }
+                                        }
+                                      },
+                                      [_c("i", { staticClass: "far fa-edit" })]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
                                 _vm.allow_delete
                                   ? _c(
                                       "button",
@@ -49729,6 +49797,11 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
+    _c("input", {
+      staticClass: "input-field",
+      attrs: { type: "hidden", name: "recid", id: "recid" }
+    }),
+    _vm._v(" "),
     _c(
       "form",
       {
@@ -49759,7 +49832,22 @@ var render = function() {
               { staticClass: "modal-dialog", attrs: { role: "document" } },
               [
                 _c("div", { staticClass: "modal-content" }, [
-                  _vm._m(3),
+                  _c("div", { staticClass: "modal-header" }, [
+                    _c(
+                      "h5",
+                      {
+                        staticClass: "modal-title",
+                        attrs: { id: "exampleModalLabel" }
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(_vm.edit == false ? "Add" : "Edit") + " Record"
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm._m(3)
+                  ]),
                   _vm._v(" "),
                   _c(
                     "div",
@@ -49800,7 +49888,12 @@ var render = function() {
                                     "option",
                                     {
                                       key: i,
-                                      domProps: { value: option.value }
+                                      domProps: {
+                                        value: option.value,
+                                        selected:
+                                          _vm.edit_data[column.name] ==
+                                          option.value
+                                      }
                                     },
                                     [_vm._v(_vm._s(option.caption))]
                                   )
@@ -49808,6 +49901,19 @@ var render = function() {
                               ],
                               2
                             )
+                          : column.type == "number"
+                          ? _c("input", {
+                              staticClass: "form-control input-field",
+                              attrs: {
+                                type: column.type,
+                                name: column.name,
+                                placeholder: column.placeholder,
+                                min: column.min,
+                                max: column.max,
+                                step: column.step
+                              },
+                              domProps: { value: _vm.edit_data[column.name] }
+                            })
                           : column.default_value
                           ? _c("input", {
                               staticClass: "form-control",
@@ -49828,6 +49934,7 @@ var render = function() {
                                 placeholder: column.placeholder,
                                 "data-route": column.lookup_route
                               },
+                              domProps: { value: _vm.edit_data[column.name] },
                               on: { keypress: _vm.lookup }
                             })
                           : column.generate_series
@@ -49842,6 +49949,7 @@ var render = function() {
                                   column.lookup_values ||
                                   column.system_generated
                               },
+                              domProps: { value: _vm.edit_data[column.name] },
                               on: { change: _vm.generateSeries }
                             })
                           : _c("input", {
@@ -49854,29 +49962,14 @@ var render = function() {
                                 readonly:
                                   column.lookup_values ||
                                   column.system_generated
-                              }
+                              },
+                              domProps: { value: _vm.edit_data[column.name] }
                             })
                       ])
                     })
                   ),
                   _vm._v(" "),
-                  _c("div", { staticClass: "modal-footer" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-secondary",
-                        attrs: { type: "button", "data-dismiss": "modal" },
-                        on: {
-                          click: function($event) {
-                            _vm.clearInput()
-                          }
-                        }
-                      },
-                      [_vm._v("Close")]
-                    ),
-                    _vm._v(" "),
-                    _vm._m(4)
-                  ])
+                  _vm._m(4)
                 ])
               ]
             )
@@ -50012,36 +50105,42 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "h5",
-        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
-        [_vm._v("Add Record")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      { staticClass: "btn btn-success pull-right", attrs: { type: "submit" } },
-      [_c("i", { staticClass: "fa fa-save" }), _vm._v(" Save changes")]
-    )
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-success pull-right",
+          attrs: { type: "submit" }
+        },
+        [_c("i", { staticClass: "fa fa-save" }), _vm._v(" Save changes")]
+      )
+    ])
   },
   function() {
     var _vm = this

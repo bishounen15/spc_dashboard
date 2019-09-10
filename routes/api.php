@@ -53,7 +53,9 @@ Route::post('dataset/template',[
 Route::post('dataset/upload','TRINA\DatasetController@upload');
 
 Route::post('portal/dataset/list','WebPortal\DatasetController@getList');
+Route::post('portal/dataset/edit','WebPortal\DatasetController@edit');
 Route::post('portal/dataset','WebPortal\DatasetController@store');
+Route::put('portal/dataset','WebPortal\DatasetController@update');
 Route::delete('portal/dataset','WebPortal\DatasetController@destroy');
 
 Route::post('portal/dataset/template',[

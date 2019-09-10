@@ -5,8 +5,10 @@
             title="Item Maintenance" 
             icon="fas fa-box-open" 
             source="im01"
+            id_field="id"
             user_id="{{ Auth::user()->user_id }}"
             v-bind:allow_delete=true
+            v-bind:allow_edit=true
             v-bind:xl_import="true"
             v-bind:columns="[
                 {
@@ -34,9 +36,26 @@
                 }, 
                 {
                     name: 'uofm_base', 
-                    display_name: 'UOFM',
+                    display_name: 'Base UOFM',
                     placeholder: 'Enter UOFM', 
                     type: 'text'
+                },
+                {
+                    name: 'uofm_issue', 
+                    display_name: 'Issuance UOFM',
+                    placeholder: 'Enter Issuance UOFM', 
+                    type: 'text',
+                    hide_column: true
+                },
+                {
+                    name: 'conv_issue', 
+                    display_name: 'Issuance Conversion',
+                    placeholder: 'Conversion to base uofm', 
+                    type: 'number',
+                    min: '0',
+                    max: '100000',
+                    step: '.00001',
+                    hide_column: true
                 },
                 {
                     name: 'item_category', 

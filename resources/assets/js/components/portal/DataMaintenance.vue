@@ -79,6 +79,7 @@
                                         {{ (column.percentage ? (row[column.name] * 100) + '%' : row[column.name]) }}
                                     </td>
                                     <td class="text-center">
+                                        <button class="btn btn-sm btn-success" @click="editRecord(row)" v-if="allow_edit"><i class="far fa-edit"></i></button>
                                         <button class="btn btn-sm btn-danger" @click="deleteRecord(row)"  v-if="allow_delete"><i class="far fa-trash-alt"></i></button>
                                     </td>
                                 </tr>
@@ -97,12 +98,14 @@
             </div>
         </div>
 
+        <input type="hidden" class="input-field" name="recid" id="recid">
+        
         <form id="input-form" @submit.prevent="saveRecord()">
             <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add Record</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{(edit == false ? "Add" : "Edit")}} Record</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -113,20 +116,22 @@
 
                             <select v-bind:name="column.name" class="form-control input-field" @change="generateSeries" v-if="column.type=='select'">
                                 <option readonly selected value disabled> -- select an option -- </option>
-                                <option v-for="(option, i) in droplists[column.name]" v-bind:key="i" v-bind:value="option.value">{{option.caption}}</option>
+                                <option v-for="(option, i) in droplists[column.name]" v-bind:key="i" v-bind:value="option.value" :selected="edit_data[column.name] == option.value">{{option.caption}}</option>
                             </select>
+
+                            <input v-bind:type="column.type" class="form-control input-field" v-bind:name="column.name" v-bind:placeholder="column.placeholder" v-bind:value="edit_data[column.name]" v-bind:min="column.min" v-bind:max="column.max" v-bind:step="column.step" v-else-if="column.type=='number'">
 
                             <input v-bind:type="column.type" class="form-control" v-bind:name="column.name" v-bind:placeholder="column.placeholder" v-bind:value="column.default_value" readonly v-else-if="column.default_value">
 
-                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:placeholder="column.placeholder" @keypress="lookup" v-bind:data-route="column.lookup_route" v-else-if="column.lookup_source">
+                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:placeholder="column.placeholder" v-bind:value="edit_data[column.name]" @keypress="lookup" v-bind:data-route="column.lookup_route" v-else-if="column.lookup_source">
                             
-                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:class="{ lookup: column.lookup_values }" v-bind:placeholder="column.placeholder" :readonly="column.lookup_values || column.system_generated" @change="generateSeries" v-else-if="column.generate_series">
+                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:class="{ lookup: column.lookup_values }" v-bind:value="edit_data[column.name]" v-bind:placeholder="column.placeholder" :readonly="column.lookup_values || column.system_generated" @change="generateSeries" v-else-if="column.generate_series">
 
-                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:class="{ lookup: column.lookup_values }" v-bind:placeholder="column.placeholder" :readonly="column.lookup_values || column.system_generated" v-else>
+                            <input v-bind:type="column.type" v-bind:name="column.name" class="form-control input-field" v-bind:class="{ lookup: column.lookup_values }" v-bind:placeholder="column.placeholder" v-bind:value="edit_data[column.name]" :readonly="column.lookup_values || column.system_generated" v-else>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="clearInput()">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-success pull-right"><i class="fa fa-save"></i> Save changes</button>
                     </div>
                     </div>
@@ -171,6 +176,7 @@
         mounted() {
             this.initList();
             this.inquire();
+            $("#AddModal").on("hidden.bs.modal", this.clearInput);
         },
         data() {
             return {
@@ -179,7 +185,9 @@
                 table_rows: [],
                 inquire_data: {},
                 main_data: {},
+                edit_data: {},
                 pagination: {},
+                edit: false,
                 loading: false,
                 uploading: false,
                 file: ''
@@ -197,7 +205,9 @@
             source: String,
             user_id: String,
             xl_import: Boolean,
-            allow_delete: false
+            allow_delete: false,
+            allow_edit: false,
+            id_field: String
         },
         methods: {
             initList() {
@@ -307,14 +317,21 @@
                 let data = {};
                 data = $("#input-form").serializeArray();
 
+                let mymethod = (this.edit == true ? "put" : "post");
+
                 let params = {};
 
                 params['table'] = this.source;
                 params['data'] = data;
                 params['user_id'] = this.user_id;
 
+                if (this.edit == true) {
+                    params["id_field"] = this.id_field;
+                    params["id_value"] = $("#recid").val();
+                }
+
                 fetch('/api/portal/dataset', {
-                    method: 'post',
+                    method: mymethod,
                     body: JSON.stringify(params),
                     headers: {
                         'content-type': 'application/json'
@@ -363,6 +380,37 @@
                         })
                         .catch(err => console.log(err));
                 }
+            },
+            editRecord(row) {
+                // if (confirm('Are You Sure?')) {
+                    let vm = this;
+                    let params = {};
+
+                    params['table'] = this.source;
+                    params['data'] = row;
+                    params['user_id'] = this.user_id;
+
+                    fetch('/api/portal/dataset/edit', {
+                        method: 'post',
+                        body: JSON.stringify(params),
+                        headers: {
+                            'content-type': 'application/json'
+                        }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.error != "") {
+                                alert(data.error);
+                            } else {
+                                vm.edit_data = data.data;
+                                $("#recid").val(data.data[vm.id_field]);
+                                console.log($("#recid").val());
+                                vm.edit = true;
+                                $("#AddModal").modal('toggle');
+                            }
+                        })
+                        .catch(err => console.log(err));
+                // }
             },
             downloadTemplate() {
                 let cols = {};
@@ -462,6 +510,10 @@
             },
             clearInput() {
                 $('.input-field').val("");
+                if (this.edit == true) {
+                    this.edit = false;
+                    this.edit_data = {};
+                }
             },
             generateSeries: function(event) {
                 let cols = this.columns;

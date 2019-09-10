@@ -126,7 +126,14 @@
                                     
                                     <td>
                                         <div class="form-group">
-                                            <input type="text" name="product-type[]" class="form-control" value="{{$product->model_name}}" placeholder="Based on WO Selected" readonly>
+                                            <div class="form row">
+                                                <div class="col-sm-9 pr-0">
+                                                    <input type="text" name="product-type[]" class="form-control" value="{{$product->model_name}}" placeholder="Based on WO Selected" readonly>
+                                                </div>
+                                                <div class="col-sm-3 pl-1">
+                                                    <button class="btn" name="bom[]"><i class="fas fa-tasks"></i></button>
+                                                </div>
+                                            </div>
                                             <span class="form-text text-danger" id="err_product_type[]"></span>
                                         </div>
                                     </td>
@@ -190,7 +197,14 @@
 
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" name="product-type[]" class="form-control" placeholder="Based on WO Selected" readonly>
+                                        <div class="form row">
+                                            <div class="col-sm-9 pr-0">
+                                                <input type="text" name="product-type[]" class="form-control" placeholder="Based on WO Selected" readonly>
+                                            </div>
+                                            <div class="col-sm-3 pl-1">
+                                                <button class="btn" name="bom[]"><i class="fas fa-tasks"></i></button>
+                                            </div>
+                                        </div>
                                         <span class="form-text text-danger" id="err_product_type[]"></span>
                                     </div>
                                 </td>
