@@ -67,6 +67,10 @@ Route::post('portal/dataset/template',[
  
  Route::post('trina/module/lookup','ModulesController@trinaLookup');
 
+ Route::post('prodline/lookup','WebPortal\ProductionLinesController@selectValues');
+ Route::post('prodline/withsched/{production_date?}','WebPortal\ProductionLinesController@withSchedule');
+ Route::post('prodline/schedule/{date}/{line}','WebPortal\ProductionLinesController@loadSchedule');
+
  Route::post('prodtype/lookup','WebPortal\ProductTypesController@selectValues');
  Route::post('prodtype/details/{prodtype}','WebPortal\ProductTypesController@getDetails');
 
@@ -84,3 +88,6 @@ Route::post('portal/dataset/template',[
 
  Route::post('planning/bom/details/{prodtype}','Planning\BOMController@getBOM');
  Route::post('planning/bom/add','Planning\BOMController@store');
+ Route::post('planning/bom/check/{product_type}/{item_code}','Planning\BOMController@checkBOMItem');
+
+ Route::post('mes/issuance/list','WebPortal\WarehouseIssuanceController@list');

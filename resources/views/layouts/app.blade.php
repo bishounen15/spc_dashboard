@@ -127,9 +127,14 @@
                                 @endif
                                 <a class="dropdown-item" href="/planning/schedule">&nbsp;&nbsp;&nbsp;&nbsp;Production Schedule</a>
                                 
-                                @if(Auth::user()->mes_role == 'WHSE' || Auth::user()->sysadmin == 1)
-                                <h6 class="dropdown-header">Warehouse</h6>
-                                <a class="dropdown-item" href="/mes/materials">&nbsp;&nbsp;&nbsp;&nbsp;Cells Received</a>
+                                @if(Auth::user()->mes_role == 'WHSE' || Auth::user()->mes_role == 'MH' || Auth::user()->sysadmin == 1)
+                                    <h6 class="dropdown-header">Warehouse</h6>
+                                    @if(Auth::user()->mes_role == 'WHSE' || Auth::user()->sysadmin == 1)
+                                    <a class="dropdown-item" href="/mes/materials">&nbsp;&nbsp;&nbsp;&nbsp;Cells Received</a>
+                                    @endif
+                                    @if(Auth::user()->mes_role == 'WHSE' || Auth::user()->mes_role == 'MH' || Auth::user()->sysadmin == 1)
+                                    <a class="dropdown-item" href="/mes/issuance">&nbsp;&nbsp;&nbsp;&nbsp;Material Issuance</a>
+                                    @endif
                                 @endif
 
                                 @if(Auth::user()->mes_role == 'SHIP' || Auth::user()->sysadmin == 1)

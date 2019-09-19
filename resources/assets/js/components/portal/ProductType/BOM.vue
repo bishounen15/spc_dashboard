@@ -183,22 +183,17 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="filter_item">Filter Items</label>
-                                    <input type="text" name="filter_item" id="filter_item" class="form-control form-control-sm input-field" @keypress="filterItems">
-                                </div>
-
-                                <div class="form-group">
                                     <label for="bom_qty">Usage</label>
                                     <input type="number" name="bom_qty" id="bom_qty" class="form-control form-control-sm input-field" step=".00001">
                                 </div>
                             </div>
 
-                            <div class="col-sm-8 bg-light">
+                            <div class="col-sm-8 bg-light p-3">
                                 <div class="row">
-                                    <div class="col-sm">
-                                        <label for="">Item List</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="filter_item" id="filter_item" class="form-control form-control-sm input-field" placeholder="Filter Items" @keypress="filterItems">
                                     </div>
-                                    <div class="col-sm text-right" v-if="items.length > 0">
+                                    <div class="col-sm-6 text-right" v-if="items.length > 0">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="mark-all" id="mark-all" :disabled="items.length < 2" @change="toggleMark">
                                             <label class="form-check-label" for="defaultCheck1">
@@ -207,7 +202,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row pt-2">
                                     <div class="col-sm-12 text-center" v-if="items.length == 0">
                                         <h5>No Item Found</h5>
                                     </div>

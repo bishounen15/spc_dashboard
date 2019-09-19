@@ -262,6 +262,8 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/mes/cabinet', 'WebPortal\CabinetsController@index');
         Route::get('/planning/item', 'Planning\ItemsController@index');
         Route::get('/planning/bom', 'Planning\BOMController@index');
+
+        Route::get('/mes/issuance', 'WebPortal\WarehouseIssuanceController@index');
     });
 // }); 
 

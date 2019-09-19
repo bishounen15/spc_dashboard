@@ -31,6 +31,13 @@ class BOMController extends Controller
         return Response::json(["rm"=>$bom_rm,"pk"=>$bom_pk,"hr"=>$bom_hr]);
     }
 
+    public function checkBOMItem($product_type, $item_code) {
+        $info = DB::connection('web_portal')
+                        ->select("SELECT C.item_desc, C.uofm_base, C.uofm_issue, C.conv_issue FROM spmmc00.bm01 A INNER JOIN spmmc00.bm02 B ON A.id = B.bom_id INNER JOIN spmmc00.im01 C ON B.item_code = C.item_code WHERE A.product_type = ? AND B.item_code = ?",[$product_type,$item_code]);
+        
+        return Response::json(['data' => $info]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

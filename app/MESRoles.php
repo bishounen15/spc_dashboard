@@ -29,6 +29,10 @@ class MESRoles extends ReadOnlyBase
             "description" => "Warehouse",
         ],
         [
+            "code" => "MH",
+            "description" => "Material Handler",
+        ],
+        [
             "code" => "VIEW",
             "description" => "Viewer",
         ],
