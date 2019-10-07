@@ -53845,6 +53845,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -53866,22 +53899,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }],
             transactions: [],
             transaction: {
+                id: 0,
+                trx_type: '',
                 date: '',
                 production_date: '',
                 production_line: '',
                 registration: '',
                 product_type: '',
                 mits_number: '',
+                requestor: '',
                 items: []
             },
             item_details: {
+                id: 0,
                 item_code: '',
-                item_desc: '',
+                item_desc: '-',
                 uofm_base: '',
                 uofm_issue: '',
                 conv_issue: 0,
                 base_qty: 0,
-                issue_qty: 0
+                issue_qty: 0,
+                remarks: ''
             },
             item_codes: [],
             uofm: '',
@@ -53893,18 +53931,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             pagination: {},
             loading: false,
             display_list: "flex",
-            display_form: "none"
+            display_form: "none",
+            method: ''
         };
     },
-    created: function created() {},
+    created: function created() {
+        this.transaction.requestor = this.requestor;
+    },
 
     props: {
         columns: Array,
         role: String,
-        default_date: String
+        default_date: String,
+        requestor: String
     },
     methods: {
-        getLines: function getLines(event) {
+        getLines: function getLines() {
             var vm = this;
 
             fetch('/api/prodline/withsched/' + this.transaction.production_date, {
@@ -53926,6 +53968,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             this.loading = true;
+            this.transactions = [];
 
             var params = {};
 
@@ -53940,7 +53983,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             params['parameters'] = d;
 
-            fetch(page_url || '/api/mes/issuance/list', {
+            fetch(page_url || '/api/mes/issuance/list/', {
                 method: 'post',
                 body: JSON.stringify(params),
                 headers: {
@@ -53978,8 +54021,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.display_list = this.display_form;
             this.display_form = temp;
         },
-
-        lineDetails: function lineDetails(event) {
+        createNew: function createNew() {
+            this.method = 'post';
+            this.transaction.trx_type = 'Request';
+            this.toggleForm();
+        },
+        lineDetails: function lineDetails() {
             var vm = this;
 
             fetch('/api/prodline/schedule/' + this.transaction.production_date + "/" + this.transaction.production_line, {
@@ -53998,38 +54045,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return console.log(err);
             });
         },
-        // selectProduct: function(event) {
-        //     this.transaction.product_type = event.target.value;
-        // },
+
         checkItem: function checkItem(event) {
             var vm = this;
 
-            fetch('/api/planning/bom/check/' + this.transaction.product_type + "/" + event.target.value, {
-                method: 'post'
-            }).then(function (res) {
-                return res.json();
-            }).then(function (data) {
-                var id = vm.item_details;
+            if (event.target.value != '') {
+                fetch('/api/planning/bom/check/' + this.transaction.product_type + "/" + event.target.value, {
+                    method: 'post'
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    var id = vm.item_details;
 
-                if (data.data.length == 0) {
-                    alert("Part Number [" + event.target.value + "] does not exist on [" + vm.transaction.product_type + "] BOM.");
+                    if (data.data.length == 0) {
+                        alert("Part Number [" + event.target.value + "] does not exist on [" + vm.transaction.product_type + "] BOM.");
 
-                    id.item_desc = '-';
-                    id.uofm_base = '';
-                    id.uofm_issue = '';
-                    id.conv_issue = 0;
-                } else {
-                    id.item_desc = data.data[0].item_desc;
-                    id.uofm_base = data.data[0].uofm_base;
-                    id.uofm_issue = data.data[0].uofm_issue;
-                    id.conv_issue = data.data[0].conv_issue;
-                }
+                        id.item_desc = '-';
+                        id.uofm_base = '';
+                        id.uofm_issue = '';
+                        id.conv_issue = 0;
+                    } else {
+                        id.item_desc = data.data[0].item_desc;
+                        id.uofm_base = data.data[0].uofm_base;
+                        id.uofm_issue = data.data[0].uofm_issue == null ? data.data[0].uofm_base : data.data[0].uofm_issue;
+                        id.conv_issue = data.data[0].conv_issue;
+                    }
 
-                id.base_qty = 0;
-                id.issue_qty = 0;
-            }).catch(function (err) {
-                return console.log(err);
-            });
+                    id.base_qty = 0;
+                    id.issue_qty = 0;
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
         },
         changeUofm: function changeUofm(event) {
             this.uofm = event.target.value;
@@ -54041,16 +54088,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var id = this.item_details;
 
             if (this.uofm == 'base') {
-                id.issue_qty = Math.ceil(id.base_qty / id.conv_issue);
+                id.issue_qty = Math.ceil(id.base_qty / (id.conv_issue == 0 ? 1 : id.conv_issue));
             } else {
                 id.base_qty = id.issue_qty * id.conv_issue;
             }
         },
         convertQtyEdit: function convertQtyEdit(row) {
             if (this.edit_uofm == 'base') {
-                row.issue_qty = Math.ceil(row.base_qty / row.conv_issue);
+                row.issue_qty = Math.ceil(row.base_qty / (row.conv_issue == 0 ? 1 : row.conv_issue));
             } else {
-                row.base_qty = row.issue_qty * row.conv_issue;
+                row.base_qty = row.issue_qty * (row.conv_issue == 0 ? 1 : row.conv_issue);
             }
         },
         addItem: function addItem() {
@@ -54069,14 +54116,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 add['edit'] = false;
 
                 this.transaction.items.push(add);
-
-                id.item_code = '';
-                id.item_desc = '-';
-                id.uofm_base = '';
-                id.uofm_issue = '';
-                id.conv_issue = 0;
-                id.base_qty = '';
-                id.issue_qty = '';
+                this.clearDetails();
 
                 $("#item-search").focus();
             }
@@ -54100,7 +54140,146 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         updateItem: function updateItem(row) {
             row.edit = false;
         },
-        saveTransaction: function saveTransaction() {}
+        saveTransaction: function saveTransaction() {
+            var _this2 = this;
+
+            var mydata = {};
+
+            mydata['params'] = JSON.stringify(JSON.stringify(this.transaction));
+
+            fetch('/api/mes/issuance', {
+                method: this.method,
+                body: JSON.stringify(mydata),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                if (data != "") {
+                    alert(data);
+                } else {
+                    _this2.inquire();
+                    _this2.clearInput();
+                    _this2.toggleForm();
+                }
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        clearInput: function clearInput() {
+            var trx = this.transaction;
+
+            trx.date = this.default_date;
+            trx.production_date = this.default_date;
+            trx.production_line = '';
+            trx.registration = '';
+            trx.product_type = '';
+            trx.mits_number = '';
+
+            trx.items.splice(0);
+        },
+        cancelTransaction: function cancelTransaction() {
+            this.clearInput();
+            this.toggleForm();
+        },
+        submitTrx: function submitTrx(id) {
+            var _this3 = this;
+
+            fetch('/api/mes/issuance/submit/' + id, {
+                method: "post"
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                _this3.inquire();
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        deleteTrx: function deleteTrx(id) {
+            var _this4 = this;
+
+            fetch('/api/mes/issuance/delete/' + id, {
+                method: "delete"
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                _this4.inquire();
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        editTrx: function editTrx(id) {
+            var _this5 = this;
+
+            var vm = this;
+
+            fetch('/api/mes/issuance/edit/' + id, {
+                method: "get"
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                var trx = _this5.transaction;
+
+                trx.id = data.transaction.id;
+
+                if (data.transaction.trx_type == "Request" && data.transaction.status == 1) {
+                    trx.trx_type = "Issue";
+                    vm.method = "post";
+                } else {
+                    trx.trx_type = data.transaction.trx_type;
+                    vm.method = "put";
+                }
+
+                trx.production_date = data.transaction.production_date;
+                vm.getLines();
+                trx.production_line = data.transaction.production_line;
+                vm.lineDetails();
+                trx.registration = data.transaction.registration;
+                trx.product_type = data.transaction.product_type;
+                trx.mits_number = data.transaction.mits_number;
+
+                $.each(data.items, function (i) {
+                    var add = {};
+
+                    add.id = this.id;
+                    add.item_code = this.item_code;
+                    add.item_desc = this.item_desc;
+                    add.uofm_base = this.uofm_base;
+                    add.uofm_issue = this.uofm_issue;
+                    add.conv_issue = this.conv_issue;
+                    add.base_qty = this.base_qty;
+                    add.issue_qty = this.issue_qty;
+                    add.remarks = this.remarks;
+                    add.edit = false;
+
+                    trx.items.push(add);
+                });
+
+                _this5.clearDetails();
+
+                _this5.toggleForm();
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        clearDetails: function clearDetails() {
+            this.item_details.item_code = '';
+            this.item_details.item_desc = '-';
+            this.item_details.uofm_base = '';
+            this.item_details.uofm_issue = '';
+            this.item_details.conv_issue = 0;
+            this.item_details.base_qty = '';
+            this.item_details.issue_qty = '';
+            this.item_details.remarks = '';
+        },
+        addRemarks: function addRemarks(row) {
+            var remarks = prompt("Enter Remarks:", row.remarks);
+
+            if (remarks != null) {
+                row.remarks = remarks;
+            }
+        }
     }
 });
 
@@ -54340,19 +54519,33 @@ var render = function() {
                       "button",
                       {
                         staticClass: "btn btn-success",
-                        attrs: {
-                          "data-toggle": "modal",
-                          "data-target": "#AddModal"
-                        },
                         on: {
                           click: function($event) {
-                            _vm.toggleForm()
+                            _vm.createNew()
                           }
                         }
                       },
                       [
                         _c("i", { staticClass: "fa fa-plus" }),
                         _vm._v(" Create Request")
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.role != "MH"
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-info",
+                        on: {
+                          click: function($event) {
+                            _vm.csvDownload()
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "fas fa-file-csv" }),
+                        _vm._v(" Export CSV File")
                       ]
                     )
                   : _vm._e()
@@ -54390,6 +54583,8 @@ var render = function() {
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(transaction.date))]),
                           _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(transaction.trx_type))]),
+                          _vm._v(" "),
                           _c("td", [
                             _vm._v(_vm._s(transaction.production_date))
                           ]),
@@ -54402,9 +54597,188 @@ var render = function() {
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(transaction.mits_number))]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(transaction.status))]),
-                          _vm._v(" "),
-                          _c("td")
+                          _c("td", [
+                            _vm.role == "MH" &&
+                            transaction.trx_type == "Request" &&
+                            transaction.status == "Open"
+                              ? _c(
+                                  "div",
+                                  {
+                                    staticClass: "btn-group",
+                                    attrs: { role: "group" }
+                                  },
+                                  [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn btn-sm btn-secondary dropdown-toggle",
+                                        attrs: {
+                                          id:
+                                            "statusButton" +
+                                            (_vm.pagination.first_rec + i),
+                                          type: "button",
+                                          "data-toggle": "dropdown",
+                                          "aria-haspopup": "true",
+                                          "aria-expanded": "false"
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                " +
+                                            _vm._s(transaction.status) +
+                                            "\n                                "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "dropdown-menu",
+                                        attrs: {
+                                          "aria-labelledby": "btnGroupDrop1"
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "a",
+                                          {
+                                            staticClass: "dropdown-item",
+                                            attrs: { href: "#" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.editTrx(transaction.id)
+                                              }
+                                            }
+                                          },
+                                          [_c("small", [_vm._v("Edit")])]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "a",
+                                          {
+                                            staticClass: "dropdown-item",
+                                            attrs: { href: "#" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.submitTrx(transaction.id)
+                                              }
+                                            }
+                                          },
+                                          [_c("small", [_vm._v("Submit")])]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "a",
+                                          {
+                                            staticClass: "dropdown-item",
+                                            attrs: { href: "#" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.deleteTrx(transaction.id)
+                                              }
+                                            }
+                                          },
+                                          [_c("small", [_vm._v("Delete")])]
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                )
+                              : _vm.role != "MH" &&
+                                ((transaction.trx_type == "Request" &&
+                                  transaction.status == "Submitted") ||
+                                  (transaction.trx_type == "Issue" &&
+                                    transaction.status == "Open"))
+                              ? _c(
+                                  "div",
+                                  {
+                                    staticClass: "btn-group",
+                                    attrs: { role: "group" }
+                                  },
+                                  [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn btn-sm btn-secondary dropdown-toggle",
+                                        attrs: {
+                                          id:
+                                            "statusButton" +
+                                            (_vm.pagination.first_rec + i),
+                                          type: "button",
+                                          "data-toggle": "dropdown",
+                                          "aria-haspopup": "true",
+                                          "aria-expanded": "false"
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                " +
+                                            _vm._s(transaction.status) +
+                                            "\n                                "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "dropdown-menu",
+                                        attrs: {
+                                          "aria-labelledby": "btnGroupDrop1"
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "a",
+                                          {
+                                            staticClass: "dropdown-item",
+                                            attrs: { href: "#" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.editTrx(transaction.id)
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("small", [
+                                              _vm._v(
+                                                _vm._s(
+                                                  transaction.trx_type ==
+                                                    "Request"
+                                                    ? "Issue"
+                                                    : "Edit Issuance"
+                                                )
+                                              )
+                                            ])
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        transaction.trx_type == "Issue"
+                                          ? _c(
+                                              "a",
+                                              {
+                                                staticClass: "dropdown-item",
+                                                attrs: { href: "#" },
+                                                on: {
+                                                  click: function($event) {
+                                                    _vm.submitTrx(
+                                                      transaction.id
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [_c("small", [_vm._v("Submit")])]
+                                            )
+                                          : _vm._e()
+                                      ]
+                                    )
+                                  ]
+                                )
+                              : _c("span", [_vm._v(_vm._s(transaction.status))])
+                          ])
                         ])
                       })
                 ],
@@ -54466,11 +54840,14 @@ var render = function() {
                     attrs: {
                       type: "date",
                       name: "production_date",
-                      id: "production_date"
+                      id: "production_date",
+                      readonly: _vm.transaction.trx_type == "Issue"
                     },
                     domProps: { value: _vm.transaction.production_date },
                     on: {
-                      change: _vm.getLines,
+                      change: function($event) {
+                        _vm.getLines()
+                      },
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -54504,7 +54881,11 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { name: "production_line", id: "production_line" },
+                      attrs: {
+                        name: "production_line",
+                        id: "production_line",
+                        readonly: _vm.transaction.trx_type == "Issue"
+                      },
                       on: {
                         change: [
                           function($event) {
@@ -54524,7 +54905,9 @@ var render = function() {
                                 : $$selectedVal[0]
                             )
                           },
-                          _vm.lineDetails
+                          function($event) {
+                            _vm.lineDetails()
+                          }
                         ]
                       }
                     },
@@ -54612,7 +54995,11 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { name: "product_type", id: "product_type" },
+                      attrs: {
+                        name: "product_type",
+                        id: "product_type",
+                        readonly: _vm.transaction.trx_type == "Issue"
+                      },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -54678,7 +55065,8 @@ var render = function() {
                       type: "text",
                       name: "mits_number",
                       id: "mits_number",
-                      placeholder: "Enter MITS Number here"
+                      placeholder: "Enter MITS Number here",
+                      readonly: _vm.transaction.trx_type == "Issue"
                     },
                     domProps: { value: _vm.transaction.mits_number },
                     on: {
@@ -54709,6 +55097,11 @@ var render = function() {
                         disabled:
                           _vm.transaction.mits_number == "" ||
                           _vm.transaction.items.length == 0
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.saveTransaction()
+                        }
                       }
                     },
                     [_c("i", { staticClass: "fas fa-save" }), _vm._v(" Save")]
@@ -54722,7 +55115,7 @@ var render = function() {
                       staticClass: "btn btn-danger btn-block",
                       on: {
                         click: function($event) {
-                          _vm.toggleForm()
+                          _vm.cancelTransaction()
                         }
                       }
                     },
@@ -54735,197 +55128,205 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-sm-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "form-row" }, [
-                _c("div", { staticClass: "col-sm-6" }, [
+          _vm.transaction.trx_type == "Request"
+            ? _c("div", { staticClass: "card" }, [
+                _c("div", { staticClass: "card-body" }, [
                   _c("div", { staticClass: "form-row" }, [
-                    _c("div", { staticClass: "col-sm" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.item_details.item_code,
-                            expression: "item_details.item_code"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          id: "item-search",
-                          placeholder:
-                            "Enter Part Number here then hit the TAB / ENTER Key"
-                        },
-                        domProps: { value: _vm.item_details.item_code },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !("button" in $event) &&
-                              $event.keyCode !== 13
-                            ) {
-                              return null
+                    _c("div", { staticClass: "col-sm-6" }, [
+                      _c("div", { staticClass: "form-row" }, [
+                        _c("div", { staticClass: "col-sm" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.item_details.item_code,
+                                expression: "item_details.item_code"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              id: "item-search",
+                              placeholder:
+                                "Enter Part Number here then hit the TAB / ENTER Key"
+                            },
+                            domProps: { value: _vm.item_details.item_code },
+                            on: {
+                              keyup: function($event) {
+                                if (
+                                  !("button" in $event) &&
+                                  $event.keyCode !== 13
+                                ) {
+                                  return null
+                                }
+                                return _vm.checkItem($event)
+                              },
+                              focusout: _vm.checkItem,
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.item_details,
+                                  "item_code",
+                                  $event.target.value
+                                )
+                              }
                             }
-                            return _vm.checkItem($event)
-                          },
-                          focusout: _vm.checkItem,
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.item_details,
-                              "item_code",
-                              $event.target.value
+                          })
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-row mt-2 ml-2" }, [
+                        _c("div", { staticClass: "col-sm" }, [
+                          _c("span", { attrs: { id: "item_description" } }, [
+                            _vm._v(
+                              _vm._s(
+                                !_vm.item_details
+                                  ? "-"
+                                  : _vm.item_details.item_desc
+                              )
                             )
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-row mt-2 ml-2" }, [
-                    _c("div", { staticClass: "col-sm" }, [
-                      _c("span", { attrs: { id: "item_description" } }, [
-                        _vm._v(
-                          _vm._s(
-                            !_vm.item_details ? "-" : _vm.item_details.item_desc
-                          )
-                        )
-                      ])
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-sm-4" }, [
-                  _c("div", { staticClass: "input-group mb-2" }, [
-                    _c("div", { staticClass: "input-group-prepend" }, [
-                      _c("div", { staticClass: "input-group-text" }, [
-                        _c("input", {
-                          attrs: { type: "radio", name: "uofm", value: "base" },
-                          on: { change: _vm.changeUofm }
-                        }),
-                        _vm._v(
-                          "\n                                           Base Unit\n                                    "
-                        )
+                          ])
+                        ])
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.item_details.base_qty,
-                          expression: "item_details.base_qty"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        type: "number",
-                        step: ".00001",
-                        placeholder: "Enter quantity in base unit",
-                        readonly:
-                          _vm.uofm != "base" ||
-                          _vm.item_details.item_desc == "-"
-                      },
-                      domProps: { value: _vm.item_details.base_qty },
-                      on: {
-                        keyup: function($event) {
-                          _vm.convertQty()
-                        },
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.item_details,
-                            "base_qty",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "input-group" }, [
-                    _c("div", { staticClass: "input-group-prepend" }, [
-                      _c("div", { staticClass: "input-group-text" }, [
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "input-group mb-2" }, [
+                        _c("div", { staticClass: "input-group-prepend" }, [
+                          _c("div", { staticClass: "input-group-text" }, [
+                            _c("input", {
+                              attrs: {
+                                type: "radio",
+                                name: "uofm",
+                                value: "base"
+                              },
+                              on: { change: _vm.changeUofm }
+                            }),
+                            _vm._v(
+                              "\n                                           Base Unit\n                                    "
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.item_details.base_qty,
+                              expression: "item_details.base_qty"
+                            }
+                          ],
+                          staticClass: "form-control",
                           attrs: {
-                            type: "radio",
-                            name: "uofm",
-                            value: "issue"
+                            type: "number",
+                            step: ".00001",
+                            placeholder: "Enter quantity in base unit",
+                            readonly:
+                              _vm.uofm != "base" ||
+                              _vm.item_details.item_desc == "-"
                           },
-                          on: { change: _vm.changeUofm }
-                        }),
-                        _vm._v(
-                          "\n                                           Issue Unit\n                                    "
-                        )
+                          domProps: { value: _vm.item_details.base_qty },
+                          on: {
+                            keyup: function($event) {
+                              _vm.convertQty()
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.item_details,
+                                "base_qty",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-group" }, [
+                        _c("div", { staticClass: "input-group-prepend" }, [
+                          _c("div", { staticClass: "input-group-text" }, [
+                            _c("input", {
+                              attrs: {
+                                type: "radio",
+                                name: "uofm",
+                                value: "issue"
+                              },
+                              on: { change: _vm.changeUofm }
+                            }),
+                            _vm._v(
+                              "\n                                           Issue Unit\n                                    "
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.item_details.issue_qty,
+                              expression: "item_details.issue_qty"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "number",
+                            step: ".00001",
+                            placeholder: "Enter quantity in issuance unit",
+                            readonly:
+                              _vm.uofm != "issue" ||
+                              _vm.item_details.item_desc == "-"
+                          },
+                          domProps: { value: _vm.item_details.issue_qty },
+                          on: {
+                            keyup: function($event) {
+                              _vm.convertQty()
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.item_details,
+                                "issue_qty",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("input", {
-                      directives: [
+                    _c("div", { staticClass: "col-sm-2 align-middle" }, [
+                      _c(
+                        "button",
                         {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.item_details.issue_qty,
-                          expression: "item_details.issue_qty"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        type: "number",
-                        step: ".00001",
-                        placeholder: "Enter quantity in issuance unit",
-                        readonly:
-                          _vm.uofm != "issue" ||
-                          _vm.item_details.item_desc == "-"
-                      },
-                      domProps: { value: _vm.item_details.issue_qty },
-                      on: {
-                        keyup: function($event) {
-                          _vm.convertQty()
-                        },
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+                          staticClass: "btn btn-primary btn-block",
+                          attrs: {
+                            id: "AddItem",
+                            disabled:
+                              _vm.item_details.item_desc == "-" ||
+                              _vm.item_details.base_qty == 0
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.addItem()
+                            }
                           }
-                          _vm.$set(
-                            _vm.item_details,
-                            "issue_qty",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
+                        },
+                        [_vm._v("Add Item")]
+                      )
+                    ])
                   ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-sm-2 align-middle" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary btn-block",
-                      attrs: {
-                        id: "AddItem",
-                        disabled:
-                          _vm.item_details.item_desc == "-" ||
-                          _vm.item_details.base_qty == 0
-                      },
-                      on: {
-                        click: function($event) {
-                          _vm.addItem()
-                        }
-                      }
-                    },
-                    [_vm._v("Add Item")]
-                  )
                 ])
               ])
-            ])
-          ]),
+            : _vm._e(),
           _vm._v(" "),
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }, [
@@ -54952,11 +55353,19 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "form-row mt-1" }, [
                       _c("div", { staticClass: "col-sm" }, [
-                        _c("span", { attrs: { id: "item_description" } }, [
-                          _vm._v(_vm._s(item.item_desc))
-                        ])
+                        _c("small", [_vm._v(_vm._s(item.item_desc))])
                       ])
-                    ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.transaction.trx_type == "Issue"
+                      ? _c("div", { staticClass: "form-row mt-1" }, [
+                          _c("div", { staticClass: "col-sm" }, [
+                            _c("small", { staticClass: "text-danger" }, [
+                              _vm._v(_vm._s(item.remarks))
+                            ])
+                          ])
+                        ])
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
                   item.edit == false
@@ -55085,10 +55494,32 @@ var render = function() {
                   _vm._v(" "),
                   item.edit == false
                     ? _c("div", { staticClass: "col-sm-2 text-center" }, [
+                        _vm.transaction.trx_type == "Issue"
+                          ? _c("div", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-warning btn-sm mb-2",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.addRemarks(item)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "far fa-sticky-note"
+                                  }),
+                                  _vm._v(" Remarks")
+                                ]
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-success",
+                            staticClass: "btn btn-success btn-sm",
                             on: {
                               click: function($event) {
                                 _vm.editItem(item)
@@ -55101,7 +55532,7 @@ var render = function() {
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-danger",
+                            staticClass: "btn btn-danger btn-sm",
                             on: {
                               click: function($event) {
                                 _vm.deleteItem(item)
@@ -55115,7 +55546,7 @@ var render = function() {
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-success",
+                            staticClass: "btn btn-success btn-sm",
                             on: {
                               click: function($event) {
                                 _vm.updateItem(item)
@@ -55128,7 +55559,7 @@ var render = function() {
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-danger",
+                            staticClass: "btn btn-danger btn-sm",
                             on: {
                               click: function($event) {
                                 _vm.cancelEdit(item)
@@ -55154,7 +55585,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("h3", { staticClass: "mb-4" }, [
       _c("i", { staticClass: "fas fa-dolly" }),
-      _vm._v(" Material Issuance")
+      _vm._v(" Material Requisition / Issuance")
     ])
   },
   function() {
@@ -55182,6 +55613,8 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("th", [_vm._v("Date")]),
       _vm._v(" "),
+      _c("th", [_vm._v("Type")]),
+      _vm._v(" "),
       _c("th", [_vm._v("Production Date")]),
       _vm._v(" "),
       _c("th", [_vm._v("Line")]),
@@ -55190,9 +55623,7 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("th", [_vm._v("MITS")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Status")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Action")])
+      _c("th", [_vm._v("Status")])
     ])
   },
   function() {

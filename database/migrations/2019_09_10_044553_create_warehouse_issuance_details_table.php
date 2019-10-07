@@ -18,8 +18,12 @@ class CreateWarehouseIssuanceDetailsTable extends Migration
 
             $table->integer('issuance_id');
             $table->string('item_code');
-            $table->float('qty_issued',12,8);
-            $table->float('conv_qty',12,8);
+            $table->string('uofm_base');
+            $table->string('uofm_issue');
+            $table->float('conv_issue',15,5);
+            $table->float('base_qty',15,5);
+            $table->float('issue_qty',15,5);
+            $table->string('remarks')->nullable();
 
             $table->timestamps();
         });

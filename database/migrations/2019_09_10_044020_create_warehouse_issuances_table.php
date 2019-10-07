@@ -16,13 +16,15 @@ class CreateWarehouseIssuancesTable extends Migration
         Schema::connection('web_portal')->create('wi01', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->string('trx_type');
             $table->date('production_date');
             $table->string('production_line');
             $table->string('registration');
             $table->string('product_type');
             $table->string('requestor');
             $table->string('mits_number');
-            
+            $table->boolean('status')->default(false);
+
             $table->timestamps();
         });
     }

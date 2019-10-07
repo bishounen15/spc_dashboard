@@ -91,3 +91,8 @@ Route::post('portal/dataset/template',[
  Route::post('planning/bom/check/{product_type}/{item_code}','Planning\BOMController@checkBOMItem');
 
  Route::post('mes/issuance/list','WebPortal\WarehouseIssuanceController@list');
+ Route::post('mes/issuance','WebPortal\WarehouseIssuanceController@store');
+ Route::post('mes/issuance/submit/{id}','WebPortal\WarehouseIssuanceController@submitTransaction');
+ Route::delete('mes/issuance/delete/{id}','WebPortal\WarehouseIssuanceController@deleteTransaction');
+ Route::get('mes/issuance/edit/{id}','WebPortal\WarehouseIssuanceController@edit');
+ Route::put('mes/issuance','WebPortal\WarehouseIssuanceController@update');

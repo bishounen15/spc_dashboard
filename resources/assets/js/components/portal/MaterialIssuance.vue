@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3 class="mb-4"><i class="fas fa-dolly"></i> Material Issuance</h3>
+        <h3 class="mb-4"><i class="fas fa-dolly"></i> Material Requisition / Issuance</h3>
         <div class="row" id="list" v-bind:style="{display : display_list}">
             <div class="col-sm-3">
                 <div class="card">
@@ -52,7 +52,8 @@
                         </div>
 
                         <div class="col-sm text-right">
-                            <button class="btn btn-success" data-toggle="modal" data-target="#AddModal" @click="toggleForm()" v-if="role=='MH' || role=='sysadmin'"><i class="fa fa-plus"></i> Create Request</button>
+                            <button class="btn btn-success" @click="createNew()" v-if="role=='MH' || role=='sysadmin'"><i class="fa fa-plus"></i> Create Request</button>
+                            <button class="btn btn-info" @click="csvDownload()" v-if="role!='MH'"><i class="fas fa-file-csv"></i> Export CSV File</button>
                         </div>
                     </div>
                 </div>
@@ -60,12 +61,12 @@
                     <thead class="thead-dark">
                         <th>#</th>
                         <th>Date</th>
+                        <th>Type</th>
                         <th>Production Date</th>
                         <th>Line</th>
                         <th>Registration</th>
                         <th>MITS</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </thead>
                     <tbody>
                         <tr v-if="loading">
@@ -80,12 +81,35 @@
                         <tr v-for="(transaction, i) in transactions" v-bind:key="i" v-else>
                             <td>{{ pagination.first_rec + i }}</td>
                             <td>{{transaction.date}}</td>
+                            <td>{{transaction.trx_type}}</td>
                             <td>{{transaction.production_date}}</td>
                             <td>{{transaction.production_line}}</td>
                             <td>{{transaction.registration}}</td>
                             <td>{{transaction.mits_number}}</td>
-                            <td>{{transaction.status}}</td>
-                            <td></td>
+                            <td>
+                                <div class="btn-group" role="group" v-if="role=='MH' && transaction.trx_type=='Request' && transaction.status=='Open'">
+                                    <button :id="'statusButton'+(pagination.first_rec + i)" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{transaction.status}}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                    <a class="dropdown-item" href="#" @click="editTrx(transaction.id)"><small>Edit</small></a>
+                                    <a class="dropdown-item" href="#" @click="submitTrx(transaction.id)"><small>Submit</small></a>
+                                    <a class="dropdown-item" href="#" @click="deleteTrx(transaction.id)"><small>Delete</small></a>
+                                    </div>
+                                </div>
+
+                                <div class="btn-group" role="group" v-else-if="role!='MH' && ((transaction.trx_type=='Request' && transaction.status=='Submitted') || (transaction.trx_type=='Issue' && transaction.status=='Open'))">
+                                    <button :id="'statusButton'+(pagination.first_rec + i)" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{transaction.status}}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                    <a class="dropdown-item" href="#" @click="editTrx(transaction.id)"><small>{{transaction.trx_type == "Request" ? "Issue" : "Edit Issuance"}}</small></a>
+                                    <a class="dropdown-item" href="#" @click="submitTrx(transaction.id)" v-if="transaction.trx_type == 'Issue'"><small>Submit</small></a>
+                                    </div>
+                                </div>
+
+                                <span v-else>{{transaction.status}}</span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -108,14 +132,14 @@
                         <div class="form-row mb-2">
                             <div class="col-sm-4">Production Date</div>
                             <div class="col-sm-8">
-                                <input type="date" name="production_date" id="production_date" class="form-control" v-model="transaction.production_date" @change="getLines">
+                                <input type="date" name="production_date" id="production_date" class="form-control" v-model="transaction.production_date" @change="getLines()" :readonly="transaction.trx_type=='Issue'">
                             </div>
                         </div>
 
                         <div class="form-row mb-2">
                             <div class="col-sm-4">Production Line</div>
                             <div class="col-sm-8">
-                                <select class="form-control" name="production_line" id="production_line" v-model="transaction.production_line" @change="lineDetails">
+                                <select class="form-control" name="production_line" id="production_line" v-model="transaction.production_line" @change="lineDetails()" :readonly="transaction.trx_type=='Issue'">
                                     <option readonly selected value disabled> -- Select Production Line -- </option>
                                     <option v-for="(option, i) in production_lines" v-bind:key="i" v-bind:value="option.value">{{option.caption}}</option>
                                 </select>
@@ -132,7 +156,7 @@
                         <div class="form-row mb-2">
                             <div class="col-sm-4">Product Type</div>
                             <div class="col-sm-8">
-                                <select class="form-control" name="product_type" id="product_type" v-model="transaction.product_type">
+                                <select class="form-control" name="product_type" id="product_type" v-model="transaction.product_type" :readonly="transaction.trx_type=='Issue'">
                                     <option readonly selected value disabled> -- Select Product Type -- </option>
                                     <option v-for="(option, i) in production_schedules" v-bind:key="i" v-bind:value="option.product_type">{{option.product_type}}</option>
                                 </select>
@@ -142,17 +166,17 @@
                         <div class="form-row mb-2">
                             <div class="col-sm-4">MITS Number</div>
                             <div class="col-sm-8">
-                                <input type="text" name="mits_number" id="mits_number" class="form-control" placeholder="Enter MITS Number here" v-model="transaction.mits_number">
+                                <input type="text" name="mits_number" id="mits_number" class="form-control" placeholder="Enter MITS Number here" v-model="transaction.mits_number" :readonly="transaction.trx_type=='Issue'">
                             </div>
                         </div>
                     </div>
                     <div class="card-footer">
                         <div class="row">
                             <div class="col-sm">
-                                <button class="btn btn-success btn-block" :disabled="transaction.mits_number=='' || transaction.items.length == 0"><i class="fas fa-save"></i> Save</button>
+                                <button class="btn btn-success btn-block" :disabled="transaction.mits_number=='' || transaction.items.length == 0" @click="saveTransaction()"><i class="fas fa-save"></i> Save</button>
                             </div>
                             <div class="col-sm">
-                                <button class="btn btn-danger btn-block" @click="toggleForm()"><i class="fas fa-ban"></i> Cancel</button>
+                                <button class="btn btn-danger btn-block" @click="cancelTransaction()"><i class="fas fa-ban"></i> Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -160,7 +184,7 @@
             </div>
 
             <div class="col-sm-8">
-                <div class="card">
+                <div class="card" v-if="transaction.trx_type=='Request'">
                     <div class="card-body">
                         <div class="form-row">
                             <div class="col-sm-6">
@@ -220,7 +244,13 @@
 
                                 <div class="form-row mt-1">
                                     <div class="col-sm">
-                                        <span id="item_description">{{ item.item_desc }}</span>
+                                        <small>{{ item.item_desc }}</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-row mt-1" v-if="transaction.trx_type=='Issue'">
+                                    <div class="col-sm">
+                                        <small class="text-danger">{{ item.remarks }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -262,13 +292,16 @@
                             </div>
 
                             <div class="col-sm-2 text-center" v-if="item.edit == false">
-                                <button class="btn btn-success" @click="editItem(item)"><i class="far fa-edit"></i></button>&nbsp;
-                                <button class="btn btn-danger" @click="deleteItem(item)"><i class="far fa-trash-alt"></i></button>
+                                <div v-if="transaction.trx_type=='Issue'">
+                                <button class="btn btn-warning btn-sm mb-2" @click="addRemarks(item)"><i class="far fa-sticky-note"></i> Remarks</button>
+                                </div>
+                                <button class="btn btn-success btn-sm" @click="editItem(item)"><i class="far fa-edit"></i></button>&nbsp;
+                                <button class="btn btn-danger btn-sm" @click="deleteItem(item)"><i class="far fa-trash-alt"></i></button>
                             </div>
 
                             <div class="col-sm-2 text-center" v-else>
-                                <button class="btn btn-success" @click="updateItem(item)"><i class="fas fa-save"></i></button>&nbsp;
-                                <button class="btn btn-danger" @click="cancelEdit(item)"><i class="fas fa-times"></i></button>
+                                <button class="btn btn-success btn-sm" @click="updateItem(item)"><i class="fas fa-save"></i></button>&nbsp;
+                                <button class="btn btn-danger btn-sm" @click="cancelEdit(item)"><i class="fas fa-times"></i></button>
                             </div>
                         </div>
                         </div>
@@ -302,22 +335,27 @@ export default {
             ],
             transactions: [],
             transaction: {
+                id: 0,
+                trx_type: '',
                 date: '',
                 production_date: '',
                 production_line: '',
                 registration: '',
                 product_type: '',
                 mits_number: '',
+                requestor: '',
                 items: []
             },
             item_details: {
+                id: 0,
                 item_code: '',
-                item_desc: '',
+                item_desc: '-',
                 uofm_base: '',
                 uofm_issue: '',
                 conv_issue: 0,
                 base_qty: 0,
-                issue_qty: 0
+                issue_qty: 0,
+                remarks: ''
             },
             item_codes:[],
             uofm: '',
@@ -329,19 +367,21 @@ export default {
             pagination: {},
             loading: false,
             display_list: "flex",
-            display_form: "none"
+            display_form: "none",
+            method: ''
         }
     },
     created() {
-        
+        this.transaction.requestor = this.requestor;
     },
     props: {
         columns: Array,
         role: String,
-        default_date: String
+        default_date: String,
+        requestor: String
     },
     methods: {
-        getLines: function(event) {
+        getLines() {
             let vm = this;
 
             fetch('/api/prodline/withsched/' + this.transaction.production_date, {
@@ -360,7 +400,8 @@ export default {
         },
         inquire(page_url) {
             this.loading = true;
-
+            this.transactions = [];
+            
             let params = {};
 
             let p = $("#inquiry-form").serializeArray();
@@ -374,7 +415,7 @@ export default {
 
             params['parameters'] = d;
             
-            fetch(page_url || '/api/mes/issuance/list', {
+            fetch(page_url || '/api/mes/issuance/list/', {
                 method: 'post',
                 body: JSON.stringify(params),
                 headers: {
@@ -411,7 +452,12 @@ export default {
             this.display_list = this.display_form;
             this.display_form = temp;
         },
-        lineDetails: function(event) {
+        createNew() {
+            this.method = 'post';
+            this.transaction.trx_type = 'Request';
+            this.toggleForm();
+        },
+        lineDetails() {
             let vm = this;
 
             fetch('/api/prodline/schedule/' + this.transaction.production_date + "/" + this.transaction.production_line, {
@@ -429,37 +475,36 @@ export default {
                 })
                 .catch(err => console.log(err));
         },
-        // selectProduct: function(event) {
-        //     this.transaction.product_type = event.target.value;
-        // },
         checkItem: function(event) {
             let vm = this;
+            
+            if (event.target.value != '') {
+                fetch('/api/planning/bom/check/' + this.transaction.product_type + "/" + event.target.value, {
+                    method: 'post',
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        let id = vm.item_details;
 
-            fetch('/api/planning/bom/check/' + this.transaction.product_type + "/" + event.target.value, {
-                method: 'post',
-                })
-                .then(res => res.json())
-                .then(data => {
-                    let id = vm.item_details;
+                        if (data.data.length == 0) { 
+                            alert("Part Number ["+event.target.value+"] does not exist on ["+vm.transaction.product_type+"] BOM.");
+                                                    
+                            id.item_desc = '-';
+                            id.uofm_base = '';
+                            id.uofm_issue = '';
+                            id.conv_issue = 0;
+                        } else {
+                            id.item_desc = data.data[0].item_desc;
+                            id.uofm_base = data.data[0].uofm_base;
+                            id.uofm_issue = (data.data[0].uofm_issue == null ? data.data[0].uofm_base : data.data[0].uofm_issue);
+                            id.conv_issue = data.data[0].conv_issue;
+                        }
 
-                    if (data.data.length == 0) { 
-                        alert("Part Number ["+event.target.value+"] does not exist on ["+vm.transaction.product_type+"] BOM.");
-                                                
-                        id.item_desc = '-';
-                        id.uofm_base = '';
-                        id.uofm_issue = '';
-                        id.conv_issue = 0;
-                    } else {
-                        id.item_desc = data.data[0].item_desc;
-                        id.uofm_base = data.data[0].uofm_base;
-                        id.uofm_issue = data.data[0].uofm_issue;
-                        id.conv_issue = data.data[0].conv_issue;
-                    }
-
-                    id.base_qty = 0;
-                    id.issue_qty = 0;
-                })
-                .catch(err => console.log(err));
+                        id.base_qty = 0;
+                        id.issue_qty = 0;
+                    })
+                    .catch(err => console.log(err));
+            }
         },
         changeUofm: function(event) {
             this.uofm = event.target.value;
@@ -471,16 +516,16 @@ export default {
             let id = this.item_details;
 
             if (this.uofm == 'base') {
-                id.issue_qty = Math.ceil(id.base_qty / id.conv_issue);
+                id.issue_qty = Math.ceil(id.base_qty / (id.conv_issue == 0 ? 1 : id.conv_issue));
             } else {
                 id.base_qty = id.issue_qty * id.conv_issue;
             }
         }, 
         convertQtyEdit(row) {
             if (this.edit_uofm == 'base') {
-                row.issue_qty = Math.ceil(row.base_qty / row.conv_issue);
+                row.issue_qty = Math.ceil(row.base_qty / (row.conv_issue == 0 ? 1 : row.conv_issue));
             } else {
-                row.base_qty = row.issue_qty * row.conv_issue;
+                row.base_qty = row.issue_qty * (row.conv_issue == 0 ? 1 : row.conv_issue);
             }
         },
         addItem() {
@@ -499,14 +544,7 @@ export default {
                 add['edit'] = false;
 
                 this.transaction.items.push(add);
-                
-                id.item_code = '';
-                id.item_desc = '-';
-                id.uofm_base = '';
-                id.uofm_issue = '';
-                id.conv_issue = 0;
-                id.base_qty = '';
-                id.issue_qty = '';
+                this.clearDetails();
 
                 $("#item-search").focus();
             }
@@ -531,7 +569,132 @@ export default {
             row.edit = false;
         },
         saveTransaction() {
+            let mydata = {};
 
+            mydata['params'] = JSON.stringify(JSON.stringify(this.transaction));
+
+            fetch('/api/mes/issuance', {
+                    method: this.method,
+                    body: JSON.stringify(mydata),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                            if (data != "") {
+                                alert(data);
+                            } else {
+                                this.inquire();
+                                this.clearInput();
+                                this.toggleForm();
+                            }
+                    })
+                    .catch(err => console.log(err));
+        },
+        clearInput() {
+            let trx = this.transaction;
+
+            trx.date = this.default_date;
+            trx.production_date = this.default_date;
+            trx.production_line = '';
+            trx.registration = '';
+            trx.product_type = '';
+            trx.mits_number = '';
+
+            trx.items.splice(0);
+        },
+        cancelTransaction() {
+            this.clearInput();
+            this.toggleForm();
+        },
+        submitTrx(id) {
+            fetch('/api/mes/issuance/submit/' + id, {
+                    method: "post"
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                            this.inquire();
+                    })
+                    .catch(err => console.log(err));
+        },
+        deleteTrx(id) {
+            fetch('/api/mes/issuance/delete/' + id, {
+                    method: "delete"
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        this.inquire();
+                    })
+                    .catch(err => console.log(err));
+        },
+        editTrx(id) {
+            let vm = this;
+            
+            fetch('/api/mes/issuance/edit/' + id, {
+                    method: "get"
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        let trx = this.transaction;
+                        
+                        trx.id = data.transaction.id;
+                        
+                        if (data.transaction.trx_type == "Request" && data.transaction.status == 1) {
+                            trx.trx_type = "Issue";
+                            vm.method = "post";
+                        } else {
+                            trx.trx_type = data.transaction.trx_type;
+                            vm.method = "put";
+                        }
+                        
+                        trx.production_date = data.transaction.production_date;
+                        vm.getLines();
+                        trx.production_line = data.transaction.production_line;
+                        vm.lineDetails();
+                        trx.registration = data.transaction.registration;
+                        trx.product_type = data.transaction.product_type;
+                        trx.mits_number = data.transaction.mits_number;
+
+                        $.each(data.items, function(i) {
+                            let add = {};
+
+                            add.id = this.id;
+                            add.item_code = this.item_code;
+                            add.item_desc = this.item_desc;
+                            add.uofm_base = this.uofm_base;
+                            add.uofm_issue = this.uofm_issue;
+                            add.conv_issue = this.conv_issue;
+                            add.base_qty = this.base_qty;
+                            add.issue_qty = this.issue_qty;
+                            add.remarks = this.remarks;
+                            add.edit = false;
+
+                            trx.items.push(add);
+                        });
+
+                        this.clearDetails();
+                        
+                        this.toggleForm();
+                    })
+                    .catch(err => console.log(err));
+        },
+        clearDetails() {
+            this.item_details.item_code = '';
+            this.item_details.item_desc = '-';
+            this.item_details.uofm_base = '';
+            this.item_details.uofm_issue = '';
+            this.item_details.conv_issue = 0;
+            this.item_details.base_qty = '';
+            this.item_details.issue_qty = '';
+            this.item_details.remarks = '';
+        },
+        addRemarks(row) {
+            let remarks = prompt("Enter Remarks:", row.remarks);
+
+            if (remarks != null) {
+                row.remarks = remarks
+            } 
         }
     }
 }
