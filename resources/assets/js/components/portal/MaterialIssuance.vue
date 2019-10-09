@@ -184,7 +184,7 @@
             </div>
 
             <div class="col-sm-8">
-                <div class="card" v-if="transaction.trx_type=='Request'">
+                <div class="card" v-if="transaction.trx_type=='Request' && transaction.items.length < 10">
                     <div class="card-body">
                         <div class="form-row">
                             <div class="col-sm-6">
@@ -224,7 +224,7 @@
                             </div>
 
                             <div class="col-sm-2 align-middle">
-                                <button id="AddItem" class="btn btn-primary btn-block" @click="addItem()" :disabled="item_details.item_desc=='-' || item_details.base_qty == 0">Add Item</button>
+                                <button id="AddItem" class="btn btn-primary btn-block" @click="addItem()" :disabled="(item_details.item_desc=='-' || item_details.base_qty == 0)">Add Item</button>
                             </div>
                         </div>
                     </div>
@@ -248,7 +248,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-row mt-1" v-if="transaction.trx_type=='Issue'">
+                                <div class="form-row mt-1">
                                     <div class="col-sm">
                                         <small class="text-danger">{{ item.remarks }}</small>
                                     </div>
@@ -292,7 +292,7 @@
                             </div>
 
                             <div class="col-sm-2 text-center" v-if="item.edit == false">
-                                <div v-if="transaction.trx_type=='Issue'">
+                                <div>
                                 <button class="btn btn-warning btn-sm mb-2" @click="addRemarks(item)"><i class="far fa-sticky-note"></i> Remarks</button>
                                 </div>
                                 <button class="btn btn-success btn-sm" @click="editItem(item)"><i class="far fa-edit"></i></button>&nbsp;

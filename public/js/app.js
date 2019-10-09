@@ -55128,7 +55128,8 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-sm-8" }, [
-          _vm.transaction.trx_type == "Request"
+          _vm.transaction.trx_type == "Request" &&
+          _vm.transaction.items.length < 10
             ? _c("div", { staticClass: "card" }, [
                 _c("div", { staticClass: "card-body" }, [
                   _c("div", { staticClass: "form-row" }, [
@@ -55357,15 +55358,13 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm.transaction.trx_type == "Issue"
-                      ? _c("div", { staticClass: "form-row mt-1" }, [
-                          _c("div", { staticClass: "col-sm" }, [
-                            _c("small", { staticClass: "text-danger" }, [
-                              _vm._v(_vm._s(item.remarks))
-                            ])
-                          ])
+                    _c("div", { staticClass: "form-row mt-1" }, [
+                      _c("div", { staticClass: "col-sm" }, [
+                        _c("small", { staticClass: "text-danger" }, [
+                          _vm._v(_vm._s(item.remarks))
                         ])
-                      : _vm._e()
+                      ])
+                    ])
                   ]),
                   _vm._v(" "),
                   item.edit == false
@@ -55494,27 +55493,23 @@ var render = function() {
                   _vm._v(" "),
                   item.edit == false
                     ? _c("div", { staticClass: "col-sm-2 text-center" }, [
-                        _vm.transaction.trx_type == "Issue"
-                          ? _c("div", [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-warning btn-sm mb-2",
-                                  on: {
-                                    click: function($event) {
-                                      _vm.addRemarks(item)
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass: "far fa-sticky-note"
-                                  }),
-                                  _vm._v(" Remarks")
-                                ]
-                              )
-                            ])
-                          : _vm._e(),
+                        _c("div", [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-warning btn-sm mb-2",
+                              on: {
+                                click: function($event) {
+                                  _vm.addRemarks(item)
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "far fa-sticky-note" }),
+                              _vm._v(" Remarks")
+                            ]
+                          )
+                        ]),
                         _vm._v(" "),
                         _c(
                           "button",
