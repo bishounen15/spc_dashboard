@@ -296,7 +296,7 @@
                                 <button class="btn btn-warning btn-sm mb-2" @click="addRemarks(item)"><i class="far fa-sticky-note"></i> Remarks</button>
                                 </div>
                                 <button class="btn btn-success btn-sm" @click="editItem(item)"><i class="far fa-edit"></i></button>&nbsp;
-                                <button class="btn btn-danger btn-sm" @click="deleteItem(item)"><i class="far fa-trash-alt"></i></button>
+                                <button class="btn btn-danger btn-sm" @click="deleteItem(item)" :disabled="role=='WHSE'"><i class="far fa-trash-alt"></i></button>
                             </div>
 
                             <div class="col-sm-2 text-center" v-else>

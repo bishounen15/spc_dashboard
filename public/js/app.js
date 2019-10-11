@@ -55528,6 +55528,7 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn btn-danger btn-sm",
+                            attrs: { disabled: _vm.role == "WHSE" },
                             on: {
                               click: function($event) {
                                 _vm.deleteItem(item)
