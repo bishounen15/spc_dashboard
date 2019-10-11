@@ -87,24 +87,10 @@
                 hide_column: true
             }, 
             {
-                name: 'SPEC03', 
-                display_name: 'Color 2',
-                placeholder: 'Enter Color 2', 
-                type: 'text',
-                hide_column: true
-            }, 
-            {
                 name: 'RECQTY', 
                 display_name: 'Received Qty',
                 placeholder: 'Enter Received Qty', 
                 type: 'text'
-            }, 
-            {
-                name: 'ACTQTY', 
-                display_name: 'Actual Qty',
-                placeholder: 'Enter Actual Qty', 
-                type: 'text',
-                hide_column: true
             }
     ]"></portal-maintenance>
 </div>
