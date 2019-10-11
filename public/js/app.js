@@ -55521,22 +55521,26 @@ var render = function() {
                               }
                             }
                           },
-                          [_c("i", { staticClass: "far fa-edit" })]
+                          [
+                            _c("i", { staticClass: "far fa-edit" }),
+                            _vm._v(_vm._s(_vm.role == "WHSE" ? "Edit" : ""))
+                          ]
                         ),
                         _vm._v(" \n                            "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-danger btn-sm",
-                            attrs: { disabled: _vm.role == "WHSE" },
-                            on: {
-                              click: function($event) {
-                                _vm.deleteItem(item)
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "far fa-trash-alt" })]
-                        )
+                        _vm.role != "WHSE"
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger btn-sm",
+                                on: {
+                                  click: function($event) {
+                                    _vm.deleteItem(item)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "far fa-trash-alt" })]
+                            )
+                          : _vm._e()
                       ])
                     : _c("div", { staticClass: "col-sm-2 text-center" }, [
                         _c(
