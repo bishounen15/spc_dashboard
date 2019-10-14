@@ -14059,6 +14059,7 @@ Vue.component('lot-record', __webpack_require__(49));
 Vue.component('cab-record', __webpack_require__(52));
 Vue.component('bom-maintenance', __webpack_require__(55));
 Vue.component('material-issuance', __webpack_require__(63));
+Vue.component('lot-assign', __webpack_require__(70));
 
 var app = new Vue({
   el: '#app'
@@ -55656,6 +55657,572 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(71)
+/* template */
+var __vue_template__ = __webpack_require__(72)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/portal/LotAssign.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3fc58534", Component.options)
+  } else {
+    hotAPI.reload("data-v-3fc58534", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 71 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {},
+    data: function data() {
+        return {
+            parent_lot: {
+                lot_id: '',
+                part_number: '',
+                description: '',
+                efficiency: '',
+                qty: 0,
+                issue_qty: 0,
+                child_lots: []
+            },
+            child_qty: 0
+        };
+    },
+    created: function created() {},
+
+    props: {},
+    computed: {
+        qtyRemaining: function qtyRemaining() {
+            var total = 0;
+
+            $.each(this.parent_lot.child_lots, function () {
+                total += this.qty;
+            });
+
+            return this.parent_lot.qty - total;
+        }
+    },
+    methods: {
+        getDetails: function getDetails(event) {
+            var _this = this;
+
+            var vm = this;
+
+            if (event.target.value != '') {
+                fetch('/api/mes/lot/info/' + event.target.value, {
+                    method: 'get'
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    event.target.value = '';
+                    var pl = vm.parent_lot;
+                    if (data.parent_lot.length > 0) {
+                        var details = data.parent_lot[0];
+
+                        pl.lot_id = details.lot_id;
+                        pl.part_number = details.part_number;
+                        pl.description = details.description;
+                        pl.efficiency = details.efficiency;
+                        pl.qty = details.qty;
+                        pl.issue_qty = details.issue_qty;
+
+                        pl.child_lots = data.child_lot;
+
+                        _this.setDefaults();
+                    } else {
+                        pl.lot_id = '';
+                        pl.part_number = '';
+                        pl.description = '';
+                        pl.efficiency = '';
+                        pl.qty = '';
+                        pl.issue_qty = '';
+                        pl.child_lots = [];
+                    }
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
+        },
+        getChild: function getChild(parent) {
+            var vm = this;
+
+            if (parent != '') {
+                fetch('/api/mes/lot/info/' + parent, {
+                    method: 'get'
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    var pl = vm.parent_lot;
+                    if (data.parent_lot.length > 0) {
+                        var details = data.parent_lot[0];
+                        pl.child_lots = data.child_lot;
+                    } else {
+                        pl.child_lots = [];
+                    }
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
+        },
+
+        addChild: function addChild(event) {
+            var _this2 = this;
+
+            var vm = this;
+
+            if (event.target.value != '') {
+                if (vm.parent_lot.issue_qty < vm.child_qty) {
+                    alert('Quantity should not exceed Qty per Pack.');
+                } else if (vm.child_qty <= 0) {
+                    alert('Quantity should be greater than zero (0).');
+                } else if (vm.qtyRemaining < vm.child_qty) {
+                    alert('You cannot exceed the Balance Quantity.');
+                } else {
+                    fetch('/api/mes/lot/assign/' + vm.parent_lot.lot_id + '/' + event.target.value + '/' + vm.child_qty, {
+                        method: 'post'
+                    }).then(function (res) {
+                        return res.json();
+                    }).then(function (data) {
+                        event.target.value = '';
+                        if (data.msg == '') {
+                            _this2.getChild(vm.parent_lot.lot_id);
+                            _this2.setDefaults();
+                        } else {
+                            alert(data.msg);
+                        }
+                    }).catch(function (err) {
+                        return console.log(err);
+                    });
+                }
+            }
+        },
+        setDefaults: function setDefaults() {
+            this.child_qty = this.parent_lot.issue_qty;
+        }
+    }
+});
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-5" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("\n                    Parent Lot Details\n                ")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "parent_lot" } }, [
+                _vm._v("Enter Parent Lot ID")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: { type: "text", name: "parent_lot", id: "parent_lot" },
+                on: {
+                  keyup: function($event) {
+                    if (!("button" in $event) && $event.keyCode !== 13) {
+                      return null
+                    }
+                    return _vm.getDetails($event)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _c("table", { staticClass: "table table-condensed" }, [
+                _c("tbody", [
+                  _c("tr", [
+                    _c(
+                      "th",
+                      { staticClass: "table-dark", attrs: { width: "25%" } },
+                      [_vm._v("Parent Lot")]
+                    ),
+                    _vm._v(" "),
+                    _c("td", { attrs: { width: "75%" } }, [
+                      _c("h3", [_vm._v(_vm._s(_vm.parent_lot.lot_id))])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "table-dark" }, [
+                      _vm._v("Part Number")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.parent_lot.part_number))])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "table-dark" }, [
+                      _vm._v("Description")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c("small", [_vm._v(_vm._s(_vm.parent_lot.description))])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "table-dark" }, [
+                      _vm._v("Efficiency")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.parent_lot.efficiency))])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "table-dark" }, [
+                      _vm._v("Quantity")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.parent_lot.qty))])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "table-dark" }, [
+                      _vm._v("Qty per Pack")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.parent_lot.issue_qty))])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "table-dark" }, [
+                      _vm._v("Balance Qty")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(this.qtyRemaining))])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-7" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("\n                    Child Lot IDs\n                ")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "form-row" }, [
+              _c("div", { staticClass: "col-sm-8" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "child_lot" } }, [
+                    _vm._v("Enter Child Lot ID")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "child_lot",
+                      id: "child_lot",
+                      disabled:
+                        _vm.parent_lot.lot_id == "" || this.qtyRemaining == 0
+                    },
+                    on: {
+                      keyup: function($event) {
+                        if (!("button" in $event) && $event.keyCode !== 13) {
+                          return null
+                        }
+                        return _vm.addChild($event)
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "qty" } }, [
+                    _vm._v("Quantity "),
+                    _vm.parent_lot.issue_qty > _vm.child_qty
+                      ? _c("span", [_vm._v("(Loose Qty)")])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.child_qty,
+                        expression: "child_qty"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    class: {
+                      "is-invalid":
+                        _vm.parent_lot.issue_qty < _vm.child_qty ||
+                        _vm.child_qty <= 0 ||
+                        _vm.qtyRemaining < _vm.child_qty
+                    },
+                    attrs: {
+                      type: "number",
+                      step: "0.00001",
+                      name: "qty",
+                      id: "qty",
+                      disabled:
+                        _vm.parent_lot.lot_id == "" || this.qtyRemaining == 0
+                    },
+                    domProps: { value: _vm.child_qty },
+                    on: {
+                      keyup: function($event) {
+                        if (!("button" in $event) && $event.keyCode !== 13) {
+                          return null
+                        }
+                        return _vm.addChild($event)
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.child_qty = $event.target.value
+                      }
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "table",
+              { staticClass: "table table-sm table-condensed table-striped" },
+              [
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.parent_lot.child_lots, function(lot, i) {
+                    return _c("tr", { key: i }, [
+                      _c("td", [_vm._v(_vm._s(i + 1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(lot.child_id))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(lot.qty))]),
+                      _vm._v(" "),
+                      _vm._m(2, true)
+                    ])
+                  })
+                )
+              ]
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h3", { staticClass: "mb-3" }, [
+      _c("i", { staticClass: "fas fa-box-open" }),
+      _vm._v(" Lot ID Assignment")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "table-dark" }, [
+      _c("tr", [
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Child Lot")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "25%" } }, [_vm._v("Quantity")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "15%" } }, [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _c("button", { staticClass: "btn btn-sm btn-danger" }, [
+        _c("i", { staticClass: "far fa-trash-alt" }),
+        _vm._v(" Remove")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3fc58534", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

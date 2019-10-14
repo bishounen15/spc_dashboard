@@ -18,10 +18,9 @@ class CreateMaterialLotDetailsTable extends Migration
 
             $table->string('parent_lot');
             $table->string('child_lot');
+            $table->float('qty',15,5);
 
             $table->timestamps();
-
-            $table->unique(['parent_lot','child_lot']);
         });
     }
 

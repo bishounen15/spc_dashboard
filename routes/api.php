@@ -96,3 +96,6 @@ Route::post('portal/dataset/template',[
  Route::delete('mes/issuance/delete/{id}','WebPortal\WarehouseIssuanceController@deleteTransaction');
  Route::get('mes/issuance/edit/{id}','WebPortal\WarehouseIssuanceController@edit');
  Route::put('mes/issuance','WebPortal\WarehouseIssuanceController@update');
+
+ Route::get('mes/lot/info/{lot}','WebPortal\LotAssignController@getDetails');
+ Route::post('mes/lot/assign/{parent}/{child}/{qty}','WebPortal\LotAssignController@addChild');

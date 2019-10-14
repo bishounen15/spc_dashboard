@@ -22,6 +22,7 @@ Vue.component('lot-record', require('./components/portal/LotRecord.vue'));
 Vue.component('cab-record', require('./components/portal/CabinetInfo.vue'));
 Vue.component('bom-maintenance', require('./components/portal/ProductType/BOM.vue'));
 Vue.component('material-issuance', require('./components/portal/MaterialIssuance.vue'));
+Vue.component('lot-assign', require('./components/portal/LotAssign.vue'));
 
 const app = new Vue({
     el: '#app'

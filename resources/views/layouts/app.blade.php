@@ -137,6 +137,9 @@
                                     @if(Auth::user()->mes_role == 'WHSE' || Auth::user()->mes_role == 'MH' || Auth::user()->sysadmin == 1)
                                     <a class="dropdown-item" href="/mes/issuance">&nbsp;&nbsp;&nbsp;&nbsp;Material Issuance</a>
                                     @endif
+                                    @if(Auth::user()->mes_role == 'MH' || Auth::user()->sysadmin == 1)
+                                    <a class="dropdown-item" href="/mes/assign/lot">&nbsp;&nbsp;&nbsp;&nbsp;Lot ID Assignment</a>
+                                    @endif
                                 @endif
 
                                 @if(Auth::user()->mes_role == 'SHIP' || Auth::user()->sysadmin == 1)
