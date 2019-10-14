@@ -58,7 +58,7 @@
                                 <div class="row mb-2">
                                     <div class="col"></div>
                                     <div class="col-sm text-right">
-                                        <button class="btn btn-sm btn-success" name="rawmat" @click="addComponent" :disabled="!bom.product_type"><i class="fas fa-plus"></i> Add Component</button>
+                                        <button class="btn btn-sm btn-success" name="rawmat" @click="addComponent" :disabled="!bom.product_type" v-if="role=='PLAN' || role=='sysadmin'"><i class="fas fa-plus"></i> Add Component</button>
                                     </div>
                                 </div>
                                 <table class="table table-sm table-condensed table-bordered" id="rawmat-table">
@@ -272,6 +272,9 @@ export default {
     },
     created() {
         
+    },
+    props: {
+        role: String
     },
     methods: {
         changeTab: function(event) {

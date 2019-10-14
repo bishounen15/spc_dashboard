@@ -52527,6 +52527,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     created: function created() {},
 
+    props: {
+        role: String
+    },
     methods: {
         changeTab: function changeTab(event) {
             this.active_tab = event.target.id;
@@ -52848,21 +52851,23 @@ var render = function() {
                     _c("div", { staticClass: "col" }),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-sm text-right" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-sm btn-success",
-                          attrs: {
-                            name: "rawmat",
-                            disabled: !_vm.bom.product_type
-                          },
-                          on: { click: _vm.addComponent }
-                        },
-                        [
-                          _c("i", { staticClass: "fas fa-plus" }),
-                          _vm._v(" Add Component")
-                        ]
-                      )
+                      _vm.role == "PLAN" || _vm.role == "sysadmin"
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-sm btn-success",
+                              attrs: {
+                                name: "rawmat",
+                                disabled: !_vm.bom.product_type
+                              },
+                              on: { click: _vm.addComponent }
+                            },
+                            [
+                              _c("i", { staticClass: "fas fa-plus" }),
+                              _vm._v(" Add Component")
+                            ]
+                          )
+                        : _vm._e()
                     ])
                   ]),
                   _vm._v(" "),
