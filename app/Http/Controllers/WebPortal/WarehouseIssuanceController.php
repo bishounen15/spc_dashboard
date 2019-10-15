@@ -4,12 +4,14 @@ namespace App\Http\Controllers\WebPortal;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 
 use App\Models\WebPortal\WarehouseIssuance;
 use App\Models\WebPortal\WarehouseIssuanceDetails;
 
 use DB;
 use Response;
+use Validator;
 
 class WarehouseIssuanceController extends Controller
 {
@@ -71,48 +73,68 @@ class WarehouseIssuanceController extends Controller
     public function store(Request $request)
     {
         //
-        $err_msg = '';
-
         $req = json_decode(json_decode($request->params));
         // dd($req);
-        try {
-            $header = WarehouseIssuance::create(
-                [
-                    "trx_type" => $req->trx_type,
-                    "production_date" => $req->production_date,
-                    "production_line" => $req->production_line,
-                    "registration" => $req->registration,
-                    "product_type" => $req->product_type,
-                    "mits_number" => $req->mits_number,
-                    "requestor" => $req->requestor,
-                ]
-            );
-    
-            foreach($req->items as $item) {
-                $details = WarehouseIssuanceDetails::create(
-                    [
-                        "issuance_id" => $header->id,
-                        "item_code" => $item->item_code,
-                        "uofm_base" => $item->uofm_base,
-                        "uofm_issue" => $item->uofm_issue,
-                        "conv_issue" => $item->conv_issue,
-                        "base_qty" => $item->base_qty,
-                        "issue_qty" => $item->issue_qty,
-                        "remarks" => $item->remarks,
-                    ]
-                );
-            }
-        } catch (\Throwable $th) {
-            $results = $th;
 
+        $data = [
+            "trx_type" => $req->trx_type,
+            "production_date" => $req->production_date,
+            "production_line" => $req->production_line,
+            "registration" => $req->registration,
+            "product_type" => $req->product_type,
+            "mits_number" => $req->mits_number,
+            "requestor" => $req->requestor,
+        ];
+
+        $trx_type = $data['trx_type'];
+        $mits_number = $data['mits_number'];
+
+        $validator = Validator::make($data, [
+            'mits_number' => [
+                'required',
+                Rule::unique('web_portal.wi01')->where(function ($query) use ($trx_type,$mits_number) {
+                    return $query->where('trx_type', $trx_type)
+                        ->where('mits_number', $mits_number);
+                }),
+            ],
+        ], [
+            'mits_number.unique' => 'MITS Number ['.$mits_number.'] is already exist.',
+        ]);
+
+        $err_msg = '';
+
+        if ($validator->fails()) {
+            $err_msg = $validator->messages()->first();
+        } else {
             try {
-                $err_msg = $this->error_codes[$results->errorInfo[1]];
+                $header = WarehouseIssuance::create($data);
+        
+                foreach($req->items as $item) {
+                    $details = WarehouseIssuanceDetails::create(
+                        [
+                            "issuance_id" => $header->id,
+                            "item_code" => $item->item_code,
+                            "uofm_base" => $item->uofm_base,
+                            "uofm_issue" => $item->uofm_issue,
+                            "conv_issue" => $item->conv_issue,
+                            "base_qty" => $item->base_qty,
+                            "issue_qty" => $item->issue_qty,
+                            "remarks" => $item->remarks,
+                        ]
+                    );
+                }
             } catch (\Throwable $th) {
-                $err_msg = $results->errorInfo[2];
-            }
-        } finally {
-            return Response::json($err_msg);
+                $results = $th;
+
+                try {
+                    $err_msg = $this->error_codes[$results->errorInfo[1]];
+                } catch (\Throwable $th) {
+                    $err_msg = $results->errorInfo[2];
+                }
+            } 
         }
+
+        return Response::json($err_msg);
     }
 
     public function submitTransaction($id) {
@@ -177,46 +199,68 @@ class WarehouseIssuanceController extends Controller
     public function update(Request $request)
     {
         //
-        $err_msg = '';
-
         $req = json_decode(json_decode($request->params));
         
-        try {
-            $header = WarehouseIssuance::where("id",$req->id)
-                                            ->update(
-                                                [
-                                                    "production_date" => $req->production_date,
-                                                    "production_line" => $req->production_line,
-                                                    "registration" => $req->registration,
-                                                    "product_type" => $req->product_type,
-                                                    "mits_number" => $req->mits_number,
-                                                ]
-                                            );
-    
-            foreach($req->items as $item) {
-                $details = WarehouseIssuanceDetails::where("id",$item->id)->update(
-                    [
-                        "item_code" => $item->item_code,
-                        "uofm_base" => $item->uofm_base,
-                        "uofm_issue" => $item->uofm_issue,
-                        "conv_issue" => $item->conv_issue,
-                        "base_qty" => $item->base_qty,
-                        "issue_qty" => $item->issue_qty,
-                        "remarks" => $item->remarks,
-                    ]
-                );
-            }
-        } catch (\Throwable $th) {
-            $results = $th;
+        $data = [
+            "production_date" => $req->production_date,
+            "production_line" => $req->production_line,
+            "registration" => $req->registration,
+            "product_type" => $req->product_type,
+            "trx_type" => $req->trx_type,
+            "mits_number" => $req->mits_number,
+        ];
 
+        $trx_id = $req->id;
+        $trx_type = $data['trx_type'];
+        $mits_number = $data['mits_number'];
+
+        $validator = Validator::make($data, [
+            'mits_number' => [
+                'required',
+                Rule::unique('web_portal.wi01')->where(function ($query) use ($trx_type,$mits_number,$trx_id) {
+                    return $query->where('trx_type', $trx_type)
+                        ->where('mits_number', $mits_number)
+                        ->where('id','<>', $trx_id);
+                }),
+            ],
+        ], [
+            'mits_number.unique' => 'MITS Number ['.$mits_number.'] is already exist.',
+        ]);
+
+        $err_msg = '';
+
+        if ($validator->fails()) {
+            $err_msg = $validator->messages()->first();
+        } else {
             try {
-                $err_msg = $this->error_codes[$results->errorInfo[1]];
+                $header = WarehouseIssuance::where("id",$req->id)
+                                                ->update($data);
+        
+                foreach($req->items as $item) {
+                    $details = WarehouseIssuanceDetails::where("id",$item->id)->update(
+                        [
+                            "item_code" => $item->item_code,
+                            "uofm_base" => $item->uofm_base,
+                            "uofm_issue" => $item->uofm_issue,
+                            "conv_issue" => $item->conv_issue,
+                            "base_qty" => $item->base_qty,
+                            "issue_qty" => $item->issue_qty,
+                            "remarks" => $item->remarks,
+                        ]
+                    );
+                }
             } catch (\Throwable $th) {
-                $err_msg = $results->errorInfo[2];
-            }
-        } finally {
-            return Response::json($err_msg);
+                $results = $th;
+
+                try {
+                    $err_msg = $this->error_codes[$results->errorInfo[1]];
+                } catch (\Throwable $th) {
+                    $err_msg = $results->errorInfo[2];
+                }
+            } 
         }
+
+        return Response::json($err_msg);
     }
 
     /**
