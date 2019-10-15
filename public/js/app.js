@@ -14028,7 +14028,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(66);
+module.exports = __webpack_require__(69);
 
 
 /***/ }),
@@ -14059,7 +14059,7 @@ Vue.component('lot-record', __webpack_require__(49));
 Vue.component('cab-record', __webpack_require__(52));
 Vue.component('bom-maintenance', __webpack_require__(55));
 Vue.component('material-issuance', __webpack_require__(63));
-Vue.component('lot-assign', __webpack_require__(70));
+Vue.component('lot-assign', __webpack_require__(66));
 
 var app = new Vue({
   el: '#app'
@@ -53884,6 +53884,131 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -53934,6 +54059,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 base_qty: 0,
                 issue_qty: 0
             },
+            view_details: [],
             pagination: {},
             loading: false,
             display_list: "flex",
@@ -54265,6 +54391,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this5.clearDetails();
 
                 _this5.toggleForm();
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        viewTrx: function viewTrx(id) {
+            var vm = this;
+
+            fetch('/api/mes/issuance/view/' + id, {
+                method: "get"
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                vm.view_details = data.results;
+                $('#ViewDetail').modal('toggle');
             }).catch(function (err) {
                 return console.log(err);
             });
@@ -54779,6 +54919,70 @@ var render = function() {
                                               [_c("small", [_vm._v("Submit")])]
                                             )
                                           : _vm._e()
+                                      ]
+                                    )
+                                  ]
+                                )
+                              : _vm.role != "MH" &&
+                                transaction.trx_type == "Issue" &&
+                                transaction.status == "Issued"
+                              ? _c(
+                                  "div",
+                                  {
+                                    staticClass: "btn-group",
+                                    attrs: { role: "group" }
+                                  },
+                                  [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn btn-sm btn-success dropdown-toggle",
+                                        attrs: {
+                                          id:
+                                            "statusButton" +
+                                            (_vm.pagination.first_rec + i),
+                                          type: "button",
+                                          "data-toggle": "dropdown",
+                                          "aria-haspopup": "true",
+                                          "aria-expanded": "false"
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                " +
+                                            _vm._s(transaction.status) +
+                                            "\n                                "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "dropdown-menu",
+                                        attrs: {
+                                          "aria-labelledby": "btnGroupDrop1"
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "a",
+                                          {
+                                            staticClass: "dropdown-item",
+                                            attrs: { href: "#" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.viewTrx(transaction.id)
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("small", [
+                                              _vm._v("View Details")
+                                            ])
+                                          ]
+                                        )
                                       ]
                                     )
                                   ]
@@ -55581,6 +55785,284 @@ var render = function() {
           ])
         ])
       ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "ViewDetail",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "ViewDetailLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog modal-lg", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(5),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "table",
+                  {
+                    staticClass: "table table-sm table-condensed table-bordered"
+                  },
+                  [
+                    _c("tr", [
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            MITS Number\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].mits_number
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Request Date\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].request_date
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Product Type\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].product_type
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Production Date\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].production_date
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Production Line\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].production_line
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Registration\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].registration
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Requested By\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "25%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].request_by
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Issued By\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "25%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].issue_by
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(6),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      { staticStyle: { "font-size": "0.7em" } },
+                      [
+                        _vm._m(7),
+                        _vm._v(" "),
+                        _vm._m(8),
+                        _vm._v(" "),
+                        _vm._l(_vm.view_details, function(detail, i) {
+                          return _c("tr", { key: i }, [
+                            _c("td", [_vm._v(_vm._s(detail.item_code))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(detail.description))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(detail.rqty_base))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(detail.rqty_issue))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(detail.rremarks))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(detail.iqty_base))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(detail.iqty_issue))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(detail.iremarks))])
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _vm._m(9)
+            ])
+          ]
+        )
+      ]
     )
   ])
 }
@@ -55641,6 +56123,122 @@ var staticRenderFns = [
       { staticClass: "text-center table-warning", attrs: { colspan: "8" } },
       [_c("h4", [_vm._v("Loading Data. Please Wait...")])]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "ViewDetailLabel" } },
+        [_vm._v("Issuance Details")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c(
+        "th",
+        { staticClass: "bg-warning text-center", attrs: { colspan: "8" } },
+        [_vm._v("Item Details")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c(
+        "th",
+        { staticClass: "table-light text-center", attrs: { rowspan: "2" } },
+        [_vm._v("Part No.")]
+      ),
+      _vm._v(" "),
+      _c(
+        "th",
+        { staticClass: "table-light text-center", attrs: { rowspan: "2" } },
+        [_vm._v("Description")]
+      ),
+      _vm._v(" "),
+      _c(
+        "th",
+        { staticClass: "table-light text-center", attrs: { colspan: "2" } },
+        [_vm._v("Request Qty")]
+      ),
+      _vm._v(" "),
+      _c(
+        "th",
+        { staticClass: "table-light text-center", attrs: { rowspan: "2" } },
+        [_vm._v("Remarks")]
+      ),
+      _vm._v(" "),
+      _c(
+        "th",
+        { staticClass: "table-light text-center", attrs: { colspan: "2" } },
+        [_vm._v("Issue Qty")]
+      ),
+      _vm._v(" "),
+      _c(
+        "th",
+        { staticClass: "table-light text-center", attrs: { rowspan: "2" } },
+        [_vm._v("Remarks")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", { staticClass: "table-light text-center" }, [
+        _vm._v("Base Unit")
+      ]),
+      _vm._v(" "),
+      _c("th", { staticClass: "table-light text-center" }, [
+        _vm._v("Issue Unit")
+      ]),
+      _vm._v(" "),
+      _c("th", { staticClass: "table-light text-center" }, [
+        _vm._v("Base Unit")
+      ]),
+      _vm._v(" "),
+      _c("th", { staticClass: "table-light text-center" }, [
+        _vm._v("Issue Unit")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
+    ])
   }
 ]
 render._withStripped = true
@@ -55654,23 +56252,14 @@ if (false) {
 
 /***/ }),
 /* 66 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(71)
+var __vue_script__ = __webpack_require__(67)
 /* template */
-var __vue_template__ = __webpack_require__(72)
+var __vue_template__ = __webpack_require__(68)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -55709,7 +56298,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 71 */
+/* 67 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -55953,7 +56542,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 72 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -56223,6 +56812,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-3fc58534", module.exports)
   }
 }
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

@@ -140,6 +140,10 @@ class WarehouseIssuanceController extends Controller
     public function show($id)
     {
         //
+        $results = DB::connection('web_portal')
+                        ->select("SELECT E.updated_at AS request_date, D.mits_number, D.production_date, F.LINDESC AS production_line, D.registration, D.product_type, E.item_code, C.item_desc AS description, E.base_qty AS rqty_base, E.issue_qty AS rqty_issue, E.remarks AS rremarks, A.updated_at AS issue_date, B.base_qty AS iqty_base, B.issue_qty AS iqty_issue, B.remarks AS iremarks, A.requestor as request_by, D.requestor AS issue_by FROM wi01 A INNER JOIN wi02 B ON A.id = B.issuance_id INNER JOIN im01 C ON B.item_code = C.item_code INNER JOIN wi01 D ON A.mits_number = D.mits_number AND D.trx_type = 'Request' INNER JOIN wi02 E ON D.id = E.issuance_id AND B.item_code = E.item_code INNER JOIN lin01 F ON D.production_line = F.LINCODE WHERE A.id = ? AND A.trx_type = 'Issue' ORDER BY E.id",[$id]);
+
+        return Response::json(['results' => $results]);
     }
 
     /**

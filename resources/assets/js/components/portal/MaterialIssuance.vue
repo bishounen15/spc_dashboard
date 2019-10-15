@@ -108,6 +108,15 @@
                                     </div>
                                 </div>
 
+                                <div class="btn-group" role="group" v-else-if="role!='MH' && transaction.trx_type=='Issue' && transaction.status=='Issued'">
+                                    <button :id="'statusButton'+(pagination.first_rec + i)" type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{transaction.status}}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                    <a class="dropdown-item" href="#" @click="viewTrx(transaction.id)"><small>View Details</small></a>
+                                    </div>
+                                </div>
+
                                 <span v-else>{{transaction.status}}</span>
                             </td>
                         </tr>
@@ -308,6 +317,122 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="ViewDetail" tabindex="-1" role="dialog" aria-labelledby="ViewDetailLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ViewDetailLabel">Issuance Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm table-condensed table-bordered">
+                        <tr>
+                            <th colspan="2" width="20%" class="table-dark">
+                                MITS Number
+                            </th>
+                            <td colspan="2" width="30%">
+                                {{(view_details.length > 0 ? view_details[0].mits_number : "")}}
+                            </td>
+
+                            <th colspan="2" width="20%" class="table-dark">
+                                Request Date
+                            </th>
+                            <td colspan="2" width="30%">
+                                {{(view_details.length > 0 ? view_details[0].request_date : "")}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="2" width="20%" class="table-dark">
+                                Product Type
+                            </th>
+                            <td colspan="2" width="30%">
+                                {{(view_details.length > 0 ? view_details[0].product_type : "")}}
+                            </td>
+
+                            <th colspan="2" width="20%" class="table-dark">
+                                Production Date
+                            </th>
+                            <td colspan="2" width="30%">
+                                {{(view_details.length > 0 ? view_details[0].production_date : "")}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="2" width="20%" class="table-dark">
+                                Production Line
+                            </th>
+                            <td colspan="2" width="30%">
+                                {{(view_details.length > 0 ? view_details[0].production_line : "")}}
+                            </td>
+
+                            <th colspan="2" width="20%" class="table-dark">
+                                Registration
+                            </th>
+                            <td colspan="2" width="30%">
+                                {{(view_details.length > 0 ? view_details[0].registration : "")}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="2" width="20%" class="table-dark">
+                                Requested By
+                            </th>
+                            <td colspan="2" width="25%">
+                                {{(view_details.length > 0 ? view_details[0].request_by : "")}}
+                            </td>
+
+                            <th colspan="2" width="20%" class="table-dark">
+                                Issued By
+                            </th>
+                            <td colspan="2" width="25%">
+                                {{(view_details.length > 0 ? view_details[0].issue_by : "")}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="8" class="bg-warning text-center">Item Details</th>
+                        </tr>
+                        <tbody style="font-size: 0.7em;">
+                            <tr>
+                                <th class="table-light text-center" rowspan="2">Part No.</th>
+                                <th class="table-light text-center" rowspan="2">Description</th>
+                                <th class="table-light text-center" colspan="2">Request Qty</th>
+                                <th class="table-light text-center" rowspan="2">Remarks</th>
+                                <th class="table-light text-center" colspan="2">Issue Qty</th>
+                                <th class="table-light text-center" rowspan="2">Remarks</th>
+                            </tr>
+
+                            <tr>
+                                <th class="table-light text-center">Base Unit</th>
+                                <th class="table-light text-center">Issue Unit</th>
+                                <th class="table-light text-center">Base Unit</th>
+                                <th class="table-light text-center">Issue Unit</th>
+                            </tr>
+
+                            <tr v-for="(detail, i) in view_details" v-bind:key="i">
+                                <td>{{detail.item_code}}</td>
+                                <td>{{detail.description}}</td>
+                                <td>{{detail.rqty_base}}</td>
+                                <td>{{detail.rqty_issue}}</td>
+                                <td>{{detail.rremarks}}</td>
+                                <td>{{detail.iqty_base}}</td>
+                                <td>{{detail.iqty_issue}}</td>
+                                <td>{{detail.iremarks}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
+            </div>
         </div>
 </template>
 
@@ -364,6 +489,7 @@ export default {
                 base_qty: 0,
                 issue_qty: 0
             },
+            view_details: [],
             pagination: {},
             loading: false,
             display_list: "flex",
@@ -676,6 +802,19 @@ export default {
                         this.clearDetails();
                         
                         this.toggleForm();
+                    })
+                    .catch(err => console.log(err));
+        },
+        viewTrx(id) {
+            let vm = this;
+            
+            fetch('/api/mes/issuance/view/' + id, {
+                    method: "get"
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        vm.view_details = data.results;
+                        $('#ViewDetail').modal('toggle');
                     })
                     .catch(err => console.log(err));
         },
