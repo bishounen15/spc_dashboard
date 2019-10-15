@@ -399,19 +399,19 @@
                         </tr>
                         <tbody style="font-size: 0.7em;">
                             <tr>
-                                <th class="table-light text-center" rowspan="2">Part No.</th>
-                                <th class="table-light text-center" rowspan="2">Description</th>
-                                <th class="table-light text-center" colspan="2">Request Qty</th>
-                                <th class="table-light text-center" rowspan="2">Remarks</th>
-                                <th class="table-light text-center" colspan="2">Issue Qty</th>
-                                <th class="table-light text-center" rowspan="2">Remarks</th>
+                                <th class="bg-light text-center" rowspan="2">Part No.</th>
+                                <th class="bg-light text-center" rowspan="2">Description</th>
+                                <th class="bg-light text-center" colspan="2">Request Qty</th>
+                                <th class="bg-light text-center" rowspan="2">Remarks</th>
+                                <th class="bg-light text-center" colspan="2">Issue Qty</th>
+                                <th class="bg-light text-center" rowspan="2">Remarks</th>
                             </tr>
 
                             <tr>
-                                <th class="table-light text-center">Base Unit</th>
-                                <th class="table-light text-center">Issue Unit</th>
-                                <th class="table-light text-center">Base Unit</th>
-                                <th class="table-light text-center">Issue Unit</th>
+                                <th class="bg-light text-center">Base Unit</th>
+                                <th class="bg-light text-center">Issue Unit</th>
+                                <th class="bg-light text-center">Base Unit</th>
+                                <th class="bg-light text-center">Issue Unit</th>
                             </tr>
 
                             <tr v-for="(detail, i) in view_details" v-bind:key="i">

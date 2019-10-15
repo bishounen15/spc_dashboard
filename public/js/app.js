@@ -56168,37 +56168,37 @@ var staticRenderFns = [
     return _c("tr", [
       _c(
         "th",
-        { staticClass: "table-light text-center", attrs: { rowspan: "2" } },
+        { staticClass: "bg-light text-center", attrs: { rowspan: "2" } },
         [_vm._v("Part No.")]
       ),
       _vm._v(" "),
       _c(
         "th",
-        { staticClass: "table-light text-center", attrs: { rowspan: "2" } },
+        { staticClass: "bg-light text-center", attrs: { rowspan: "2" } },
         [_vm._v("Description")]
       ),
       _vm._v(" "),
       _c(
         "th",
-        { staticClass: "table-light text-center", attrs: { colspan: "2" } },
+        { staticClass: "bg-light text-center", attrs: { colspan: "2" } },
         [_vm._v("Request Qty")]
       ),
       _vm._v(" "),
       _c(
         "th",
-        { staticClass: "table-light text-center", attrs: { rowspan: "2" } },
+        { staticClass: "bg-light text-center", attrs: { rowspan: "2" } },
         [_vm._v("Remarks")]
       ),
       _vm._v(" "),
       _c(
         "th",
-        { staticClass: "table-light text-center", attrs: { colspan: "2" } },
+        { staticClass: "bg-light text-center", attrs: { colspan: "2" } },
         [_vm._v("Issue Qty")]
       ),
       _vm._v(" "),
       _c(
         "th",
-        { staticClass: "table-light text-center", attrs: { rowspan: "2" } },
+        { staticClass: "bg-light text-center", attrs: { rowspan: "2" } },
         [_vm._v("Remarks")]
       )
     ])
@@ -56208,21 +56208,13 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("th", { staticClass: "table-light text-center" }, [
-        _vm._v("Base Unit")
-      ]),
+      _c("th", { staticClass: "bg-light text-center" }, [_vm._v("Base Unit")]),
       _vm._v(" "),
-      _c("th", { staticClass: "table-light text-center" }, [
-        _vm._v("Issue Unit")
-      ]),
+      _c("th", { staticClass: "bg-light text-center" }, [_vm._v("Issue Unit")]),
       _vm._v(" "),
-      _c("th", { staticClass: "table-light text-center" }, [
-        _vm._v("Base Unit")
-      ]),
+      _c("th", { staticClass: "bg-light text-center" }, [_vm._v("Base Unit")]),
       _vm._v(" "),
-      _c("th", { staticClass: "table-light text-center" }, [
-        _vm._v("Issue Unit")
-      ])
+      _c("th", { staticClass: "bg-light text-center" }, [_vm._v("Issue Unit")])
     ])
   },
   function() {
