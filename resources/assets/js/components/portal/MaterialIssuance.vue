@@ -339,26 +339,10 @@
                             </td>
 
                             <th colspan="2" width="20%" class="table-dark">
-                                Request Date
-                            </th>
-                            <td colspan="2" width="30%">
-                                {{(view_details.length > 0 ? view_details[0].request_date : "")}}
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th colspan="2" width="20%" class="table-dark">
                                 Product Type
                             </th>
                             <td colspan="2" width="30%">
                                 {{(view_details.length > 0 ? view_details[0].product_type : "")}}
-                            </td>
-
-                            <th colspan="2" width="20%" class="table-dark">
-                                Production Date
-                            </th>
-                            <td colspan="2" width="30%">
-                                {{(view_details.length > 0 ? view_details[0].production_date : "")}}
                             </td>
                         </tr>
 
@@ -375,6 +359,22 @@
                             </th>
                             <td colspan="2" width="30%">
                                 {{(view_details.length > 0 ? view_details[0].registration : "")}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="2" width="20%" class="table-dark">
+                                Request Date
+                            </th>
+                            <td colspan="2" width="30%">
+                                {{(view_details.length > 0 ? view_details[0].request_date : "")}}
+                            </td>
+
+                            <th colspan="2" width="20%" class="table-dark">
+                                Issue Date
+                            </th>
+                            <td colspan="2" width="30%">
+                                {{(view_details.length > 0 ? view_details[0].issue_date : "")}}
                             </td>
                         </tr>
 
@@ -417,11 +417,11 @@
                             <tr v-for="(detail, i) in view_details" v-bind:key="i">
                                 <td>{{detail.item_code}}</td>
                                 <td>{{detail.description}}</td>
-                                <td>{{detail.rqty_base}}</td>
-                                <td>{{detail.rqty_issue}}</td>
+                                <td class="text-right">{{detail.rqty_base}}</td>
+                                <td class="text-right">{{detail.rqty_issue}}</td>
                                 <td>{{detail.rremarks}}</td>
-                                <td>{{detail.iqty_base}}</td>
-                                <td>{{detail.iqty_issue}}</td>
+                                <td class="text-right">{{detail.iqty_base}}</td>
+                                <td class="text-right">{{detail.iqty_issue}}</td>
                                 <td>{{detail.iremarks}}</td>
                             </tr>
                         </tbody>

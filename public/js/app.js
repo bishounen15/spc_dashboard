@@ -55848,33 +55848,6 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n                            Request Date\n                        "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
-                        _vm._v(
-                          "\n                            " +
-                            _vm._s(
-                              _vm.view_details.length > 0
-                                ? _vm.view_details[0].request_date
-                                : ""
-                            ) +
-                            "\n                        "
-                        )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("tr", [
-                      _c(
-                        "th",
-                        {
-                          staticClass: "table-dark",
-                          attrs: { colspan: "2", width: "20%" }
-                        },
-                        [
-                          _vm._v(
                             "\n                            Product Type\n                        "
                           )
                         ]
@@ -55886,31 +55859,6 @@ var render = function() {
                             _vm._s(
                               _vm.view_details.length > 0
                                 ? _vm.view_details[0].product_type
-                                : ""
-                            ) +
-                            "\n                        "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "th",
-                        {
-                          staticClass: "table-dark",
-                          attrs: { colspan: "2", width: "20%" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                            Production Date\n                        "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
-                        _vm._v(
-                          "\n                            " +
-                            _vm._s(
-                              _vm.view_details.length > 0
-                                ? _vm.view_details[0].production_date
                                 : ""
                             ) +
                             "\n                        "
@@ -55963,6 +55911,58 @@ var render = function() {
                             _vm._s(
                               _vm.view_details.length > 0
                                 ? _vm.view_details[0].registration
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Request Date\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].request_date
+                                : ""
+                            ) +
+                            "\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "th",
+                        {
+                          staticClass: "table-dark",
+                          attrs: { colspan: "2", width: "20%" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Issue Date\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "2", width: "30%" } }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.view_details.length > 0
+                                ? _vm.view_details[0].issue_date
                                 : ""
                             ) +
                             "\n                        "
@@ -56038,15 +56038,23 @@ var render = function() {
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(detail.description))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(detail.rqty_base))]),
+                            _c("td", { staticClass: "text-right" }, [
+                              _vm._v(_vm._s(detail.rqty_base))
+                            ]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(detail.rqty_issue))]),
+                            _c("td", { staticClass: "text-right" }, [
+                              _vm._v(_vm._s(detail.rqty_issue))
+                            ]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(detail.rremarks))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(detail.iqty_base))]),
+                            _c("td", { staticClass: "text-right" }, [
+                              _vm._v(_vm._s(detail.iqty_base))
+                            ]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(detail.iqty_issue))]),
+                            _c("td", { staticClass: "text-right" }, [
+                              _vm._v(_vm._s(detail.iqty_issue))
+                            ]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(detail.iremarks))])
                           ])
