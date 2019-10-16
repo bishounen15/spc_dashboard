@@ -14060,6 +14060,7 @@ Vue.component('cab-record', __webpack_require__(52));
 Vue.component('bom-maintenance', __webpack_require__(55));
 Vue.component('material-issuance', __webpack_require__(63));
 Vue.component('lot-assign', __webpack_require__(66));
+Vue.component('stringer', __webpack_require__(73));
 
 var app = new Vue({
   el: '#app'
@@ -56424,7 +56425,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 issue_qty: 0,
                 child_lots: []
             },
-            child_qty: 0
+            child_qty: 0,
+            saving: false
         };
     },
     created: function created() {},
@@ -56517,6 +56519,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 } else if (vm.qtyRemaining < vm.child_qty) {
                     alert('You cannot exceed the Balance Quantity.');
                 } else {
+                    vm.saving = true;
                     fetch('/api/mes/lot/assign/' + vm.parent_lot.lot_id + '/' + event.target.value + '/' + vm.child_qty, {
                         method: 'post'
                     }).then(function (res) {
@@ -56529,10 +56532,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         } else {
                             alert(data.msg);
                         }
+
+                        vm.saving = false;
                     }).catch(function (err) {
-                        return console.log(err);
+                        vm.saving = false;
+                        console.log(err);
                     });
                 }
+            }
+        },
+        removeChild: function removeChild(lot) {
+            var _this3 = this;
+
+            var vm = this;
+
+            if (confirm('Deleting Lot ID [' + lot + ']. Are You Sure?')) {
+                fetch('/api/mes/lot/delete/' + lot, {
+                    method: 'delete'
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    console.log(data.results);
+                    // if (data.msg == '') {
+                    _this3.getChild(vm.parent_lot.lot_id);
+                    // this.setDefaults();
+                    // } else {
+                    // alert(data.msg);
+                    // }
+                }).catch(function (err) {
+                    return console.log(err);
+                });
             }
         },
         setDefaults: function setDefaults() {
@@ -56671,7 +56700,8 @@ var render = function() {
                       name: "child_lot",
                       id: "child_lot",
                       disabled:
-                        _vm.parent_lot.lot_id == "" || this.qtyRemaining == 0
+                        _vm.parent_lot.lot_id == "" || this.qtyRemaining == 0,
+                      readonly: _vm.saving == true
                     },
                     on: {
                       keyup: function($event) {
@@ -56754,7 +56784,23 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(lot.qty))]),
                       _vm._v(" "),
-                      _vm._m(2, true)
+                      _c("td", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-sm btn-danger",
+                            on: {
+                              click: function($event) {
+                                _vm.removeChild(lot.child_id)
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "far fa-trash-alt" }),
+                            _vm._v(" Remove")
+                          ]
+                        )
+                      ])
                     ])
                   })
                 )
@@ -56791,17 +56837,6 @@ var staticRenderFns = [
         _c("th", { attrs: { width: "15%" } }, [_vm._v("Action")])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("button", { staticClass: "btn btn-sm btn-danger" }, [
-        _c("i", { staticClass: "far fa-trash-alt" }),
-        _vm._v(" Remove")
-      ])
-    ])
   }
 ]
 render._withStripped = true
@@ -56818,6 +56853,198 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(74)
+/* template */
+var __vue_template__ = __webpack_require__(75)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/portal/Stringer.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1c0b8d9a", Component.options)
+  } else {
+    hotAPI.reload("data-v-1c0b8d9a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 74 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {},
+    data: function data() {
+        return {
+            active_tab: 'lot-tab'
+        };
+    },
+
+    methods: {
+        changeTab: function changeTab(event) {
+            this.active_tab = event.target.id;
+        }
+    }
+});
+
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-body" }, [
+        _c("ul", { staticClass: "nav nav-tabs" }, [
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                class: _vm.active_tab == "lot-tab" ? "active" : "",
+                attrs: { href: "#", id: "lot-tab" },
+                on: { click: _vm.changeTab }
+              },
+              [_vm._v("Lot IDs")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                class: _vm.active_tab == "sno-tab" ? "active" : "",
+                attrs: { href: "#", id: "sno-tab" },
+                on: { click: _vm.changeTab }
+              },
+              [_vm._v("Serial Number")]
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-body" }, [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-sm" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Production Line")]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: { type: "text", name: "", id: "", readonly: "" }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm" }, [
+            _c("label", { attrs: { for: "" } }, [_vm._v("Machine")]),
+            _vm._v(" "),
+            _c("input", {
+              staticClass: "form-control",
+              attrs: { type: "text", name: "", id: "", readonly: "" }
+            })
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1c0b8d9a", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

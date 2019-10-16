@@ -70,4 +70,11 @@ class LotAssignController extends Controller
 
         return Response::json(['msg' => $err_msg]);
     }
+
+    public function removeChild($lot) {
+        $results = MaterialLotDetail::where("child_lot",$lot)
+                        ->delete();
+
+        return Response::json(['results' => $results]);
+    }
 }

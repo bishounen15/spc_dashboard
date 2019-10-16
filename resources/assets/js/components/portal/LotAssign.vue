@@ -69,7 +69,7 @@
                             <div class="col-sm-8">
                                 <div class="form-group">
                                     <label for="child_lot">Enter Child Lot ID</label>
-                                    <input type="text" class="form-control" name="child_lot" id="child_lot" :disabled="parent_lot.lot_id=='' || this.qtyRemaining==0" v-on:keyup.13="addChild">
+                                    <input type="text" class="form-control" name="child_lot" id="child_lot" :disabled="parent_lot.lot_id=='' || this.qtyRemaining==0" :readonly="saving==true" v-on:keyup.13="addChild">
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -94,7 +94,7 @@
                                     <td>{{i+1}}</td>
                                     <td>{{lot.child_id}}</td>
                                     <td>{{lot.qty}}</td>
-                                    <td><button class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Remove</button></td>
+                                    <td><button class="btn btn-sm btn-danger" @click="removeChild(lot.child_id)"><i class="far fa-trash-alt"></i> Remove</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -121,7 +121,8 @@ export default {
                 issue_qty: 0,
                 child_lots: []
             },
-            child_qty: 0
+            child_qty: 0,
+            saving: false,
         }
     },
     created() {
@@ -210,6 +211,7 @@ export default {
                 } else if (vm.qtyRemaining < vm.child_qty) {
                     alert('You cannot exceed the Balance Quantity.');
                 } else {
+                    vm.saving = true;
                     fetch('/api/mes/lot/assign/' + vm.parent_lot.lot_id + '/' + event.target.value + '/' + vm.child_qty , {
                     method: 'post',
                     })
@@ -222,9 +224,34 @@ export default {
                         } else {
                             alert(data.msg);
                         }
+
+                        vm.saving = false;
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => {
+                        vm.saving = false;
+                        console.log(err);
+                    });
                 }
+            }
+        },
+        removeChild(lot) {
+            let vm = this;
+            
+            if (confirm('Deleting Lot ID ['+lot+']. Are You Sure?')) {
+                fetch('/api/mes/lot/delete/' + lot , {
+                method: 'delete',
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data.results);
+                    // if (data.msg == '') {
+                        this.getChild(vm.parent_lot.lot_id);
+                        // this.setDefaults();
+                    // } else {
+                        // alert(data.msg);
+                    // }
+                })
+                .catch(err => console.log(err));
             }
         },
         setDefaults() {

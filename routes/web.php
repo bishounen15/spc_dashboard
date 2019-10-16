@@ -265,6 +265,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
         Route::get('/mes/issuance', 'WebPortal\WarehouseIssuanceController@index');
         Route::get('/mes/assign/lot', 'WebPortal\LotAssignController@index');
+
+        Route::get('/mes/stringer', function() {
+            return view('mes.transactions.stringer');
+        });
     });
 // }); 
 
