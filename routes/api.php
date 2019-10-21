@@ -101,3 +101,7 @@ Route::post('portal/dataset/template',[
  Route::get('mes/lot/info/{lot}','WebPortal\LotAssignController@getDetails');
  Route::post('mes/lot/assign/{parent}/{child}/{qty}','WebPortal\LotAssignController@addChild');
  Route::delete('mes/lot/delete/{lot}','WebPortal\LotAssignController@removeChild');
+
+ Route::get('mes/lot/check/{lot}','WebPortal\LotTransactionsController@checkLot');
+
+ Route::post('mes/stringer', 'WebPortal\LotTransactionsController@store');

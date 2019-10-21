@@ -14028,7 +14028,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(69);
+module.exports = __webpack_require__(72);
 
 
 /***/ }),
@@ -14060,7 +14060,7 @@ Vue.component('cab-record', __webpack_require__(52));
 Vue.component('bom-maintenance', __webpack_require__(55));
 Vue.component('material-issuance', __webpack_require__(63));
 Vue.component('lot-assign', __webpack_require__(66));
-Vue.component('stringer', __webpack_require__(73));
+Vue.component('stringer', __webpack_require__(69));
 
 var app = new Vue({
   el: '#app'
@@ -56850,23 +56850,14 @@ if (false) {
 
 /***/ }),
 /* 69 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(74)
+var __vue_script__ = __webpack_require__(70)
 /* template */
-var __vue_template__ = __webpack_require__(75)
+var __vue_template__ = __webpack_require__(71)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -56905,11 +56896,74 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 74 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -56950,19 +57004,167 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {},
     data: function data() {
         return {
-            active_tab: 'lot-tab'
+            active_tab: 'lot-tab',
+            transactions: [],
+            transaction: {
+                LOCNCODE: '',
+                PRODLINE: '',
+                MACHINE: '',
+                SERIALNO: '',
+                UIDTRANS: '',
+                lot_ids: []
+            },
+            lots: [],
+            messages: {
+                lot: {
+                    msg: '',
+                    class: 'text-success'
+                },
+                sno: {
+                    msg: '',
+                    class: 'text-success'
+                }
+            },
+            lot_detail: {
+                lot_id: '',
+                parent_lot: ''
+            },
+            max_lot: 2
         };
     },
 
+    props: {
+        line: String,
+        prodline: String,
+        station: String,
+        machine: String,
+        user_id: String
+    },
     methods: {
         changeTab: function changeTab(event) {
             this.active_tab = event.target.id;
+        },
+        addRecord: function addRecord(event) {
+            var vm = this;
+
+            if (event.target.value != '') {
+                fetch('/api/mes/lot/check/' + event.target.value, {
+                    method: 'get'
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    vm.messages.sno.msg = "";
+                    vm.messages.lot.class = "text-danger";
+                    if (data.results.length == 0) {
+                        vm.messages.lot.msg = 'Lot ID does not exists.';
+                    } else if (data.results[0].used >= 2) {
+                        vm.messages.lot.msg = 'This Lot ID was already used ' + data.results[0].used + ' time/s.';
+                    } else if (vm.lots.includes(event.target.value)) {
+                        vm.messages.lot.msg = 'This Lot ID is already scanned.';
+                    } else {
+                        vm.messages.lot.msg = event.target.value + " is successfully added.";
+                        vm.messages.lot.class = "text-success";
+
+                        vm.transaction.lot_ids.push(data.results[0]);
+                        vm.lots.push(event.target.value);
+
+                        if (vm.transaction.lot_ids.length == 2) {
+                            $("#sno").focus();
+                        }
+
+                        event.target.value = '';
+                    }
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
+        },
+        deleteRecord: function deleteRecord(row) {
+            this.lots.splice(row, 1);
+            this.transaction.lot_ids.splice(row, 1);
+        },
+
+        addTransaction: function addTransaction(event) {
+            var vm = this;
+
+            var formData = new FormData();
+            formData.append('serial', event.target.value);
+            formData.append('station', this.station);
+
+            axios.post('/mes/validate', formData).then(function (response) {
+                vm.messages.lot.msg = "";
+
+                if (response.data.errors.error_msg == "") {
+                    vm.transaction.LOCNCODE = vm.station;
+                    vm.transaction.PRODLINE = vm.prodline;
+                    vm.transaction.MACHINE = vm.machine;
+                    vm.transaction.SERIALNO = event.target.value;
+                    vm.transaction.UIDTRANS = vm.user_id;
+
+                    vm.saveTransaction(event.target);
+                } else {
+                    event.target.value = '';
+                    vm.messages.sno.class = "text-danger";
+                    vm.messages.sno.msg = response.data.errors.error_msg;
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
+        },
+        saveTransaction: function saveTransaction(serial) {
+            var mydata = {};
+            var vm = this;
+
+            mydata['params'] = JSON.stringify(JSON.stringify(this.transaction));
+
+            fetch('/api/mes/stringer', {
+                method: 'post',
+                body: JSON.stringify(mydata),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                if (data != "") {
+                    vm.messages.sno.msg = data;
+                    vm.messages.sno.class = "text-danger";
+                } else {
+                    var rm = [];
+                    $.each(vm.transaction.lot_ids, function () {
+                        if (this.used == 1) {
+                            rm.push(this);
+                        } else {
+                            this.used++;
+                        }
+                    });
+
+                    $.each(rm, function () {
+                        vm.deleteRecord(this);
+                    });
+
+                    vm.messages.sno.class = "text-success";
+                    vm.messages.sno.msg = "[" + vm.transaction.SERIALNO + "] is successfully transacted.";
+                    serial.value = "";
+                }
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+
+        moveSNO: function moveSNO(event) {
+            event.preventDefault();
+            $("#sno").focus();
+        },
+        moveLot: function moveLot(event) {
+            event.preventDefault();
+            $("#lot_id").focus();
         }
     }
 });
 
 /***/ }),
-/* 75 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -56970,7 +57172,65 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-body" }, [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-sm" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Production Line")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.line,
+                    expression: "line"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", name: "", id: "", readonly: "" },
+                domProps: { value: _vm.line },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.line = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm" }, [
+            _c("label", { attrs: { for: "" } }, [_vm._v("Machine")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.machine,
+                  expression: "machine"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text", name: "", id: "", readonly: "" },
+              domProps: { value: _vm.machine },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.machine = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "card" }, [
       _c("div", { staticClass: "card-body" }, [
@@ -56984,7 +57244,7 @@ var render = function() {
                 attrs: { href: "#", id: "lot-tab" },
                 on: { click: _vm.changeTab }
               },
-              [_vm._v("Lot IDs")]
+              [_vm._v("Data Entry")]
             )
           ]),
           _vm._v(" "),
@@ -56997,12 +57257,169 @@ var render = function() {
                 attrs: { href: "#", id: "sno-tab" },
                 on: { click: _vm.changeTab }
               },
-              [_vm._v("Serial Number")]
+              [_vm._v("Transaction Logs")]
             )
           ])
         ])
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _vm.active_tab == "lot-tab"
+      ? _c("div", { staticClass: "card", attrs: { id: "lots" } }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c("div", { staticClass: "form-row" }, [
+                  _c("label", { attrs: { for: "lot_id" } }, [
+                    _vm._v("Lot Number")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "lot_id",
+                      id: "lot_id",
+                      disabled: _vm.transaction.lot_ids.length == _vm.max_lot,
+                      autofocus: ""
+                    },
+                    on: {
+                      keyup: function($event) {
+                        if (!("button" in $event) && $event.keyCode !== 13) {
+                          return null
+                        }
+                        return _vm.addRecord($event)
+                      },
+                      keydown: function($event) {
+                        if (!("button" in $event) && $event.keyCode !== 9) {
+                          return null
+                        }
+                        return _vm.moveSNO($event)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { class: _vm.messages.lot.class, attrs: { id: "lot-msg" } },
+                    [_vm._v(_vm._s(_vm.messages.lot.msg))]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-8 mb-2" }, [
+                _c("label", [_vm._v("Lot ID Listing")]),
+                _vm._v(" "),
+                _c(
+                  "table",
+                  {
+                    staticClass: "table table-sm table-condensed table-striped"
+                  },
+                  [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      {
+                        staticClass: "align-middle",
+                        staticStyle: { "font-size": "0.9em" }
+                      },
+                      _vm._l(_vm.transaction.lot_ids, function(lot, i) {
+                        return _c(
+                          "tr",
+                          { key: i, class: lot.used > 0 ? "text-info" : "" },
+                          [
+                            _c("td", [_vm._v(_vm._s(i + 1))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(lot.lot_id) + " "),
+                              _c("br"),
+                              _vm._v(
+                                "\n                                    " +
+                                  _vm._s(lot.parent_lot) +
+                                  " "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(lot.part_number) + " "),
+                              _c("br"),
+                              _vm._v(
+                                "\n                                    " +
+                                  _vm._s(lot.description)
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(lot.qty))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-sm btn-danger",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteRecord(lot)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "fas fa-trash" }),
+                                  _vm._v(" Remove")
+                                ]
+                              )
+                            ])
+                          ]
+                        )
+                      })
+                    )
+                  ]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c("div", { staticClass: "form-row" }, [
+                  _c("label", { attrs: { for: "sno" } }, [
+                    _vm._v("Serial Number")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "sno",
+                      id: "sno",
+                      disabled: _vm.transaction.lot_ids.length == 0
+                    },
+                    on: {
+                      keyup: function($event) {
+                        if (!("button" in $event) && $event.keyCode !== 13) {
+                          return null
+                        }
+                        return _vm.addTransaction($event)
+                      },
+                      keydown: function($event) {
+                        if (!("button" in $event) && $event.keyCode !== 9) {
+                          return null
+                        }
+                        return _vm.moveLot($event)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { class: _vm.messages.sno.class, attrs: { id: "lot-msg" } },
+                    [_vm._v(_vm._s(_vm.messages.sno.msg))]
+                  )
+                ])
+              ])
+            ])
+          ])
+        ])
+      : _c("div", { staticClass: "card", attrs: { id: "snos" } }, [_vm._m(1)])
   ])
 }
 var staticRenderFns = [
@@ -57010,30 +57427,42 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-body" }, [
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-sm" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "" } }, [_vm._v("Production Line")]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "text", name: "", id: "", readonly: "" }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm" }, [
-            _c("label", { attrs: { for: "" } }, [_vm._v("Machine")]),
+    return _c("thead", { staticClass: "thead-dark" }, [
+      _c("th", [_vm._v("#")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Lot ID / Parent Lot")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Part Number / Description")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Qty")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Actions")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-body" }, [
+      _c("label", [_vm._v("Transaction Log")]),
+      _vm._v(" "),
+      _c(
+        "table",
+        { staticClass: "table table-sm table-condensed table-striped" },
+        [
+          _c("thead", { staticClass: "thead-dark" }, [
+            _c("th", [_vm._v("#")]),
             _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: { type: "text", name: "", id: "", readonly: "" }
-            })
+            _c("th", [_vm._v("Serial Number")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Trx Date")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Lot Used")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Actions")])
           ])
-        ])
-      ])
+        ]
+      )
     ])
   }
 ]
@@ -57045,6 +57474,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-1c0b8d9a", module.exports)
   }
 }
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

@@ -152,9 +152,13 @@
                                 @foreach(Auth::user()->portalUser->mesUser->assignment as $assign)
                                     @if(App\Models\WebPortal\IPAssign::where("IPADDRESS",Request::ip())->count() == 0)
                                         @if($assign->stationInfo->NEWPORTAL == 1)
-                                            <a class="dropdown-item" href="/mescreate/{{$assign->stationInfo->STNID}}">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
-                                            @if($assign->STNCODE == 'FG-PROD')
-                                            <a class="dropdown-item" href="/mes/packaging">&nbsp;&nbsp;&nbsp;&nbsp;<small>Packaging</small></a>
+                                            @if($assign->STNCODE == 'STRINGER')
+                                                <a class="dropdown-item" href="/mes/stringer">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
+                                            @else
+                                                <a class="dropdown-item" href="/mescreate/{{$assign->stationInfo->STNID}}">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
+                                                @if($assign->STNCODE == 'FG-PROD')
+                                                <a class="dropdown-item" href="/mes/packaging">&nbsp;&nbsp;&nbsp;&nbsp;<small>Packaging</small></a>
+                                                @endif
                                             @endif
                                         @endif
                                     @else
@@ -162,9 +166,13 @@
                                             $ip_assign = App\Models\WebPortal\IPAssign::where([["IPADDRESS",Request::ip()],["STATION",$assign->stationInfo->STNCODE],]);
                                         @endphp
                                         @if($assign->stationInfo->NEWPORTAL == 1 && $ip_assign->count() != 0)
-                                            <a class="dropdown-item" href="/mescreate/{{$assign->stationInfo->STNID}}/{{$ip_assign->first()->PRODLINE}}">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
-                                            @if($assign->STNCODE == 'FG-PROD')
-                                            <a class="dropdown-item" href="/mes/packaging">&nbsp;&nbsp;&nbsp;&nbsp;<small>Packaging</small></a>
+                                            @if($assign->STNCODE == 'STRINGER')
+                                                <a class="dropdown-item" href="/mes/stringer">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
+                                            @else
+                                                <a class="dropdown-item" href="/mescreate/{{$assign->stationInfo->STNID}}/{{$ip_assign->first()->PRODLINE}}">&nbsp;&nbsp;&nbsp;&nbsp;<small>{{$assign->stationInfo->STNDESC}}</small></a>
+                                                @if($assign->STNCODE == 'FG-PROD')
+                                                <a class="dropdown-item" href="/mes/packaging">&nbsp;&nbsp;&nbsp;&nbsp;<small>Packaging</small></a>
+                                                @endif
                                             @endif
                                         @endif
                                     @endif
