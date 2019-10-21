@@ -96,14 +96,34 @@ class LotTransactionsController extends Controller
         return Response::json($err_msg); 
     }
 
-    public function list() {
-        
+    public function list($station,$machine) {
+        $dt = date('Y-m-d',strtotime("-" . (date('H:i') < "06:00" ? 1 : 0) . " days",strtotime("Today")));
+
+        $start = $dt  . " 06:00:00";
+        $end = date('Y-m-d',strtotime("+1 days",strtotime($dt))) . " 05:59:59";
 
         $sql = "SELECT A.LOCNCODE, D.LINDESC AS PRODLINE, A.MACHINE, A.SERIALNO, A.TRXDATE, IFNULL(B.LOTNUMBER,'') AS LOT1, IFNULL(C.LOTNUMBER,'') AS LOT2 FROM lt01 A INNER JOIN lin01 D ON A.PRODLINE = D.LINCODE LEFT JOIN lt02 B ON A.SERIALNO = B.SERIALNO AND B.INDEXNO = 1 LEFT JOIN lt02 C ON A.SERIALNO = C.SERIALNO AND C.INDEXNO = 2 WHERE A.TRXDATE BETWEEN ? AND  ? ORDER BY A.TRXDATE DESC";
 
-        $results = DB::connection('wep_portal')
-                        ->select($sql,[$start, $end]);
+        $results = DB::connection('web_portal')
+                        ->table('lt01 AS A')
+                        ->join('lin01 AS D','A.PRODLINE','D.LINCODE')
+                        ->leftJoin('lt02 AS B', function ($join) {
+                            $join->on('A.SERIALNO', '=', 'B.SERIALNO')
+                                 ->where('B.INDEXNO', '=', 1);
+                        })
+                        ->leftJoin('lt02 AS C', function ($join) {
+                            $join->on('A.SERIALNO', '=', 'C.SERIALNO')
+                                 ->where('C.INDEXNO', '=', 2);
+                        })
+                        ->selectRaw("A.LOCNCODE, D.LINDESC AS PRODLINE, A.MACHINE, A.SERIALNO, A.TRXDATE, IFNULL(B.LOTNUMBER,'') AS LOT1, IFNULL(C.LOTNUMBER,'') AS LOT2")
+                        ->where([
+                            ["A.LOCNCODE",$station],
+                            ["A.MACHINE",$machine],
+                        ])
+                        ->whereBetween("A.TRXDATE",[$start,$end])
+                        ->orderBy("A.TRXDATE","DESC")
+                        ->paginate(10);
 
-        return Response::json([ "results" => $results ]);
+        return Response::json($results);
     }
 }

@@ -56999,9 +56999,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {},
+    mounted: function mounted() {
+        this.refreshTransactions();
+    },
     data: function data() {
         return {
             active_tab: 'lot-tab',
@@ -57029,7 +57055,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 lot_id: '',
                 parent_lot: ''
             },
-            max_lot: 2
+            max_lot: 2,
+            pagination: {}
         };
     },
 
@@ -57145,6 +57172,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                     vm.messages.sno.class = "text-success";
                     vm.messages.sno.msg = "[" + vm.transaction.SERIALNO + "] is successfully transacted.";
+
+                    vm.refreshTransactions();
+
                     serial.value = "";
                 }
             }).catch(function (err) {
@@ -57159,6 +57189,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         moveLot: function moveLot(event) {
             event.preventDefault();
             $("#lot_id").focus();
+        },
+        refreshTransactions: function refreshTransactions() {
+            var vm = this;
+            fetch('/api/mes/stringer/trx/' + this.station + "/" + this.machine, {
+                method: 'get'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (res) {
+                vm.transactions = res.data;
+                vm.makePagination(res.next_page_url, res.prev_page_url, res.current_page, res.last_page, res.from, res.to, res.total);
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        makePagination: function makePagination(next_page_url, prev_page_url, current_page, last_page, from, to, total) {
+            var msg = total > 0 ? 'Showing ' + from + ' of ' + to + ' of ' + total + ' entries' : 'No records to show';
+
+            var pagination = {
+                next_page: next_page_url,
+                prev_page: prev_page_url,
+                curr_page: current_page,
+                last_page: last_page,
+                first_rec: from,
+                last_rec: to,
+                total_rec: total,
+                message: msg
+            };
+
+            this.pagination = pagination;
         }
     }
 });
@@ -57419,7 +57478,116 @@ var render = function() {
             ])
           ])
         ])
-      : _c("div", { staticClass: "card", attrs: { id: "snos" } }, [_vm._m(1)])
+      : _c("div", { staticClass: "card", attrs: { id: "snos" } }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("label", [_vm._v("Transaction Log")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-sm" }, [
+                _c(
+                  "nav",
+                  { attrs: { "aria-label": "Page navigation example" } },
+                  [
+                    _c("ul", { staticClass: "pagination" }, [
+                      _c(
+                        "li",
+                        {
+                          staticClass: "page-item",
+                          class: [{ disabled: !_vm.pagination.prev_page }],
+                          on: {
+                            click: function($event) {
+                              !!_vm.pagination.prev_page &&
+                                _vm.inquire(_vm.pagination.prev_page)
+                            }
+                          }
+                        },
+                        [_vm._m(1)]
+                      ),
+                      _vm._v(" "),
+                      _vm.pagination.total_rec
+                        ? _c("li", { staticClass: "page-item disabled" }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "page-link",
+                                attrs: { href: "#" }
+                              },
+                              [
+                                _vm._v(
+                                  "Page " +
+                                    _vm._s(_vm.pagination.curr_page) +
+                                    " of " +
+                                    _vm._s(_vm.pagination.last_page)
+                                )
+                              ]
+                            )
+                          ])
+                        : _c("li", { staticClass: "page-item disabled" }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "page-link",
+                                attrs: { href: "#" }
+                              },
+                              [_vm._v("No Record Found")]
+                            )
+                          ]),
+                      _vm._v(" "),
+                      _c(
+                        "li",
+                        {
+                          staticClass: "page-item",
+                          class: [{ disabled: !_vm.pagination.next_page }]
+                        },
+                        [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "page-link",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  !!_vm.pagination.next_page &&
+                                    _vm.inquire(_vm.pagination.next_page)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fas fa-forward" })]
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "table",
+              { staticClass: "table table-sm table-condensed table-striped" },
+              [
+                _vm._m(2),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.transactions, function(trx, i) {
+                    return _c("tr", { key: i }, [
+                      _c("td", [_vm._v(_vm._s(i + 1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(trx.SERIALNO))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(trx.TRXDATE))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(trx.LOT1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(trx.LOT2))])
+                    ])
+                  })
+                )
+              ]
+            )
+          ])
+        ])
   ])
 }
 var staticRenderFns = [
@@ -57443,26 +57611,24 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-body" }, [
-      _c("label", [_vm._v("Transaction Log")]),
+    return _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+      _c("i", { staticClass: "fas fa-backward" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-dark" }, [
+      _c("th", [_vm._v("#")]),
       _vm._v(" "),
-      _c(
-        "table",
-        { staticClass: "table table-sm table-condensed table-striped" },
-        [
-          _c("thead", { staticClass: "thead-dark" }, [
-            _c("th", [_vm._v("#")]),
-            _vm._v(" "),
-            _c("th", [_vm._v("Serial Number")]),
-            _vm._v(" "),
-            _c("th", [_vm._v("Trx Date")]),
-            _vm._v(" "),
-            _c("th", [_vm._v("Lot Used")]),
-            _vm._v(" "),
-            _c("th", [_vm._v("Actions")])
-          ])
-        ]
-      )
+      _c("th", [_vm._v("Serial Number")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Trx Date")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Lot # 1")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Lot # 2")])
     ])
   }
 ]

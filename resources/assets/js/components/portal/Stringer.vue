@@ -82,14 +82,38 @@
         <div class="card" id="snos" v-else>
             <div class="card-body">
                 <label>Transaction Log</label>
+                <div class="row">
+                    <div class="col-sm">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li class="page-item" v-bind:class="[{ disabled: !pagination.prev_page }]" @click="!!pagination.prev_page && inquire(pagination.prev_page)"><a class="page-link" href="#"><i class="fas fa-backward"></i></a></li>
+
+                                <li class="page-item disabled" v-if="pagination.total_rec"><a class="page-link" href="#" >Page {{pagination.curr_page}} of {{pagination.last_page}}</a></li>
+
+                                <li class="page-item disabled" v-else><a class="page-link" href="#">No Record Found</a></li>
+                                
+                                <li class="page-item" v-bind:class="[{ disabled: !pagination.next_page }]"><a class="page-link" href="#" @click="!!pagination.next_page && inquire(pagination.next_page)"><i class="fas fa-forward"></i></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
                 <table class="table table-sm table-condensed table-striped">
                     <thead class="thead-dark">
                         <th>#</th>
                         <th>Serial Number</th>
                         <th>Trx Date</th>
-                        <th>Lot Used</th>
-                        <th>Actions</th>
+                        <th>Lot # 1</th>
+                        <th>Lot # 2</th>
                     </thead>
+                    <tbody>
+                        <tr v-for="(trx,i) in transactions" v-bind:key="i">
+                            <td>{{i+1}}</td>
+                            <td>{{trx.SERIALNO}}</td>
+                            <td>{{trx.TRXDATE}}</td>
+                            <td>{{trx.LOT1}}</td>
+                            <td>{{trx.LOT2}}</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -99,7 +123,7 @@
 <script>
 export default {
     mounted() {
-
+        this.refreshTransactions();
     },
     data() {
         return {
@@ -128,7 +152,8 @@ export default {
                 lot_id: '',
                 parent_lot: ''
             },
-            max_lot: 2
+            max_lot: 2,
+            pagination: {}
         }
     },
     props: {
@@ -244,6 +269,9 @@ export default {
 
                                 vm.messages.sno.class = "text-success";
                                 vm.messages.sno.msg = "["+vm.transaction.SERIALNO+"] is successfully transacted.";
+
+                                vm.refreshTransactions();
+
                                 serial.value = "";
                             }
                     })
@@ -256,6 +284,34 @@ export default {
         moveLot: function(event) {
             event.preventDefault();
             $("#lot_id").focus();
+        },
+        refreshTransactions() {
+            let vm = this;
+            fetch('/api/mes/stringer/trx/' + this.station + "/" + this.machine, {
+                    method: 'get',
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        vm.transactions = res.data;
+                        vm.makePagination(res.next_page_url, res.prev_page_url, res.current_page, res.last_page, res.from, res.to, res.total);
+                    })
+                    .catch(err => console.log(err));
+        },
+        makePagination(next_page_url, prev_page_url, current_page, last_page, from, to, total) {
+            let msg = total > 0 ? 'Showing ' + from + ' of ' + to + ' of ' + total + ' entries' : 'No records to show';
+
+            let pagination = {
+                next_page: next_page_url,
+                prev_page: prev_page_url,
+                curr_page: current_page,
+                last_page: last_page,
+                first_rec: from,
+                last_rec: to,
+                total_rec: total,
+                message: msg
+            }
+
+            this.pagination = pagination;
         }
     }
 }
