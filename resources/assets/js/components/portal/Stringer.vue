@@ -86,13 +86,13 @@
                     <div class="col-sm">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">
-                                <li class="page-item" v-bind:class="[{ disabled: !pagination.prev_page }]" @click="!!pagination.prev_page && inquire(pagination.prev_page)"><a class="page-link" href="#"><i class="fas fa-backward"></i></a></li>
+                                <li class="page-item" v-bind:class="[{ disabled: !pagination.prev_page }]" @click="!!pagination.prev_page && refreshTransactions(pagination.prev_page)"><a class="page-link" href="#"><i class="fas fa-backward"></i></a></li>
 
                                 <li class="page-item disabled" v-if="pagination.total_rec"><a class="page-link" href="#" >Page {{pagination.curr_page}} of {{pagination.last_page}}</a></li>
 
                                 <li class="page-item disabled" v-else><a class="page-link" href="#">No Record Found</a></li>
                                 
-                                <li class="page-item" v-bind:class="[{ disabled: !pagination.next_page }]"><a class="page-link" href="#" @click="!!pagination.next_page && inquire(pagination.next_page)"><i class="fas fa-forward"></i></a></li>
+                                <li class="page-item" v-bind:class="[{ disabled: !pagination.next_page }]"><a class="page-link" href="#" @click="!!pagination.next_page && refreshTransactions(pagination.next_page)"><i class="fas fa-forward"></i></a></li>
                             </ul>
                         </nav>
                     </div>
@@ -285,9 +285,9 @@ export default {
             event.preventDefault();
             $("#lot_id").focus();
         },
-        refreshTransactions() {
+        refreshTransactions(page_url) {
             let vm = this;
-            fetch('/api/mes/stringer/trx/' + this.station + "/" + this.machine, {
+            fetch(page_url || '/api/mes/stringer/trx/' + this.station + "/" + this.machine, {
                     method: 'get',
                     })
                     .then(res => res.json())

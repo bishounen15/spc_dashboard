@@ -57190,9 +57190,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             event.preventDefault();
             $("#lot_id").focus();
         },
-        refreshTransactions: function refreshTransactions() {
+        refreshTransactions: function refreshTransactions(page_url) {
             var vm = this;
-            fetch('/api/mes/stringer/trx/' + this.station + "/" + this.machine, {
+            fetch(page_url || '/api/mes/stringer/trx/' + this.station + "/" + this.machine, {
                 method: 'get'
             }).then(function (res) {
                 return res.json();
@@ -57497,7 +57497,9 @@ var render = function() {
                           on: {
                             click: function($event) {
                               !!_vm.pagination.prev_page &&
-                                _vm.inquire(_vm.pagination.prev_page)
+                                _vm.refreshTransactions(
+                                  _vm.pagination.prev_page
+                                )
                             }
                           }
                         },
@@ -57548,7 +57550,9 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   !!_vm.pagination.next_page &&
-                                    _vm.inquire(_vm.pagination.next_page)
+                                    _vm.refreshTransactions(
+                                      _vm.pagination.next_page
+                                    )
                                 }
                               }
                             },
