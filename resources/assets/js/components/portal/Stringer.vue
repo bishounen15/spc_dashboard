@@ -107,7 +107,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="(trx,i) in transactions" v-bind:key="i">
-                            <td>{{i+1}}</td>
+                            <td>{{pagination.first_rec+i}}</td>
                             <td>{{trx.SERIALNO}}</td>
                             <td>{{trx.TRXDATE}}</td>
                             <td>{{trx.LOT1}}</td>

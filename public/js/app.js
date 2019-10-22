@@ -57576,7 +57576,7 @@ var render = function() {
                   "tbody",
                   _vm._l(_vm.transactions, function(trx, i) {
                     return _c("tr", { key: i }, [
-                      _c("td", [_vm._v(_vm._s(i + 1))]),
+                      _c("td", [_vm._v(_vm._s(_vm.pagination.first_rec + i))]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(trx.SERIALNO))]),
                       _vm._v(" "),
