@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="card">
+        <div class="card" v-if="machine!='-'">
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm">
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" v-if="machine!='-'">
             <div class="card-body">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
@@ -96,18 +96,34 @@
                             </ul>
                         </nav>
                     </div>
+                    <div class="col-sm text-right" v-if="machine=='-'">
+                        <button class="btn btn-info" data-toggle="modal" data-target="#filter"><i class="fas fa-filter"></i> Filter Results</button>
+                        <button class="btn btn-success"><i class="fas fa-file-csv"></i> Export Data</button>
+                    </div>
                 </div>
                 <table class="table table-sm table-condensed table-striped">
                     <thead class="thead-dark">
                         <th>#</th>
+                        <th v-if="machine=='-'">Line</th>
+                        <th v-if="machine=='-'">Station</th>
+                        <th v-if="machine=='-'">Machine</th>
                         <th>Serial Number</th>
                         <th>Trx Date</th>
                         <th>Lot # 1</th>
                         <th>Lot # 2</th>
                     </thead>
                     <tbody>
-                        <tr v-for="(trx,i) in transactions" v-bind:key="i">
+                        <tr v-if="loading==true">
+                            <td class="text-center" v-bind:colspan="machine=='-' ? 8 : 5">Loading Records. Please wait...</td>
+                        </tr>
+                        <tr v-else-if="transactions.length==0">
+                            <td class="text-center" v-bind:colspan="machine=='-' ? 8 : 5">No Record Found</td>
+                        </tr>
+                        <tr v-for="(trx,i) in transactions" v-bind:key="i" v-else>
                             <td>{{pagination.first_rec+i}}</td>
+                            <td v-if="machine=='-'">{{trx.PRODLINE}}</td>
+                            <td v-if="machine=='-'">{{trx.LOCNCODE}}</td>
+                            <td v-if="machine=='-'">{{trx.MACHINE}}</td>
                             <td>{{trx.SERIALNO}}</td>
                             <td>{{trx.TRXDATE}}</td>
                             <td>{{trx.LOT1}}</td>
@@ -117,17 +133,118 @@
                 </table>
             </div>
         </div>
+
+        <div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="filterLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Filter Results</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-sm-4">
+                            Date Range
+                        </div>
+
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <input type="date" name="start" id="start" class="form-control mb-2" v-model="start_date">
+                                <input type="date" name="end" id="end" class="form-control" v-model="end_date">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-sm-4">
+                            Stringer Machine
+                        </div>
+
+                        <div class="col-sm-8">
+                            <div class="form-row">
+                                <div class="col-sm">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="machine[]" value="ATW1" @click="machineSelect">
+                                        <label class="form-check-label" for="machine">ATW # 1</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="machine[]" value="ATW2" @click="machineSelect">
+                                        <label class="form-check-label" for="machine">ATW # 2</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="machine[]" value="ATW3" @click="machineSelect">
+                                        <label class="form-check-label" for="machine">ATW # 3</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-sm">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="machine[]" value="ATW4" @click="machineSelect">
+                                        <label class="form-check-label" for="machine">ATW # 4</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="machine[]" value="ATW5" @click="machineSelect">
+                                        <label class="form-check-label" for="machine">ATW # 5</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="machine[]" value="ATW6" @click="machineSelect">
+                                        <label class="form-check-label" for="machine">ATW # 6</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-sm">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="machine[]" value="ATW7" @click="machineSelect">
+                                        <label class="form-check-label" for="machine">ATW # 7</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="machine[]" value="ATW8" @click="machineSelect">
+                                        <label class="form-check-label" for="machine">ATW # 8</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="machine[]" value="ATW9" @click="machineSelect">
+                                        <label class="form-check-label" for="machine">ATW # 9</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" @click="refreshTransactions()">Refresh Data</button>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     mounted() {
+        this.start_date = this.date;
+        this.end_date = this.date;
+
         this.refreshTransactions();
+        if (this.machine != "-") {
+            this.active_tab = 'lot-tab';
+        } else {
+            this.active_tab = 'sno-tab';
+        }
+    },
+    created() {
+        
     },
     data() {
         return {
-            active_tab: 'lot-tab',
+            active_tab: '',
             transactions: [],
             transaction: {
                 LOCNCODE: '',
@@ -153,7 +270,11 @@ export default {
                 parent_lot: ''
             },
             max_lot: 2,
-            pagination: {}
+            pagination: {},
+            machines: [],
+            start_date: '',
+            end_date: '',
+            loading: false
         }
     },
     props: {
@@ -161,7 +282,8 @@ export default {
         prodline: String,
         station: String,
         machine: String,
-        user_id: String
+        user_id: String,
+        date: Date
     },
     methods: {
         changeTab: function(event) {
@@ -287,15 +409,30 @@ export default {
         },
         refreshTransactions(page_url) {
             let vm = this;
-            fetch(page_url || '/api/mes/stringer/trx/' + this.station + "/" + this.machine, {
-                    method: 'get',
+            let mydata = {};
+
+            vm.loading = true;
+
+            mydata['params'] = JSON.stringify(JSON.stringify(this.machines));
+
+            fetch(page_url || '/api/mes/stringer/trx/' + this.station + "/" + this.machine + "/" + this.start_date + "/" + this.end_date, {
+                    method: 'post',
+                    body: JSON.stringify(mydata),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
                     })
                     .then(res => res.json())
                     .then(res => {
                         vm.transactions = res.data;
                         vm.makePagination(res.next_page_url, res.prev_page_url, res.current_page, res.last_page, res.from, res.to, res.total);
+
+                        vm.loading = false;
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => {
+                        console.log(err);
+                        vm.loading = false;
+                    });
         },
         makePagination(next_page_url, prev_page_url, current_page, last_page, from, to, total) {
             let msg = total > 0 ? 'Showing ' + from + ' of ' + to + ' of ' + total + ' entries' : 'No records to show';
@@ -312,6 +449,13 @@ export default {
             }
 
             this.pagination = pagination;
+        },
+        machineSelect: function(event) {
+            if (event.target.checked) {
+                this.machines.push(event.target.value);
+            } else {
+                this.machines.splice(event.target.value,1);
+            }
         }
     }
 }

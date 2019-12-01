@@ -118,6 +118,9 @@
                                 <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
                                 <a class="dropdown-item" href="/mes/output">&nbsp;&nbsp;&nbsp;&nbsp;Daily Output</a>
                                 <a class="dropdown-item" href="/mes/ftd">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
+                                @if(Auth::user()->mes_role != 'OPRT')
+                                    <a class="dropdown-item" href="/mes/stringer">&nbsp;&nbsp;&nbsp;&nbsp;Stringer Lot Transactions</a>
+                                @endif
                                 
                                 <h6 class="dropdown-header">Planning</h6>
                                 @if(Auth::user()->mes_role == 'PLAN' || Auth::user()->sysadmin == 1)

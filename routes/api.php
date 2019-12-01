@@ -105,4 +105,4 @@ Route::post('portal/dataset/template',[
  Route::get('mes/lot/check/{lot}','WebPortal\LotTransactionsController@checkLot');
 
  Route::post('mes/stringer', 'WebPortal\LotTransactionsController@store');
- Route::get('mes/stringer/trx/{station}/{machine}', 'WebPortal\LotTransactionsController@list');
+ Route::post('mes/stringer/trx/{station}/{machine}/{sdate?}/{edate?}', 'WebPortal\LotTransactionsController@list');

@@ -27,13 +27,21 @@ class LotTransactionsController extends Controller
     //
     public function index() {
         $assignment = IPAssign::where("IPADDRESS",Req::ip())->first();
-
+        
         $data = [];
 
-        $prodline = ProductionLine::where("LINCODE",$assignment->PRODLINE)->first();
-        $data['prodline'] = $prodline;
-        $data['station'] = $assignment->STATION;
-        $data['machine'] = $assignment->MACHINE;
+        $data['date'] = date('Y-m-d');
+
+        if ($assignment != null) {
+            $prodline = ProductionLine::where("LINCODE",$assignment->PRODLINE)->first();
+            $data['prodline'] = $prodline;
+            $data['station'] = $assignment->STATION;
+            $data['machine'] = $assignment->MACHINE;
+        } else {
+            $data['prodline'] = null;
+            $data['station'] = "STRINGER";
+            $data['machine'] = "-";
+        }
 
         return view('mes.transactions.stringer', $data);
     }
@@ -96,11 +104,33 @@ class LotTransactionsController extends Controller
         return Response::json($err_msg); 
     }
 
-    public function list($station,$machine) {
-        $dt = date('Y-m-d',strtotime("-" . (date('H:i') < "06:00" ? 1 : 0) . " days",strtotime("Today")));
+    public function list($station,$machine,$sdate = null,$edate = null, Request $request) {
+        // $dt = date('Y-m-d',strtotime("-" . (date('H:i') < "06:00" ? 1 : 0) . " days",strtotime("Today")));
 
-        $start = $dt  . " 06:00:00";
-        $end = date('Y-m-d',strtotime("+1 days",strtotime($dt))) . " 05:59:59";
+        // $start = $dt  . " 06:00:00";
+        // $end = date('Y-m-d',strtotime("+1 days",strtotime($dt))) . " 05:59:59";
+        $start = ($sdate == null ? date('Y-m-d') : date('Y-m-d',strtotime($sdate)))  . " 06:00:00";
+        $end = date('Y-m-d',strtotime("+1 days",strtotime(($edate == null ? "Today" : $edate)))) . " 05:59:59";
+
+        $cond = [
+            ["A.LOCNCODE",$station],
+        ];
+
+        $sel_mc = [];
+
+        if ($machine != "-") {
+            array_push($sel_mc, $machine);
+        } else {
+            $mc = json_decode(json_decode($request->params));
+        
+            $mcs = ['ATW1','ATW2','ATW3','ATW4','ATW5','ATW6'];
+
+            if (count($mc) > 0) {
+                $sel_mc = $mc;
+            } else {
+                $sel_mc = $mcs;
+            }
+        }
 
         $sql = "SELECT A.LOCNCODE, D.LINDESC AS PRODLINE, A.MACHINE, A.SERIALNO, A.TRXDATE, IFNULL(B.LOTNUMBER,'') AS LOT1, IFNULL(C.LOTNUMBER,'') AS LOT2 FROM lt01 A INNER JOIN lin01 D ON A.PRODLINE = D.LINCODE LEFT JOIN lt02 B ON A.SERIALNO = B.SERIALNO AND B.INDEXNO = 1 LEFT JOIN lt02 C ON A.SERIALNO = C.SERIALNO AND C.INDEXNO = 2 WHERE A.TRXDATE BETWEEN ? AND  ? ORDER BY A.TRXDATE DESC";
 
@@ -116,10 +146,8 @@ class LotTransactionsController extends Controller
                                  ->where('C.INDEXNO', '=', 2);
                         })
                         ->selectRaw("A.LOCNCODE, D.LINDESC AS PRODLINE, A.MACHINE, A.SERIALNO, A.TRXDATE, IFNULL(B.LOTNUMBER,'') AS LOT1, IFNULL(C.LOTNUMBER,'') AS LOT2")
-                        ->where([
-                            ["A.LOCNCODE",$station],
-                            ["A.MACHINE",$machine],
-                        ])
+                        ->where($cond)
+                        ->whereIn("A.MACHINE",$sel_mc)
                         ->whereBetween("A.TRXDATE",[$start,$end])
                         ->orderBy("A.TRXDATE","DESC")
                         ->paginate(10);

@@ -57023,14 +57023,129 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
+        this.start_date = this.date;
+        this.end_date = this.date;
+
         this.refreshTransactions();
+        if (this.machine != "-") {
+            this.active_tab = 'lot-tab';
+        } else {
+            this.active_tab = 'sno-tab';
+        }
     },
+    created: function created() {},
     data: function data() {
         return {
-            active_tab: 'lot-tab',
+            active_tab: '',
             transactions: [],
             transaction: {
                 LOCNCODE: '',
@@ -57056,7 +57171,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 parent_lot: ''
             },
             max_lot: 2,
-            pagination: {}
+            pagination: {},
+            machines: [],
+            start_date: '',
+            end_date: '',
+            loading: false
         };
     },
 
@@ -57065,7 +57184,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         prodline: String,
         station: String,
         machine: String,
-        user_id: String
+        user_id: String,
+        date: Date
     },
     methods: {
         changeTab: function changeTab(event) {
@@ -57192,15 +57312,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         refreshTransactions: function refreshTransactions(page_url) {
             var vm = this;
-            fetch(page_url || '/api/mes/stringer/trx/' + this.station + "/" + this.machine, {
-                method: 'get'
+            var mydata = {};
+
+            vm.loading = true;
+
+            mydata['params'] = JSON.stringify(JSON.stringify(this.machines));
+
+            fetch(page_url || '/api/mes/stringer/trx/' + this.station + "/" + this.machine + "/" + this.start_date + "/" + this.end_date, {
+                method: 'post',
+                body: JSON.stringify(mydata),
+                headers: {
+                    'content-type': 'application/json'
+                }
             }).then(function (res) {
                 return res.json();
             }).then(function (res) {
                 vm.transactions = res.data;
                 vm.makePagination(res.next_page_url, res.prev_page_url, res.current_page, res.last_page, res.from, res.to, res.total);
+
+                vm.loading = false;
             }).catch(function (err) {
-                return console.log(err);
+                console.log(err);
+                vm.loading = false;
             });
         },
         makePagination: function makePagination(next_page_url, prev_page_url, current_page, last_page, from, to, total) {
@@ -57218,6 +57351,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             };
 
             this.pagination = pagination;
+        },
+
+        machineSelect: function machineSelect(event) {
+            if (event.target.checked) {
+                this.machines.push(event.target.value);
+            } else {
+                this.machines.splice(event.target.value, 1);
+            }
         }
     }
 });
@@ -57231,97 +57372,103 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-body" }, [
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-sm" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "" } }, [_vm._v("Production Line")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.line,
-                    expression: "line"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { type: "text", name: "", id: "", readonly: "" },
-                domProps: { value: _vm.line },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+    _vm.machine != "-"
+      ? _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-sm" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [
+                    _vm._v("Production Line")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.line,
+                        expression: "line"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", name: "", id: "", readonly: "" },
+                    domProps: { value: _vm.line },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.line = $event.target.value
+                      }
                     }
-                    _vm.line = $event.target.value
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm" }, [
+                _c("label", { attrs: { for: "" } }, [_vm._v("Machine")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.machine,
+                      expression: "machine"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", name: "", id: "", readonly: "" },
+                  domProps: { value: _vm.machine },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.machine = $event.target.value
+                    }
                   }
-                }
-              })
+                })
+              ])
             ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm" }, [
-            _c("label", { attrs: { for: "" } }, [_vm._v("Machine")]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.machine,
-                  expression: "machine"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", name: "", id: "", readonly: "" },
-              domProps: { value: _vm.machine },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.machine = $event.target.value
-                }
-              }
-            })
           ])
         ])
-      ])
-    ]),
+      : _vm._e(),
     _vm._v(" "),
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-body" }, [
-        _c("ul", { staticClass: "nav nav-tabs" }, [
-          _c("li", { staticClass: "nav-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "nav-link",
-                class: _vm.active_tab == "lot-tab" ? "active" : "",
-                attrs: { href: "#", id: "lot-tab" },
-                on: { click: _vm.changeTab }
-              },
-              [_vm._v("Data Entry")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "nav-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "nav-link",
-                class: _vm.active_tab == "sno-tab" ? "active" : "",
-                attrs: { href: "#", id: "sno-tab" },
-                on: { click: _vm.changeTab }
-              },
-              [_vm._v("Transaction Logs")]
-            )
+    _vm.machine != "-"
+      ? _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("ul", { staticClass: "nav nav-tabs" }, [
+              _c("li", { staticClass: "nav-item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    class: _vm.active_tab == "lot-tab" ? "active" : "",
+                    attrs: { href: "#", id: "lot-tab" },
+                    on: { click: _vm.changeTab }
+                  },
+                  [_vm._v("Data Entry")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    class: _vm.active_tab == "sno-tab" ? "active" : "",
+                    attrs: { href: "#", id: "sno-tab" },
+                    on: { click: _vm.changeTab }
+                  },
+                  [_vm._v("Transaction Logs")]
+                )
+              ])
+            ])
           ])
         ])
-      ])
-    ]),
+      : _vm._e(),
     _vm._v(" "),
     _vm.active_tab == "lot-tab"
       ? _c("div", { staticClass: "card", attrs: { id: "lots" } }, [
@@ -57563,35 +57710,453 @@ var render = function() {
                     ])
                   ]
                 )
-              ])
+              ]),
+              _vm._v(" "),
+              _vm.machine == "-"
+                ? _c("div", { staticClass: "col-sm text-right" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _vm._m(3)
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c(
               "table",
               { staticClass: "table table-sm table-condensed table-striped" },
               [
-                _vm._m(2),
+                _c("thead", { staticClass: "thead-dark" }, [
+                  _c("th", [_vm._v("#")]),
+                  _vm._v(" "),
+                  _vm.machine == "-" ? _c("th", [_vm._v("Line")]) : _vm._e(),
+                  _vm._v(" "),
+                  _vm.machine == "-" ? _c("th", [_vm._v("Station")]) : _vm._e(),
+                  _vm._v(" "),
+                  _vm.machine == "-" ? _c("th", [_vm._v("Machine")]) : _vm._e(),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Serial Number")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Trx Date")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Lot # 1")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Lot # 2")])
+                ]),
                 _vm._v(" "),
                 _c(
                   "tbody",
-                  _vm._l(_vm.transactions, function(trx, i) {
-                    return _c("tr", { key: i }, [
-                      _c("td", [_vm._v(_vm._s(_vm.pagination.first_rec + i))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(trx.SERIALNO))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(trx.TRXDATE))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(trx.LOT1))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(trx.LOT2))])
-                    ])
-                  })
+                  [
+                    _vm.loading == true
+                      ? _c("tr", [
+                          _c(
+                            "td",
+                            {
+                              staticClass: "text-center",
+                              attrs: { colspan: _vm.machine == "-" ? 8 : 5 }
+                            },
+                            [_vm._v("Loading Records. Please wait...")]
+                          )
+                        ])
+                      : _vm.transactions.length == 0
+                      ? _c("tr", [
+                          _c(
+                            "td",
+                            {
+                              staticClass: "text-center",
+                              attrs: { colspan: _vm.machine == "-" ? 8 : 5 }
+                            },
+                            [_vm._v("No Record Found")]
+                          )
+                        ])
+                      : _vm._l(_vm.transactions, function(trx, i) {
+                          return _c("tr", { key: i }, [
+                            _c("td", [
+                              _vm._v(_vm._s(_vm.pagination.first_rec + i))
+                            ]),
+                            _vm._v(" "),
+                            _vm.machine == "-"
+                              ? _c("td", [_vm._v(_vm._s(trx.PRODLINE))])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.machine == "-"
+                              ? _c("td", [_vm._v(_vm._s(trx.LOCNCODE))])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.machine == "-"
+                              ? _c("td", [_vm._v(_vm._s(trx.MACHINE))])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(trx.SERIALNO))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(trx.TRXDATE))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(trx.LOT1))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(trx.LOT2))])
+                          ])
+                        })
+                  ],
+                  2
                 )
               ]
             )
           ])
-        ])
+        ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "filter",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "filterLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(4),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "form-row" }, [
+                  _c("div", { staticClass: "col-sm-4" }, [
+                    _vm._v(
+                      "\n                        Date Range\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-8" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.start_date,
+                            expression: "start_date"
+                          }
+                        ],
+                        staticClass: "form-control mb-2",
+                        attrs: { type: "date", name: "start", id: "start" },
+                        domProps: { value: _vm.start_date },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.start_date = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.end_date,
+                            expression: "end_date"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "date", name: "end", id: "end" },
+                        domProps: { value: _vm.end_date },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.end_date = $event.target.value
+                          }
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-row" }, [
+                  _c("div", { staticClass: "col-sm-4" }, [
+                    _vm._v(
+                      "\n                        Stringer Machine\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-8" }, [
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "col-sm" }, [
+                        _c(
+                          "div",
+                          { staticClass: "form-check form-check-inline" },
+                          [
+                            _c("input", {
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                id: "machine[]",
+                                value: "ATW1"
+                              },
+                              on: { click: _vm.machineSelect }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "machine" }
+                              },
+                              [_vm._v("ATW # 1")]
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "form-check form-check-inline" },
+                          [
+                            _c("input", {
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                id: "machine[]",
+                                value: "ATW2"
+                              },
+                              on: { click: _vm.machineSelect }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "machine" }
+                              },
+                              [_vm._v("ATW # 2")]
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "form-check form-check-inline" },
+                          [
+                            _c("input", {
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                id: "machine[]",
+                                value: "ATW3"
+                              },
+                              on: { click: _vm.machineSelect }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "machine" }
+                              },
+                              [_vm._v("ATW # 3")]
+                            )
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "col-sm" }, [
+                        _c(
+                          "div",
+                          { staticClass: "form-check form-check-inline" },
+                          [
+                            _c("input", {
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                id: "machine[]",
+                                value: "ATW4"
+                              },
+                              on: { click: _vm.machineSelect }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "machine" }
+                              },
+                              [_vm._v("ATW # 4")]
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "form-check form-check-inline" },
+                          [
+                            _c("input", {
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                id: "machine[]",
+                                value: "ATW5"
+                              },
+                              on: { click: _vm.machineSelect }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "machine" }
+                              },
+                              [_vm._v("ATW # 5")]
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "form-check form-check-inline" },
+                          [
+                            _c("input", {
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                id: "machine[]",
+                                value: "ATW6"
+                              },
+                              on: { click: _vm.machineSelect }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "machine" }
+                              },
+                              [_vm._v("ATW # 6")]
+                            )
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-row" }, [
+                      _c("div", { staticClass: "col-sm" }, [
+                        _c(
+                          "div",
+                          { staticClass: "form-check form-check-inline" },
+                          [
+                            _c("input", {
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                id: "machine[]",
+                                value: "ATW7"
+                              },
+                              on: { click: _vm.machineSelect }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "machine" }
+                              },
+                              [_vm._v("ATW # 7")]
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "form-check form-check-inline" },
+                          [
+                            _c("input", {
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                id: "machine[]",
+                                value: "ATW8"
+                              },
+                              on: { click: _vm.machineSelect }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "machine" }
+                              },
+                              [_vm._v("ATW # 8")]
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "form-check form-check-inline" },
+                          [
+                            _c("input", {
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                id: "machine[]",
+                                value: "ATW9"
+                              },
+                              on: { click: _vm.machineSelect }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "machine" }
+                              },
+                              [_vm._v("ATW # 9")]
+                            )
+                          ]
+                        )
+                      ])
+                    ])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                    on: {
+                      click: function($event) {
+                        _vm.refreshTransactions()
+                      }
+                    }
+                  },
+                  [_vm._v("Refresh Data")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -57623,16 +58188,47 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "thead-dark" }, [
-      _c("th", [_vm._v("#")]),
+    return _c(
+      "button",
+      {
+        staticClass: "btn btn-info",
+        attrs: { "data-toggle": "modal", "data-target": "#filter" }
+      },
+      [_c("i", { staticClass: "fas fa-filter" }), _vm._v(" Filter Results")]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("button", { staticClass: "btn btn-success" }, [
+      _c("i", { staticClass: "fas fa-file-csv" }),
+      _vm._v(" Export Data")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Filter Results")]
+      ),
       _vm._v(" "),
-      _c("th", [_vm._v("Serial Number")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Trx Date")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Lot # 1")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Lot # 2")])
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
     ])
   }
 ]
