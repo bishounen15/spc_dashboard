@@ -534,6 +534,23 @@ class MESController extends Controller
         return Response::json(['cno' => $cno, 'location' => $location]);
     }
 
+    public function mesDups() {
+        $locs = mesStation::whereRaw("SORTIX IS NOT NULL")->orderBy("SORTIX","ASC")->select("STNCODE")->get();
+        $data = [];
+        $data['locs'] = $locs;
+
+        return view('mes.reports.dups', $data);
+    }
+
+    public function loadDups($start, $end, $location) {
+        $sdate = date('Y-m-d',strtotime($start))  . " 06:00:00";
+        $edate = date('Y-m-d',strtotime("+1 days",strtotime($end))) . " 05:59:59";
+
+        $results = DB::connection('web_portal')->select("SELECT A.ROWID, A.SERIALNO, A.LOCNCODE, D.LINDESC AS PRODLINE, A.TRXDATE, A.TRXUID, B.USERNAME, (SELECT CONCAT(LOCNCODE, ': ', DATE_FORMAT(TRXDATE,'%Y-%m-%d %H:%i:%s')) AS NEXT_TRX FROM mes01 WHERE SERIALNO = A.SERIALNO AND TRXDATE > A.TRXDATE LIMIT 1) AS NEXT_LOC FROM mes01 A INNER JOIN sys01 B ON A.TRXUID = B.USERID INNER JOIN lbl02 C ON A.SERIALNO = C.SERIALNO AND C.LBLTYPE = 1 LEFT JOIN lin01 D ON IFNULL(A.PRODLINE, C.PRODLINE) = D.LINCODE WHERE A.TRXDATE BETWEEN ? AND ? AND EXISTS (SELECT SERIALNO, LOCNCODE, COUNT(*) RECORDS FROM mes01 WHERE LOCNCODE = ? AND SERIALNO = A.SERIALNO AND LOCNCODE = A.LOCNCODE GROUP BY SERIALNO, LOCNCODE HAVING RECORDS > 1) ORDER BY SERIALNO, TRXDATE",[$sdate,$edate,$location]);
+
+        return Datatables::of($results)->make(true);
+    }
+
     /**
      * Display the specified resource.
      *

@@ -267,6 +267,9 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/mes/assign/lot', 'WebPortal\LotAssignController@index');
 
         Route::get('/mes/stringer', 'WebPortal\LotTransactionsController@index');
+
+        Route::get('/mes/duplicates', 'MESController@mesDups')->name('mes_dups');
+        Route::get('/mes/duplicates/{start}/{end}/{location}', 'MESController@loadDups')->name('mes_duplicates');
     });
 // }); 
 

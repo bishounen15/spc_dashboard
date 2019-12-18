@@ -25,6 +25,10 @@
             <th>Version</th>
             <th>Product ID</th>
             <th>Product Type</th>
+            <th>Grade of Cell Power</th>
+            <th>Cell Power</th>
+            <th>Cell Color</th>
+            <th>Cell Eff.</th>
             <th>Module Grade</th>
             <th>EL Grade</th>
             <th>Status</th>
@@ -284,7 +288,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ]
                     },
                     text:       'Excel',
                     filename: "TRINA_module_info_excel"
@@ -292,7 +296,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ]
                     },
                     text:       'CSV',
                     filename: "TRINA_module_info_csv"
@@ -305,6 +309,10 @@
                 { data: 'WorkOrder_vertion' },
                 { data: 'Product_ID' },
                 { data: 'Product_Type' },
+                { data: 'Grade_of_Cell_Power' },
+                { data: 'Cell_Power' },
+                { data: 'Cell_Color' },
+                { data: 'EFF' },
                 { data: 'Module_Grade' },
                 { data: 'EL_Grade' },
                 { data: 'Status' },
