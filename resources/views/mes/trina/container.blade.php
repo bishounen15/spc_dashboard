@@ -28,6 +28,9 @@
             <th>Production Date</th>
             <th>cell No</th>
             <th>MODULE GRADE</th>
+            <th>Orig. WO</th>
+            <th>Orig. Cell Part No.</th>
+            <th>Orig. Cell Suppliers</th>
         </thead>
         <tbody class="tbody-light" style="font-size: 0.75em;">
             
@@ -269,7 +272,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
                     },
                     text:       'Excel',
                     filename: "TRINA_Container_Info_excel"
@@ -277,7 +280,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
                     },
                     text:       'CSV',
                     filename: "TRINA_Container_Info_csv"
@@ -302,6 +305,9 @@
                 { data: 'Production Date' },
                 { data: 'cell No' },
                 { data: 'MODULE GRADE' },
+                { data: 'Orig. WO' },
+                { data: 'Orig_Cell_PartNo' },
+                { data: 'Orig. Cell Suppliers' },
             ],
         });
     });
