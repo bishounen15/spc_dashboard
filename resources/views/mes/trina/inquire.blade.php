@@ -165,6 +165,15 @@
                                     <input type="text" class="form-control form-control-sm" name="CellLot" id="CellLot" readonly>
                                 </div>
                             </div>
+
+                            <div class="form-row mb-1">
+                                <div class="col-sm-4">
+                                    <label for="CellBarCode">Cell Barcode</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-control-sm" name="CellBarCode" id="CellBarCode" readonly>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
