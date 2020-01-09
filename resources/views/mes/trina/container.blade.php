@@ -305,9 +305,9 @@
                 { data: 'Production Date' },
                 { data: 'cell No' },
                 { data: 'MODULE GRADE' },
-                { data: 'Orig. WO' },
+                { data: 'Orig_WO' },
                 { data: 'Orig_Cell_PartNo' },
-                { data: 'Orig. Cell Suppliers' },
+                { data: 'Orig_Cell_Suppliers' },
             ],
         });
     });
