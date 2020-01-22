@@ -5,6 +5,9 @@ namespace App\Http\Controllers\TRINA;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\Models\TRINA\ModuleID;
+use App\SerialInfo;
+
 use DataTables;
 use DB;
 use Response;
@@ -220,5 +223,79 @@ class ReportsController extends Controller
         $container = DB::connection("trina")->select("SELECT '' as `Contract no`, a.Container_No as `Batch No`, a.Carton_No as 'Carton No', a.WorkOrder_ID as 'Workorder ID', a.Module_ID as 'Module ID', a.Product_ID as 'Product ID', a.Product_Type as 'Product Type', f.po_number as 'Purchase Order', '' as 'Country Of Original', b.Cell_Suppliers as 'Cell Suppliers', '' as 'CONTAINER No', '' as 'SEAL', '' as 'BOL', '' as 'Ship destination', b.Layout_QTY_of_Cell as 'Cells Per Panel', DATE_ADD(c.Create_Date,INTERVAL CASE WHEN c.Create_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) as 'Production Date', b.Cell_MID as 'cell No', a.Module_Grade as 'MODULE GRADE', CASE a.WorkOrder_ID WHEN a.ORG_WO THEN '' ELSE a.ORG_WO END as 'Orig_WO', CASE a.WorkOrder_ID WHEN a.ORG_WO THEN '' ELSE g.Cell_MID END AS 'Orig_Cell_PartNo', CASE a.WorkOrder_ID WHEN a.ORG_WO THEN '' ELSE g.Cell_Suppliers END AS 'Orig_Cell_Suppliers' FROM omes.rt_mid_packing a inner join omes.df_wo_mat b on a.WorkOrder_ID = b.WorkOrder_ID inner join omes.rt_wo_mid c on a.Module_ID = c.Module_ID INNER JOIN omes.df_pid_type_mapping d ON b.Product_ID = d.Q1_ID LEFT JOIN omes.rt_mid_cellsizing e ON a.Module_ID = e.Module_ID LEFT JOIN solarph.po_data f ON e.CellBarCode = f.cell_lot inner join omes.df_wo_mat g on a.ORG_WO = g.WorkOrder_ID where a.Module_ID like 'S98%' AND a.State = 'Packed' AND DATE_ADD(a.Packing_Date,INTERVAL CASE WHEN a.Packing_Date < '2019-04-26' THEN 15 ELSE 0 END HOUR) BETWEEN ? AND ?" . $cond . $filtercond . " ORDER BY a.Carton_No, a.Packing_Date",[$start,$end]);
 
         return Datatables::of($container)->make(true);
+    }
+
+    function missingSerials($date = null) {
+        $start = ($date == null ? date('Y-m-d') : date('Y-m-d',strtotime($date)))  . " 06:00:00";
+        $end = date('Y-m-d',strtotime("+1 days",strtotime(($date == null ? "Today" : $date)))) . " 05:59:59";
+
+        $MIDs = ModuleID::whereBetween(
+            "Create_date",
+            [$start,
+            $end]
+        )->get();
+
+        $data = [];
+        
+        foreach($MIDs as $MID) {
+            if ($MID->portalInfo->count() == 0) {
+                array_push($data, [
+                    "Module_ID" => $MID->Module_ID,
+                    "OrderID" => $MID->workOrderDetails()->OrderID,
+                    "WorkOrder_ID" => $MID->WorkOrder_ID,
+                    "WorkOrder_vertion" => $MID->WorkOrder_vertion,
+                    "Product_ID" => $MID->workOrderDetails()->Product_ID,
+                    "Product_Type" => $MID->workOrderDetails()->productType->Product_Type,
+                    "Create_Date" => $MID->Create_Date,
+                    "Synced" => ($MID->portalInfo->count() > 1 ? "Yes" : "No"),
+                ]);
+            }
+        }
+        
+        return Response::json($data);
+    }
+
+    function syncSerials(Request $request) {
+        $MIDs = json_decode(json_decode($request->params));
+
+        $exception = DB::transaction(function() use ($MIDs) {
+            $insert = [];
+
+            foreach($MIDs as $MID) {
+                $info = SerialInfo::where([
+                        ["SERIALNO","<",$MID->Module_ID],
+                        ["CUSTOMER","TRINA"],
+                    ])->orderBy("SERIALNO","DESC")->limit(1)->first();
+    
+                $data = [
+                    "LBLCNO" => $info->LBLCNO,
+                    "SERIALNO" => $MID->Module_ID,
+                    "LBLTYPE" => $info->LBLTYPE,
+                    "PRODTYPE" => $info->PRODTYPE,
+                    "CELLCOUNT" => $info->CELLCOUNT,
+                    "CELLCOLOR" => $info->CELLCOLOR,
+                    "CUSTOMER" => $info->CUSTOMER,
+                    "ORDERNO" => $MID->WorkOrder_ID,
+                    "PRODLINE" => $info->PRODLINE,
+                    "COLOR" => $info->COLOR,
+                    "MODCLASS" => $info->MODCLASS,
+                    "CURRENTLOC" => $info->CURRENTLOC,
+                    "TEMPLATE" => $info->TEMPLATE,
+                    "CTYPE" => $info->CTYPE,
+                ];
+
+                array_push($insert, $data);
+            }
+
+            try {
+                $result = DB::connection('web_portal')->table('lbl02')->insert($insert);
+                return "";
+            } catch (\Exception $e) {
+                //throw $th;
+                return $e->errorInfo[2];
+            }
+        }, 5);
+        
+        return Response::json($exception);
     }
 }

@@ -24,6 +24,7 @@ Vue.component('bom-maintenance', require('./components/portal/ProductType/BOM.vu
 Vue.component('material-issuance', require('./components/portal/MaterialIssuance.vue'));
 Vue.component('lot-assign', require('./components/portal/LotAssign.vue'));
 Vue.component('stringer', require('./components/portal/Stringer.vue'));
+Vue.component('missing-serials', require('./components/trina/MissingSerials.vue'));
 
 const app = new Vue({
     el: '#app'

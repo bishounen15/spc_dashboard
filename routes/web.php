@@ -247,6 +247,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
             return view('mes.trina.admin.sync');
         });
 
+        Route::get('/trina/module/missing/{date?}', function() {
+            return view('mes.trina.missing');
+        });
+
         Route::get('/planning/wo', function() {
             return view('planning.workorder.index');
         });

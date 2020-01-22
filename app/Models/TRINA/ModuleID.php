@@ -18,4 +18,15 @@ class ModuleID extends Model
         'Module_ID',
         'EL_Grade',
     ];
+
+    public function portalInfo() {
+        return $this->hasMany('App\SerialInfo', 'SERIALNO', 'Module_ID');
+    }
+
+    public function workOrderDetails() {
+        return WorkOrder::where([
+            ["WorkOrder_ID",$this->WorkOrder_ID],
+            ["WorkOrder_vertion",$this->WorkOrder_vertion]
+        ])->first();
+    }
 }

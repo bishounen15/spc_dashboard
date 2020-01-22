@@ -106,3 +106,6 @@ Route::post('portal/dataset/template',[
 
  Route::post('mes/stringer', 'WebPortal\LotTransactionsController@store');
  Route::post('mes/stringer/trx/{station}/{machine}/{sdate?}/{edate?}', 'WebPortal\LotTransactionsController@list');
+
+ Route::post('trina/missing/{date?}','TRINA\ReportsController@missingSerials');
+ Route::post('trina/syncmid','TRINA\ReportsController@syncSerials');

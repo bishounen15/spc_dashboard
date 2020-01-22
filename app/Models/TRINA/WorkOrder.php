@@ -19,4 +19,8 @@ class WorkOrder extends Model
         'Module_Colour',
         'IsBonded',
     ];
+
+    public function productType() {
+        return $this->hasOne('App\Models\TRINA\ProductTypes', 'Q1_ID', 'Product_ID');
+    }
 }

@@ -14028,7 +14028,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(72);
+module.exports = __webpack_require__(75);
 
 
 /***/ }),
@@ -14061,6 +14061,7 @@ Vue.component('bom-maintenance', __webpack_require__(55));
 Vue.component('material-issuance', __webpack_require__(63));
 Vue.component('lot-assign', __webpack_require__(66));
 Vue.component('stringer', __webpack_require__(69));
+Vue.component('missing-serials', __webpack_require__(72));
 
 var app = new Vue({
   el: '#app'
@@ -58243,6 +58244,386 @@ if (false) {
 
 /***/ }),
 /* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(73)
+/* template */
+var __vue_template__ = __webpack_require__(74)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/trina/MissingSerials.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-901c3ffe", Component.options)
+  } else {
+    hotAPI.reload("data-v-901c3ffe", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 73 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        if (this.date == '') {
+            this.date = this.def_date;
+        }
+    },
+    data: function data() {
+        return {
+            list: [],
+            loading: false,
+            syncing: false,
+            date: ''
+        };
+    },
+    created: function created() {
+        this.getList();
+    },
+
+    props: {
+        def_date: String
+    },
+    methods: {
+        getList: function getList() {
+            var vm = this;
+            var uri = '/api/trina/missing/' + vm.date;
+            vm.loading = true;
+
+            fetch(uri, {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (res) {
+                vm.list = res;
+                vm.loading = false;
+            }).catch(function (err) {
+                vm.loading = false;
+            });
+        },
+        syncSerials: function syncSerials() {
+            var vm = this;
+
+            if (vm.list.length == 0 || vm.list == undefined) {
+                alert("There are no serials for sync.");
+            } else {
+                var mydata = {};
+                mydata['params'] = JSON.stringify(JSON.stringify(vm.list));
+
+                vm.syncing = true;
+
+                fetch('/api/trina/syncmid', {
+                    method: 'post',
+                    body: JSON.stringify(mydata),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    if (data == "") {
+                        alert("Sync Success.");
+                        vm.getList();
+                    } else {
+                        alert("Sync Failed: " + data);
+                    }
+
+                    vm.syncing = false;
+                }).catch(function (err) {
+                    alert("Error: " + err);
+                    vm.syncing = false;
+                });
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-body" }, [
+        _c("div", { staticClass: "form-inline" }, [
+          _c("label", { staticClass: "my-1 mr-2", attrs: { for: "tdate" } }, [
+            _vm._v("Date")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.date,
+                expression: "date"
+              }
+            ],
+            staticClass: "form-control form-control-sm my-1 mr-sm-2",
+            attrs: {
+              type: "date",
+              name: "tdate",
+              id: "tdate",
+              disabled: _vm.loading == true
+            },
+            domProps: { value: _vm.date },
+            on: {
+              change: function($event) {
+                _vm.getList()
+              },
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.date = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-success my-1",
+              attrs: {
+                type: "submit",
+                id: "SyncButton",
+                disabled:
+                  _vm.loading == true ||
+                  (_vm.list.length == 0 || _vm.list == undefined)
+              },
+              on: {
+                click: function($event) {
+                  _vm.syncSerials()
+                }
+              }
+            },
+            [_c("i", { staticClass: "fas fa-sync" }), _vm._v(" Sync Serials")]
+          )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "table",
+      {
+        staticClass: "table table-condensed table-striped table-sm",
+        staticStyle: { width: "100%" },
+        attrs: { id: "mod-list" }
+      },
+      [
+        _vm._m(1),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          {
+            staticClass: "tbody-light",
+            staticStyle: { "font-size": "0.75em" }
+          },
+          [
+            _vm.loading
+              ? _c("tr", [_vm._m(2)])
+              : _vm.syncing
+              ? _c("tr", [_vm._m(3)])
+              : _vm.list.length == 0 || _vm.list == undefined
+              ? _c("tr", [
+                  _c(
+                    "td",
+                    { staticClass: "text-center", attrs: { colspan: "8" } },
+                    [
+                      _vm._v(
+                        "\n                    No Record Found\n                "
+                      )
+                    ]
+                  )
+                ])
+              : _vm._l(_vm.list, function(data, i) {
+                  return _c("tr", { key: i }, [
+                    _c("td", [_vm._v(_vm._s(data.Module_ID))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(data.OrderID))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(data.WorkOrder_ID))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(data.WorkOrder_vertion))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(data.Product_ID))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(data.Product_Type))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(data.Create_Date))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(data.Synced))])
+                  ])
+                })
+          ],
+          2
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h3", [
+      _c("i", { staticClass: "fas fa-info-circle" }),
+      _vm._v(" TRINA Missing Serial Numbers")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "thead",
+      { staticClass: "thead-dark", staticStyle: { "font-size": "0.7em" } },
+      [
+        _c("th", [_vm._v("Module ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Order ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Work Order ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Version")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Product ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Product Type")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Creation Date")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Synced in Web Portal")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "td",
+      { staticClass: "text-center table-warning", attrs: { colspan: "8" } },
+      [_c("h4", [_vm._v("Loading Data. Please Wait...")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "td",
+      { staticClass: "text-center table-info", attrs: { colspan: "8" } },
+      [_c("h4", [_vm._v("Syncing Module IDs. Please Wait...")])]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-901c3ffe", module.exports)
+  }
+}
+
+/***/ }),
+/* 75 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
