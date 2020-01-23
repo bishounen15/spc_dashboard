@@ -109,3 +109,5 @@ Route::post('portal/dataset/template',[
 
  Route::post('trina/missing/{date?}','TRINA\ReportsController@missingSerials');
  Route::post('trina/syncmid','TRINA\ReportsController@syncSerials');
+
+ Route::post('mes/transactions/{date}/{shift}/{station}/{line?}', 'MESController@transactions');

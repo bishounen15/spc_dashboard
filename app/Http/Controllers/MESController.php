@@ -275,8 +275,8 @@ class MESController extends Controller
 
         $data['shift'] = $shift;
 
-        return view('mes.transactions.trx',$data);
-        // return view('mes.reports.transactions');            
+        return view('mes.vue.mes',$data);
+        // return view('mes.transactions.trx',$data);
     }
 
     public function serialValidation(Request $request, $line = null) {

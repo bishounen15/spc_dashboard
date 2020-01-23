@@ -14028,7 +14028,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(75);
+module.exports = __webpack_require__(76);
 
 
 /***/ }),
@@ -14062,6 +14062,7 @@ Vue.component('material-issuance', __webpack_require__(63));
 Vue.component('lot-assign', __webpack_require__(66));
 Vue.component('stringer', __webpack_require__(69));
 Vue.component('missing-serials', __webpack_require__(72));
+Vue.component('mes', __webpack_require__(75));
 
 var app = new Vue({
   el: '#app'
@@ -58624,9 +58625,957 @@ if (false) {
 
 /***/ }),
 /* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(80)
+/* template */
+var __vue_template__ = __webpack_require__(81)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/portal/MES.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6b862222", Component.options)
+  } else {
+    hotAPI.reload("data-v-6b862222", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 76 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this._keyListener = function (e) {
+            if (e.key === "x" && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault(); // present "Save Page" from getting triggered.
+
+                this.toggle();
+            } else if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault(); // present "Save Page" from getting triggered.
+
+                this.save();
+            } else if (e.key === "Escape") {
+                e.preventDefault(); // present "Save Page" from getting triggered.
+
+                this.cancel();
+            }
+        };
+
+        document.addEventListener('keydown', this._keyListener.bind(this));
+    },
+    beforeDestroy: function beforeDestroy() {
+        document.removeEventListener('keydown', this._keyListener);
+    },
+    data: function data() {
+        return {
+            transact: false,
+            loading: false,
+            processing: false,
+            messages: {
+                warning: '',
+                error: ''
+            },
+            record_per_page: 25,
+            pagination: {},
+            transactions: [],
+            list: []
+        };
+    },
+    created: function created() {
+        this.listTransactions();
+    },
+
+    props: {
+        line: String,
+        line_desc: String,
+        station: String,
+        station_desc: String,
+        station_id: String,
+        uid: String,
+        user_name: String,
+        registration: String,
+        prod_date: String,
+        shift: String
+    },
+    methods: {
+        toggle: function toggle(e) {
+            this.transact = !this.transact;
+        },
+        save: function save(e) {
+            if (this.transact) {
+                alert("Saved");
+                this.toggle();
+            }
+        },
+        cancel: function cancel(e) {
+            if (this.transact) {
+                this.toggle();
+            }
+        },
+        listTransactions: function listTransactions(page_url) {
+            var _this = this;
+
+            var vm = this;
+            vm.loading = true;
+
+            fetch(page_url || '/api/mes/transactions/' + vm.prod_date + '/' + vm.shift + '/' + vm.station_id + '/' + (vm.line || ''), {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (res) {
+                vm.transactions = res.data;
+                vm.makePagination(vm.transactions.length, vm.record_per_page);
+                vm.listRecords();
+                _this.loading = false;
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        makePagination: function makePagination(total_records, paginate) {
+            var pagination = {
+                curr_page: 1,
+                first_page: 1,
+                last_page: Math.ceil(total_records / paginate),
+                first_rec: 1,
+                last_rec: paginate,
+                total_rec: total_records,
+                rec_per_page: paginate
+            };
+
+            this.pagination = pagination;
+        },
+        nextPage: function nextPage() {
+            if (this.pagination.curr_page < this.pagination.last_page) {
+                this.pagination.curr_page++;
+                this.changeRecords();
+            }
+        },
+        prevPage: function prevPage() {
+            if (this.pagination.curr_page > this.pagination.first_page) {
+                this.pagination.curr_page--;
+                this.changeRecords();
+            }
+        },
+        changeRecords: function changeRecords() {
+            this.pagination.first_rec = this.pagination.rec_per_page * (this.pagination.curr_page - 1) + 1;
+            this.pagination.last_rec = this.pagination.rec_per_page * this.pagination.curr_page;
+
+            if (this.pagination.last_rec > this.pagination.total_rec) {
+                this.pagination.last_rec = this.pagination.total_rec;
+            }
+
+            this.listRecords();
+        },
+        listRecords: function listRecords() {
+            var p = this.pagination;
+            var l = [];
+            var i = void 0;
+
+            for (i = p.first_rec; i <= p.last_rec; i++) {
+                if (i >= p.first_rec && i <= p.last_rec) {
+                    l.push(this.transactions[i - 1]);
+                }
+            }
+
+            this.list = l;
+        }
+    }
+});
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm" }, [
+        _c("h2", [
+          _c("i", { staticClass: "fas fa-qrcode" }),
+          _vm._v(" Line Transactions [" + _vm._s(_vm.station_desc) + "]")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm text-right" }, [
+        _c("h5", [
+          _vm._v(
+            _vm._s(_vm.prod_date) +
+              " - Shift " +
+              _vm._s(
+                _vm.shift +
+                  (_vm.line == null
+                    ? ""
+                    : " - " +
+                      _vm.line_desc +
+                      " [" +
+                      (_vm.registration || "No Govt. Registration") +
+                      "]")
+              )
+          )
+        ]),
+        _vm._v(" "),
+        _c("h6", [
+          _vm._v("Operator: [" + _vm._s(_vm.uid) + "] " + _vm._s(_vm.user_name))
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { attrs: { hidden: _vm.transact } }, [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-body" }, [
+          _c("div", { staticClass: "form-row" }, [
+            _c("div", { staticClass: "col-sm-4 text-right" }, [
+              _vm._v(
+                "\n                        Scan Serial Number\n                    "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-7" }, [
+              _c("input", {
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "sno",
+                  id: "sno",
+                  placeholder: "Scan your serial here",
+                  autofocus: ""
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "form-text text-danger",
+                  attrs: { id: "err_sno" }
+                },
+                [_vm._v(_vm._s(_vm.messages.error))]
+              )
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-body m-0 p-2" }, [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-sm" }, [
+            _c(
+              "nav",
+              {
+                staticStyle: { "font-size": "0.75em" },
+                attrs: { "aria-label": "Page navigation example" }
+              },
+              [
+                _c("ul", { staticClass: "pagination" }, [
+                  _c(
+                    "li",
+                    {
+                      staticClass: "page-item",
+                      class: [
+                        {
+                          disabled:
+                            _vm.pagination.curr_page <=
+                              _vm.pagination.first_page ||
+                            !_vm.pagination.total_rec
+                        }
+                      ],
+                      on: {
+                        click: function($event) {
+                          _vm.prevPage()
+                        }
+                      }
+                    },
+                    [_vm._m(0)]
+                  ),
+                  _vm._v(" "),
+                  _vm.pagination.total_rec
+                    ? _c("li", { staticClass: "page-item disabled" }, [
+                        _c(
+                          "a",
+                          { staticClass: "page-link", attrs: { href: "#" } },
+                          [
+                            _vm._v(
+                              "Page " +
+                                _vm._s(_vm.pagination.curr_page) +
+                                " of " +
+                                _vm._s(_vm.pagination.last_page)
+                            )
+                          ]
+                        )
+                      ])
+                    : _c("li", { staticClass: "page-item disabled" }, [
+                        _c(
+                          "a",
+                          { staticClass: "page-link", attrs: { href: "#" } },
+                          [_vm._v("No Record Found")]
+                        )
+                      ]),
+                  _vm._v(" "),
+                  _c(
+                    "li",
+                    {
+                      staticClass: "page-item",
+                      class: [
+                        {
+                          disabled:
+                            _vm.pagination.curr_page >=
+                              _vm.pagination.last_page ||
+                            !_vm.pagination.total_rec
+                        }
+                      ]
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "page-link",
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              _vm.nextPage()
+                            }
+                          }
+                        },
+                        [_c("i", { staticClass: "fas fa-forward" })]
+                      )
+                    ]
+                  )
+                ])
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm text-right" }, [
+            _c("p", [
+              _vm._v(
+                "\n                        Showing record " +
+                  _vm._s(_vm.pagination.first_rec || 0) +
+                  " to " +
+                  _vm._s(_vm.pagination.last_rec || 0) +
+                  " (Total Records: " +
+                  _vm._s(_vm.transactions.length) +
+                  ")\n                    "
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "table",
+          {
+            staticClass: "table table-condensed table-striped table-sm",
+            staticStyle: { width: "100%" },
+            attrs: { id: "mes-list" }
+          },
+          [
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              {
+                staticClass: "tbody-light",
+                staticStyle: { "font-size": "0.75em" }
+              },
+              _vm._l(_vm.list, function(transaction, i) {
+                return _c("tr", { key: i }, [
+                  _c("td", [_vm._v(_vm._s(transaction.SERIALNO))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.MODEL))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.PRODLINE))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.MODCLASS))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.LOCNCODE))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.CUSTOMER))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.DATE))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.TRXDATE))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.SHIFT))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.STATUS))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.REMARKS))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(transaction.USER))])
+                ])
+              })
+            )
+          ]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { attrs: { hidden: !_vm.transact } }, [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "row" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm text-right" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  attrs: { id: "SaveButton" },
+                  on: { click: _vm.save }
+                },
+                [_vm._v("Save (Ctrl + S)")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary",
+                  attrs: { type: "button" },
+                  on: { click: _vm.toggle }
+                },
+                [_vm._v("Cancel (Esc)")]
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c(
+            "div",
+            {
+              staticClass: "jumbotron p-3 bg-danger text-center text-white",
+              attrs: { hidden: _vm.messages.warning == "" }
+            },
+            [
+              _c(
+                "h3",
+                { staticClass: "display-6", attrs: { id: "warn-msg" } },
+                [_vm._v(_vm._s(_vm.messages.warning))]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-row" }, [
+            _vm._m(3),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-6 offset-sm-1" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _vm._m(4),
+                _vm._v(" "),
+                _vm._m(5),
+                _vm._v(" "),
+                _vm._m(6),
+                _vm._v(" "),
+                _vm._m(7),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "form-check form-check-inline",
+                    attrs: { hidden: _vm.station != "MRB" }
+                  },
+                  [
+                    _c("input", {
+                      staticClass: "form-check-input",
+                      attrs: {
+                        type: "radio",
+                        name: "status",
+                        id: "stat3",
+                        value: "3"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-check-label",
+                        attrs: { for: "inlineRadio3" }
+                      },
+                      [_vm._v("RMA")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "form-check form-check-inline",
+                    attrs: { hidden: _vm.station != "MRB" }
+                  },
+                  [
+                    _c("input", {
+                      staticClass: "form-check-input",
+                      attrs: {
+                        type: "radio",
+                        name: "status",
+                        id: "stat4",
+                        value: "4"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-check-label",
+                        attrs: { for: "inlineRadio3" }
+                      },
+                      [_vm._v("STFET")]
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _vm._m(8),
+              _vm._v(" "),
+              _vm._m(9)
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+      _c("i", { staticClass: "fas fa-backward" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "thead",
+      { staticClass: "thead-dark", staticStyle: { "font-size": "0.7em" } },
+      [
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("Serial Number")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("Model")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "5%" } }, [_vm._v("Line")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "5%" } }, [_vm._v("Class")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "5%" } }, [_vm._v("Location")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "5%" } }, [_vm._v("Customer")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("Trx. Date")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("Scan Date")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "5%" } }, [_vm._v("Shift")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "5%" } }, [_vm._v("Status")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "20%" } }, [_vm._v("Remarks")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("User")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("strong", [_vm._v("Transaction Details")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-5" }, [
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "serialno" } }, [_vm._v("Serial Number")]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control form-control-sm",
+          attrs: {
+            type: "text",
+            name: "serialno",
+            id: "serialno",
+            readonly: ""
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "customer" } }, [_vm._v("Customer")]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control form-control-sm",
+          attrs: {
+            type: "text",
+            name: "customer",
+            id: "customer",
+            readonly: ""
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "model" } }, [_vm._v("Model")]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control form-control-sm",
+          attrs: { type: "text", name: "model", id: "model", readonly: "" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "station" } }, [_vm._v("Recent Location")]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control form-control-sm",
+          attrs: { type: "text", name: "station", id: "station", readonly: "" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "class" } }, [_vm._v("Current Class")]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control form-control-sm",
+          attrs: { type: "text", name: "class", id: "class", readonly: "" }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-row" }, [
+      _c("label", { attrs: { for: "status" } }, [_vm._v("Module Status")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-check form-check-inline" }, [
+      _c("input", {
+        staticClass: "form-check-input",
+        attrs: { type: "radio", name: "status", id: "stat0", value: "0" }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "form-check-label", attrs: { for: "inlineRadio1" } },
+        [_vm._v("Good")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-check form-check-inline" }, [
+      _c("input", {
+        staticClass: "form-check-input",
+        attrs: { type: "radio", name: "status", id: "stat1", value: "1" }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "form-check-label", attrs: { for: "inlineRadio2" } },
+        [_vm._v("MRB")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-check form-check-inline" }, [
+      _c("input", {
+        staticClass: "form-check-input",
+        attrs: { type: "radio", name: "status", id: "stat2", value: "2" }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "form-check-label", attrs: { for: "inlineRadio3" } },
+        [_vm._v("Scrap")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "class" } }, [_vm._v("Module Class")]),
+      _vm._v(" "),
+      _c("select", {
+        staticClass: "form-control form-control-sm",
+        attrs: { name: "modclass", id: "modclass" }
+      }),
+      _vm._v(" "),
+      _c("small", {
+        staticClass: "form-text text-danger",
+        attrs: { id: "err_modclass" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "remarks" } }, [_vm._v("Remarks")]),
+      _vm._v(" "),
+      _c("textarea", {
+        staticClass: "form-control form-control-sm",
+        attrs: { name: "remarks", id: "remarks", rows: "8" }
+      }),
+      _vm._v(" "),
+      _c("small", {
+        staticClass: "form-text text-danger",
+        attrs: { id: "err_remarks" }
+      })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6b862222", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
