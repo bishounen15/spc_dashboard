@@ -13,4 +13,8 @@ class mesRouting extends Model
     public function stationInfo() {
         return $this->belongsTo('App\mesStation', 'SRCLOC', 'STNCODE');
     }
+
+    public function nextStation() {
+        return $this->belongsTo('App\mesStation', 'STNID', 'STNID');
+    }
 }

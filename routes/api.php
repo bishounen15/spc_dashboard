@@ -111,3 +111,4 @@ Route::post('portal/dataset/template',[
  Route::post('trina/syncmid','TRINA\ReportsController@syncSerials');
 
  Route::post('mes/transactions/{date}/{shift}/{station}/{line?}', 'MESController@transactions');
+ Route::post('mes/validate','MESController@validation');

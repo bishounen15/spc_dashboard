@@ -20,6 +20,9 @@ use DB;
 use DataTables;
 use Response;
 
+use Validator;
+use Illuminate\Validation\Rule;
+
 class MESController extends Controller
 {
     public function __construct()
@@ -594,5 +597,98 @@ class MESController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    function validation(Request $request) {
+        $msg = "";
+        $err = false;
+
+        $info = SerialInfo::where([
+            ["SERIALNO",$request->SERIALNO],
+            ["LBLTYPE",1],
+        ])->first();
+
+        $station = mesStation::where("STNCODE",$request->STATION)->first();
+        $initloc = $station->routing()->count();
+        
+        if (!$info) {
+            $msg = "Serial Number [" . $request->SERIALNO . "] does not exists";
+        } else {
+            $currloc = $info->CURRENTLOC == null ? "Not yet scanned" : $info->CURRENTLOC;
+
+            if ($info->lineAssoc()->LINCAT != $request->REGISTRATION) {
+                $msg = "Serial Number [" . $request->SERIALNO . "] is under " . $info->lineAssoc()->LINCAT . " Registration." ;
+            } else {
+                $stn = mesStation::where("STNCODE",$request->STATION)->first()->routing()->where("SRCLOC",$info->CURRENTLOC)->get();
+
+                if ($stn->count() == 0) {
+                    $stn = mesStation::where("STNCODE",$request->STATION)->first()->routing()->where("CUSTSKIP","LIKE","%".$info->CUSTOMER."%")->first();
+
+                    if (!$stn) {
+                        $err = true;
+                    } else {
+                        $stn2 = mesStation::where("STNCODE",$stn->SRCLOC)->first()->routing()->where("SRCLOC",$info->CURRENTLOC)->first();
+
+                        if (!$stn2) {
+                            $err = true;
+                        }
+                    }
+
+                    if ($err) {
+                        if ($initloc > 0 || ($initloc == 0 && $info->CURRENTLOC != null)) {
+                            if ($request->STATION == $info->CURRENTLOC) {
+                                $msg = "Serial Number [" . $request->SERIALNO . "] is already scanned in this location." ;
+                            } else {
+                                $msg = "Serial Number [" . $request->SERIALNO . "] cannot be transacted in this location. Current Location [" . $currloc . "]." ;
+                            }
+                        } 
+                    }
+                } else {
+                    if ($station->UNIQUESNO == 1) {
+                        $sno = $request->SERIALNO;
+                        $loc = $request->STATION;
+
+                        $data = [
+                            "SERIALNO" => $sno,
+                            "LOCNCODE" => $loc,
+                        ];
+
+                        $validator = Validator::make($data, [
+                            'SERIALNO' => [
+                                Rule::unique('web_portal.mes01')->where(function ($query) use($sno,$loc) {
+                                    return $query->where('SERIALNO', $sno)
+                                    ->where('LOCNCODE', $loc);
+                                }),
+                            ],
+                        ], [
+                            'SERIALNO.unique' => 'Serial Number ['.$data['SERIALNO'].'] has already passed this location. Current Location [' . $currloc . '].',
+                        ]);
+
+                        if ($validator->fails()) {
+                            $err = true;
+                            $msg = $validator->messages()->first();
+                        }
+                    }
+
+                    if (!$err) {
+                        if ($station->CLASSALLOW != '') {
+                            $allowed_class = [];
+
+                            if (strstr($station->CLASSALLOW,'|')) {
+                                $allowed_class = explode('|',$station->CLASSALLOW);
+                            } else {
+                                array_push($allowed_class,$station->CLASSALLOW);
+                            }
+
+                            if (!in_array($info->MODCLASS,$allowed_class)) {
+                                $msg = 'Serial Number ['.$request->SERIALNO.'] current class is ['.$info->MODCLASS.']. This station only allows then following classes ['.$station->CLASSALLOW.'].';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return Response::json($msg);
     }
 }

@@ -310,6 +310,9 @@ export default {
             }
 
             this.list = l;
+        },
+        validation() {
+
         }
     }
 }

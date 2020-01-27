@@ -69,4 +69,12 @@ class SerialInfo extends Model
     public function workOrder() {
         return $this->hasOne('App\Models\WebPortal\WorkOrder', 'WOID', 'ORDERNO')->first();
     }
+
+    public function lineAssoc() {
+        return $this->hasOne('App\Models\WebPortal\ProductionLine', 'LINCODE', 'PRODLINE')->first();
+    }
+
+    public function stationAssoc() {
+        return $this->hasOne('App\mesStation', 'STNCODE', 'CURRENTLOC')->first();
+    }
 }
