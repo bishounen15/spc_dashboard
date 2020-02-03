@@ -97,7 +97,7 @@
                             <strong>Transaction Details</strong>
                         </div>
                         <div class="col-sm text-right">
-                            <button class="btn btn-success" id="SaveButton" @click="save">Save (Ctrl + S)</button>
+                            <button class="btn btn-success" id="SaveButton" :disabled="(transaction.data.MODCLASS == '' && class_list.length > 0) || processing" @click="save">{{processing ? "Saving..." : "Save (Ctrl + S)"}}</button>
                             <button type="button" class="btn btn-secondary" @click="toggle">Cancel (Esc)</button>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
 
                             <div class="form-group">
                                 <label for="class">Module Class</label>
-                                <select class="form-control form-control-sm" name="modclass" id="modclass" v-model="transaction.data.MODCLASS">
+                                <select class="form-control form-control-sm" name="modclass" id="modclass" v-model="transaction.data.MODCLASS" @change="warningMessage()">
                                     <option disabled selected value="">Module Class Select...</option>
                                     <option v-for="(classes,index) in class_list" v-bind:key="index" v-bind:value="classes.MCLCODE">{{ classes.MCLDESC }}</option>
                                 </select>
@@ -192,16 +192,13 @@ export default {
     mounted() {
         this._keyListener = function(e) {
             if (e.key === "x" && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault(); // present "Save Page" from getting triggered.
-
+                e.preventDefault(); 
                 this.toggle();
             } else if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault(); // present "Save Page" from getting triggered.
-
+                e.preventDefault();
                 this.save();
             } else if (e.key === "Escape") {
-                e.preventDefault(); // present "Save Page" from getting triggered.
-
+                e.preventDefault();
                 this.cancel();
             }
         };
@@ -220,7 +217,12 @@ export default {
             messages: {
                 warning: '',
                 error: '',
+                custom: {
+                    class: '',
+                    message: '',
+                }
             },
+            status: ["Good","MRB","Scrap"],
             record_per_page: 25,
             pagination: {},
             transactions: [],
@@ -231,6 +233,8 @@ export default {
                     SNOSTAT: 0,
                     MODCLASS: '',
                     REMARKS: '',
+                    USERID: '',
+                    PRODLINE: 0,
                 }
             },
             list: [],
@@ -242,6 +246,10 @@ export default {
     },
     created() {
         this.listTransactions();
+        let trx = this.transaction.data;
+
+        trx.USERID = this.uid;
+        trx.PRODLINE = this.line;
     },
     props: {
         line: String,
@@ -269,8 +277,53 @@ export default {
         },
         save: function(e) {
             if (this.transact) {
-                alert("Saved");
-                this.toggle();
+                if (!this.processing) {
+                    if (!(this.transaction.data.MODCLASS == "" && this.class_list.length > 0)) {
+                        let vm = this;
+                        let trx = this.transaction.data;
+
+                        let data = {
+                                        SERIALNO: trx.SERIALNO,
+                                        MODEL: vm.lookup.MODELNAME,
+                                        PRODLINE: vm.line_desc,
+                                        MODCLASS: trx.MODCLASS,
+                                        LOCNCODE: trx.LOCNCODE,
+                                        CUSTOMER: vm.lookup.CUSTOMER,
+                                        DATE: vm.prod_date,
+                                        TRXDATE: '',
+                                        SHIFT: "Shift " + vm.shift,
+                                        STATUS: vm.status[trx.SNOSTAT],
+                                        REMARKS: trx.REMARKS,
+                                        USER: vm.user_name,
+                                    };
+
+                        vm.processing = true;
+
+                        fetch('/api/mes/save', {
+                            method: 'post',
+                            body: JSON.stringify(trx),
+                            headers: {
+                                'content-type': 'application/json'
+                            }
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if (res.Message == "") {
+                                    data.TRXDATE = res.Data.TRXDATE;
+                                    vm.transactions.unshift(data);
+                                    vm.makePagination(vm.transactions.length, vm.record_per_page);
+                                    vm.listRecords();
+
+                                    this.toggle();
+                                } else {
+                                    alert(res.Message);
+                                }
+
+                                this.processing = false;
+                            })
+                            .catch(err => console.log(err));
+                    }
+                }
             }
         },
         cancel: function(e) {
@@ -376,13 +429,18 @@ export default {
                     vm.lookup = res.Data;
                     vm.classes = vm.lookup.Classes;
 
+                    vm.messages.custom.class = (res.Data.Warning != null ? res.Data.Warning.Class : '')
+                    vm.messages.custom.message = (res.Data.Warning != null ? res.Data.Warning.Message : '')
+
                     if (res.Messages.Error == "") {
+                        vm.transaction.data.SERIALNO = vm.lookup.SERIALNO;
+                        vm.transaction.data.LOCNCODE = vm.station;
+                        vm.transaction.data.SNOSTAT = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.SNOSTAT : 0);
+                        vm.optionChange();
+                        vm.transaction.data.MODCLASS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : '');
+                        vm.transaction.data.REMARKS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : '');
                         
-                            vm.transaction.data.SNOSTAT = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.SNOSTAT : 0);
-                            vm.optionChange();
-                            vm.transaction.data.MODCLASS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : '');
-                            vm.transaction.data.REMARKS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : '');
-                        
+                        vm.warningMessage();
                         vm.toggle();
                     }
 
@@ -410,7 +468,19 @@ export default {
                 }                
             });
 
+            if (list.length == 0) {
+                vm.transaction.data.MODCLASS = "";
+            }
+
             vm.class_list = list;
+            vm.warningMessage();
+        },
+        warningMessage() {
+            if (this.messages.custom.class != "" && this.messages.custom.class != this.transaction.data.MODCLASS) {
+                this.messages.warning = this.messages.custom.message;
+            } else {
+                this.messages.warning = "";
+            }
         }
     }
 }

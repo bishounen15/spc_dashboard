@@ -58870,16 +58870,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         this._keyListener = function (e) {
             if (e.key === "x" && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault(); // present "Save Page" from getting triggered.
-
+                e.preventDefault();
                 this.toggle();
             } else if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault(); // present "Save Page" from getting triggered.
-
+                e.preventDefault();
                 this.save();
             } else if (e.key === "Escape") {
-                e.preventDefault(); // present "Save Page" from getting triggered.
-
+                e.preventDefault();
                 this.cancel();
             }
         };
@@ -58897,8 +58894,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             processing: false,
             messages: {
                 warning: '',
-                error: ''
+                error: '',
+                custom: {
+                    class: '',
+                    message: ''
+                }
             },
+            status: ["Good", "MRB", "Scrap"],
             record_per_page: 25,
             pagination: {},
             transactions: [],
@@ -58908,7 +58910,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     LOCNCODE: '',
                     SNOSTAT: 0,
                     MODCLASS: '',
-                    REMARKS: ''
+                    REMARKS: '',
+                    USERID: '',
+                    PRODLINE: 0
                 }
             },
             list: [],
@@ -58920,6 +58924,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     created: function created() {
         this.listTransactions();
+        var trx = this.transaction.data;
+
+        trx.USERID = this.uid;
+        trx.PRODLINE = this.line;
     },
 
     props: {
@@ -58947,9 +58955,57 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         save: function save(e) {
+            var _this = this;
+
             if (this.transact) {
-                alert("Saved");
-                this.toggle();
+                if (!this.processing) {
+                    if (!(this.transaction.data.MODCLASS == "" && this.class_list.length > 0)) {
+                        var vm = this;
+                        var trx = this.transaction.data;
+
+                        var data = {
+                            SERIALNO: trx.SERIALNO,
+                            MODEL: vm.lookup.MODELNAME,
+                            PRODLINE: vm.line_desc,
+                            MODCLASS: trx.MODCLASS,
+                            LOCNCODE: trx.LOCNCODE,
+                            CUSTOMER: vm.lookup.CUSTOMER,
+                            DATE: vm.prod_date,
+                            TRXDATE: '',
+                            SHIFT: "Shift " + vm.shift,
+                            STATUS: vm.status[trx.SNOSTAT],
+                            REMARKS: trx.REMARKS,
+                            USER: vm.user_name
+                        };
+
+                        vm.processing = true;
+
+                        fetch('/api/mes/save', {
+                            method: 'post',
+                            body: JSON.stringify(trx),
+                            headers: {
+                                'content-type': 'application/json'
+                            }
+                        }).then(function (res) {
+                            return res.json();
+                        }).then(function (res) {
+                            if (res.Message == "") {
+                                data.TRXDATE = res.Data.TRXDATE;
+                                vm.transactions.unshift(data);
+                                vm.makePagination(vm.transactions.length, vm.record_per_page);
+                                vm.listRecords();
+
+                                _this.toggle();
+                            } else {
+                                alert(res.Message);
+                            }
+
+                            _this.processing = false;
+                        }).catch(function (err) {
+                            return console.log(err);
+                        });
+                    }
+                }
             }
         },
         cancel: function cancel(e) {
@@ -58958,7 +59014,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         listTransactions: function listTransactions() {
-            var _this = this;
+            var _this2 = this;
 
             var vm = this;
             vm.loading = true;
@@ -58971,7 +59027,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 vm.transactions = res.data;
                 vm.makePagination(vm.transactions.length, vm.record_per_page);
                 vm.listRecords();
-                _this.loading = false;
+                _this2.loading = false;
 
                 var isDisabled = setInterval(function () {
                     if (!$("#sno").prop('disabled')) {
@@ -59059,13 +59115,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 vm.lookup = res.Data;
                 vm.classes = vm.lookup.Classes;
 
-                if (res.Messages.Error == "") {
+                vm.messages.custom.class = res.Data.Warning != null ? res.Data.Warning.Class : '';
+                vm.messages.custom.message = res.Data.Warning != null ? res.Data.Warning.Message : '';
 
+                if (res.Messages.Error == "") {
+                    vm.transaction.data.SERIALNO = vm.lookup.SERIALNO;
+                    vm.transaction.data.LOCNCODE = vm.station;
                     vm.transaction.data.SNOSTAT = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.SNOSTAT : 0;
                     vm.optionChange();
                     vm.transaction.data.MODCLASS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : '';
                     vm.transaction.data.REMARKS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : '';
 
+                    vm.warningMessage();
                     vm.toggle();
                 }
 
@@ -59096,7 +59157,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
 
+            if (list.length == 0) {
+                vm.transaction.data.MODCLASS = "";
+            }
+
             vm.class_list = list;
+            vm.warningMessage();
+        },
+        warningMessage: function warningMessage() {
+            if (this.messages.custom.class != "" && this.messages.custom.class != this.transaction.data.MODCLASS) {
+                this.messages.warning = this.messages.custom.message;
+            } else {
+                this.messages.warning = "";
+            }
         }
     }
 });
@@ -59390,10 +59463,20 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-success",
-                  attrs: { id: "SaveButton" },
+                  attrs: {
+                    id: "SaveButton",
+                    disabled:
+                      (_vm.transaction.data.MODCLASS == "" &&
+                        _vm.class_list.length > 0) ||
+                      _vm.processing
+                  },
                   on: { click: _vm.save }
                 },
-                [_vm._v("Save (Ctrl + S)")]
+                [
+                  _vm._v(
+                    _vm._s(_vm.processing ? "Saving..." : "Save (Ctrl + S)")
+                  )
+                ]
               ),
               _vm._v(" "),
               _c(
@@ -59800,23 +59883,28 @@ var render = function() {
                     staticClass: "form-control form-control-sm",
                     attrs: { name: "modclass", id: "modclass" },
                     on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.transaction.data,
-                          "MODCLASS",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.transaction.data,
+                            "MODCLASS",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        },
+                        function($event) {
+                          _vm.warningMessage()
+                        }
+                      ]
                     }
                   },
                   [

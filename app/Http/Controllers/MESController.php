@@ -605,6 +605,7 @@ class MESController extends Controller
         $msg = "";
         $err = false;
         $data = [];
+        $warn = null;
 
         $info = SerialInfo::where([
             ["SERIALNO",$request->SERIALNO],
@@ -719,6 +720,11 @@ class MESController extends Controller
                             ])->first();
 
                             if ($cond) {
+                                $warn = [
+                                    "Class" => $cond->CLASS_ALLOW,
+                                    "Message" => $cond->WARNING_MSG
+                                ];
+
                                 $check = DB::connection($cond->CONN)->select("SELECT COUNT(*) AS TRX FROM ".$cond->TABLE_NAME." WHERE ".$cond->FIELD_NAME." = ?" . $cond->ADDCOND,[$last_mes->SERIALNO]);
                                 $trx_count = $check[0]->TRX;
                                 
@@ -747,16 +753,79 @@ class MESController extends Controller
                 "CURRENTCLASS" => $info->MODCLASS,
                 "LAST_TRX" => $last_trx,
                 "Classes" => $classes->classes(),
+                "Warning" => $warn,
             ];
         }
 
         return Response::json([
             "Messages" => [
                 "Status" => $err,
-                "Warning" => "",
                 "Error" => $msg
             ],
             "Data" => $data
+        ]);
+    }
+
+    function saveTransaction(Request $request) {
+        $err = false;
+        $cno = $this->generateControl();
+        $rec = null;
+        $msg = "";
+
+        $data = [
+            "SERIALNO" => $request->SERIALNO,
+            "LOCNCODE" => $request->LOCNCODE,
+            "MODCLASS" => ($request->MODCLASS != null ? $request->MODCLASS : ""),
+            "SNOSTAT" => $request->SNOSTAT,
+            "MESCNO" => $cno,
+            "REMARKS" => $request->REMARKS,
+            "TRXUID" => $request->USERID,
+            "TRXDATE" => DB::raw('now()'),
+        ];
+
+        if ($request->PRODLINE != "") {
+            $data["PRODLINE"] = $request->PRODLINE;
+        }
+
+        $unique_sno = mesStation::where("STNCODE",$request->LOCNCODE)->first()->UNIQUESNO;
+
+        if ($unique_sno) {
+            $sno = $request->SERIALNO;
+            $loc = $request->LOCNCODE;
+
+            $validator = Validator::make($data, [
+                'SERIALNO' => [
+                    Rule::unique('web_portal.mes01')->where(function ($query) use($sno,$loc) {
+                        return $query->where('SERIALNO', $sno)
+                        ->where('LOCNCODE', $loc);
+                    }),
+                ],
+            ], [
+                'SERIALNO.unique' => 'Serial Number ['.$data['SERIALNO'].'] has already passed this location.',
+            ]);
+
+            if ($validator->fails()) {
+                $err = true;
+                $msg = $validator->messages()->first();
+            }
+        }
+
+        if (!$err) {
+            $rec = mesData::insert($data);
+
+            if ($rec) {
+                unset($rec);
+                $rec = mesData::where([
+                    ["SERIALNO",$request->SERIALNO],
+                    ["LOCNCODE",$request->LOCNCODE],
+                    ["TRXUID",$request->USERID],
+                ])->first();
+            }
+        }
+
+        return Response::json([
+            "Message" => $msg,
+            "Data" => $rec,
         ]);
     }
 }
