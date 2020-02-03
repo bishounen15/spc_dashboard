@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-sm">
+            <div class="col-sm-8">
                 <h2><i class="fas fa-qrcode"></i> Line Transactions [{{station_desc}}]</h2>
             </div>
-            <div class="col-sm text-right">
+            <div class="col-sm-4 text-right">
                 <h5>{{prod_date}} - Shift {{ shift + (line == null ? "" : " - " + line_desc + " [" + (registration || 'No Govt. Registration') + "]") }}</h5>
                 <h6>Operator: [{{uid}}] {{user_name}}</h6>
             </div>
@@ -18,7 +18,7 @@
                             Scan Serial Number
                         </div>
                         <div class="col-sm-7">
-                            <input type="text" class="form-control" name="sno" id="sno" placeholder="Scan your serial here" autofocus>
+                            <input type="text" class="form-control" name="sno" id="sno" placeholder="Scan your serial here" v-model="sno" v-on:keyup.13="validation" :disabled="loading || transact || validating" autofocus>
                             <span class="form-text text-danger" id="err_sno">{{messages.error}}</span>
                         </div>
                     </div>
@@ -63,7 +63,13 @@
                         <th width="10%">User</th>
                     </thead>
                     <tbody class="tbody-light" style="font-size: 0.75em;">
-                        <tr v-for="(transaction, i) in list" v-bind:key="i">
+                        <tr v-if="loading">
+                            <td colspan="12" class="text-center">Loading Data. Please Wait...</td>
+                        </tr>
+                        <tr v-else-if="pagination.total_rec == 0">
+                            <td colspan="12" class="text-center">No Record found</td>
+                        </tr>
+                        <tr v-for="(transaction, i) in list" v-bind:key="i" v-else>
                             <td>{{transaction.SERIALNO}}</td>
                             <td>{{transaction.MODEL}}</td>
                             <td>{{transaction.PRODLINE}}</td>
@@ -105,27 +111,27 @@
                         <div class="col-sm-5">
                             <div class="form-group">
                                 <label for="serialno">Serial Number</label>
-                                <input type="text" class="form-control form-control-sm" name="serialno" id="serialno" readonly>
+                                <input type="text" class="form-control form-control-sm" name="serialno" id="serialno" v-model="lookup.SERIALNO" readonly>
                             </div>
             
                             <div class="form-group">
                                 <label for="customer">Customer</label>
-                                <input type="text" class="form-control form-control-sm" name="customer" id="customer" readonly>
+                                <input type="text" class="form-control form-control-sm" name="customer" id="customer" v-model="lookup.CUSTOMER" readonly>
                             </div>
             
                             <div class="form-group">
                                 <label for="model">Model</label>
-                                <input type="text" class="form-control form-control-sm" name="model" id="model" readonly>
+                                <input type="text" class="form-control form-control-sm" name="model" id="model" v-model="lookup.MODELNAME" readonly>
                             </div>
             
                             <div class="form-group">
                                 <label for="station">Recent Location</label>
-                                <input type="text" class="form-control form-control-sm" name="station" id="station" readonly>
+                                <input type="text" class="form-control form-control-sm" name="station" id="station" v-model="lookup.RECENTLOC" readonly>
                             </div>
 
                             <div class="form-group">
                                 <label for="class">Current Class</label>
-                                <input type="text" class="form-control form-control-sm" name="class" id="class" readonly>
+                                <input type="text" class="form-control form-control-sm" name="class" id="class" v-model="lookup.CURRENTCLASS" readonly>
                             </div>
                         </div>
                         <div class="col-sm-6 offset-sm-1">
@@ -135,15 +141,15 @@
                                 </div>
                                 
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status" id="stat0" value="0">
+                                    <input class="form-check-input" type="radio" name="status" id="stat0" value="0" @change="optionChange()" v-model="transaction.data.SNOSTAT" :checked="transaction.data.SNOSTAT == 0">
                                     <label class="form-check-label" for="inlineRadio1">Good</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status" id="stat1" value="1">
+                                    <input class="form-check-input" type="radio" name="status" id="stat1" value="1" @change="optionChange()" v-model="transaction.data.SNOSTAT" :checked="transaction.data.SNOSTAT == 1">
                                     <label class="form-check-label" for="inlineRadio2">MRB</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status" id="stat2" value="2">
+                                    <input class="form-check-input" type="radio" name="status" id="stat2" value="2" @change="optionChange()" v-model="transaction.data.SNOSTAT" :checked="transaction.data.SNOSTAT == 2">
                                     <label class="form-check-label" for="inlineRadio3">Scrap</label>
                                 </div>
                                 
@@ -161,13 +167,16 @@
 
                             <div class="form-group">
                                 <label for="class">Module Class</label>
-                                <select class="form-control form-control-sm" name="modclass" id="modclass"></select>
+                                <select class="form-control form-control-sm" name="modclass" id="modclass" v-model="transaction.data.MODCLASS">
+                                    <option disabled selected value="">Module Class Select...</option>
+                                    <option v-for="(classes,index) in class_list" v-bind:key="index" v-bind:value="classes.MCLCODE">{{ classes.MCLDESC }}</option>
+                                </select>
                                 <small class="form-text text-danger" id="err_modclass"></small>
                             </div>
 
                             <div class="form-group">
                                 <label for="remarks">Remarks</label>
-                                <textarea class="form-control form-control-sm" name="remarks" id="remarks" rows="8"></textarea>
+                                <textarea class="form-control form-control-sm" name="remarks" id="remarks" rows="8" v-model="transaction.data.REMARKS"></textarea>
                                 <small class="form-text text-danger" id="err_remarks"></small>
                             </div>
                         </div>
@@ -206,6 +215,7 @@ export default {
         return {
             transact: false,
             loading: false,
+            validating: false,
             processing: false,
             messages: {
                 warning: '',
@@ -214,7 +224,20 @@ export default {
             record_per_page: 25,
             pagination: {},
             transactions: [],
+            transaction: {
+                data: {
+                    SERIALNO: '',
+                    LOCNCODE: '',
+                    SNOSTAT: 0,
+                    MODCLASS: '',
+                    REMARKS: '',
+                }
+            },
             list: [],
+            classes: [],
+            class_list: [],
+            sno: '',
+            lookup: {},
         }
     },
     created() {
@@ -234,7 +257,15 @@ export default {
     },
     methods: {
         toggle: function(e) {
-            this.transact = !this.transact;
+            this.transact = !this.transact; 
+            if (!this.transact) {
+                let isDisabled = setInterval(function() {
+                    if (!$("#sno").prop('disabled')) {
+                        clearInterval(isDisabled);
+                        $("#sno").focus();
+                    }
+                }, 100);
+            }
         },
         save: function(e) {
             if (this.transact) {
@@ -247,11 +278,11 @@ export default {
                 this.toggle();
             }
         },
-        listTransactions(page_url) {
+        listTransactions() {
             let vm = this;
             vm.loading = true;
             
-            fetch(page_url || '/api/mes/transactions/' + vm.prod_date + '/' + vm.shift + '/' + vm.station_id + '/' + (vm.line || '') , {
+            fetch('/api/mes/transactions/' + vm.prod_date + '/' + vm.shift + '/' + vm.station_id + '/' + (vm.line || '') , {
                 method: 'post'
                 })
                 .then(res => res.json())
@@ -260,6 +291,13 @@ export default {
                     vm.makePagination(vm.transactions.length, vm.record_per_page);
                     vm.listRecords();
                     this.loading = false;
+
+                    let isDisabled = setInterval(function() {
+                        if (!$("#sno").prop('disabled')) {
+                            clearInterval(isDisabled);
+                            $("#sno").focus();
+                        }
+                    }, 100);
                 })
                 .catch(err => console.log(err));
         },
@@ -269,7 +307,7 @@ export default {
                     first_page: 1,
                     last_page: Math.ceil(total_records/paginate),
                     first_rec: 1,
-                    last_rec: paginate,
+                    last_rec: (paginate < total_records ? paginate : total_records),
                     total_rec: total_records,
                     rec_per_page: paginate,
                 }
@@ -302,7 +340,7 @@ export default {
             let p = this.pagination
             let l = [];
             let i;
-
+            
             for(i=p.first_rec;i<=p.last_rec;i++) {
                 if (i >= p.first_rec && i <= p.last_rec) {
                     l.push(this.transactions[i-1]);
@@ -311,8 +349,68 @@ export default {
 
             this.list = l;
         },
-        validation() {
+        validation: function(e) {
+            let vm = this;
+            let data = {
+                "SERIALNO": e.target.value,
+                "REGISTRATION": vm.registration,
+                "STATION": vm.station,
+                "PRODLINE": vm.line,
+                "TRXDATE": vm.prod_date,
+                "TRXLAST": (vm.transactions.length > 0 ? vm.transactions[0] : [])
+            };
 
+            vm.validating = true;
+            vm.messages.error = 'Checking module information...';
+
+            fetch('/api/mes/validate', {
+                method: 'post',
+                body: JSON.stringify(data),
+                headers: {
+                    'content-type': 'application/json'
+                }
+                })
+                .then(res => res.json())
+                .then(res => {
+                    vm.messages.error = res.Messages.Error;
+                    vm.lookup = res.Data;
+                    vm.classes = vm.lookup.Classes;
+
+                    if (res.Messages.Error == "") {
+                        
+                            vm.transaction.data.SNOSTAT = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.SNOSTAT : 0);
+                            vm.optionChange();
+                            vm.transaction.data.MODCLASS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : '');
+                            vm.transaction.data.REMARKS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : '');
+                        
+                        vm.toggle();
+                    }
+
+                    vm.sno = "";
+
+                    vm.validating = false;
+                    if (res.Messages.error == "") { vm.messages.error = ''; }
+
+                    let isDisabled = setInterval(function() {
+                        if (!$("#sno").prop('disabled')) {
+                            clearInterval(isDisabled);
+                            $("#sno").focus();
+                        }
+                    }, 100);
+                })
+                .catch(err => console.log(err));
+        },
+        optionChange() {
+            let list = [];
+            let vm = this;
+
+            vm.classes.forEach(element => {
+                if (element.MODSTATUS == vm.transaction.data.SNOSTAT) {
+                    list.push(element);
+                }                
+            });
+
+            vm.class_list = list;
         }
     }
 }

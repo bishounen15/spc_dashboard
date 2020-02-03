@@ -10,6 +10,7 @@ use App\mesData;
 use App\mesClasses;
 use App\mesStation;
 use App\SerialInfo;
+use App\portalCustomer;
 use App\Models\Planning\ProductionSchedule;
 use App\Models\WebPortal\OEMCondition;
 use App\Models\WebPortal\ProductionLine;
@@ -69,9 +70,10 @@ class MESController extends Controller
         }
 
         $mes = DB::connection('web_portal')
-                    ->select("SELECT A.SERIALNO, REPLACE(REPLACE(REPLACE(REPLACE(IFNULL(IFNULL(I.PRODCODE, H.MODELNAME),E.PRODCODE),'[R]',CASE WHEN B.CELLCOLOR = 'E' AND B.CUSTOMER = 'GEN1' THEN 'M' ELSE B.CELLCOLOR END),'[C]',B.CELLCOUNT),'[P]',IFNULL(IFNULL(J.BIN,F.Bin),'XXX')),'[T]',IFNULL(B.CTYPE,'??')) AS MODEL, K.LINDESC AS PRODLINE, B.CUSTOMER, DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) AS 'DATE', A.TRXDATE, CONCAT('Shift ',CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END) AS SHIFT, CASE A.SNOSTAT WHEN 0 THEN 'GOOD' WHEN 1 THEN 'MRB' ELSE 'SCRAP' END AS STATUS, A.REMARKS, A.MODCLASS, IFNULL(CONCAT(C.LASTNAME,', ',C.FIRSTNAME),D.USERNAME) AS USER, A.LOCNCODE FROM mes01 A INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 INNER JOIN lin01 K ON IFNULL(A.PRODLINE,B.PRODLINE) = K.LINCODE LEFT JOIN hri01 C ON A.TRXUID = C.IDNUMBER INNER JOIN sys01 D ON A.TRXUID = D.USERID LEFT JOIN cus01 E ON B.CUSTOMER = E.CUSCODE LEFT JOIN ftd_upd F ON B.SERIALNO = F.ModuleID LEFT JOIN lbl02 G ON A.SERIALNO = G.SERIALNO AND G.LBLTYPE = 3 LEFT JOIN lbt00 H ON G.CUSTOMER = H.CUSTOMER AND G.TEMPLATE = H.TMPCODE LEFT JOIN typ00 I ON B.PRODTYPE = I.PRODTYPE LEFT JOIN bin00 J ON I.PRODTYPE = J.PRODTYPE AND I.CUSTOMER = J.CUSTOMER AND (F.Pmpp >= J.MINPMPP AND F.Pmpp < J.MAXPMPP) WHERE DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) = ? AND CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END = ? AND A.LOCNCODE = ?" . ($line == null ? "" : " AND A.PRODLINE = ?") . " ORDER BY A.ROWID DESC",$values);
+                    ->select("SELECT A.SERIALNO, REPLACE(REPLACE(REPLACE(REPLACE(IFNULL(IFNULL(I.PRODCODE, H.MODELNAME),E.PRODCODE),'[R]',CASE WHEN B.CELLCOLOR = 'E' AND B.CUSTOMER = 'GEN1' THEN 'M' ELSE B.CELLCOLOR END),'[C]',B.CELLCOUNT),'[P]',IFNULL(IFNULL(J.BIN,F.Bin),'XXX')),'[T]',IFNULL(B.CTYPE,'??')) AS MODEL, K.LINDESC AS PRODLINE, B.CUSTOMER, DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) AS 'DATE', A.TRXDATE, CONCAT('Shift ',CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END) AS SHIFT, CASE A.SNOSTAT WHEN 0 THEN 'GOOD' WHEN 1 THEN 'MRB' ELSE 'SCRAP' END AS STATUS, A.REMARKS, A.MODCLASS, IFNULL(CONCAT(C.LASTNAME,', ',C.FIRSTNAME),D.USERNAME) AS USER, A.LOCNCODE FROM mes01 A INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 INNER JOIN lin01 K ON IFNULL(A.PRODLINE,B.PRODLINE) = K.LINCODE LEFT JOIN hri01 C ON A.TRXUID = C.IDNUMBER INNER JOIN sys01 D ON A.TRXUID = D.USERID LEFT JOIN cus01 E ON B.CUSTOMER = E.CUSCODE LEFT JOIN ftd_upd F ON B.SERIALNO = F.ModuleID LEFT JOIN lbl02 G ON A.SERIALNO = G.SERIALNO AND G.LBLTYPE = 3 LEFT JOIN lbt00 H ON G.CUSTOMER = H.CUSTOMER AND G.TEMPLATE = H.TMPCODE LEFT JOIN typ00 I ON B.PRODTYPE = I.PRODTYPE LEFT JOIN bin00 J ON I.PRODTYPE = J.PRODTYPE AND I.CUSTOMER = J.CUSTOMER AND (F.Pmpp >= J.MINPMPP AND F.Pmpp < J.MAXPMPP) WHERE DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) = ? AND CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END = ? AND A.LOCNCODE = ?" . ($line == null ? "" : " AND IFNULL(A.PRODLINE,B.PRODLINE) = ?") . " ORDER BY A.ROWID DESC",$values);
 
-        return Datatables::of($mes)->make(true);
+        // return Datatables::of($mes)->make(true);
+        return Response::json(["data" => $mes]);
     }
 
     public function dailyOutput($date = null) {
@@ -602,18 +604,20 @@ class MESController extends Controller
     function validation(Request $request) {
         $msg = "";
         $err = false;
+        $data = [];
 
         $info = SerialInfo::where([
             ["SERIALNO",$request->SERIALNO],
             ["LBLTYPE",1],
         ])->first();
 
-        $station = mesStation::where("STNCODE",$request->STATION)->first();
-        $initloc = $station->routing()->count();
-        
         if (!$info) {
             $msg = "Serial Number [" . $request->SERIALNO . "] does not exists";
         } else {
+            $station = mesStation::where("STNCODE",$request->STATION)->first();
+            $initloc = $station->routing()->count();
+            $last_trx = $info->mes()->orderBy("TRXDATE","DESC")->first();
+            
             $currloc = $info->CURRENTLOC == null ? "Not yet scanned" : $info->CURRENTLOC;
 
             if ($info->lineAssoc()->LINCAT != $request->REGISTRATION) {
@@ -681,7 +685,51 @@ class MESController extends Controller
                             }
 
                             if (!in_array($info->MODCLASS,$allowed_class)) {
-                                $msg = 'Serial Number ['.$request->SERIALNO.'] current class is ['.$info->MODCLASS.']. This station only allows then following classes ['.$station->CLASSALLOW.'].';
+                                $err = true;
+                            }
+                        }
+
+                        if ($err) {
+                            $msg = 'Serial Number ['.$request->SERIALNO.'] current class is ['.$info->MODCLASS.']. This station only allows then following classes ['.$station->CLASSALLOW.'].';
+                        } else {
+                            if (count($request->TRXLAST) > 0) {
+                                $last_mes = json_decode(json_encode($request->TRXLAST));
+                                $last_cus = $last_mes->CUSTOMER;
+                            } else {
+                                $date=date_create($request->TRXDATE);
+                                date_add($date,date_interval_create_from_date_string("-1 days"));
+                                $date = date_format($date,"Y-m-d") . " 06:00:00";
+                                
+                                $last_mes = mesData::join("lbl02","mes01.SERIALNO","lbl02.SERIALNO")
+                                ->where([
+                                    ["mes01.LOCNCODE",$station->STNCODE],
+                                    [DB::raw("IFNULL(mes01.PRODLINE,lbl02.PRODLINE)"),$request->PRODLINE],
+                                    ["lbl02.LBLTYPE",1],
+                                    ["TRXDATE",">=",$date],
+                                ])->orderBy("TRXDATE","DESC")
+                                ->select("mes01.SERIALNO","lbl02.CUSTOMER","mes01.MODCLASS","mes01.LOCNCODE")
+                                ->first();
+                                
+                                $last_cus = $last_mes->serial()->where("LBLTYPE",1)->first()->CUSTOMER;
+                            }
+
+                            $cond = OEMCondition::where([
+                                ["CUSTOMER", $last_cus],
+                                ["STATION", $station->STNCODE],
+                            ])->first();
+
+                            if ($cond) {
+                                $check = DB::connection($cond->CONN)->select("SELECT COUNT(*) AS TRX FROM ".$cond->TABLE_NAME." WHERE ".$cond->FIELD_NAME." = ?" . $cond->ADDCOND,[$last_mes->SERIALNO]);
+                                $trx_count = $check[0]->TRX;
+                                
+                                if ($check[0]->TRX == 0 && $last_mes->MODCLASS <> $cond->CLASS_ALLOW) {
+                                    eval($cond->ERR_MSG);
+
+                                    if ($e_msg <> "") {
+                                        $msg = $e_msg;
+                                        $err = true;
+                                    }
+                                }
                             }
                         }
                     }
@@ -689,6 +737,26 @@ class MESController extends Controller
             }
         }
 
-        return Response::json($msg);
+        if ($msg == "") {
+            $classes = portalCustomer::where("CUSCODE",$info->CUSTOMER)->first();
+            $data = [
+                "SERIALNO" => $info->SERIALNO,
+                "CUSTOMER" => $info->CUSTOMER,
+                "MODELNAME" => $info->PRODTYPE,
+                "RECENTLOC" => $info->CURRENTLOC,
+                "CURRENTCLASS" => $info->MODCLASS,
+                "LAST_TRX" => $last_trx,
+                "Classes" => $classes->classes(),
+            ];
+        }
+
+        return Response::json([
+            "Messages" => [
+                "Status" => $err,
+                "Warning" => "",
+                "Error" => $msg
+            ],
+            "Data" => $data
+        ]);
     }
 }

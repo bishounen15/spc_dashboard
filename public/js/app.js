@@ -58856,6 +58856,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -58884,6 +58893,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             transact: false,
             loading: false,
+            validating: false,
             processing: false,
             messages: {
                 warning: '',
@@ -58892,7 +58902,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             record_per_page: 25,
             pagination: {},
             transactions: [],
-            list: []
+            transaction: {
+                data: {
+                    SERIALNO: '',
+                    LOCNCODE: '',
+                    SNOSTAT: 0,
+                    MODCLASS: '',
+                    REMARKS: ''
+                }
+            },
+            list: [],
+            classes: [],
+            class_list: [],
+            sno: '',
+            lookup: {}
         };
     },
     created: function created() {
@@ -58914,6 +58937,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         toggle: function toggle(e) {
             this.transact = !this.transact;
+            if (!this.transact) {
+                var isDisabled = setInterval(function () {
+                    if (!$("#sno").prop('disabled')) {
+                        clearInterval(isDisabled);
+                        $("#sno").focus();
+                    }
+                }, 100);
+            }
         },
         save: function save(e) {
             if (this.transact) {
@@ -58926,13 +58957,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.toggle();
             }
         },
-        listTransactions: function listTransactions(page_url) {
+        listTransactions: function listTransactions() {
             var _this = this;
 
             var vm = this;
             vm.loading = true;
 
-            fetch(page_url || '/api/mes/transactions/' + vm.prod_date + '/' + vm.shift + '/' + vm.station_id + '/' + (vm.line || ''), {
+            fetch('/api/mes/transactions/' + vm.prod_date + '/' + vm.shift + '/' + vm.station_id + '/' + (vm.line || ''), {
                 method: 'post'
             }).then(function (res) {
                 return res.json();
@@ -58941,6 +58972,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 vm.makePagination(vm.transactions.length, vm.record_per_page);
                 vm.listRecords();
                 _this.loading = false;
+
+                var isDisabled = setInterval(function () {
+                    if (!$("#sno").prop('disabled')) {
+                        clearInterval(isDisabled);
+                        $("#sno").focus();
+                    }
+                }, 100);
             }).catch(function (err) {
                 return console.log(err);
             });
@@ -58951,7 +58989,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 first_page: 1,
                 last_page: Math.ceil(total_records / paginate),
                 first_rec: 1,
-                last_rec: paginate,
+                last_rec: paginate < total_records ? paginate : total_records,
                 total_rec: total_records,
                 rec_per_page: paginate
             };
@@ -58993,7 +59031,73 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.list = l;
         },
-        validation: function validation() {}
+
+        validation: function validation(e) {
+            var vm = this;
+            var data = {
+                "SERIALNO": e.target.value,
+                "REGISTRATION": vm.registration,
+                "STATION": vm.station,
+                "PRODLINE": vm.line,
+                "TRXDATE": vm.prod_date,
+                "TRXLAST": vm.transactions.length > 0 ? vm.transactions[0] : []
+            };
+
+            vm.validating = true;
+            vm.messages.error = 'Checking module information...';
+
+            fetch('/api/mes/validate', {
+                method: 'post',
+                body: JSON.stringify(data),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (res) {
+                vm.messages.error = res.Messages.Error;
+                vm.lookup = res.Data;
+                vm.classes = vm.lookup.Classes;
+
+                if (res.Messages.Error == "") {
+
+                    vm.transaction.data.SNOSTAT = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.SNOSTAT : 0;
+                    vm.optionChange();
+                    vm.transaction.data.MODCLASS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : '';
+                    vm.transaction.data.REMARKS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : '';
+
+                    vm.toggle();
+                }
+
+                vm.sno = "";
+
+                vm.validating = false;
+                if (res.Messages.error == "") {
+                    vm.messages.error = '';
+                }
+
+                var isDisabled = setInterval(function () {
+                    if (!$("#sno").prop('disabled')) {
+                        clearInterval(isDisabled);
+                        $("#sno").focus();
+                    }
+                }, 100);
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        optionChange: function optionChange() {
+            var list = [];
+            var vm = this;
+
+            vm.classes.forEach(function (element) {
+                if (element.MODSTATUS == vm.transaction.data.SNOSTAT) {
+                    list.push(element);
+                }
+            });
+
+            vm.class_list = list;
+        }
     }
 });
 
@@ -59007,14 +59111,14 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-sm" }, [
+      _c("div", { staticClass: "col-sm-8" }, [
         _c("h2", [
           _c("i", { staticClass: "fas fa-qrcode" }),
           _vm._v(" Line Transactions [" + _vm._s(_vm.station_desc) + "]")
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-sm text-right" }, [
+      _c("div", { staticClass: "col-sm-4 text-right" }, [
         _c("h5", [
           _vm._v(
             _vm._s(_vm.prod_date) +
@@ -59050,13 +59154,37 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-7" }, [
               _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.sno,
+                    expression: "sno"
+                  }
+                ],
                 staticClass: "form-control",
                 attrs: {
                   type: "text",
                   name: "sno",
                   id: "sno",
                   placeholder: "Scan your serial here",
+                  disabled: _vm.loading || _vm.transact || _vm.validating,
                   autofocus: ""
+                },
+                domProps: { value: _vm.sno },
+                on: {
+                  keyup: function($event) {
+                    if (!("button" in $event) && $event.keyCode !== 13) {
+                      return null
+                    }
+                    return _vm.validation($event)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.sno = $event.target.value
+                  }
                 }
               }),
               _vm._v(" "),
@@ -59193,33 +59321,58 @@ var render = function() {
                 staticClass: "tbody-light",
                 staticStyle: { "font-size": "0.75em" }
               },
-              _vm._l(_vm.list, function(transaction, i) {
-                return _c("tr", { key: i }, [
-                  _c("td", [_vm._v(_vm._s(transaction.SERIALNO))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.MODEL))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.PRODLINE))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.MODCLASS))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.LOCNCODE))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.CUSTOMER))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.DATE))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.TRXDATE))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.SHIFT))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.STATUS))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.REMARKS))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(transaction.USER))])
-                ])
-              })
+              [
+                _vm.loading
+                  ? _c("tr", [
+                      _c(
+                        "td",
+                        {
+                          staticClass: "text-center",
+                          attrs: { colspan: "12" }
+                        },
+                        [_vm._v("Loading Data. Please Wait...")]
+                      )
+                    ])
+                  : _vm.pagination.total_rec == 0
+                  ? _c("tr", [
+                      _c(
+                        "td",
+                        {
+                          staticClass: "text-center",
+                          attrs: { colspan: "12" }
+                        },
+                        [_vm._v("No Record found")]
+                      )
+                    ])
+                  : _vm._l(_vm.list, function(transaction, i) {
+                      return _c("tr", { key: i }, [
+                        _c("td", [_vm._v(_vm._s(transaction.SERIALNO))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.MODEL))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.PRODLINE))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.MODCLASS))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.LOCNCODE))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.CUSTOMER))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.DATE))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.TRXDATE))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.SHIFT))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.STATUS))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.REMARKS))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(transaction.USER))])
+                      ])
+                    })
+              ],
+              2
             )
           ]
         )
@@ -59273,17 +59426,303 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("div", { staticClass: "form-row" }, [
-            _vm._m(3),
+            _c("div", { staticClass: "col-sm-5" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "serialno" } }, [
+                  _vm._v("Serial Number")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.lookup.SERIALNO,
+                      expression: "lookup.SERIALNO"
+                    }
+                  ],
+                  staticClass: "form-control form-control-sm",
+                  attrs: {
+                    type: "text",
+                    name: "serialno",
+                    id: "serialno",
+                    readonly: ""
+                  },
+                  domProps: { value: _vm.lookup.SERIALNO },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.lookup, "SERIALNO", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "customer" } }, [
+                  _vm._v("Customer")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.lookup.CUSTOMER,
+                      expression: "lookup.CUSTOMER"
+                    }
+                  ],
+                  staticClass: "form-control form-control-sm",
+                  attrs: {
+                    type: "text",
+                    name: "customer",
+                    id: "customer",
+                    readonly: ""
+                  },
+                  domProps: { value: _vm.lookup.CUSTOMER },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.lookup, "CUSTOMER", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "model" } }, [_vm._v("Model")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.lookup.MODELNAME,
+                      expression: "lookup.MODELNAME"
+                    }
+                  ],
+                  staticClass: "form-control form-control-sm",
+                  attrs: {
+                    type: "text",
+                    name: "model",
+                    id: "model",
+                    readonly: ""
+                  },
+                  domProps: { value: _vm.lookup.MODELNAME },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.lookup, "MODELNAME", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "station" } }, [
+                  _vm._v("Recent Location")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.lookup.RECENTLOC,
+                      expression: "lookup.RECENTLOC"
+                    }
+                  ],
+                  staticClass: "form-control form-control-sm",
+                  attrs: {
+                    type: "text",
+                    name: "station",
+                    id: "station",
+                    readonly: ""
+                  },
+                  domProps: { value: _vm.lookup.RECENTLOC },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.lookup, "RECENTLOC", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "class" } }, [
+                  _vm._v("Current Class")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.lookup.CURRENTCLASS,
+                      expression: "lookup.CURRENTCLASS"
+                    }
+                  ],
+                  staticClass: "form-control form-control-sm",
+                  attrs: {
+                    type: "text",
+                    name: "class",
+                    id: "class",
+                    readonly: ""
+                  },
+                  domProps: { value: _vm.lookup.CURRENTCLASS },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.lookup, "CURRENTCLASS", $event.target.value)
+                    }
+                  }
+                })
+              ])
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-6 offset-sm-1" }, [
               _c("div", { staticClass: "form-group" }, [
-                _vm._m(4),
+                _vm._m(3),
                 _vm._v(" "),
-                _vm._m(5),
+                _c("div", { staticClass: "form-check form-check-inline" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.transaction.data.SNOSTAT,
+                        expression: "transaction.data.SNOSTAT"
+                      }
+                    ],
+                    staticClass: "form-check-input",
+                    attrs: {
+                      type: "radio",
+                      name: "status",
+                      id: "stat0",
+                      value: "0"
+                    },
+                    domProps: {
+                      checked: _vm.transaction.data.SNOSTAT == 0,
+                      checked: _vm._q(_vm.transaction.data.SNOSTAT, "0")
+                    },
+                    on: {
+                      change: [
+                        function($event) {
+                          _vm.$set(_vm.transaction.data, "SNOSTAT", "0")
+                        },
+                        function($event) {
+                          _vm.optionChange()
+                        }
+                      ]
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "form-check-label",
+                      attrs: { for: "inlineRadio1" }
+                    },
+                    [_vm._v("Good")]
+                  )
+                ]),
                 _vm._v(" "),
-                _vm._m(6),
+                _c("div", { staticClass: "form-check form-check-inline" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.transaction.data.SNOSTAT,
+                        expression: "transaction.data.SNOSTAT"
+                      }
+                    ],
+                    staticClass: "form-check-input",
+                    attrs: {
+                      type: "radio",
+                      name: "status",
+                      id: "stat1",
+                      value: "1"
+                    },
+                    domProps: {
+                      checked: _vm.transaction.data.SNOSTAT == 1,
+                      checked: _vm._q(_vm.transaction.data.SNOSTAT, "1")
+                    },
+                    on: {
+                      change: [
+                        function($event) {
+                          _vm.$set(_vm.transaction.data, "SNOSTAT", "1")
+                        },
+                        function($event) {
+                          _vm.optionChange()
+                        }
+                      ]
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "form-check-label",
+                      attrs: { for: "inlineRadio2" }
+                    },
+                    [_vm._v("MRB")]
+                  )
+                ]),
                 _vm._v(" "),
-                _vm._m(7),
+                _c("div", { staticClass: "form-check form-check-inline" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.transaction.data.SNOSTAT,
+                        expression: "transaction.data.SNOSTAT"
+                      }
+                    ],
+                    staticClass: "form-check-input",
+                    attrs: {
+                      type: "radio",
+                      name: "status",
+                      id: "stat2",
+                      value: "2"
+                    },
+                    domProps: {
+                      checked: _vm.transaction.data.SNOSTAT == 2,
+                      checked: _vm._q(_vm.transaction.data.SNOSTAT, "2")
+                    },
+                    on: {
+                      change: [
+                        function($event) {
+                          _vm.$set(_vm.transaction.data, "SNOSTAT", "2")
+                        },
+                        function($event) {
+                          _vm.optionChange()
+                        }
+                      ]
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "form-check-label",
+                      attrs: { for: "inlineRadio3" }
+                    },
+                    [_vm._v("Scrap")]
+                  )
+                ]),
                 _vm._v(" "),
                 _c(
                   "div",
@@ -59342,9 +59781,102 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _vm._m(8),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "class" } }, [
+                  _vm._v("Module Class")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.transaction.data.MODCLASS,
+                        expression: "transaction.data.MODCLASS"
+                      }
+                    ],
+                    staticClass: "form-control form-control-sm",
+                    attrs: { name: "modclass", id: "modclass" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.transaction.data,
+                          "MODCLASS",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "option",
+                      { attrs: { disabled: "", selected: "", value: "" } },
+                      [_vm._v("Module Class Select...")]
+                    ),
+                    _vm._v(" "),
+                    _vm._l(_vm.class_list, function(classes, index) {
+                      return _c(
+                        "option",
+                        { key: index, domProps: { value: classes.MCLCODE } },
+                        [_vm._v(_vm._s(classes.MCLDESC))]
+                      )
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c("small", {
+                  staticClass: "form-text text-danger",
+                  attrs: { id: "err_modclass" }
+                })
+              ]),
               _vm._v(" "),
-              _vm._m(9)
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "remarks" } }, [_vm._v("Remarks")]),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.transaction.data.REMARKS,
+                      expression: "transaction.data.REMARKS"
+                    }
+                  ],
+                  staticClass: "form-control form-control-sm",
+                  attrs: { name: "remarks", id: "remarks", rows: "8" },
+                  domProps: { value: _vm.transaction.data.REMARKS },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.transaction.data,
+                        "REMARKS",
+                        $event.target.value
+                      )
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("small", {
+                  staticClass: "form-text text-danger",
+                  attrs: { id: "err_remarks" }
+                })
+              ])
             ])
           ])
         ])
@@ -59407,156 +59939,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-sm-5" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "serialno" } }, [_vm._v("Serial Number")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control form-control-sm",
-          attrs: {
-            type: "text",
-            name: "serialno",
-            id: "serialno",
-            readonly: ""
-          }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "customer" } }, [_vm._v("Customer")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control form-control-sm",
-          attrs: {
-            type: "text",
-            name: "customer",
-            id: "customer",
-            readonly: ""
-          }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "model" } }, [_vm._v("Model")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control form-control-sm",
-          attrs: { type: "text", name: "model", id: "model", readonly: "" }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "station" } }, [_vm._v("Recent Location")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control form-control-sm",
-          attrs: { type: "text", name: "station", id: "station", readonly: "" }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "class" } }, [_vm._v("Current Class")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control form-control-sm",
-          attrs: { type: "text", name: "class", id: "class", readonly: "" }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "form-row" }, [
       _c("label", { attrs: { for: "status" } }, [_vm._v("Module Status")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-check form-check-inline" }, [
-      _c("input", {
-        staticClass: "form-check-input",
-        attrs: { type: "radio", name: "status", id: "stat0", value: "0" }
-      }),
-      _vm._v(" "),
-      _c(
-        "label",
-        { staticClass: "form-check-label", attrs: { for: "inlineRadio1" } },
-        [_vm._v("Good")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-check form-check-inline" }, [
-      _c("input", {
-        staticClass: "form-check-input",
-        attrs: { type: "radio", name: "status", id: "stat1", value: "1" }
-      }),
-      _vm._v(" "),
-      _c(
-        "label",
-        { staticClass: "form-check-label", attrs: { for: "inlineRadio2" } },
-        [_vm._v("MRB")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-check form-check-inline" }, [
-      _c("input", {
-        staticClass: "form-check-input",
-        attrs: { type: "radio", name: "status", id: "stat2", value: "2" }
-      }),
-      _vm._v(" "),
-      _c(
-        "label",
-        { staticClass: "form-check-label", attrs: { for: "inlineRadio3" } },
-        [_vm._v("Scrap")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "class" } }, [_vm._v("Module Class")]),
-      _vm._v(" "),
-      _c("select", {
-        staticClass: "form-control form-control-sm",
-        attrs: { name: "modclass", id: "modclass" }
-      }),
-      _vm._v(" "),
-      _c("small", {
-        staticClass: "form-text text-danger",
-        attrs: { id: "err_modclass" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "remarks" } }, [_vm._v("Remarks")]),
-      _vm._v(" "),
-      _c("textarea", {
-        staticClass: "form-control form-control-sm",
-        attrs: { name: "remarks", id: "remarks", rows: "8" }
-      }),
-      _vm._v(" "),
-      _c("small", {
-        staticClass: "form-text text-danger",
-        attrs: { id: "err_remarks" }
-      })
     ])
   }
 ]
