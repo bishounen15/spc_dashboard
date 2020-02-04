@@ -18,7 +18,7 @@
                             Scan Serial Number
                         </div>
                         <div class="col-sm-7">
-                            <input type="text" class="form-control" name="sno" id="sno" placeholder="Scan your serial here" v-model="sno" v-on:keyup.13="validation" :disabled="loading || transact || validating" autofocus>
+                            <input type="text" class="form-control" name="sno" id="sno" placeholder="Scan your serial here" v-model="sno" v-on:keyup.13="validation" :disabled="loading || transact || validating || processing" autofocus>
                             <span class="form-text text-danger" id="err_sno">{{messages.error}}</span>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                         </div>
                         <div class="col-sm text-right">
                             <button class="btn btn-success" id="SaveButton" :disabled="(transaction.data.MODCLASS == '' && class_list.length > 0) || processing" @click="save">{{processing ? "Saving..." : "Save (Ctrl + S)"}}</button>
-                            <button type="button" class="btn btn-secondary" @click="toggle">Cancel (Esc)</button>
+                            <button type="button" class="btn btn-secondary" :hidden="processing" @click="toggle">Cancel (Esc)</button>
                         </div>
                     </div>
                 </div>
@@ -191,10 +191,7 @@
 export default {
     mounted() {
         this._keyListener = function(e) {
-            if (e.key === "x" && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault(); 
-                this.toggle();
-            } else if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+            if (e.key.toLowerCase() === "s" && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();
                 this.save();
             } else if (e.key === "Escape") {
@@ -220,6 +217,7 @@ export default {
                 custom: {
                     class: '',
                     message: '',
+                    auto_remarks: '',
                 }
             },
             status: ["Good","MRB","Scrap"],
@@ -275,12 +273,14 @@ export default {
                 }, 100);
             }
         },
-        save: function(e) {
-            if (this.transact) {
-                if (!this.processing) {
-                    if (!(this.transaction.data.MODCLASS == "" && this.class_list.length > 0)) {
-                        let vm = this;
-                        let trx = this.transaction.data;
+        save(auto) {
+            let vm = this;
+            let auto_save = auto || false;
+
+            if (vm.transact || auto_save) {
+                if (!vm.processing || auto_save) {
+                    if (!(vm.transaction.data.MODCLASS == "" && vm.class_list.length > 0)) {
+                        let trx = vm.transaction.data;
 
                         let data = {
                                         SERIALNO: trx.SERIALNO,
@@ -293,7 +293,7 @@ export default {
                                         TRXDATE: '',
                                         SHIFT: "Shift " + vm.shift,
                                         STATUS: vm.status[trx.SNOSTAT],
-                                        REMARKS: trx.REMARKS,
+                                        REMARKS: (auto_save ? vm.messages.custom.auto_remarks : trx.REMARKS),
                                         USER: vm.user_name,
                                     };
 
@@ -314,21 +314,25 @@ export default {
                                     vm.makePagination(vm.transactions.length, vm.record_per_page);
                                     vm.listRecords();
 
-                                    this.toggle();
+                                    if (!auto_save) { vm.toggle(); }
                                 } else {
                                     alert(res.Message);
                                 }
 
-                                this.processing = false;
+                                vm.processing = false;
                             })
                             .catch(err => console.log(err));
                     }
+                } else {
+                    alert("Module Class is required.")
                 }
             }
         },
         cancel: function(e) {
             if (this.transact) {
-                this.toggle();
+                if (!this.processing) {
+                    this.toggle();
+                }
             }
         },
         listTransactions() {
@@ -437,11 +441,16 @@ export default {
                         vm.transaction.data.LOCNCODE = vm.station;
                         vm.transaction.data.SNOSTAT = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.SNOSTAT : 0);
                         vm.optionChange();
-                        vm.transaction.data.MODCLASS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : '');
-                        vm.transaction.data.REMARKS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : '');
+                        vm.transaction.data.MODCLASS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : (vm.class_list.length > 0 ? vm.class_list[0].MCLCODE : ''));
+                        vm.transaction.data.REMARKS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : vm.status[0]);
                         
-                        vm.warningMessage();
-                        vm.toggle();
+                        if (res.Data.auto_save) {
+                            vm.messages.custom.auto_remarks = res.Data.auto_remarks;
+                            vm.save(res.Data.auto_save);
+                        } else {
+                            vm.warningMessage();
+                            vm.toggle();
+                        }
                     }
 
                     vm.sno = "";

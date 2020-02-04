@@ -58869,10 +58869,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
         this._keyListener = function (e) {
-            if (e.key === "x" && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                this.toggle();
-            } else if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+            if (e.key.toLowerCase() === "s" && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();
                 this.save();
             } else if (e.key === "Escape") {
@@ -58897,7 +58894,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 error: '',
                 custom: {
                     class: '',
-                    message: ''
+                    message: '',
+                    auto_remarks: ''
                 }
             },
             status: ["Good", "MRB", "Scrap"],
@@ -58954,14 +58952,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }, 100);
             }
         },
-        save: function save(e) {
-            var _this = this;
+        save: function save(auto) {
+            var vm = this;
+            var auto_save = auto || false;
 
-            if (this.transact) {
-                if (!this.processing) {
-                    if (!(this.transaction.data.MODCLASS == "" && this.class_list.length > 0)) {
-                        var vm = this;
-                        var trx = this.transaction.data;
+            if (vm.transact || auto_save) {
+                if (!vm.processing || auto_save) {
+                    if (!(vm.transaction.data.MODCLASS == "" && vm.class_list.length > 0)) {
+                        var trx = vm.transaction.data;
 
                         var data = {
                             SERIALNO: trx.SERIALNO,
@@ -58974,7 +58972,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             TRXDATE: '',
                             SHIFT: "Shift " + vm.shift,
                             STATUS: vm.status[trx.SNOSTAT],
-                            REMARKS: trx.REMARKS,
+                            REMARKS: auto_save ? vm.messages.custom.auto_remarks : trx.REMARKS,
                             USER: vm.user_name
                         };
 
@@ -58995,26 +58993,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                 vm.makePagination(vm.transactions.length, vm.record_per_page);
                                 vm.listRecords();
 
-                                _this.toggle();
+                                if (!auto_save) {
+                                    vm.toggle();
+                                }
                             } else {
                                 alert(res.Message);
                             }
 
-                            _this.processing = false;
+                            vm.processing = false;
                         }).catch(function (err) {
                             return console.log(err);
                         });
                     }
+                } else {
+                    alert("Module Class is required.");
                 }
             }
         },
+
         cancel: function cancel(e) {
             if (this.transact) {
-                this.toggle();
+                if (!this.processing) {
+                    this.toggle();
+                }
             }
         },
         listTransactions: function listTransactions() {
-            var _this2 = this;
+            var _this = this;
 
             var vm = this;
             vm.loading = true;
@@ -59027,7 +59032,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 vm.transactions = res.data;
                 vm.makePagination(vm.transactions.length, vm.record_per_page);
                 vm.listRecords();
-                _this2.loading = false;
+                _this.loading = false;
 
                 var isDisabled = setInterval(function () {
                     if (!$("#sno").prop('disabled')) {
@@ -59123,11 +59128,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     vm.transaction.data.LOCNCODE = vm.station;
                     vm.transaction.data.SNOSTAT = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.SNOSTAT : 0;
                     vm.optionChange();
-                    vm.transaction.data.MODCLASS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : '';
-                    vm.transaction.data.REMARKS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : '';
+                    vm.transaction.data.MODCLASS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : vm.class_list.length > 0 ? vm.class_list[0].MCLCODE : '';
+                    vm.transaction.data.REMARKS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : vm.status[0];
 
-                    vm.warningMessage();
-                    vm.toggle();
+                    if (res.Data.auto_save) {
+                        vm.messages.custom.auto_remarks = res.Data.auto_remarks;
+                        vm.save(res.Data.auto_save);
+                    } else {
+                        vm.warningMessage();
+                        vm.toggle();
+                    }
                 }
 
                 vm.sno = "";
@@ -59241,7 +59251,11 @@ var render = function() {
                   name: "sno",
                   id: "sno",
                   placeholder: "Scan your serial here",
-                  disabled: _vm.loading || _vm.transact || _vm.validating,
+                  disabled:
+                    _vm.loading ||
+                    _vm.transact ||
+                    _vm.validating ||
+                    _vm.processing,
                   autofocus: ""
                 },
                 domProps: { value: _vm.sno },
@@ -59483,7 +59497,7 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-secondary",
-                  attrs: { type: "button" },
+                  attrs: { type: "button", hidden: _vm.processing },
                   on: { click: _vm.toggle }
                 },
                 [_vm._v("Cancel (Esc)")]

@@ -280,8 +280,8 @@ class MESController extends Controller
 
         $data['shift'] = $shift;
 
-        // return view('mes.vue.mes',$data);
-        return view('mes.transactions.trx',$data);
+        return view('mes.vue.mes',$data);
+        // return view('mes.transactions.trx',$data);
     }
 
     public function serialValidation(Request $request, $line = null) {
@@ -481,6 +481,7 @@ class MESController extends Controller
                     'custclass' => $cond != null ? $cond->CLASS_ALLOW : "",
                     'warning' => $warn,
                     'source_station' => $rou != null ? $rou->SRCLOC : "",
+                    'auto_save' => $auto_save,
                 ];
             }
         }
@@ -606,6 +607,8 @@ class MESController extends Controller
         $err = false;
         $data = [];
         $warn = null;
+        $auto_save = false;
+        $auto_remarks = "";
 
         $info = SerialInfo::where([
             ["SERIALNO",$request->SERIALNO],
@@ -617,7 +620,11 @@ class MESController extends Controller
         } else {
             $station = mesStation::where("STNCODE",$request->STATION)->first();
             $initloc = $station->routing()->count();
-            $last_trx = $info->mes()->orderBy("TRXDATE","DESC")->first();
+            $last_trx = $info->mes()
+                            ->join("lts02","mes01.LOCNCODE","lts02.STNCODE")
+                            ->where("lts02.EXEMPTROUTE",0)
+                            ->selectRaw("mes01.*")
+                            ->orderBy("mes01.TRXDATE","DESC")->first();
             
             $currloc = $info->CURRENTLOC == null ? "Not yet scanned" : $info->CURRENTLOC;
 
@@ -677,6 +684,8 @@ class MESController extends Controller
 
                     if (!$err) {
                         if ($station->CLASSALLOW != '') {
+                            $auto_save = true;
+                            $auto_remarks = "Endorsed to " . $station->STNDESC;
                             $allowed_class = [];
 
                             if (strstr($station->CLASSALLOW,'|')) {
@@ -711,7 +720,7 @@ class MESController extends Controller
                                 ->select("mes01.SERIALNO","lbl02.CUSTOMER","mes01.MODCLASS","mes01.LOCNCODE")
                                 ->first();
                                 
-                                $last_cus = $last_mes->serial()->where("LBLTYPE",1)->first()->CUSTOMER;
+                                $last_cus = ($last_mes != null ? $last_mes->serial()->where("LBLTYPE",1)->first()->CUSTOMER : "");
                             }
 
                             $cond = OEMCondition::where([
@@ -754,6 +763,8 @@ class MESController extends Controller
                 "LAST_TRX" => $last_trx,
                 "Classes" => $classes->classes(),
                 "Warning" => $warn,
+                "auto_save" => $auto_save,
+                "auto_remarks" => $auto_remarks,
             ];
         }
 
