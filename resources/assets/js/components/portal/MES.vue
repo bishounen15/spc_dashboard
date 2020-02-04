@@ -97,7 +97,7 @@
                             <strong>Transaction Details</strong>
                         </div>
                         <div class="col-sm text-right">
-                            <button class="btn btn-success" id="SaveButton" :disabled="(transaction.data.MODCLASS == '' && class_list.length > 0) || processing" @click="save">{{processing ? "Saving..." : "Save (Ctrl + S)"}}</button>
+                            <button class="btn btn-success" id="SaveButton" :disabled="(transaction.data.MODCLASS == '' && class_list.length > 0) || processing" @click="save()">{{processing ? "Saving..." : "Save (Ctrl + S)"}}</button>
                             <button type="button" class="btn btn-secondary" :hidden="processing" @click="toggle">Cancel (Esc)</button>
                         </div>
                     </div>
@@ -310,6 +310,8 @@ export default {
                             .then(res => {
                                 if (res.Message == "") {
                                     data.TRXDATE = res.Data.TRXDATE;
+                                    data.REMARKS = res.Data.REMARKS;
+
                                     vm.transactions.unshift(data);
                                     vm.makePagination(vm.transactions.length, vm.record_per_page);
                                     vm.listRecords();

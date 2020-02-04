@@ -58989,6 +58989,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         }).then(function (res) {
                             if (res.Message == "") {
                                 data.TRXDATE = res.Data.TRXDATE;
+                                data.REMARKS = res.Data.REMARKS;
+
                                 vm.transactions.unshift(data);
                                 vm.makePagination(vm.transactions.length, vm.record_per_page);
                                 vm.listRecords();
@@ -59484,7 +59486,11 @@ var render = function() {
                         _vm.class_list.length > 0) ||
                       _vm.processing
                   },
-                  on: { click: _vm.save }
+                  on: {
+                    click: function($event) {
+                      _vm.save()
+                    }
+                  }
                 },
                 [
                   _vm._v(
