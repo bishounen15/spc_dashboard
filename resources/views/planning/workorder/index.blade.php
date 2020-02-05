@@ -13,7 +13,7 @@
                 display_name: 'Work Order ID', 
                 placeholder: 'Enter Work Order ID',
                 system_generated: 'portal/wo/generate',
-                width: '25%',
+                width: '15%',
                 type: 'text',
                 inquire: true,
                 inquire_type: 'LIKE'
@@ -79,6 +79,13 @@
                 width: '10%',
                 type: 'text',
                 default_value: 'OPEN'
+            },
+            {
+                name: 'REMARKS', 
+                display_name: 'Remarks', 
+                placeholder: 'Enter Remarks (Will be displayed on Daily Report)',
+                type: 'text',
+                width: '10%'
             }
     ]"></portal-maintenance>
 </div>
