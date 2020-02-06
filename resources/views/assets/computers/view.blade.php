@@ -23,6 +23,11 @@
                         <strong>Remarks</strong> <br>
                         {{$asset->remarks}}
                     @endif
+                    @if ($asset->updated_at != null)
+                        <hr>
+                        <strong>Last Scan Date</strong> <br>
+                        {{$asset->updated_at}}
+                    @endif
                 </div>
             </div>
         </div>
@@ -54,6 +59,11 @@
                         <tr>
                             <th width="35%">Graphics Card</th>
                             <td width="65%">{{$asset->gfx_card}}</td>
+                        </tr>
+
+                        <tr>
+                            <th width="35%">User Accounts</th>
+                            <td width="65%">{{$asset->user_accounts}}</td>
                         </tr>
                     </table>
                     <br>
