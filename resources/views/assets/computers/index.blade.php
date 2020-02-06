@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-{{-- <div class="container"> --}}
+<div class="container-fluid">
     <h3>Computing Devices Master List</h3>
     <br>
     <table class="table table-condensed table-striped table-sm" id="asset-list" style="width: 100%;">
@@ -38,7 +38,7 @@
             
         </tbody>
     </table>
-{{-- </div> --}}
+</div>
 @endsection
 
 @include('layouts.modal')
