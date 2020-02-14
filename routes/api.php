@@ -113,3 +113,5 @@ Route::post('portal/dataset/template',[
  Route::post('mes/transactions/{date}/{shift}/{station}/{line?}', 'MESController@transactions');
  Route::post('mes/validate','MESController@validation');
  Route::post('mes/save','MESController@saveTransaction');
+
+ Route::post('asset/sites/{site?}','SitesController@sites');

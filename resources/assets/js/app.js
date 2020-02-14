@@ -26,6 +26,7 @@ Vue.component('lot-assign', require('./components/portal/LotAssign.vue'));
 Vue.component('stringer', require('./components/portal/Stringer.vue'));
 Vue.component('missing-serials', require('./components/trina/MissingSerials.vue'));
 Vue.component('mes', require('./components/portal/MES.vue'));
+Vue.component('asset-entry', require('./components/assets/AssetEntry.vue'));
 
 const app = new Vue({
     el: '#app'

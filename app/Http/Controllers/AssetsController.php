@@ -58,6 +58,10 @@ class AssetsController extends Controller
         return view('assets.computers.view', $data);
     }
 
+    public function create() {
+        return view('assets.computers.create');
+    }
+
     public function saveAsset(Request $request) {
         $asset_item = Assets::updateOrCreate(
                             [

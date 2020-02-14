@@ -14028,7 +14028,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(78);
+module.exports = __webpack_require__(81);
 
 
 /***/ }),
@@ -14063,6 +14063,7 @@ Vue.component('lot-assign', __webpack_require__(66));
 Vue.component('stringer', __webpack_require__(69));
 Vue.component('missing-serials', __webpack_require__(72));
 Vue.component('mes', __webpack_require__(75));
+Vue.component('asset-entry', __webpack_require__(78));
 
 var app = new Vue({
   el: '#app'
@@ -60063,6 +60064,1785 @@ if (false) {
 
 /***/ }),
 /* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(79)
+/* template */
+var __vue_template__ = __webpack_require__(80)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/assets/AssetEntry.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0b16a587", Component.options)
+  } else {
+    hotAPI.reload("data-v-0b16a587", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 79 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this.record.type = "Laptop";
+        this.record.status = "Owned";
+    },
+    data: function data() {
+        return {
+            current_tab: "general",
+            departments: {
+                factory: ["Admin", "Equipment Engineering", "Facilities", "Finance", "Human Resources", "Information Technology", "OEM", "Planning", "Process Engineering", "Production", "Purchasing", "Quality", "Sales", "Warehouse and Logistics"],
+                corporate: ["Construction", "Corporate Business Sales", "Design Technology", "Domestic Business Development", "Finance", "HR and Admin", "Information Technology", "International Business Development", "Land Acquisition", "Legal Affairs", "ManCom", "Marketing", "Permitting and Compliance", "Plant Management", "Project Development", "Quality", "Regional Sales", "Regulatory", "Rooftop Sales", "Sales Operation", "Supply Chain"]
+            },
+            sites: [],
+            sub_sites: [],
+            depts: [],
+            statuses: ["Deployed", "In-Stock", "Vendor Repair", "Retired"],
+            net_intefaces: ["Ethernet", "Wireless80211"],
+            record: {
+                type: '',
+                brand: '',
+                model: '',
+                serial: '',
+                os: '',
+                site: '',
+                sub_site: '',
+                host_name: '',
+                proc: '',
+                hdd: '',
+                ram: '',
+                gfx_card: '',
+                id_number: '',
+                name: '',
+                dept: '',
+                status: '',
+                device_status: '',
+                remarks: ''
+                // network: [],
+                // disks: [],
+                // software: [],
+            }
+        };
+    },
+    created: function created() {
+        this.getSites();
+    },
+
+    props: {
+        add: Boolean
+    },
+    methods: {
+        changeTab: function changeTab(tab) {
+            this.current_tab = tab;
+        },
+
+        rbChange: function rbChange(e) {
+            // console.log(this.record.type);
+        },
+        siteLookup: function siteLookup(e) {
+            this.getSites(e.target.value);
+            var ix = e.target.selectedIndex;
+            var selected_site = e.target.options[ix].text;
+
+            var vm = this;
+
+            if (selected_site == 'Factory') {
+                vm.depts = vm.departments.factory;
+            } else {
+                vm.depts = vm.departments.corporate;
+            }
+        },
+        getSites: function getSites(site_id) {
+            var mysite = site_id || '';
+            var vm = this;
+
+            fetch('/api/asset/sites/' + mysite, {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (res) {
+                if (mysite == '') {
+                    vm.sites = res;
+                } else {
+                    vm.sub_sites = res;
+                }
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        saveAsset: function saveAsset() {
+            var vm = this;
+
+            fetch('/api/asset/update', {
+                method: 'post',
+                body: JSON.stringify(this.record),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (res) {
+                alert("Record created.");
+                window.location.href = '/assets/general';
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row mb-3" }, [
+      _c("div", { staticClass: "col-sm" }, [
+        _c("h3", [
+          _c("i", {
+            class: { "fas fa-plus": _vm.add, "far fa-edit": !_vm.add }
+          }),
+          _vm._v(" " + _vm._s(_vm.add ? "Create" : "Edit") + " Asset Record")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm text-right" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            on: {
+              click: function($event) {
+                _vm.saveAsset()
+              }
+            }
+          },
+          [_c("i", { staticClass: "fas fa-save" }), _vm._v(" Save Record")]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm" }, [
+        _c("ul", { staticClass: "nav nav-tabs nav-fill" }, [
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                class: { active: _vm.current_tab == "general" },
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    _vm.changeTab("general")
+                  }
+                }
+              },
+              [_vm._v("General Info")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                class: { active: _vm.current_tab == "specs" },
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    _vm.changeTab("specs")
+                  }
+                }
+              },
+              [_vm._v("Specifications")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                class: { active: _vm.current_tab == "network" },
+                attrs: { href: "#", hidden: "" },
+                on: {
+                  click: function($event) {
+                    _vm.changeTab("network")
+                  }
+                }
+              },
+              [_vm._v("Network")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                class: { active: _vm.current_tab == "disks" },
+                attrs: { href: "#", hidden: "" },
+                on: {
+                  click: function($event) {
+                    _vm.changeTab("disks")
+                  }
+                }
+              },
+              [_vm._v("Disks")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                class: { active: _vm.current_tab == "software" },
+                attrs: { href: "#", hidden: "" },
+                on: {
+                  click: function($event) {
+                    _vm.changeTab("software")
+                  }
+                }
+              },
+              [_vm._v("Software")]
+            )
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "container-fluid bg-white" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-sm" }, [
+          _c(
+            "div",
+            {
+              staticClass: "form mt-3",
+              attrs: { hidden: _vm.current_tab != "general" }
+            },
+            [
+              _c("div", { staticClass: "form-row" }, [
+                _c("div", { staticClass: "col-sm" }, [
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c(
+                        "div",
+                        { staticClass: "form-check form-check-inline" },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.record.type,
+                                expression: "record.type"
+                              }
+                            ],
+                            staticClass: "form-check-input",
+                            attrs: {
+                              type: "radio",
+                              name: "type",
+                              value: "Laptop"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.record.type, "Laptop")
+                            },
+                            on: {
+                              change: [
+                                function($event) {
+                                  _vm.$set(_vm.record, "type", "Laptop")
+                                },
+                                _vm.rbChange
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "inlineRadio1" }
+                            },
+                            [_vm._v("Laptop")]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "form-check form-check-inline" },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.record.type,
+                                expression: "record.type"
+                              }
+                            ],
+                            staticClass: "form-check-input",
+                            attrs: {
+                              type: "radio",
+                              name: "type",
+                              value: "Desktop"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.record.type, "Desktop")
+                            },
+                            on: {
+                              change: [
+                                function($event) {
+                                  _vm.$set(_vm.record, "type", "Desktop")
+                                },
+                                _vm.rbChange
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "inlineRadio2" }
+                            },
+                            [_vm._v("Desktop")]
+                          )
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.brand,
+                            expression: "record.brand"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "brand",
+                          placeholder: "Enter device brand name"
+                        },
+                        domProps: { value: _vm.record.brand },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.record, "brand", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.model,
+                            expression: "record.model"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "model",
+                          placeholder: "Enter device model name"
+                        },
+                        domProps: { value: _vm.record.model },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.record, "model", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(3),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.serial,
+                            expression: "record.serial"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "serial",
+                          placeholder: "Enter device serial number"
+                        },
+                        domProps: { value: _vm.record.serial },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.record, "serial", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(4),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.os,
+                            expression: "record.os"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          name: "os",
+                          placeholder: "Enter Operating System"
+                        },
+                        domProps: { value: _vm.record.os },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.record, "os", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(5),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.record.site,
+                              expression: "record.site"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { name: "site" },
+                          on: {
+                            click: _vm.siteLookup,
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.record,
+                                "site",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "option",
+                            {
+                              attrs: { value: "", disabled: "", selected: "" }
+                            },
+                            [_vm._v("-- Select site --")]
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.sites, function(site, index) {
+                            return _c(
+                              "option",
+                              { key: index, domProps: { value: site.descr } },
+                              [_vm._v(_vm._s(site.descr))]
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(6),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.record.sub_site,
+                              expression: "record.sub_site"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            name: "sub_site",
+                            disabled: _vm.sub_sites.length == 0
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.record,
+                                "sub_site",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "option",
+                            {
+                              attrs: { value: "", disabled: "", selected: "" }
+                            },
+                            [_vm._v("-- Select sub site --")]
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.sub_sites, function(site, index) {
+                            return _c(
+                              "option",
+                              { key: index, domProps: { value: site.descr } },
+                              [_vm._v(_vm._s(site.descr))]
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm" }, [
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(7),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.host_name,
+                            expression: "record.host_name"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "host_name",
+                          placeholder: "Enter device host name"
+                        },
+                        domProps: { value: _vm.record.host_name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.record,
+                              "host_name",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(8),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.id_number,
+                            expression: "record.id_number"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "id_number",
+                          placeholder: "Enter ID Number of Assignee"
+                        },
+                        domProps: { value: _vm.record.id_number },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.record,
+                              "id_number",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(9),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.name,
+                            expression: "record.name"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "name",
+                          placeholder: "Enter Employee Name"
+                        },
+                        domProps: { value: _vm.record.name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.record, "name", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(10),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.record.dept,
+                              expression: "record.dept"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { name: "dept" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.record,
+                                "dept",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "option",
+                            {
+                              attrs: { value: "", disabled: "", selected: "" }
+                            },
+                            [_vm._v("-- Select Department --")]
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.depts, function(dept, index) {
+                            return _c(
+                              "option",
+                              { key: index, domProps: { value: dept } },
+                              [_vm._v(_vm._s(dept))]
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(11),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c(
+                        "div",
+                        { staticClass: "form-check form-check-inline" },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.record.status,
+                                expression: "record.status"
+                              }
+                            ],
+                            staticClass: "form-check-input",
+                            attrs: {
+                              type: "radio",
+                              name: "status",
+                              value: "Owned"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.record.status, "Owned")
+                            },
+                            on: {
+                              change: function($event) {
+                                _vm.$set(_vm.record, "status", "Owned")
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "inlineRadio1" }
+                            },
+                            [_vm._v("Owned")]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "form-check form-check-inline" },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.record.status,
+                                expression: "record.status"
+                              }
+                            ],
+                            staticClass: "form-check-input",
+                            attrs: {
+                              type: "radio",
+                              name: "status",
+                              value: "Leased"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.record.status, "Leased")
+                            },
+                            on: {
+                              change: function($event) {
+                                _vm.$set(_vm.record, "status", "Leased")
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "inlineRadio2" }
+                            },
+                            [_vm._v("Leased")]
+                          )
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(12),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.record.device_status,
+                              expression: "record.device_status"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { name: "device_status" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.record,
+                                "device_status",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "option",
+                            {
+                              attrs: { value: "", disabled: "", selected: "" }
+                            },
+                            [_vm._v("-- Select Status --")]
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.statuses, function(status, index) {
+                            return _c(
+                              "option",
+                              { key: index, domProps: { value: status } },
+                              [_vm._v(_vm._s(status))]
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(13),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.remarks,
+                            expression: "record.remarks"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          name: "remarks",
+                          placeholder: "Enter Remarks / Notes"
+                        },
+                        domProps: { value: _vm.record.remarks },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.record, "remarks", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ])
+                ])
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "mt-3",
+              attrs: { hidden: _vm.current_tab != "specs" }
+            },
+            [
+              _c("div", { staticClass: "form-row" }, [
+                _c("div", { staticClass: "col-sm" }, [
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(14),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.proc,
+                            expression: "record.proc"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "proc",
+                          placeholder: "Enter Processor Details"
+                        },
+                        domProps: { value: _vm.record.proc },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.record, "proc", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(15),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.hdd,
+                            expression: "record.hdd"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "hdd",
+                          placeholder: "Enter Total Storage Capacity"
+                        },
+                        domProps: { value: _vm.record.hdd },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.record, "hdd", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(16),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.ram,
+                            expression: "record.ram"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "ram",
+                          placeholder: "Enter Total Memory"
+                        },
+                        domProps: { value: _vm.record.ram },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.record, "ram", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(17),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.record.gfx_card,
+                            expression: "record.gfx_card"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "gfx_card",
+                          placeholder: "Enter Graphics Card Info"
+                        },
+                        domProps: { value: _vm.record.gfx_card },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.record,
+                              "gfx_card",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm" })
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "mt-3",
+              attrs: { hidden: _vm.current_tab != "network" }
+            },
+            [
+              _c("div", { staticClass: "form-row" }, [
+                _c("div", { staticClass: "col-sm" }, [
+                  _vm._m(18),
+                  _vm._v(" "),
+                  _vm._m(19),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row mb-3" }, [
+                    _vm._m(20),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm" }, [
+                      _c(
+                        "select",
+                        {
+                          staticClass: "form-control",
+                          attrs: { name: "interface" }
+                        },
+                        [
+                          _c(
+                            "option",
+                            {
+                              attrs: { value: "", disabled: "", selected: "" }
+                            },
+                            [_vm._v("-- Select Interface --")]
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.net_intefaces, function(ni, index) {
+                            return _c(
+                              "option",
+                              { key: index, domProps: { value: ni } },
+                              [_vm._v(_vm._s(ni))]
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(21)
+                ]),
+                _vm._v(" "),
+                _vm._m(22)
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "mt-3",
+              attrs: { hidden: _vm.current_tab != "disks" }
+            },
+            [_vm._v("\n                    Disks\n                ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "mt-3",
+              attrs: { hidden: _vm.current_tab != "software" }
+            },
+            [_vm._v("\n                    Software\n                ")]
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "type" } }, [_vm._v("Equipment Type")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "brand" } }, [_vm._v("Brand")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "model" } }, [_vm._v("Model")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "serial" } }, [_vm._v("Serial Number")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "os" } }, [_vm._v("Operating System")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "site" } }, [_vm._v("Site")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "sub_site" } }, [_vm._v("Sub site")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "host_name" } }, [_vm._v("Host Name")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "id_number" } }, [
+        _vm._v("Employee ID Number")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "name" } }, [_vm._v("Name")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "dept" } }, [_vm._v("Department")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "status" } }, [_vm._v("Property Type")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "device_status" } }, [_vm._v("Status")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "remarks" } }, [_vm._v("Remarks")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "proc" } }, [_vm._v("Processor")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "hdd" } }, [_vm._v("Storage")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "ram" } }, [_vm._v("Total Memory")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "gfx_card" } }, [_vm._v("Graphics Card")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-row mb-3" }, [
+      _c("div", { staticClass: "col-sm" }, [
+        _c("label", { attrs: { for: "ip" } }, [_vm._v("IP Address")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm" }, [
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "text", name: "ip", placeholder: "Enter IP Address" }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-row mb-3" }, [
+      _c("div", { staticClass: "col-sm" }, [
+        _c("label", { attrs: { for: "mac" } }, [_vm._v("MAC Address")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm" }, [
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "text", name: "mac", placeholder: "Enter MAC Address" }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c("label", { attrs: { for: "interface" } }, [_vm._v("Interface")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row mb-3" }, [
+      _c("div", { staticClass: "col-sm" }, [
+        _c("button", { staticClass: "btn btn-success btn-block" }, [
+          _vm._v("Save")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm" }, [
+        _c("button", { staticClass: "btn btn-secondary btn-block" }, [
+          _vm._v("Cancel")
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm" }, [
+      _c(
+        "table",
+        { staticClass: "table table-condensed table-striped table-dark" },
+        [
+          _c("thead", [
+            _c("tr", [
+              _c("th", [_vm._v("#")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("IP Address")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("MAC Address")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Name")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Description")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Interface")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Actions")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("tbody")
+        ]
+      )
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0b16a587", module.exports)
+  }
+}
+
+/***/ }),
+/* 81 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

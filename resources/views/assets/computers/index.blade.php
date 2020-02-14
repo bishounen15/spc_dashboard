@@ -1,8 +1,18 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid">
-    <h3>Computing Devices Master List</h3>
-    <br>
+    <div class="row mb-3">
+        <div class="col-sm">
+            <h3><i class="fas fa-laptop"></i> Computing Devices Master List</h3>
+        </div>
+
+        @if(Auth::user()->assets_role == "MNGE" || Auth::user()->sysadmin == 1)
+        <div class="col-sm text-right">
+            <a href="/assets/create" role="button" class="btn btn-success"><i class="fas fa-plus"></i> Add Record</a>
+        </div>
+        @endif
+    </div>
+    
     <table class="table table-condensed table-striped table-sm" id="asset-list" style="width: 100%;">
         <thead class="thead-dark text-center" style="font-size: 0.7em;">
             <tr>
