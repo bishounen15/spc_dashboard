@@ -60528,6 +60528,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         saveAsset: function saveAsset() {
             var vm = this;
 
+            if (vm.record.dept == "") {
+                vm.record.dept = "-";
+            }
+
             fetch('/api/asset/update', {
                 method: 'post',
                 body: JSON.stringify(this.record),

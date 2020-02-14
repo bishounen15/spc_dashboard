@@ -408,6 +408,10 @@ export default {
         saveAsset() {
             let vm = this;
 
+            if (vm.record.dept == "") {
+                vm.record.dept = "-";
+            }
+
             fetch('/api/asset/update', {
                 method: 'post',
                 body: JSON.stringify(this.record),
