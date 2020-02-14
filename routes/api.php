@@ -34,6 +34,7 @@ Route::get('prodlines/{date}', function($date) {
     return $prodline;
 });
 
+Route::post('asset/check/{serial}', 'AssetsController@check');
 Route::post('asset/update', 'AssetsController@saveAsset');
 Route::post('asset/network', 'AssetsController@saveNetwork');
 Route::post('asset/disks', 'AssetsController@saveDisks');

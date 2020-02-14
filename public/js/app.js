@@ -60436,6 +60436,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -60476,7 +60477,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // network: [],
                 // disks: [],
                 // software: [],
-            }
+            },
+            hasError: false,
+            error_msg: ''
         };
     },
     created: function created() {
@@ -60546,6 +60549,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (err) {
                 return console.log(err);
             });
+        },
+
+        checkSerial: function checkSerial(e) {
+            var vm = this;
+
+            fetch('/api/asset/check/' + e.target.value, {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (res) {
+                if (res != "") {
+                    vm.hasError = true;
+                } else {
+                    vm.hasError = false;
+                }
+
+                vm.error_msg = res;
+                console.log(vm.error_msg);
+            }).catch(function (err) {
+                return console.log(err);
+            });
         }
     }
 });
@@ -60574,6 +60598,7 @@ var render = function() {
           "button",
           {
             staticClass: "btn btn-success",
+            attrs: { disabled: _vm.hasError },
             on: {
               click: function($event) {
                 _vm.saveAsset()
@@ -60857,7 +60882,7 @@ var render = function() {
                             expression: "record.serial"
                           }
                         ],
-                        staticClass: "form-control",
+                        staticClass: "form-control form-danger",
                         attrs: {
                           type: "text",
                           name: "serial",
@@ -60865,6 +60890,7 @@ var render = function() {
                         },
                         domProps: { value: _vm.record.serial },
                         on: {
+                          blur: _vm.checkSerial,
                           input: function($event) {
                             if ($event.target.composing) {
                               return
@@ -60872,7 +60898,11 @@ var render = function() {
                             _vm.$set(_vm.record, "serial", $event.target.value)
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "form-text text-danger" }, [
+                        _vm._v(_vm._s(_vm.error_msg))
+                      ])
                     ])
                   ]),
                   _vm._v(" "),

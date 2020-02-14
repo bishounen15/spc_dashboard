@@ -5,7 +5,7 @@
                 <h3><i v-bind:class="{ 'fas fa-plus' : add, 'far fa-edit' : !add }"></i> {{add ? "Create" : "Edit"}} Asset Record</h3>
             </div>
             <div class="col-sm text-right">
-                <button class="btn btn-success" @click="saveAsset()"><i class="fas fa-save"></i> Save Record</button>
+                <button class="btn btn-success" @click="saveAsset()" :disabled="hasError"><i class="fas fa-save"></i> Save Record</button>
             </div>
         </div>
 
@@ -77,7 +77,8 @@
                                         <label for="serial">Serial Number</label>
                                     </div>
                                     <div class="col-sm">
-                                        <input type="text" class="form-control" name="serial" placeholder="Enter device serial number" v-model="record.serial">
+                                        <input type="text" class="form-control form-danger" name="serial" placeholder="Enter device serial number" @blur="checkSerial" v-model="record.serial">
+                                        <span class="form-text text-danger">{{error_msg}}</span>
                                     </div>
                                 </div>
 
@@ -359,7 +360,9 @@ export default {
                 // network: [],
                 // disks: [],
                 // software: [],
-            }
+            },
+            hasError: false,
+            error_msg: '',
         }
     }, 
     created() {
@@ -425,7 +428,26 @@ export default {
                     window.location.href = '/assets/general';
                 })
                 .catch(err => console.log(err));
-        }
+        },
+        checkSerial: function(e) {
+            let vm = this;
+
+            fetch('/api/asset/check/' + e.target.value, {
+                method: 'post'
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res != "") {
+                        vm.hasError = true;
+                    } else {
+                        vm.hasError = false;
+                    }
+
+                    vm.error_msg = res;
+                    console.log(vm.error_msg);
+                })
+                .catch(err => console.log(err));
+        },
     }
 }
 </script>

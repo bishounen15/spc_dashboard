@@ -153,4 +153,11 @@ class AssetsController extends Controller
         $deleted = Software::whereNotIn("rowid",$request->IDs)->delete();
         return Response::json($deleted);
     }
+
+    public function check($serial) {
+        $exists = Assets::where("serial",$serial)->exists();
+        $msg = ($exists ? "This serial already exists" : "");
+
+        return Response::json($msg);
+    }
 }
