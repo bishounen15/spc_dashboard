@@ -60455,7 +60455,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             current_tab: "general",
             departments: {
                 factory: ["Admin", "Equipment Engineering", "Facilities", "Finance", "Human Resources", "Information Technology", "OEM", "Planning", "Process Engineering", "Production", "Purchasing", "Quality", "Sales", "Warehouse and Logistics"],
-                corporate: ["Construction", "Corporate Business Sales", "Design Technology", "Domestic Business Development", "Finance", "HR and Admin", "Information Technology", "International Business Development", "Land Acquisition", "Legal Affairs", "ManCom", "Marketing", "Permitting and Compliance", "Plant Management", "Project Development", "Quality", "Regional Sales", "Regulatory", "Rooftop Sales", "Sales Operation", "Supply Chain"]
+                corporate: ["Construction", "Commercial Business Group", "Design Technology", "Domestic Business Development", "Finance", "HR and Admin", "Information Technology", "International Business Development", "Land Acquisition", "Legal Affairs", "ManCom", "Marketing", "Permitting and Compliance", "Plant Management", "Project Development", "Quality", "Regional Sales", "Regulatory", "Rooftop Sales", "Sales Operation", "Supply Chain"]
             },
             sites: [],
             sub_sites: [],
