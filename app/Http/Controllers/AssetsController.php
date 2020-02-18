@@ -62,6 +62,22 @@ class AssetsController extends Controller
         return view('assets.computers.create');
     }
 
+    public function edit($id) {
+        $data = [
+            "id" => $id,
+        ];
+
+        return view('assets.computers.edit',$data);
+    }
+
+    public function getDetails($id)
+    {
+        //
+        $details = Assets::find($id);
+
+        return Response::json($details);
+    }
+
     public function saveAsset(Request $request) {
         $asset_item = Assets::updateOrCreate(
                             [

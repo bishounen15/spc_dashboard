@@ -5,7 +5,19 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="card">
-                    <div class="card-header">General Informtation</div>
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-sm">
+                                General Information
+                            </div>
+                            
+                            @if(Auth::user()->assets_role == "MNGE" || Auth::user()->sysadmin == 1)
+                            <div class="col-sm text-right">
+                                <a href="/assets/edit/{{$asset->id}}" role="button" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Edit</a>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
                     <div class="card-body text-center">
                         <img class="card-img-top" height="300px" src="{{$asset->image_path()}}" alt="Card image cap">
                         <hr>

@@ -5,7 +5,7 @@
                 <h3><i v-bind:class="{ 'fas fa-plus' : add, 'far fa-edit' : !add }"></i> {{add ? "Create" : "Edit"}} Asset Record</h3>
             </div>
             <div class="col-sm text-right">
-                <button class="btn btn-success" @click="saveAsset()" :disabled="hasError"><i class="fas fa-save"></i> Save Record</button>
+                <button class="btn btn-success" @click="saveAsset()" :disabled="hasError"><i class="fas fa-save"></i> {{add ? "Save" : "Update"}} Record</button>
             </div>
         </div>
 
@@ -59,7 +59,7 @@
                                         <label for="brand">Brand</label>
                                     </div>
                                     <div class="col-sm">
-                                        <input type="text" class="form-control" name="brand" placeholder="Enter device brand name" v-model="record.brand">
+                                        <input type="text" class="form-control" name="brand" placeholder="Enter device brand name" :readonly="!add" v-model="record.brand">
                                     </div>
                                 </div>
 
@@ -68,7 +68,7 @@
                                         <label for="model">Model</label>
                                     </div>
                                     <div class="col-sm">
-                                        <input type="text" class="form-control" name="model" placeholder="Enter device model name" v-model="record.model">
+                                        <input type="text" class="form-control" name="model" placeholder="Enter device model name" :readonly="!add" v-model="record.model">
                                     </div>
                                 </div>
 
@@ -77,7 +77,7 @@
                                         <label for="serial">Serial Number</label>
                                     </div>
                                     <div class="col-sm">
-                                        <input type="text" class="form-control form-danger" name="serial" placeholder="Enter device serial number" @blur="checkSerial" v-model="record.serial">
+                                        <input type="text" class="form-control form-danger" name="serial" placeholder="Enter device serial number" :readonly="!add" @blur="checkSerial" v-model="record.serial">
                                         <span class="form-text text-danger">{{error_msg}}</span>
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
                                         <label for="os">Operating System</label>
                                     </div>
                                     <div class="col-sm">
-                                        <textarea class="form-control" name="os" placeholder="Enter Operating System" v-model="record.os"></textarea>
+                                        <textarea class="form-control" name="os" placeholder="Enter Operating System" :readonly="!add" v-model="record.os"></textarea>
                                     </div>
                                 </div>
 
@@ -323,8 +323,15 @@
 <script>
 export default {
     mounted() {
-        this.record.type = "Laptop";
-        this.record.status = "Owned";
+        this.getSites();
+
+        if (this.add) {
+            this.record.type = "Laptop";
+            this.record.status = "Owned";
+        } else {
+            // console.log(this.record.serial = this.device_id);
+            this.getDetails(this.device_id);
+        }
     },
     data() {
         return {
@@ -366,10 +373,11 @@ export default {
         }
     }, 
     created() {
-        this.getSites();
+        
     },
     props: {
         add: Boolean,
+        device_id: Number,
     },
     methods: {
         changeTab(tab) {
@@ -424,30 +432,67 @@ export default {
                 })
                 .then(res => res.json())
                 .then(res => {
-                    alert("Record created.");
+                    alert("Record "+ (vm.add ? "created" : "updated") +".");
                     window.location.href = '/assets/general';
                 })
                 .catch(err => console.log(err));
         },
         checkSerial: function(e) {
+            if (add) {
+                let vm = this;
+
+                fetch('/api/asset/check/' + e.target.value, {
+                    method: 'post'
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res != "") {
+                            vm.hasError = true;
+                        } else {
+                            vm.hasError = false;
+                        }
+
+                        vm.error_msg = res;
+                        console.log(vm.error_msg);
+                    })
+                    .catch(err => console.log(err));
+            }
+        },
+        getDetails(id) {
             let vm = this;
 
-            fetch('/api/asset/check/' + e.target.value, {
+            fetch('/api/asset/get/' + id , {
                 method: 'post'
                 })
                 .then(res => res.json())
                 .then(res => {
-                    if (res != "") {
-                        vm.hasError = true;
+                    vm.record.serial = res.serial;
+                    vm.record.type = res.type;
+                    vm.record.status = res.status;
+                    vm.record.brand = res.brand;
+                    vm.record.model = res.model;
+                    vm.record.os = res.os;
+                    vm.record.site = res.site;
+                    vm.getSites(res.site);
+                    vm.record.sub_site = res.sub_site;
+                    vm.record.host_name = res.host_name;
+                    vm.record.id_number = res.id_number;
+                    vm.record.name = res.name;
+                    if (res.site == 'Factory') {
+                        vm.depts = vm.departments.factory;
                     } else {
-                        vm.hasError = false;
+                        vm.depts = vm.departments.corporate;
                     }
-
-                    vm.error_msg = res;
-                    console.log(vm.error_msg);
+                    vm.record.dept = res.dept;
+                    vm.record.device_status = res.device_status;
+                    vm.record.remarks = res.remarks;
+                    vm.record.proc = res.proc;
+                    vm.record.hdd = res.hdd;
+                    vm.record.ram = res.ram;
+                    vm.record.gfx_card = res.gfx_card;
                 })
                 .catch(err => console.log(err));
-        },
+        }
     }
 }
 </script>

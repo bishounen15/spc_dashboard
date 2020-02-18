@@ -138,6 +138,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::resource('/assets/general','AssetsController');
         Route::resource('/assets/dashboard/general','AssetDashboardController');
         Route::get('/assets/create','AssetsController@create');
+        Route::get('/assets/edit/{id}','AssetsController@edit');
 
         Route::get('/proddt/setup/machine/data', 'MachinesController@load')->name('machine_data');
         Route::resource('/proddt/setup/machine','MachinesController');

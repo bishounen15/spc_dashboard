@@ -60440,8 +60440,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
-        this.record.type = "Laptop";
-        this.record.status = "Owned";
+        this.getSites();
+
+        if (this.add) {
+            this.record.type = "Laptop";
+            this.record.status = "Owned";
+        } else {
+            // console.log(this.record.serial = this.device_id);
+            this.getDetails(this.device_id);
+        }
     },
     data: function data() {
         return {
@@ -60482,12 +60489,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             error_msg: ''
         };
     },
-    created: function created() {
-        this.getSites();
-    },
+    created: function created() {},
 
     props: {
-        add: Boolean
+        add: Boolean,
+        device_id: Number
     },
     methods: {
         changeTab: function changeTab(tab) {
@@ -60544,7 +60550,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (res) {
                 return res.json();
             }).then(function (res) {
-                alert("Record created.");
+                alert("Record " + (vm.add ? "created" : "updated") + ".");
                 window.location.href = '/assets/general';
             }).catch(function (err) {
                 return console.log(err);
@@ -60552,21 +60558,59 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         checkSerial: function checkSerial(e) {
+            if (add) {
+                var vm = this;
+
+                fetch('/api/asset/check/' + e.target.value, {
+                    method: 'post'
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (res) {
+                    if (res != "") {
+                        vm.hasError = true;
+                    } else {
+                        vm.hasError = false;
+                    }
+
+                    vm.error_msg = res;
+                    console.log(vm.error_msg);
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
+        },
+        getDetails: function getDetails(id) {
             var vm = this;
 
-            fetch('/api/asset/check/' + e.target.value, {
+            fetch('/api/asset/get/' + id, {
                 method: 'post'
             }).then(function (res) {
                 return res.json();
             }).then(function (res) {
-                if (res != "") {
-                    vm.hasError = true;
+                vm.record.serial = res.serial;
+                vm.record.type = res.type;
+                vm.record.status = res.status;
+                vm.record.brand = res.brand;
+                vm.record.model = res.model;
+                vm.record.os = res.os;
+                vm.record.site = res.site;
+                vm.getSites(res.site);
+                vm.record.sub_site = res.sub_site;
+                vm.record.host_name = res.host_name;
+                vm.record.id_number = res.id_number;
+                vm.record.name = res.name;
+                if (res.site == 'Factory') {
+                    vm.depts = vm.departments.factory;
                 } else {
-                    vm.hasError = false;
+                    vm.depts = vm.departments.corporate;
                 }
-
-                vm.error_msg = res;
-                console.log(vm.error_msg);
+                vm.record.dept = res.dept;
+                vm.record.device_status = res.device_status;
+                vm.record.remarks = res.remarks;
+                vm.record.proc = res.proc;
+                vm.record.hdd = res.hdd;
+                vm.record.ram = res.ram;
+                vm.record.gfx_card = res.gfx_card;
             }).catch(function (err) {
                 return console.log(err);
             });
@@ -60605,7 +60649,10 @@ var render = function() {
               }
             }
           },
-          [_c("i", { staticClass: "fas fa-save" }), _vm._v(" Save Record")]
+          [
+            _c("i", { staticClass: "fas fa-save" }),
+            _vm._v(" " + _vm._s(_vm.add ? "Save" : "Update") + " Record")
+          ]
         )
       ])
     ]),
@@ -60822,7 +60869,8 @@ var render = function() {
                         attrs: {
                           type: "text",
                           name: "brand",
-                          placeholder: "Enter device brand name"
+                          placeholder: "Enter device brand name",
+                          readonly: !_vm.add
                         },
                         domProps: { value: _vm.record.brand },
                         on: {
@@ -60854,7 +60902,8 @@ var render = function() {
                         attrs: {
                           type: "text",
                           name: "model",
-                          placeholder: "Enter device model name"
+                          placeholder: "Enter device model name",
+                          readonly: !_vm.add
                         },
                         domProps: { value: _vm.record.model },
                         on: {
@@ -60886,7 +60935,8 @@ var render = function() {
                         attrs: {
                           type: "text",
                           name: "serial",
-                          placeholder: "Enter device serial number"
+                          placeholder: "Enter device serial number",
+                          readonly: !_vm.add
                         },
                         domProps: { value: _vm.record.serial },
                         on: {
@@ -60922,7 +60972,8 @@ var render = function() {
                         staticClass: "form-control",
                         attrs: {
                           name: "os",
-                          placeholder: "Enter Operating System"
+                          placeholder: "Enter Operating System",
+                          readonly: !_vm.add
                         },
                         domProps: { value: _vm.record.os },
                         on: {
