@@ -36,6 +36,7 @@
                 <th rowspan="2">Name</th>
                 <th rowspan="2">Dept.</th>
                 <th rowspan="2">Remarks</th>
+                <th rowspan="2">Last Update</th>
             </tr>
             <tr>
                 <th>IP</th>
@@ -69,7 +70,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22 ]
                     },
                     text:       'Excel',
                     filename: "assets_excel"
@@ -77,7 +78,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22 ]
                     },
                     text:       'CSV',
                     filename: "assets_csv"
@@ -114,6 +115,7 @@
                 { data: 'name' },
                 { data: 'dept' },
                 { data: 'remarks' },
+                { data: 'updated_at' },
             ],
         });
 
