@@ -11,4 +11,10 @@ class Sites extends Model
     protected $table = 'sites';
     //Primary Key
     protected $primaryKey = 'id';
+
+    protected $fillable = [
+        'code',
+        'descr',
+        'parent_site',
+    ];
 }

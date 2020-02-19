@@ -343,7 +343,7 @@ export default {
             sites: [],
             sub_sites: [],
             depts: [],
-            statuses: ["Deployed","In-Stock","Vendor Repair","Retired",],
+            statuses: ["Deployed","In-Stock","Vendor Repair","Defective","Retired",],
             net_intefaces: ["Ethernet","Wireless80211"],
             record: {
                 type: '',
