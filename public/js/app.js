@@ -59131,7 +59131,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     vm.transaction.data.LOCNCODE = vm.station;
                     vm.transaction.data.SNOSTAT = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.SNOSTAT : 0;
                     vm.optionChange();
-                    vm.transaction.data.MODCLASS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.MODCLASS : vm.class_list.length > 0 ? vm.class_list[0].MCLCODE : '';
+                    vm.transaction.data.MODCLASS = vm.lookup.LAST_TRX ? vm.lookup.CURRENTCLASS : vm.class_list.length > 0 ? vm.class_list[0].MCLCODE : '';
                     vm.transaction.data.REMARKS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : vm.status[0];
 
                     if (res.Data.auto_save) {
