@@ -15,6 +15,7 @@ use App\Models\Planning\ProductionSchedule;
 use App\Models\WebPortal\OEMCondition;
 use App\Models\WebPortal\ProductionLine;
 use App\Models\WebPortal\IPAssign;
+use App\Models\WebPortal\MESAdditional;
 use Illuminate\Support\Facades\Auth;
 
 use DB;
@@ -58,6 +59,19 @@ class MESController extends Controller
                     ->select("SELECT A.SERIALNO, CONCAT(REPLACE(REPLACE(REPLACE(REPLACE(IFNULL(IFNULL(I.PRODCODE, H.MODELNAME),E.PRODCODE),'[R]',CASE WHEN B.CELLCOLOR = 'E' AND B.CUSTOMER = 'GEN1' THEN 'M' ELSE B.CELLCOLOR END),'[C]',B.CELLCOUNT),'[P]',IFNULL(IFNULL(J.BIN,F.Bin),'XXX')),'[T]',IFNULL(B.CTYPE,'??')),CASE IFNULL(L.REMARKS,'') WHEN '' THEN '' ELSE CONCAT(' (',L.REMARKS,')') END) AS MODEL, K.LINDESC AS PRODLINE, B.CUSTOMER, DATE_ADD(DATE(A.TRXDATE), INTERVAL CASE WHEN TIME(A.TRXDATE) < '06:00:00' THEN -1 ELSE 0 END DAY) AS 'DATE', A.TRXDATE, CONCAT('Shift ',CASE WHEN TIME(A.TRXDATE) BETWEEN '06:00:00' AND '13:59:59' THEN 'A' WHEN TIME(A.TRXDATE) BETWEEN '14:00:00' AND '21:59:59' THEN 'B' ELSE 'C' END) AS SHIFT, CASE A.SNOSTAT WHEN 0 THEN 'GOOD' WHEN 1 THEN 'MRB' ELSE 'SCRAP' END AS STATUS, A.REMARKS, A.MODCLASS, IFNULL(CONCAT(C.LASTNAME,', ',C.FIRSTNAME),D.USERNAME) AS USER, A.LOCNCODE FROM mes01 A INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 INNER JOIN lin01 K ON IFNULL(A.PRODLINE,B.PRODLINE) = K.LINCODE LEFT JOIN hri01 C ON A.TRXUID = C.IDNUMBER INNER JOIN sys01 D ON A.TRXUID = D.USERID LEFT JOIN cus01 E ON B.CUSTOMER = E.CUSCODE LEFT JOIN ftd_upd F ON B.SERIALNO = F.ModuleID LEFT JOIN lbl02 G ON A.SERIALNO = G.SERIALNO AND G.LBLTYPE = 3 LEFT JOIN lbt00 H ON G.CUSTOMER = H.CUSTOMER AND G.TEMPLATE = H.TMPCODE LEFT JOIN typ00 I ON B.PRODTYPE = I.PRODTYPE LEFT JOIN bin00 J ON I.PRODTYPE = J.PRODTYPE AND I.CUSTOMER = J.CUSTOMER AND (F.Pmpp >= J.MINPMPP AND F.Pmpp < J.MAXPMPP) LEFT JOIN wor01 L ON B.ORDERNO = L.WOID WHERE A.TRXDATE BETWEEN ? AND ? ORDER BY A.ROWID DESC",[$sdate,$edate]);
 
         return Datatables::of($mes)->make(true);
+    }
+
+    public function testOuts($date = null)
+    {
+        $cond = [];
+
+        $sdate = ($date == null ? date('Y-m-d') : date('Y-m-d',strtotime($date)))  . " 06:00:00";
+        $edate = date('Y-m-d',strtotime("+1 days",strtotime(($date == null ? "Today" : $date)))) . " 05:59:59";
+
+        $testouts = DB::connection('web_portal')
+                    ->select("SELECT REPLACE(C.PRODCODE,'[P]', A.Bin) AS MODEL, B.BOM, COUNT(*) AS TOTAL, SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 06:00:00' AND '2020-03-12 07:00:00' THEN 1 ELSE 0 END) AS '06', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 07:00:00' AND '2020-03-12 08:00:00' THEN 1 ELSE 0 END) AS '07', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 08:00:00' AND '2020-03-12 09:00:00' THEN 1 ELSE 0 END) AS '08', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 09:00:00' AND '2020-03-12 10:00:00' THEN 1 ELSE 0 END) AS '09', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 10:00:00' AND '2020-03-12 11:00:00' THEN 1 ELSE 0 END) AS '10', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 11:00:00' AND '2020-03-12 12:00:00' THEN 1 ELSE 0 END) AS '11', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 12:00:00' AND '2020-03-12 13:00:00' THEN 1 ELSE 0 END) AS '12', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 13:00:00' AND '2020-03-12 14:00:00' THEN 1 ELSE 0 END) AS '13', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 14:00:00' AND '2020-03-12 15:00:00' THEN 1 ELSE 0 END) AS '14', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 15:00:00' AND '2020-03-12 16:00:00' THEN 1 ELSE 0 END) AS '15', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 16:00:00' AND '2020-03-12 17:00:00' THEN 1 ELSE 0 END) AS '16', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 17:00:00' AND '2020-03-12 18:00:00' THEN 1 ELSE 0 END) AS '17', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 18:00:00' AND '2020-03-12 19:00:00' THEN 1 ELSE 0 END) AS '18', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 19:00:00' AND '2020-03-12 20:00:00' THEN 1 ELSE 0 END) AS '19', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 20:00:00' AND '2020-03-12 21:00:00' THEN 1 ELSE 0 END) AS '20', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 21:00:00' AND '2020-03-12 22:00:00' THEN 1 ELSE 0 END) AS '21', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 22:00:00' AND '2020-03-12 23:00:00' THEN 1 ELSE 0 END) AS '22', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 23:00:00' AND '2020-03-13 00:00:00' THEN 1 ELSE 0 END) AS '23', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 00:00:00' AND '2020-03-13 01:00:00' THEN 1 ELSE 0 END) AS '00', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 01:00:00' AND '2020-03-13 02:00:00' THEN 1 ELSE 0 END) AS '01', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 02:00:00' AND '2020-03-13 03:00:00' THEN 1 ELSE 0 END) AS '02', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 03:00:00' AND '2020-03-13 04:00:00' THEN 1 ELSE 0 END) AS '03', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 04:00:00' AND '2020-03-13 05:00:00' THEN 1 ELSE 0 END) AS '04', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 05:00:00' AND '2020-03-13 06:00:00' THEN 1 ELSE 0 END) AS '05' FROM ftd_upd A INNER JOIN lbl02 B ON A.ModuleID = B.SERIALNO AND B.LBLTYPE = 1 INNER JOIN typ00 C ON B.PRODTYPE = C.PRODTYPE WHERE A.InspectionTime BETWEEN ? AND ? GROUP BY REPLACE(C.PRODCODE,'[P]', A.Bin), B.BOM ORDER BY MODEL, BOM",[$sdate,$edate]);
+
+        return Datatables::of($testouts)->make(true);
     }
 
     public function transactions($date = '2018-09-23', $shift = 'A', $station = 0, $line = null)
@@ -728,16 +742,31 @@ class MESController extends Controller
                                 ["STATION", $station->STNCODE],
                             ])->first();
 
+                            if (!$cond) {
+                                $cond = OEMCondition::where([
+                                    ["CUSTOMER", $info->CUSTOMER],
+                                    ["STATION", $station->STNCODE],
+                                ])->first();
+                            }
+
                             if ($cond) {
                                 $warn = [
                                     "Class" => $cond->CLASS_ALLOW,
                                     "Message" => $cond->WARNING_MSG
                                 ];
 
-                                $check = DB::connection($cond->CONN)->select("SELECT COUNT(*) AS TRX FROM ".$cond->TABLE_NAME." WHERE ".$cond->FIELD_NAME." = ?" . $cond->ADDCOND,[$last_mes->SERIALNO]);
+                                if ($cond->LASTTRX == 1) {
+                                    $cserial = $last_mes->SERIALNO;
+                                    $flag = ($last_mes->MODCLASS <> $cond->CLASS_ALLOW);
+                                } else {
+                                    $cserial = $sno;
+                                    $flag = true;
+                                }
+
+                                $check = DB::connection($cond->CONN)->select("SELECT COUNT(*) AS TRX FROM ".$cond->TABLE_NAME." WHERE ".$cond->FIELD_NAME." = ?" . $cond->ADDCOND,[$cserial]);
                                 $trx_count = $check[0]->TRX;
                                 
-                                if ($check[0]->TRX == 0 && $last_mes->MODCLASS <> $cond->CLASS_ALLOW) {
+                                if ($check[0]->TRX == 0 && $flag) {
                                     eval($cond->ERR_MSG);
 
                                     if ($e_msg <> "") {
@@ -754,6 +783,11 @@ class MESController extends Controller
 
         if ($msg == "") {
             $classes = portalCustomer::where("CUSCODE",$info->CUSTOMER)->first();
+            $setting = DB::connection("web_portal")->select("SELECT * FROM set01 WHERE PRODTYPE = ? AND LOCNCODE = ?",[$info->PRODTYPE,$station->STNCODE]);
+
+            $lot_fields = DB::connection("web_portal")->select("SELECT FIELDNAME, OPTLIST, MAXREC, ISREQ FROM set02 WHERE PRODTYPE = ? AND LOCNCODE = ? AND INFOTYPE = ?",[$info->PRODTYPE,$station->STNCODE,'LOT']);
+            $add_fields = DB::connection("web_portal")->select("SELECT FIELDNAME, OPTLIST, MAXREC, ISREQ FROM set02 WHERE PRODTYPE = ? AND LOCNCODE = ? AND INFOTYPE = ?",[$info->PRODTYPE,$station->STNCODE,'ADD']);
+
             $data = [
                 "SERIALNO" => $info->SERIALNO,
                 "CUSTOMER" => $info->CUSTOMER,
@@ -765,6 +799,10 @@ class MESController extends Controller
                 "Warning" => $warn,
                 "auto_save" => $auto_save,
                 "auto_remarks" => $auto_remarks,
+                "add_info" => count($setting) == 0 ? false : $setting[0]->ADDINFO == 1,
+                "lot_info" => count($setting) == 0 ? false : $setting[0]->LOTINFO == 1,
+                "add_fields" => $add_fields,
+                "lot_fields" => $lot_fields,
             ];
         }
 
@@ -773,7 +811,7 @@ class MESController extends Controller
                 "Status" => $err,
                 "Error" => $msg
             ],
-            "Data" => $data
+            "Data" => $data,
         ]);
     }
 
@@ -783,26 +821,57 @@ class MESController extends Controller
         $rec = null;
         $msg = "";
 
+        $req = json_decode(json_encode($request->data));
+        $lots = json_decode(json_encode($request->lot));
+        $adds = json_decode(json_encode($request->add));
+
+        $lot_rec = [];
+        $add_rec = [];
+
+        foreach ($lots as $lot) {
+            $vals = [
+                "SERIALNO" => $lot->SERIALNO,
+                "LOCNCODE" => $lot->LOCNCODE,
+                "INFOTYPE" => $lot->INFOTYPE,
+                "FIELDNAME" => $lot->FIELDNAME,
+                "FIELDVALUE" => $lot->FIELDVALUE,
+            ];
+
+            array_push($lot_rec,$vals);
+        }
+
+        foreach ($adds as $add) {
+            $vals = [
+                "SERIALNO" => $add->SERIALNO,
+                "LOCNCODE" => $add->LOCNCODE,
+                "INFOTYPE" => $add->INFOTYPE,
+                "FIELDNAME" => $add->FIELDNAME,
+                "FIELDVALUE" => $add->FIELDVALUE,
+            ];
+
+            array_push($add_rec,$vals);
+        }
+
         $data = [
-            "SERIALNO" => $request->SERIALNO,
-            "LOCNCODE" => $request->LOCNCODE,
-            "MODCLASS" => ($request->MODCLASS != null ? $request->MODCLASS : ""),
-            "SNOSTAT" => $request->SNOSTAT,
+            "SERIALNO" => $req->SERIALNO,
+            "LOCNCODE" => $req->LOCNCODE,
+            "MODCLASS" => ($req->MODCLASS != null ? $req->MODCLASS : ""),
+            "SNOSTAT" => $req->SNOSTAT,
             "MESCNO" => $cno,
-            "REMARKS" => $request->REMARKS,
-            "TRXUID" => $request->USERID,
+            "REMARKS" => $req->REMARKS,
+            "TRXUID" => $req->USERID,
             "TRXDATE" => DB::raw('now()'),
         ];
 
-        if ($request->PRODLINE != "") {
-            $data["PRODLINE"] = $request->PRODLINE;
+        if ($req->PRODLINE != "") {
+            $data["PRODLINE"] = $req->PRODLINE;
         }
 
-        $unique_sno = mesStation::where("STNCODE",$request->LOCNCODE)->first()->UNIQUESNO;
+        $unique_sno = mesStation::where("STNCODE",$req->LOCNCODE)->first()->UNIQUESNO;
 
         if ($unique_sno) {
-            $sno = $request->SERIALNO;
-            $loc = $request->LOCNCODE;
+            $sno = $req->SERIALNO;
+            $loc = $req->LOCNCODE;
 
             $validator = Validator::make($data, [
                 'SERIALNO' => [
@@ -825,11 +894,14 @@ class MESController extends Controller
             $rec = mesData::insert($data);
 
             if ($rec) {
+                $lot_data = MESAdditional::insert($lot_rec);
+                $add_data = MESAdditional::insert($add_rec);
+
                 unset($rec);
                 $rec = mesData::where([
-                    ["SERIALNO",$request->SERIALNO],
-                    ["LOCNCODE",$request->LOCNCODE],
-                    ["TRXUID",$request->USERID],
+                    ["SERIALNO",$req->SERIALNO],
+                    ["LOCNCODE",$req->LOCNCODE],
+                    ["TRXUID",$req->USERID],
                 ])->first();
             }
         }

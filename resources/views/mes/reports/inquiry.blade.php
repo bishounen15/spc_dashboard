@@ -41,6 +41,11 @@
                         </tr>
                         
                         <tr>
+                            <th width="35%" class="bg-dark text-light">BOM</th>
+                            <td width="65%" id="BOM" class="serial-info"></td>
+                        </tr>
+
+                        <tr>
                             <th width="35%" class="bg-dark text-light">Color</th>
                             <td width="65%" id="COLOR" class="serial-info"></td>
                         </tr>

@@ -97,7 +97,7 @@
                             <strong>Transaction Details</strong>
                         </div>
                         <div class="col-sm text-right">
-                            <button class="btn btn-success" id="SaveButton" :disabled="(transaction.data.MODCLASS == '' && class_list.length > 0) || processing" @click="save()">{{processing ? "Saving..." : "Save (Ctrl + S)"}}</button>
+                            <button class="btn btn-success" id="SaveButton" :disabled="(transaction.data.MODCLASS == '' && class_list.length > 0) || processing || !custom_fields" @click="save()">{{processing ? "Saving..." : "Save (Ctrl + S)"}}</button>
                             <button type="button" class="btn btn-secondary" :hidden="processing" @click="toggle">Cancel (Esc)</button>
                         </div>
                     </div>
@@ -180,6 +180,27 @@
                                 <small class="form-text text-danger" id="err_remarks"></small>
                             </div>
                         </div>
+
+                        <div class="col-sm-5" :hidden="!lot_info">
+                            <div class="alert alert-info" role="alert">
+                                Lot Information
+                            </div>
+                            
+                            <div class="form-group" v-for="(lot_field, i) in lot_fields" v-bind:key="i">
+                                <label for="lot[]" v-bind:class="{ 'text-danger': lot_field.ISREQ == 1 }">{{lot_field.FIELDNAME}}</label>
+                                <input class="form-control form-control-sm" type="text" name="lot[]" v-on:keyup.13="focus_next" v-on:blur="focus_next" >
+                            </div>
+                        </div>
+                        <div class="col-sm-6 offset-sm-1" :hidden="!add_info">
+                            <div class="alert alert-info" role="alert">
+                                Additional Information
+                            </div>
+
+                            <div class="form-group" v-for="(add_field, i) in add_fields" v-bind:key="i">
+                                <label for="add[]" v-bind:class="{ 'text-danger': add_field.ISREQ == 1 }">{{add_field.FIELDNAME}}</label>
+                                <input class="form-control form-control-sm" type="text" name="add[]" v-on:keyup.13="focus_next"  v-on:blur="focus_next" >
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -233,13 +254,21 @@ export default {
                     REMARKS: '',
                     USERID: '',
                     PRODLINE: 0,
-                }
+                },
+                lot: [],
+                add: [],
             },
             list: [],
             classes: [],
             class_list: [],
             sno: '',
             lookup: {},
+            lot_info: false,
+            lot_fields: {},
+            lot_values: [],
+            add_info: false,
+            add_fields: {},
+            add_values: [],
         }
     },
     created() {
@@ -261,6 +290,32 @@ export default {
         prod_date: String,
         shift: String,
     },
+    computed: {
+        custom_fields: function() {
+            let retval = true;
+            let lf = this.lot_fields;
+            let lv = this.lot_values; 
+
+            let af = this.add_fields;
+            let av = this.add_values; 
+
+            for (let i = 0; i < lf.length; i++) {
+                if (lf[i].ISREQ == 1 && (lv[i] == "" || lv[i] == undefined)) {
+                    retval = false;
+                    break;
+                }
+            }
+
+            for (let i = 0; i < af.length; i++) {
+                if (af[i].ISREQ == 1 && (av[i] == "" || av[i] == undefined)) {
+                    retval = false;
+                    break;
+                }
+            }
+
+            return retval;
+        },
+    },
     methods: {
         toggle: function(e) {
             this.transact = !this.transact; 
@@ -280,19 +335,29 @@ export default {
             if (vm.transact || auto_save) {
                 if (!vm.processing || auto_save) {
                     if (!(vm.transaction.data.MODCLASS == "" && vm.class_list.length > 0)) {
-                        let trx = vm.transaction.data;
+                        let trx = vm.transaction;
+                        
+                        if (!auto_save) {
+                            if (vm.lot_info) {
+                                trx.lot = vm.format_data("LOT",trx.data.LOCNCODE,trx.data.SERIALNO);
+                            }
+
+                            if (vm.add_info) {
+                                trx.add = vm.format_data("ADD",trx.data.LOCNCODE,trx.data.SERIALNO);
+                            }
+                        }
 
                         let data = {
-                                        SERIALNO: trx.SERIALNO,
+                                        SERIALNO: trx.data.SERIALNO,
                                         MODEL: vm.lookup.MODELNAME,
                                         PRODLINE: vm.line_desc,
-                                        MODCLASS: trx.MODCLASS,
-                                        LOCNCODE: trx.LOCNCODE,
+                                        MODCLASS: trx.data.MODCLASS,
+                                        LOCNCODE: trx.data.LOCNCODE,
                                         CUSTOMER: vm.lookup.CUSTOMER,
                                         DATE: vm.prod_date,
                                         TRXDATE: '',
                                         SHIFT: "Shift " + vm.shift,
-                                        STATUS: vm.status[trx.SNOSTAT],
+                                        STATUS: vm.status[trx.data.SNOSTAT],
                                         REMARKS: (auto_save ? vm.messages.custom.auto_remarks : trx.REMARKS),
                                         USER: vm.user_name,
                                     };
@@ -446,6 +511,14 @@ export default {
                         vm.transaction.data.MODCLASS = (vm.lookup.LAST_TRX ? vm.lookup.CURRENTCLASS : (vm.class_list.length > 0 ? vm.class_list[0].MCLCODE : ''));
                         vm.transaction.data.REMARKS = (vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : vm.status[0]);
                         
+                        vm.lot_info = vm.lookup.lot_info;
+                        vm.add_info = vm.lookup.add_info;
+
+                        vm.lot_fields = vm.lookup.lot_fields;
+                        vm.add_fields = vm.lookup.add_fields;
+
+                        // console.log(vm.add_fields.length);
+
                         if (res.Data.auto_save) {
                             vm.messages.custom.auto_remarks = res.Data.auto_remarks;
                             vm.save(res.Data.auto_save);
@@ -492,6 +565,46 @@ export default {
             } else {
                 this.messages.warning = "";
             }
+        },
+        focus_next: function(e) {
+            let index = $('.form-control').index(document.activeElement) + 1;
+            $('.form-control').eq(index).focus();
+
+            this.lot_values = $("input[name='lot[]']")
+              .map(function(){return $(this).val();}).get();
+            
+            this.add_values = $("input[name='add[]']")
+              .map(function(){return $(this).val();}).get();
+        }, format_data(myType, location, serial) {
+            let vm = this;
+            let myData = [];
+            let fields, values;
+
+            if (myType == "LOT") {
+                fields = vm.lot_fields;
+                values = vm.lot_values;
+            } else {
+                fields = vm.add_fields;
+                values = vm.add_values;
+            }
+
+            for (let i = 0; i < fields.length; i++) {
+                if (values[i] == "" || values[i] == undefined) {
+                    continue;
+                } else {
+                    let data = {
+                        "SERIALNO": serial,
+                        "LOCNCODE": location,
+                        "INFOTYPE": myType,
+                        "FIELDNAME": fields[i].FIELDNAME,
+                        "FIELDVALUE": values[i],
+                    };
+
+                    myData.push(data);
+                }
+            }
+
+            return myData;
         }
     }
 }

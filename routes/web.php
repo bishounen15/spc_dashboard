@@ -276,6 +276,14 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
 
         Route::get('/mes/duplicates', 'MESController@mesDups')->name('mes_dups');
         Route::get('/mes/duplicates/{start}/{end}/{location}', 'MESController@loadDups')->name('mes_duplicates');
+
+        Route::get('/planning/products/data', 'Planning\ProductTypesController@load')->name('prodtypes_data');
+        Route::resource('/planning/products','Planning\ProductTypesController');
+
+        Route::get('/report/test', function() {
+            return view('mes.reports.test');
+        });
+        Route::get('/output/test/{date?}', 'MESController@testOuts')->name('testouts_data');
     });
 // }); 
 

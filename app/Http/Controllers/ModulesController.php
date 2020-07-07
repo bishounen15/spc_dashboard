@@ -48,6 +48,7 @@ class ModulesController extends Controller
             $data['PRODLINE'] = ProductionLine::where("LINCODE",$mod->PRODLINE)->first()->LINDESC;
             $data['PALLETNO'] = $mod->palletInfo != null ? $mod->palletInfo->PALLETNO : '';
             $data['CONTAINER'] = '';
+            $data['BOM'] = $mod->BOM;
         }
 
         return Response::json($data);

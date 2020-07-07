@@ -58866,6 +58866,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -58912,13 +58933,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     REMARKS: '',
                     USERID: '',
                     PRODLINE: 0
-                }
+                },
+                lot: [],
+                add: []
             },
             list: [],
             classes: [],
             class_list: [],
             sno: '',
-            lookup: {}
+            lookup: {},
+            lot_info: false,
+            lot_fields: {},
+            lot_values: [],
+            add_info: false,
+            add_fields: {},
+            add_values: []
         };
     },
     created: function created() {
@@ -58941,6 +58970,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         prod_date: String,
         shift: String
     },
+    computed: {
+        custom_fields: function custom_fields() {
+            var retval = true;
+            var lf = this.lot_fields;
+            var lv = this.lot_values;
+
+            var af = this.add_fields;
+            var av = this.add_values;
+
+            for (var i = 0; i < lf.length; i++) {
+                if (lf[i].ISREQ == 1 && (lv[i] == "" || lv[i] == undefined)) {
+                    retval = false;
+                    break;
+                }
+            }
+
+            for (var _i = 0; _i < af.length; _i++) {
+                if (af[_i].ISREQ == 1 && (av[_i] == "" || av[_i] == undefined)) {
+                    retval = false;
+                    break;
+                }
+            }
+
+            return retval;
+        }
+    },
     methods: {
         toggle: function toggle(e) {
             this.transact = !this.transact;
@@ -58960,19 +59015,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (vm.transact || auto_save) {
                 if (!vm.processing || auto_save) {
                     if (!(vm.transaction.data.MODCLASS == "" && vm.class_list.length > 0)) {
-                        var trx = vm.transaction.data;
+                        var trx = vm.transaction;
+
+                        if (!auto_save) {
+                            if (vm.lot_info) {
+                                trx.lot = vm.format_data("LOT", trx.data.LOCNCODE, trx.data.SERIALNO);
+                            }
+
+                            if (vm.add_info) {
+                                trx.add = vm.format_data("ADD", trx.data.LOCNCODE, trx.data.SERIALNO);
+                            }
+                        }
 
                         var data = {
-                            SERIALNO: trx.SERIALNO,
+                            SERIALNO: trx.data.SERIALNO,
                             MODEL: vm.lookup.MODELNAME,
                             PRODLINE: vm.line_desc,
-                            MODCLASS: trx.MODCLASS,
-                            LOCNCODE: trx.LOCNCODE,
+                            MODCLASS: trx.data.MODCLASS,
+                            LOCNCODE: trx.data.LOCNCODE,
                             CUSTOMER: vm.lookup.CUSTOMER,
                             DATE: vm.prod_date,
                             TRXDATE: '',
                             SHIFT: "Shift " + vm.shift,
-                            STATUS: vm.status[trx.SNOSTAT],
+                            STATUS: vm.status[trx.data.SNOSTAT],
                             REMARKS: auto_save ? vm.messages.custom.auto_remarks : trx.REMARKS,
                             USER: vm.user_name
                         };
@@ -59134,6 +59199,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     vm.transaction.data.MODCLASS = vm.lookup.LAST_TRX ? vm.lookup.CURRENTCLASS : vm.class_list.length > 0 ? vm.class_list[0].MCLCODE : '';
                     vm.transaction.data.REMARKS = vm.lookup.LAST_TRX ? vm.lookup.LAST_TRX.REMARKS : vm.status[0];
 
+                    vm.lot_info = vm.lookup.lot_info;
+                    vm.add_info = vm.lookup.add_info;
+
+                    vm.lot_fields = vm.lookup.lot_fields;
+                    vm.add_fields = vm.lookup.add_fields;
+
+                    // console.log(vm.add_fields.length);
+
                     if (res.Data.auto_save) {
                         vm.messages.custom.auto_remarks = res.Data.auto_remarks;
                         vm.save(res.Data.auto_save);
@@ -59183,6 +59256,50 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             } else {
                 this.messages.warning = "";
             }
+        },
+
+        focus_next: function focus_next(e) {
+            var index = $('.form-control').index(document.activeElement) + 1;
+            $('.form-control').eq(index).focus();
+
+            this.lot_values = $("input[name='lot[]']").map(function () {
+                return $(this).val();
+            }).get();
+
+            this.add_values = $("input[name='add[]']").map(function () {
+                return $(this).val();
+            }).get();
+        }, format_data: function format_data(myType, location, serial) {
+            var vm = this;
+            var myData = [];
+            var fields = void 0,
+                values = void 0;
+
+            if (myType == "LOT") {
+                fields = vm.lot_fields;
+                values = vm.lot_values;
+            } else {
+                fields = vm.add_fields;
+                values = vm.add_values;
+            }
+
+            for (var i = 0; i < fields.length; i++) {
+                if (values[i] == "" || values[i] == undefined) {
+                    continue;
+                } else {
+                    var data = {
+                        "SERIALNO": serial,
+                        "LOCNCODE": location,
+                        "INFOTYPE": myType,
+                        "FIELDNAME": fields[i].FIELDNAME,
+                        "FIELDVALUE": values[i]
+                    };
+
+                    myData.push(data);
+                }
+            }
+
+            return myData;
         }
     }
 });
@@ -59485,7 +59602,8 @@ var render = function() {
                     disabled:
                       (_vm.transaction.data.MODCLASS == "" &&
                         _vm.class_list.length > 0) ||
-                      _vm.processing
+                      _vm.processing ||
+                      !_vm.custom_fields
                   },
                   on: {
                     click: function($event) {
@@ -59986,7 +60104,98 @@ var render = function() {
                   attrs: { id: "err_remarks" }
                 })
               ])
-            ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-sm-5", attrs: { hidden: !_vm.lot_info } },
+              [
+                _c(
+                  "div",
+                  { staticClass: "alert alert-info", attrs: { role: "alert" } },
+                  [
+                    _vm._v(
+                      "\n                            Lot Information\n                        "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.lot_fields, function(lot_field, i) {
+                  return _c("div", { key: i, staticClass: "form-group" }, [
+                    _c(
+                      "label",
+                      {
+                        class: { "text-danger": lot_field.ISREQ == 1 },
+                        attrs: { for: "lot[]" }
+                      },
+                      [_vm._v(_vm._s(lot_field.FIELDNAME))]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control form-control-sm",
+                      attrs: { type: "text", name: "lot[]" },
+                      on: {
+                        keyup: function($event) {
+                          if (!("button" in $event) && $event.keyCode !== 13) {
+                            return null
+                          }
+                          return _vm.focus_next($event)
+                        },
+                        blur: _vm.focus_next
+                      }
+                    })
+                  ])
+                })
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "col-sm-6 offset-sm-1",
+                attrs: { hidden: !_vm.add_info }
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "alert alert-info", attrs: { role: "alert" } },
+                  [
+                    _vm._v(
+                      "\n                            Additional Information\n                        "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.add_fields, function(add_field, i) {
+                  return _c("div", { key: i, staticClass: "form-group" }, [
+                    _c(
+                      "label",
+                      {
+                        class: { "text-danger": add_field.ISREQ == 1 },
+                        attrs: { for: "add[]" }
+                      },
+                      [_vm._v(_vm._s(add_field.FIELDNAME))]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control form-control-sm",
+                      attrs: { type: "text", name: "add[]" },
+                      on: {
+                        keyup: function($event) {
+                          if (!("button" in $event) && $event.keyCode !== 13) {
+                            return null
+                          }
+                          return _vm.focus_next($event)
+                        },
+                        blur: _vm.focus_next
+                      }
+                    })
+                  ])
+                })
+              ],
+              2
+            )
           ])
         ])
       ])
