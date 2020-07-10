@@ -8,6 +8,7 @@ use App\ftdData;
 use App\mesData;
 
 use App\Models\WebPortal\ProductionLine;
+use App\Models\WebPortal\MESAdditional;
 
 use DB;
 use DataTables;
@@ -76,6 +77,19 @@ class ModulesController extends Controller
                         ->orderByRaw("mes01.TRXDATE DESC");
 
         return Datatables::of($mes)->make(true);
+    }
+
+    public function lot($serial)
+    {
+        $lot = MESAdditional::selectRaw("mes02.SERIALNO, mes02.FIELDNAME, UPPER(mes02.FIELDVALUE) AS FIELDVALUE, mat01.PARTNUMBER, mat01.DESCRIPTION")
+                        ->leftJoin("mat01","mes02.FIELDVALUE","=","mat01.LOTNUMBER")
+                        ->where([
+                            ['mes02.SERIALNO','=',$serial],
+                            ['mes02.INFOTYPE','=','LOT'],
+                        ])
+                        ->orderByRaw("mes02.ROWID ASC");
+
+        return Datatables::of($lot)->make(true);
     }
 
     public function trinaLookup(Request $request) {

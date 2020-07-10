@@ -131,6 +131,29 @@
                     </tbody>
                 </table>
             </div>
+
+            <br>
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    Material Lot Details
+                </div>
+
+                <table class="table table-condensed table-striped table-sm" id="lot-list" style="width: 100%;">
+                    <thead class="thead-dark" style="font-size: 0.7em;">
+                        {{-- <th>#</th> --}}
+                        <tr>
+                            <th class="serial-hide" hidden>Serial No.</th>
+                            <th width="20%">Material</th>
+                            <th width="20%">Lot Number</th>
+                            <th width="20%">Part Number</th>
+                            <th width="40%">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody-light" style="font-size: 0.75em;">
+                        
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -200,6 +223,7 @@
 
                         table.ajax.url( '/modules/ftd/' + serialno ).load();
                         mes_table.ajax.url( '/modules/mes/' + serialno ).load();
+                        lot_table.ajax.url( '/modules/lot/' + serialno ).load();
                     },
                     error: function(xhr, textStatus, errorThrown){
                         alert (errorThrown);
@@ -355,6 +379,47 @@
                 { data: 'MODCLASS' },
                 { data: 'REMARKS' },
                 { data: 'TRXUSER' },
+            ],
+        });
+
+        var lot_table = $('#lot-list').DataTable({
+            "scrollX": true,
+            "order": [],
+            "searching": false,
+            // ajax: '#',
+            dom: 'Blfrtip',
+            buttons: [
+                "print",
+                {
+                    extend:     'excel',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3, 4 ]
+                    },
+                    text:       'Excel',
+                    filename: "lot_excel"
+                },
+                {
+                    extend:     'csv',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3, 4 ]
+                    },
+                    text:       'CSV',
+                    filename: "lot_csv"
+                },
+            ],
+            "columnDefs": [
+                {
+                    "targets": [ 0 ],
+                    "visible": false
+                }
+            ],
+            columns: [
+                // { data: 'id' },
+                { data: 'SERIALNO' },
+                { data: 'FIELDNAME' },
+                { data: 'FIELDVALUE' },
+                { data: 'PARTNUMBER' },
+                { data: 'DESCRIPTION' },
             ],
         });
     });
