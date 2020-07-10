@@ -186,9 +186,9 @@
     $(document).ready(function() {
         $("#sno").focus();
 
-        $("#sno").focusout(function() {
-			$(this).focus();
-		});
+        // $("#sno").focusout(function() {
+		// 	$(this).focus();
+		// });
 
         $("#sno").keypress(function (e) {
 			var key = e.which;
