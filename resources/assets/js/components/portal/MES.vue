@@ -335,63 +335,70 @@ export default {
             if (vm.transact || auto_save) {
                 if (!vm.processing || auto_save) {
                     if (!(vm.transaction.data.MODCLASS == "" && vm.class_list.length > 0)) {
-                        let trx = vm.transaction;
-                        
-                        if (!auto_save) {
-                            if (vm.lot_info) {
-                                trx.lot = vm.format_data("LOT",trx.data.LOCNCODE,trx.data.SERIALNO);
-                            }
-
-                            if (vm.add_info) {
-                                trx.add = vm.format_data("ADD",trx.data.LOCNCODE,trx.data.SERIALNO);
-                            }
-                        }
-
-                        let data = {
-                                        SERIALNO: trx.data.SERIALNO,
-                                        MODEL: vm.lookup.MODELNAME,
-                                        PRODLINE: vm.line_desc,
-                                        MODCLASS: trx.data.MODCLASS,
-                                        LOCNCODE: trx.data.LOCNCODE,
-                                        CUSTOMER: vm.lookup.CUSTOMER,
-                                        DATE: vm.prod_date,
-                                        TRXDATE: '',
-                                        SHIFT: "Shift " + vm.shift,
-                                        STATUS: vm.status[trx.data.SNOSTAT],
-                                        REMARKS: (auto_save ? vm.messages.custom.auto_remarks : trx.REMARKS),
-                                        USER: vm.user_name,
-                                    };
-
-                        vm.processing = true;
-
-                        fetch('/api/mes/save', {
-                            method: 'post',
-                            body: JSON.stringify(trx),
-                            headers: {
-                                'content-type': 'application/json'
-                            }
-                            })
-                            .then(res => res.json())
-                            .then(res => {
-                                if (res.Message == "") {
-                                    data.TRXDATE = res.Data.TRXDATE;
-                                    data.REMARKS = res.Data.REMARKS;
-
-                                    vm.transactions.unshift(data);
-                                    vm.makePagination(vm.transactions.length, vm.record_per_page);
-                                    vm.listRecords();
-
-                                    if (!auto_save) { vm.toggle(); }
-                                } else {
-                                    alert(res.Message);
+                        console.log(vm.custom_fields);
+                        if (vm.custom_fields) {
+                            let trx = vm.transaction;
+                            
+                            if (!auto_save) {
+                                if (vm.lot_info) {
+                                    trx.lot = vm.format_data("LOT",trx.data.LOCNCODE,trx.data.SERIALNO);
                                 }
 
-                                vm.processing = false;
-                            })
-                            .catch(err => console.log(err));
+                                if (vm.add_info) {
+                                    trx.add = vm.format_data("ADD",trx.data.LOCNCODE,trx.data.SERIALNO);
+                                }
+                            }
+
+                            let data = {
+                                            SERIALNO: trx.data.SERIALNO,
+                                            MODEL: vm.lookup.MODELNAME,
+                                            PRODLINE: vm.line_desc,
+                                            MODCLASS: trx.data.MODCLASS,
+                                            LOCNCODE: trx.data.LOCNCODE,
+                                            CUSTOMER: vm.lookup.CUSTOMER,
+                                            DATE: vm.prod_date,
+                                            TRXDATE: '',
+                                            SHIFT: "Shift " + vm.shift,
+                                            STATUS: vm.status[trx.data.SNOSTAT],
+                                            REMARKS: (auto_save ? vm.messages.custom.auto_remarks : trx.REMARKS),
+                                            USER: vm.user_name,
+                                        };
+
+                            vm.processing = true;
+
+                            fetch('/api/mes/save', {
+                                method: 'post',
+                                body: JSON.stringify(trx),
+                                headers: {
+                                    'content-type': 'application/json'
+                                }
+                                })
+                                .then(res => res.json())
+                                .then(res => {
+                                    if (res.Message == "") {
+                                        data.TRXDATE = res.Data.TRXDATE;
+                                        data.REMARKS = res.Data.REMARKS;
+
+                                        vm.transactions.unshift(data);
+                                        vm.makePagination(vm.transactions.length, vm.record_per_page);
+                                        vm.listRecords();
+
+                                        if (!auto_save) { vm.toggle(); }
+                                    } else {
+                                        alert(res.Message);
+                                    }
+
+                                    vm.processing = false;
+                                })
+                                .catch(err => console.log(err));
+                        } else {
+                            alert("Please fill up all the required field/s.");
+                            vm.processing = false;
+                        }
+                    } else {
+                        alert("Module Class is required.");
+                        vm.processing = false;
                     }
-                } else {
-                    alert("Module Class is required.")
                 }
             }
         },

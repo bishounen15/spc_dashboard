@@ -59015,66 +59015,73 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (vm.transact || auto_save) {
                 if (!vm.processing || auto_save) {
                     if (!(vm.transaction.data.MODCLASS == "" && vm.class_list.length > 0)) {
-                        var trx = vm.transaction;
+                        console.log(vm.custom_fields);
+                        if (vm.custom_fields) {
+                            var trx = vm.transaction;
 
-                        if (!auto_save) {
-                            if (vm.lot_info) {
-                                trx.lot = vm.format_data("LOT", trx.data.LOCNCODE, trx.data.SERIALNO);
-                            }
-
-                            if (vm.add_info) {
-                                trx.add = vm.format_data("ADD", trx.data.LOCNCODE, trx.data.SERIALNO);
-                            }
-                        }
-
-                        var data = {
-                            SERIALNO: trx.data.SERIALNO,
-                            MODEL: vm.lookup.MODELNAME,
-                            PRODLINE: vm.line_desc,
-                            MODCLASS: trx.data.MODCLASS,
-                            LOCNCODE: trx.data.LOCNCODE,
-                            CUSTOMER: vm.lookup.CUSTOMER,
-                            DATE: vm.prod_date,
-                            TRXDATE: '',
-                            SHIFT: "Shift " + vm.shift,
-                            STATUS: vm.status[trx.data.SNOSTAT],
-                            REMARKS: auto_save ? vm.messages.custom.auto_remarks : trx.REMARKS,
-                            USER: vm.user_name
-                        };
-
-                        vm.processing = true;
-
-                        fetch('/api/mes/save', {
-                            method: 'post',
-                            body: JSON.stringify(trx),
-                            headers: {
-                                'content-type': 'application/json'
-                            }
-                        }).then(function (res) {
-                            return res.json();
-                        }).then(function (res) {
-                            if (res.Message == "") {
-                                data.TRXDATE = res.Data.TRXDATE;
-                                data.REMARKS = res.Data.REMARKS;
-
-                                vm.transactions.unshift(data);
-                                vm.makePagination(vm.transactions.length, vm.record_per_page);
-                                vm.listRecords();
-
-                                if (!auto_save) {
-                                    vm.toggle();
+                            if (!auto_save) {
+                                if (vm.lot_info) {
+                                    trx.lot = vm.format_data("LOT", trx.data.LOCNCODE, trx.data.SERIALNO);
                                 }
-                            } else {
-                                alert(res.Message);
+
+                                if (vm.add_info) {
+                                    trx.add = vm.format_data("ADD", trx.data.LOCNCODE, trx.data.SERIALNO);
+                                }
                             }
 
+                            var data = {
+                                SERIALNO: trx.data.SERIALNO,
+                                MODEL: vm.lookup.MODELNAME,
+                                PRODLINE: vm.line_desc,
+                                MODCLASS: trx.data.MODCLASS,
+                                LOCNCODE: trx.data.LOCNCODE,
+                                CUSTOMER: vm.lookup.CUSTOMER,
+                                DATE: vm.prod_date,
+                                TRXDATE: '',
+                                SHIFT: "Shift " + vm.shift,
+                                STATUS: vm.status[trx.data.SNOSTAT],
+                                REMARKS: auto_save ? vm.messages.custom.auto_remarks : trx.REMARKS,
+                                USER: vm.user_name
+                            };
+
+                            vm.processing = true;
+
+                            fetch('/api/mes/save', {
+                                method: 'post',
+                                body: JSON.stringify(trx),
+                                headers: {
+                                    'content-type': 'application/json'
+                                }
+                            }).then(function (res) {
+                                return res.json();
+                            }).then(function (res) {
+                                if (res.Message == "") {
+                                    data.TRXDATE = res.Data.TRXDATE;
+                                    data.REMARKS = res.Data.REMARKS;
+
+                                    vm.transactions.unshift(data);
+                                    vm.makePagination(vm.transactions.length, vm.record_per_page);
+                                    vm.listRecords();
+
+                                    if (!auto_save) {
+                                        vm.toggle();
+                                    }
+                                } else {
+                                    alert(res.Message);
+                                }
+
+                                vm.processing = false;
+                            }).catch(function (err) {
+                                return console.log(err);
+                            });
+                        } else {
+                            alert("Please fill up all the required field/s.");
                             vm.processing = false;
-                        }).catch(function (err) {
-                            return console.log(err);
-                        });
+                        }
+                    } else {
+                        alert("Module Class is required.");
+                        vm.processing = false;
                     }
-                } else {
-                    alert("Module Class is required.");
                 }
             }
         },
