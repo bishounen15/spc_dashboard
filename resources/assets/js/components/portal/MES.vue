@@ -335,7 +335,7 @@ export default {
             if (vm.transact || auto_save) {
                 if (!vm.processing || auto_save) {
                     if (!(vm.transaction.data.MODCLASS == "" && vm.class_list.length > 0)) {
-                        console.log(vm.custom_fields);
+                        
                         if (vm.custom_fields) {
                             let trx = vm.transaction;
                             

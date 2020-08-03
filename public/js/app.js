@@ -59015,7 +59015,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (vm.transact || auto_save) {
                 if (!vm.processing || auto_save) {
                     if (!(vm.transaction.data.MODCLASS == "" && vm.class_list.length > 0)) {
-                        console.log(vm.custom_fields);
+
                         if (vm.custom_fields) {
                             var trx = vm.transaction;
 
