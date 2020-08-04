@@ -2,7 +2,7 @@
 @section('content')
 <div class="container-fluid">
     <portal-maintenance 
-        title="Received Cells Information" 
+        title="Received Materials Information" 
         icon="fas fa-pallet" 
         source="mat01"
         user_id="{{ Auth::user()->user_id }}"
@@ -57,7 +57,8 @@
                 name: 'PARTNUMBER', 
                 display_name: 'Part No.',
                 placeholder: 'Enter Part No.', 
-                type: 'text'
+                type: 'text',
+                inquire: true
             }, 
             {
                 name: 'DESCRIPTION', 
