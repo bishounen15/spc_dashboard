@@ -829,6 +829,16 @@ class MESController extends Controller
         $add_rec = [];
 
         foreach ($lots as $lot) {
+            if ($lot->INFOTYPE == "LOT") {
+                $lot_exists = DB::connection('web_portal')->table('mat01')->where('LOTNUMBER',$lot->FIELDVALUE)->count();
+
+                if ($lot_exists == 0) {
+                    $err = true;
+                    $msg = $lot->FIELDNAME . " [" . $lot->FIELDNAME . "] does not exists.";
+                    break;
+                }
+            }
+
             $vals = [
                 "SERIALNO" => $lot->SERIALNO,
                 "LOCNCODE" => $lot->LOCNCODE,
