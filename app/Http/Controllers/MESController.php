@@ -834,7 +834,7 @@ class MESController extends Controller
 
                 if ($lot_exists == 0) {
                     $err = true;
-                    $msg = $lot->FIELDNAME . " [" . $lot->FIELDNAME . "] does not exists.";
+                    $msg = $lot->FIELDNAME . " [" . $lot->FIELDVALUE . "] does not exists.";
                     break;
                 }
             }
