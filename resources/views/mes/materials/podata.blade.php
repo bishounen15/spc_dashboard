@@ -64,7 +64,9 @@
                 name: 'DESCRIPTION', 
                 display_name: 'Description',
                 placeholder: 'Enter Description', 
-                type: 'text'
+                type: 'text',
+                inquire: true,
+                inquire_type: 'LIKE'
             }, 
             {
                 name: 'LOTNUMBER', 

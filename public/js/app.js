@@ -48942,7 +48942,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (this.inquire) {
                     if ($("#" + this.name).val() != "" && $("#" + this.name).val() != null) {
                         if (this.inquire_type) {
-                            p.push([this.name, this.inquire_type, $("#" + this.name).val() + '%']);
+                            p.push([this.name, this.inquire_type, '%' + $("#" + this.name).val() + '%']);
                         } else {
                             p.push([this.name, $("#" + this.name).val()]);
                         }
