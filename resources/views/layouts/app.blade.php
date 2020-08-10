@@ -118,6 +118,7 @@
                                 <a class="dropdown-item" href="/mes">&nbsp;&nbsp;&nbsp;&nbsp;Daily Transactions</a>
                                 <a class="dropdown-item" href="/mes/output">&nbsp;&nbsp;&nbsp;&nbsp;Daily Output</a>
                                 <a class="dropdown-item" href="/mes/ftd">&nbsp;&nbsp;&nbsp;&nbsp;FTD Report</a>
+                                <a class="dropdown-item" href="/report/test">&nbsp;&nbsp;&nbsp;&nbsp;Test Outs for Backflush</a>
                                 @if(Auth::user()->mes_role != 'OPRT')
                                     <a class="dropdown-item" href="/mes/stringer">&nbsp;&nbsp;&nbsp;&nbsp;Stringer Lot Transactions</a>
                                 @endif

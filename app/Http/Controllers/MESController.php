@@ -64,12 +64,29 @@ class MESController extends Controller
     public function testOuts($date = null)
     {
         $cond = [];
+        $ts = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5];
+        $sql = '';
 
         $sdate = ($date == null ? date('Y-m-d') : date('Y-m-d',strtotime($date)))  . " 06:00:00";
         $edate = date('Y-m-d',strtotime("+1 days",strtotime(($date == null ? "Today" : $date)))) . " 05:59:59";
 
+        foreach($ts as $t) {
+            $s1 = $t;
+            $e1 = ($t == 23 ? 0 : $t + 1);
+
+            $st = ($s1 < 10 ? "0" : "") . $s1;
+            $et = ($e1 < 10 ? "0" : "") . $e1;
+
+            $sd = date('Y-m-d',strtotime(($s1 < 6 ? $edate : $sdate)));
+            $ed = date('Y-m-d',strtotime(($e1 < 6 ? $edate : $sdate)));
+
+            $sql .= ", SUM(CASE WHEN A.InspectionTime BETWEEN '" . $sd . " " . $st . ":00:00' AND '" . $ed . " " . $et . ":00:00' THEN 1 ELSE 0 END) AS '" . $st . "'";
+        }
+
+        // dd($sql);
+
         $testouts = DB::connection('web_portal')
-                    ->select("SELECT REPLACE(C.PRODCODE,'[P]', A.Bin) AS MODEL, B.BOM, COUNT(*) AS TOTAL, SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 06:00:00' AND '2020-03-12 07:00:00' THEN 1 ELSE 0 END) AS '06', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 07:00:00' AND '2020-03-12 08:00:00' THEN 1 ELSE 0 END) AS '07', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 08:00:00' AND '2020-03-12 09:00:00' THEN 1 ELSE 0 END) AS '08', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 09:00:00' AND '2020-03-12 10:00:00' THEN 1 ELSE 0 END) AS '09', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 10:00:00' AND '2020-03-12 11:00:00' THEN 1 ELSE 0 END) AS '10', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 11:00:00' AND '2020-03-12 12:00:00' THEN 1 ELSE 0 END) AS '11', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 12:00:00' AND '2020-03-12 13:00:00' THEN 1 ELSE 0 END) AS '12', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 13:00:00' AND '2020-03-12 14:00:00' THEN 1 ELSE 0 END) AS '13', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 14:00:00' AND '2020-03-12 15:00:00' THEN 1 ELSE 0 END) AS '14', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 15:00:00' AND '2020-03-12 16:00:00' THEN 1 ELSE 0 END) AS '15', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 16:00:00' AND '2020-03-12 17:00:00' THEN 1 ELSE 0 END) AS '16', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 17:00:00' AND '2020-03-12 18:00:00' THEN 1 ELSE 0 END) AS '17', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 18:00:00' AND '2020-03-12 19:00:00' THEN 1 ELSE 0 END) AS '18', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 19:00:00' AND '2020-03-12 20:00:00' THEN 1 ELSE 0 END) AS '19', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 20:00:00' AND '2020-03-12 21:00:00' THEN 1 ELSE 0 END) AS '20', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 21:00:00' AND '2020-03-12 22:00:00' THEN 1 ELSE 0 END) AS '21', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 22:00:00' AND '2020-03-12 23:00:00' THEN 1 ELSE 0 END) AS '22', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-12 23:00:00' AND '2020-03-13 00:00:00' THEN 1 ELSE 0 END) AS '23', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 00:00:00' AND '2020-03-13 01:00:00' THEN 1 ELSE 0 END) AS '00', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 01:00:00' AND '2020-03-13 02:00:00' THEN 1 ELSE 0 END) AS '01', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 02:00:00' AND '2020-03-13 03:00:00' THEN 1 ELSE 0 END) AS '02', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 03:00:00' AND '2020-03-13 04:00:00' THEN 1 ELSE 0 END) AS '03', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 04:00:00' AND '2020-03-13 05:00:00' THEN 1 ELSE 0 END) AS '04', SUM(CASE WHEN A.InspectionTime BETWEEN '2020-03-13 05:00:00' AND '2020-03-13 06:00:00' THEN 1 ELSE 0 END) AS '05' FROM ftd_upd A INNER JOIN lbl02 B ON A.ModuleID = B.SERIALNO AND B.LBLTYPE = 1 INNER JOIN typ00 C ON B.PRODTYPE = C.PRODTYPE WHERE A.InspectionTime BETWEEN ? AND ? GROUP BY REPLACE(C.PRODCODE,'[P]', A.Bin), B.BOM ORDER BY MODEL, BOM",[$sdate,$edate]);
+                    ->select("SELECT D.ITMCODE AS PARTNO, REPLACE(C.PRODCODE,'[P]', A.Bin) AS MODEL, B.BOM, COUNT(*) AS TOTAL".$sql." FROM ftd_upd A INNER JOIN lbl02 B ON A.ModuleID = B.SERIALNO AND B.LBLTYPE = 1 INNER JOIN typ00 C ON B.PRODTYPE = C.PRODTYPE LEFT JOIN itm01 D ON REPLACE(C.PRODCODE,'[P]', A.Bin) = D.ITMDESC WHERE A.InspectionTime BETWEEN ? AND ? GROUP BY D.ITMCODE, REPLACE(C.PRODCODE,'[P]', A.Bin), B.BOM ORDER BY PARTNO, MODEL, BOM",[$sdate,$edate]);
 
         return Datatables::of($testouts)->make(true);
     }

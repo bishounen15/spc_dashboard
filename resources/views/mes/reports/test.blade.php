@@ -2,9 +2,21 @@
 @section('content')
 <div class="container-fluid">
     <h3>Test Outs</h3>
+    <div class="card">
+        <div class="card-body">
+            
+                <div class="form-inline">
+                    <label class="my-1 mr-2" for="start">Production Date</label>
+                    <input type="date" class="form-control form-control-sm my-1 mr-sm-2" name="start" id="start" value="{{ date('Y-m-d') }}">
+                    
+                    <button type="submit" class="btn btn-primary my-1" id="RefreshButton">Refresh Report</button>
+            </div>
+        </div>
+    </div>
     <table class="table table-condensed table-striped table-sm" id="test-list" style="width: 100%;">
         <thead class="thead-dark" style="font-size: 0.7em;">
             {{-- <th>#</th> --}}
+            <th>Part No.</th>
             <th>Product</th>
             <th>BOM</th>
             <th>Total Outs</th>
@@ -44,18 +56,23 @@
 @push('jscript')
 <script>
     $(document).ready(function() {
-        $('#test-list').DataTable({
+        $("#RefreshButton").click(function() {
+            table.ajax.url( '/output/test/' + $('#start').val() ).load();
+        });
+
+        var table = $('#test-list').DataTable({
+            processing: true,
             "scrollX": true,
             "stateSave": true,
             "order": [],
-            ajax: '/output/test/2020-03-12',
+            ajax: '/output/test/' + $('#start').val(),
             dom: 'Blfrtip',
             buttons: [
                 "print",
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ]
                     },
                     text:       'Excel',
                     filename: "test_outs_excel"
@@ -63,7 +80,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ]
                     },
                     text:       'CSV',
                     filename: "test_outs_csv"
@@ -76,6 +93,7 @@
             ],
             columns: [
                 // { data: 'id' },
+                { sortable: false, data: 'PARTNO' },
                 { sortable: false, data: 'MODEL' },
                 { sortable: false, data: 'BOM' },
                 { sortable: false, data: 'TOTAL' },
