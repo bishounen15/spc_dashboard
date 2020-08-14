@@ -847,7 +847,8 @@ class MESController extends Controller
 
         foreach ($lots as $lot) {
             if ($lot->INFOTYPE == "LOT") {
-                $lot_exists = DB::connection('web_portal')->table('mat01')->where('LOTNUMBER',$lot->FIELDVALUE)->count();
+                // $lot_exists = DB::connection('web_portal')->table('mat01')->where('LOTNUMBER',$lot->FIELDVALUE)->count();
+                $lot_exists = DB::connection('web_portal')->table('mat01')->leftJoin('ml01','mat01.LOTNUMBER','ml01.parent_lot')->where(DB::raw("IFNULL(ml01.child_lot,mat01.LOTNUMBER)"),$lot->FIELDVALUE)->count();
 
                 if ($lot_exists == 0) {
                     $err = true;
