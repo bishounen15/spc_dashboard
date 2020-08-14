@@ -163,10 +163,10 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/mes/transactions/{date}/{shift}/{station}/{line?}', 'MESController@transactions')->name('mes_trx');
         Route::get('/mes/output/{date?}', 'MESController@dailyOutput')->name('mes_output');
         Route::post('/mes/validate/{line?}', 'MESController@serialValidation')->name('mes_validate');
-        // Route::get('/mes','MESController@index')->name('mes_daily');
+        Route::get('/mes','MESController@index')->name('mes_daily'); // Disable this if slow transactions
         Route::get('/mescreate/{station}/{line?}','MESController@create')->name('add_mes_trx');
         Route::post('/mescreate/{station}/{line?}','MESController@store')->name('save_mes_trx');
-        // Route::get('/mes/ftd', 'MESController@ftd')->name('mes_ftd');
+        Route::get('/mes/ftd', 'MESController@ftd')->name('mes_ftd'); // Disable this if slow transactions
         Route::post('/mes/ftdreport', 'MESController@ftdReport')->name('mes_ftdreport');
         Route::post('/mes/resetpower/{serial}/{rowid}', 'MESController@resetPower')->name('mes_resetpower');
         // Route::resource('/mes','MESController');

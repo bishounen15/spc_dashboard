@@ -16,6 +16,7 @@
     <table class="table table-condensed table-striped table-sm" id="test-list" style="width: 100%;">
         <thead class="thead-dark" style="font-size: 0.7em;">
             {{-- <th>#</th> --}}
+            <th>NS WO</th>
             <th>Part No.</th>
             <th>Product</th>
             <th>BOM</th>
@@ -72,7 +73,7 @@
                 {
                     extend:     'excel',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ]
                     },
                     text:       'Excel',
                     filename: "test_outs_excel"
@@ -80,7 +81,7 @@
                 {
                     extend:     'csv',
                     exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ]
                     },
                     text:       'CSV',
                     filename: "test_outs_csv"
@@ -93,6 +94,7 @@
             ],
             columns: [
                 // { data: 'id' },
+                { sortable: false, data: 'NSWO' },
                 { sortable: false, data: 'PARTNO' },
                 { sortable: false, data: 'MODEL' },
                 { sortable: false, data: 'BOM' },
