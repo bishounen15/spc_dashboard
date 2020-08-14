@@ -81,13 +81,8 @@ class ModulesController extends Controller
 
     public function lot($serial)
     {
-        $lot = MESAdditional::selectRaw("mes02.SERIALNO, mes02.FIELDNAME, UPPER(mes02.FIELDVALUE) AS FIELDVALUE, mat01.PARTNUMBER, mat01.DESCRIPTION")
-                        ->leftJoin("mat01","mes02.FIELDVALUE","=","mat01.LOTNUMBER")
-                        ->where([
-                            ['mes02.SERIALNO','=',$serial],
-                            ['mes02.INFOTYPE','=','LOT'],
-                        ])
-                        ->orderByRaw("mes02.ROWID ASC");
+        $lot = DB::connection('web_portal')
+                    ->select("SELECT A.SERIALNO, A.FIELDNAME, UPPER(A.FIELDVALUE) AS FIELDVALUE, IFNULL(D.PARTNUMBER, B.PARTNUMBER) AS PARTNUMBER, IFNULL(D.DESCRIPTION,B.DESCRIPTION) AS DESCRIPTION FROM mes02 A LEFT JOIN mat01 B ON A.FIELDVALUE = B.LOTNUMBER LEFT JOIN ml01 C ON A.FIELDVALUE = C.child_lot LEFT JOIN mat01 D ON C.parent_lot = D.LOTNUMBER WHERE INFOTYPE = 'LOT' AND SERIALNO = ? ORDER BY A.ROWID",[$serial]);
 
         return Datatables::of($lot)->make(true);
     }
