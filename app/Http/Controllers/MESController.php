@@ -80,13 +80,13 @@ class MESController extends Controller
             $sd = date('Y-m-d',strtotime(($s1 < 6 ? $edate : $sdate)));
             $ed = date('Y-m-d',strtotime(($e1 < 6 ? $edate : $sdate)));
 
-            $sql .= ", SUM(CASE WHEN A.InspectionTime BETWEEN '" . $sd . " " . $st . ":00:00' AND '" . $ed . " " . $et . ":00:00' THEN 1 ELSE 0 END) AS '" . $st . "'";
+            $sql .= ", SUM(CASE WHEN F.DTCREATE BETWEEN '" . $sd . " " . $st . ":00:00' AND '" . $ed . " " . $et . ":00:00' THEN 1 ELSE 0 END) AS '" . $st . "'";
         }
 
         // dd($sql);
 
         $testouts = DB::connection('web_portal')
-                    ->select("SELECT E.NSWO, D.ITMCODE AS PARTNO, REPLACE(C.PRODCODE,'[P]', A.Bin) AS MODEL, B.BOM, COUNT(*) AS TOTAL".$sql." FROM ftd_upd A INNER JOIN lbl02 B ON A.ModuleID = B.SERIALNO AND B.LBLTYPE = 1 INNER JOIN typ00 C ON B.PRODTYPE = C.PRODTYPE LEFT JOIN itm01 D ON REPLACE(C.PRODCODE,'[P]', A.Bin) = D.ITMDESC LEFT JOIN wor02 E ON B.ORDERNO = E.WOID AND B.BOM = E.REVNO AND D.ITMCODE = E.PARTNO WHERE A.InspectionTime BETWEEN ? AND ? GROUP BY E.NSWO, D.ITMCODE, REPLACE(C.PRODCODE,'[P]', A.Bin), B.BOM ORDER BY PARTNO, MODEL, BOM",[$sdate,$edate]);
+                    ->select("SELECT E.NSWO, F.PRODUCTNO AS PARTNO, F.MODELNAME AS MODEL, B.BOM, COUNT(*) AS TOTAL".$sql." FROM epl02 A INNER JOIN epl01 F ON A.PALLETNO = F.PALLETNO AND A.CARTONNO = F.CARTONNO INNER JOIN lbl02 B ON A.SERIALNO = B.SERIALNO AND B.LBLTYPE = 1 INNER JOIN typ00 C ON B.PRODTYPE = C.PRODTYPE LEFT JOIN itm01 D ON F.PRODUCTNO = D.ITMCODE LEFT JOIN wor02 E ON B.ORDERNO = E.WOID AND B.BOM = E.REVNO AND D.ITMCODE = E.PARTNO WHERE F.DTCREATE BETWEEN ? AND ? GROUP BY E.NSWO, F.PRODUCTNO, F.MODELNAME, B.BOM ORDER BY PARTNO, MODEL, BOM",[$sdate,$edate]);
 
         return Datatables::of($testouts)->make(true);
     }
