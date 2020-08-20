@@ -87,6 +87,14 @@ class ModulesController extends Controller
         return Datatables::of($lot)->make(true);
     }
 
+    public function add($serial)
+    {
+        $add = DB::connection('web_portal')
+                    ->select("SELECT A.SERIALNO, A.LOCNCODE, A.FIELDNAME, UPPER(A.FIELDVALUE) AS FIELDVALUE, IFNULL(D.PARTNUMBER, B.PARTNUMBER) AS PARTNUMBER, IFNULL(D.DESCRIPTION,B.DESCRIPTION) AS DESCRIPTION FROM mes02 A LEFT JOIN mat01 B ON A.FIELDVALUE = B.LOTNUMBER LEFT JOIN ml01 C ON A.FIELDVALUE = C.child_lot LEFT JOIN mat01 D ON C.parent_lot = D.LOTNUMBER WHERE INFOTYPE = 'ADD' AND SERIALNO = ? ORDER BY A.ROWID",[$serial]);
+
+        return Datatables::of($add)->make(true);
+    }
+
     public function trinaLookup(Request $request) {
         $module_id = DB::connection('trina')
                         ->select("SELECT COUNT(*) AS isExisting FROM omes.rt_wo_mid WHERE Module_ID = ?",[$request->lookup_value]);

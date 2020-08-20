@@ -215,6 +215,7 @@ Route::post('/link/account','LinkAccountController@link')->name('link_account');
         Route::get('/modules/ftd/{serial}','ModulesController@ftd')->name('ftd_data');
         Route::get('/modules/mes/{serial}','ModulesController@mes')->name('mod_mes');
         Route::get('/modules/lot/{serial}','ModulesController@lot')->name('lot_mes');
+        Route::get('/modules/add/{serial}','ModulesController@add')->name('add_mes');
         Route::resource('/modules','ModulesController');
 
         //Planning
