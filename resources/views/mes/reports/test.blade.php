@@ -25,11 +25,11 @@
             <th>07</th>
             <th>08</th>
             <th>09</th>
-            <th>09</th>
             <th>10</th>
             <th>11</th>
             <th>12</th>
             <th>13</th>
+            <th>14</th>
             <th>15</th>
             <th>16</th>
             <th>17</th>
@@ -103,11 +103,11 @@
                 { sortable: false, data: '07' },
                 { sortable: false, data: '08' },
                 { sortable: false, data: '09' },
-                { sortable: false, data: '09' },
                 { sortable: false, data: '10' },
                 { sortable: false, data: '11' },
                 { sortable: false, data: '12' },
                 { sortable: false, data: '13' },
+                { sortable: false, data: '14' },
                 { sortable: false, data: '15' },
                 { sortable: false, data: '16' },
                 { sortable: false, data: '17' },
