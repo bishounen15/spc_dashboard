@@ -328,7 +328,7 @@ class PackingListController extends Controller
         
         $sheet = $spreadsheet->getActiveSheet();
         
-        if ($pallet->customer->TEMPLATE == null) {
+        if ($pallet->customer->TEMPLATE == null || $pallet->customer->TEMPLATE == "Packing List - 32.xls") {
             $sheet->setCellValue('A1', "Model Name : " . $pallet->MODELNAME);
             $sheet->setCellValue('D4', $pallet->PALLETNO);
             $sheet->setCellValue('D8', $pallet->PRODUCTNO);
@@ -338,17 +338,19 @@ class PackingListController extends Controller
 			$sheet->SetCellValue('H4', $pallet->PALLETNO);
         }
 
-        $settings = DB::connection('web_portal')
-                    ->table("epl00")
-                    ->select("COLCOUNT", "COL1", "COL2")
-                    ->first();
+        // $settings = DB::connection('web_portal')
+        //             ->table("epl00")
+        //             ->select("COLCOUNT", "COL1", "COL2")
+        //             ->first();
 
-        $i = $pallet->customer->TEMPLATE == null ? 13 : 10;
+        $settings = DB::connection('web_portal')->select("SELECT ROWID, COLCOUNT, COL1, COL2 FROM epl00 WHERE ROWID = 1 UNION ALL SELECT ROWID, COLCOUNT, COL1, COL2 FROM epl00 WHERE CUSTOMER = ? ORDER BY ROWID DESC LIMIT 1",[$pallet->CUSTOMER])[0];
+
+        $i = ($pallet->customer->TEMPLATE == null || $pallet->customer->TEMPLATE == "Packing List - 32.xls") ? 13 : 10;
         $sc = 0;
         $col = $settings->COL1;
 
         foreach($pallet->details as $detail) {
-            if ($pallet->customer->TEMPLATE == null) {
+            if ($pallet->customer->TEMPLATE == null || $pallet->customer->TEMPLATE == "Packing List - 32.xls") {
                 $sheet->setCellValue($col.($i-1), '="*"&'.$col.$i.'&"*"');
                 $sheet->setCellValue($col.$i, '="'.$detail->SERIALNO.'"');
 
